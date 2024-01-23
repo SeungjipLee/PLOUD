@@ -3,6 +3,7 @@ package com.ssafy.ploud.domain.meeting.util;
 import com.ssafy.ploud.domain.meeting.dto.MeetingInfo;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingCreateRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingJoinRequest;
+import com.ssafy.ploud.domain.meeting.dto.response.MeetingInfoResponse;
 import io.openvidu.java.client.ConnectionProperties;
 import io.openvidu.java.client.ConnectionType;
 import io.openvidu.java.client.OpenVidu;
@@ -31,26 +32,49 @@ public class OpenViduUtil {
         this.openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
     }
 
-    public MeetingInfo join(MeetingJoinRequest request) {
-        // 인원 수 확인
+    public MeetingInfoResponse join(MeetingJoinRequest request) {
         MeetingInfo meetingInfo = findBySessionId(request.getSessionId());
-
-        if(meetingInfo.getCurrentPeople().equals(meetingInfo.getMaxPeople())){
+        // 방 존재여부 확인
+        if (meetingInfo == null) {
             return null;
         }
-
+        // 인원 수 확인
+        else if (meetingInfo.getCurrentPeople() != meetingInfo.getMaxPeople()) {
+            return null;
+        }
         // 비번 확인
-        if(meetingInfo.getIsPrivate() && !meetingInfo.getPassword().equals(request.getPassword())){
+        else if (meetingInfo.getIsPrivate() && !meetingInfo.getPassword()
+            .equals(request.getPassword())) {
             return null;
         }
-
         // 접속
         meetingInfo.setCurrentPeople(meetingInfo.getCurrentPeople() + 1);
 
-        return meetingInfo;
+        String serverData = "{\"serverData\": \"" + request.getUserId() + "\"}";
+        OpenViduRole role = OpenViduRole.PUBLISHER;
+
+        ConnectionProperties connectionProperties = new ConnectionProperties.Builder().type(
+            ConnectionType.WEBRTC).data(serverData).role(role).build();
+
+        MeetingInfoResponse meetingInfoResponse = null;
+
+        try {
+            String token = this.mapSessions.get(request.getSessionId())
+                .createConnection(connectionProperties).getToken();
+
+            this.mapSessionIdsTokens.get(request.getSessionId()).put(token, role);
+
+            meetingInfoResponse = new MeetingInfoResponse(meetingInfo, token);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return meetingInfoResponse;
     }
 
-    public MeetingInfo create(MeetingCreateRequest request) {
+    public MeetingInfoResponse create(MeetingCreateRequest request) {
         // Connection 생성
         String serverData = "{\"serverData\": \"" + request.getManagerId() + "\"}";
         OpenViduRole role = OpenViduRole.PUBLISHER;
@@ -70,11 +94,13 @@ public class OpenViduUtil {
             this.mapSessionIdsTokens.put(sessionId, new ConcurrentHashMap<>());
             this.mapSessionIdsTokens.get(sessionId).put(token, role);
 
-            //
-            MeetingInfo meetingInfo = new MeetingInfo(token, sessionId, request);
+            MeetingInfo meetingInfo = new MeetingInfo(sessionId, request);
             meetingList.add(meetingInfo);
 
-            return meetingInfo;
+            MeetingInfoResponse meetingInfoResponse = new MeetingInfoResponse(meetingInfo, token);
+
+
+            return meetingInfoResponse;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -96,7 +122,6 @@ public class OpenViduUtil {
                 return true;
             }
         }
-
         return false;
     }
 

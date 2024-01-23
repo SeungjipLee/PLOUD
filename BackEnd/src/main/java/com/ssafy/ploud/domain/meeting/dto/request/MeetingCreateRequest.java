@@ -8,11 +8,10 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class MeetingCreateRequest {
-
     private String managerId;
     private String categoryId;
     private String title;
     private int maxPeople;
-    private Boolean isPublic;
+    private Boolean isPrivate;
     private String password;
 }

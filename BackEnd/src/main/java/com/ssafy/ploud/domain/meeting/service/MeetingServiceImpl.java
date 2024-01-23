@@ -5,6 +5,7 @@ import com.ssafy.ploud.domain.meeting.dto.request.MeetingCreateRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingLeaveRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingJoinRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingSearchRequest;
+import com.ssafy.ploud.domain.meeting.dto.response.MeetingInfoResponse;
 import com.ssafy.ploud.domain.meeting.util.OpenViduUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,12 +51,12 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
     @Override
-    public MeetingInfo create(MeetingCreateRequest request) {
+    public MeetingInfoResponse create(MeetingCreateRequest request) {
         return openViduUtil.create(request);
     }
 
     @Override
-    public MeetingInfo join(MeetingJoinRequest request) {
+    public MeetingInfoResponse join(MeetingJoinRequest request) {
         return openViduUtil.join(request);
     }
     @Override

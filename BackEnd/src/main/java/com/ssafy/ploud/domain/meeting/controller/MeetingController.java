@@ -5,6 +5,7 @@ import com.ssafy.ploud.domain.meeting.dto.request.MeetingCreateRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingLeaveRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingJoinRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingSearchRequest;
+import com.ssafy.ploud.domain.meeting.dto.response.MeetingInfoResponse;
 import com.ssafy.ploud.domain.meeting.service.MeetingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -53,9 +54,9 @@ public class MeetingController {
     // 스터디룸 참가
     @PostMapping("/join")
     public ResponseEntity<?> joinMeeting(MeetingJoinRequest request) {
-        MeetingInfo meetingInfo = meetingService.join(request);
-        if (meetingInfo != null) {
-            return ResponseEntity.ok(meetingService.join(request));
+        MeetingInfoResponse meetingInfoResponse = meetingService.join(request);
+        if (meetingInfoResponse != null) {
+            return ResponseEntity.ok(meetingInfoResponse);
         }
         return ResponseEntity.badRequest().build();
     }

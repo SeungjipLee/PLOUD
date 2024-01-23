@@ -12,22 +12,19 @@ public class MeetingInfo {
     private String managerId;
     private String categoryId;
     private String title;
-    private Integer currentPeople;
-    private Integer maxPeople;
+    private int currentPeople;
+    private int maxPeople;
     private Boolean isPrivate;
     private String password;
-    private String token;
-
-    public MeetingInfo(String token, String sessionId, MeetingCreateRequest request) {
+    public MeetingInfo(String sessionId, MeetingCreateRequest request) {
         this.sessionId = sessionId;
         this.managerId = request.getManagerId();
         this.categoryId = request.getCategoryId();
         this.title = request.getTitle();
         this.currentPeople = 1;
         this.maxPeople = request.getMaxPeople();
-        this.isPrivate = request.getIsPublic();
+        this.isPrivate = request.getIsPrivate();
         this.password = request.getPassword();
-        this.token = token;
     }
 }
 
