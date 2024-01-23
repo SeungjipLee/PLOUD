@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class MeetingServiceImpl implements MeetingService {
-
     private OpenViduUtil openViduUtil;
 
     @Override
@@ -41,9 +40,9 @@ public class MeetingServiceImpl implements MeetingService {
     public MeetingInfo detail(String sessionId) {
         List<MeetingInfo> list = openViduUtil.getMeetingList();
 
-        for (int i = 0; i < list.size(); ++i) {
-            if (list.get(i).getSessionId().equals(sessionId)) {
-                return list.get(i);
+        for (MeetingInfo meetingInfo : list) {
+            if (meetingInfo.getSessionId().equals(sessionId)) {
+                return meetingInfo;
             }
         }
         return null;
