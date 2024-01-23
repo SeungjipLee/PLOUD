@@ -19,8 +19,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class OpenViduUtil {
 
-    private int num;
-    private OpenVidu openVidu;
+    private int num = 0;
+    private final OpenVidu openVidu;
     private Map<String, Session> mapSessions = new ConcurrentHashMap<>();
     private Map<String, Map<String, OpenViduRole>> mapSessionIdsTokens = new ConcurrentHashMap<>();
 
@@ -30,7 +30,6 @@ public class OpenViduUtil {
     public OpenViduUtil(@Value("${openvidu.url}") String OPENVIDU_URL,
         @Value("${openvidu.secret}") String OPENVIDU_SECRET) {
         this.openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
-        num = 0;
     }
 
     public MeetingInfo join(MeetingJoinRequest request) {
@@ -103,9 +102,9 @@ public class OpenViduUtil {
     }
 
     public MeetingInfo findBySessionId(String sessionId) {
-        for (int i = 0; i < meetingList.size(); ++i) {
-            if (meetingList.get(i).getSessionId().equals(sessionId)) {
-                return meetingList.get(i);
+        for (MeetingInfo meetingInfo : meetingList) {
+            if (meetingInfo.getSessionId().equals(sessionId)) {
+                return meetingInfo;
             }
         }
         return null;

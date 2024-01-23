@@ -9,12 +9,12 @@ import com.ssafy.ploud.domain.meeting.util.OpenViduUtil;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class MeetingServiceImpl implements MeetingService {
-
     private OpenViduUtil openViduUtil;
 
     @Override
