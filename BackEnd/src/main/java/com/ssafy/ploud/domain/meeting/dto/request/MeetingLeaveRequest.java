@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class MeetingLeaveRequest {
-
+    private String userId;
     private String sessionId;
     private String token;
 }
