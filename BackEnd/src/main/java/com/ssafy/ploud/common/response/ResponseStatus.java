@@ -8,8 +8,8 @@ public enum ResponseStatus {
 
   SUCCESS(HttpStatus.OK, 200, "success"),
   BAD_REQUEST(HttpStatus.BAD_REQUEST, 400, "bad request"),
-  UNAUTHORIZED(HttpStatus.UNAUTHORIZED, 409, "UnAuthorized"),
-
+  UNAUTHORIZED(HttpStatus.UNAUTHORIZED, 401, "UnAuthorized"),
+  CONFLICT(HttpStatus.CONFLICT, 409, "conflict"),
   INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, "internal server error"),
   NOT_FOUND(HttpStatus.NOT_FOUND, 404, "not found");
 

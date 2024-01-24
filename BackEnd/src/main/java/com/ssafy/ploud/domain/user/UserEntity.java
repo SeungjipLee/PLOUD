@@ -7,9 +7,13 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.Year;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name="Users")
+@Getter
+@Setter
 public class UserEntity {
 
   @Id

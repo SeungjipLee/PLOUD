@@ -1,7 +1,14 @@
 package com.ssafy.ploud.config;
 
+import com.ssafy.ploud.jwt.JwtAuthenticationEntryPoint;
+import com.ssafy.ploud.jwt.JwtAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -11,7 +18,11 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+  private JwtAuthenticationEntryPoint authenticationEntryPoint;
+  private JwtAuthenticationFilter authenticationFilter;
 
   @Bean
   public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -19,9 +30,16 @@ public class SecurityConfig {
   }
 
   @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
+      throws Exception {
+    return configuration.getAuthenticationManager();
+  }
+
+  @Bean
   public WebSecurityCustomizer webSecurityCustomizer() {
     return (web) -> web.ignoring()
-        .requestMatchers("/api/**");
+        .requestMatchers("/api/**")
+        .requestMatchers("/", "/login", "/join");
 //        .antMatchers("회원가입url", "로그인url");
   }
 
@@ -37,11 +55,29 @@ public class SecurityConfig {
     http
         .httpBasic((auth) -> auth.disable());
 
+    /*
     http
         .authorizeHttpRequests((auth) -> auth
             .requestMatchers("/api/**", "/").permitAll()
+                .requestMatchers("/", "/login", "/join").permitAll()
             .requestMatchers("/admin").hasRole("ADMIN")
             .anyRequest().authenticated());
+     */
+
+    http
+        .authorizeHttpRequests((authorize) -> {
+          authorize.requestMatchers("/api/**").permitAll();
+          authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+          authorize.anyRequest().authenticated();
+        }).httpBasic(Customizer.withDefaults());
+
+    http
+        .exceptionHandling(exception -> exception
+            .authenticationEntryPoint(authenticationEntryPoint));
+
+//    http
+//            .addFilterAt(new LoginFilter(authenticationManager(authenticatinoConfiguration)),
+//                    UsernamePasswordAuthenticationFilter.class);
 
     http
         .sessionManagement((session) -> session
