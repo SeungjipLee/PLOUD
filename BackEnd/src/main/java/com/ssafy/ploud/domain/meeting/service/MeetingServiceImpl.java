@@ -56,11 +56,7 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
     @Override
-<<<<<<< HEAD
-    public MeetingInfoResponse join(MeetingJoinRequest request) {
-=======
     public Object join(MeetingJoinRequest request) {
->>>>>>> be/feature/meeting
         return openViduUtil.join(request);
     }
     @Override
@@ -70,17 +66,6 @@ public class MeetingServiceImpl implements MeetingService {
 
     @Override
     public boolean leave(MeetingLeaveRequest request) {
-<<<<<<< HEAD
-        // 방장인 경우 방 삭제
-        if (request.getToken().equals("방장의 토큰")) {
-
-        }
-        // 아닌 경우 떠나기
-        if (openViduUtil.leave(request.getSessionId(), request.getToken())) {
-            return true;
-        }
-        return false;
-=======
         MeetingInfo meetingInfo = openViduUtil.findBySessionId(request.getSessionId());
         // 방장인 경우
         if(meetingInfo.getManagerId().equals(request.getUserId())){
@@ -88,7 +73,6 @@ public class MeetingServiceImpl implements MeetingService {
         }else{
             return openViduUtil.leave(request.getSessionId(), request.getToken(), false);
         }
->>>>>>> be/feature/meeting
     }
 
 }

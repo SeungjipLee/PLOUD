@@ -7,10 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MeetingInfo {
-<<<<<<< HEAD
-
-=======
->>>>>>> be/feature/meeting
     private String sessionId;
     private String managerId;
     private String categoryId;

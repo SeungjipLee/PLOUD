@@ -16,11 +16,7 @@ public interface MeetingService {
 
     public MeetingInfoResponse create(MeetingCreateRequest request);
 
-<<<<<<< HEAD
-    MeetingInfoResponse join(MeetingJoinRequest request);
-=======
     Object join(MeetingJoinRequest request);
->>>>>>> be/feature/meeting
 
     MeetingInfo findBySessionId(String sessionId);
 
