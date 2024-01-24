@@ -1,10 +1,12 @@
 package com.ssafy.ploud.domain.user.controller;
 
+import com.ssafy.ploud.common.UserNotFoundException;
 import com.ssafy.ploud.common.response.ApiResponse;
 import com.ssafy.ploud.common.response.ResponseStatus;
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
+import com.ssafy.ploud.domain.user.dto.UserInfoResDto;
 import com.ssafy.ploud.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +14,8 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -79,6 +83,18 @@ public class UserController {
       return ApiResponse.ok("OK");
     }
     return ApiResponse.failure("해당 이메일은 이미 존재합니다", ResponseStatus.CONFLICT);
+  }
+
+  @Operation(summary = "회원 정보 조회")
+  @GetMapping("profile/{userId}")
+  public ApiResponse<UserInfoResDto> findUserByUserId(@PathVariable("userId") String userId) {
+    try {
+      return ApiResponse.ok("회원 정보 조회 성공", userService.findUserByUserId(userId));
+    } catch (UserNotFoundException e) {
+      return ApiResponse.failure("해당 유저가 존재하지 않습니다", ResponseStatus.NOT_FOUND);
+    } catch (Exception e) {
+      return ApiResponse.error("회원 정보 조회 중 에러 발생");
+    }
   }
 
 }

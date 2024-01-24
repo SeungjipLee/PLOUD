@@ -1,9 +1,11 @@
 package com.ssafy.ploud.domain.user.service;
 
+import com.ssafy.ploud.common.UserNotFoundException;
 import com.ssafy.ploud.domain.user.UserEntity;
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
+import com.ssafy.ploud.domain.user.dto.UserInfoResDto;
 import com.ssafy.ploud.domain.user.repository.UserRepository;
 import com.ssafy.ploud.jwt.JwtTokenProvider;
 import lombok.AllArgsConstructor;
@@ -57,4 +59,15 @@ public class UserServiceImpl implements UserService {
   public boolean isUserEmailAvailable(String userEmail) {
     return !userRepository.existsByEmail(userEmail);
   }
+
+  @Override
+  public UserInfoResDto findUserByUserId(String userId) {
+
+    UserEntity user = userRepository.findByUserId(userId);
+    if (user == null) {
+      throw new UserNotFoundException("User not found with userId: " + userId);
+    }
+    return UserInfoResDto.toDto(user);
+  }
+
 }
