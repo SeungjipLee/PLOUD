@@ -8,6 +8,8 @@ import io.openvidu.java.client.ConnectionProperties;
 import io.openvidu.java.client.ConnectionType;
 import io.openvidu.java.client.OpenVidu;
 import io.openvidu.java.client.OpenViduRole;
+import io.openvidu.java.client.Recording;
+import io.openvidu.java.client.RecordingProperties;
 import io.openvidu.java.client.Session;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +18,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,6 +31,8 @@ public class OpenViduUtil {
 
     @Getter
     private List<MeetingInfo> meetingList = new ArrayList<>();
+    @Getter
+    private Map<String, Boolean> sessionRecordings = new ConcurrentHashMap<>();
 
     public OpenViduUtil(@Value("${openvidu.url}") String OPENVIDU_URL,
         @Value("${openvidu.secret}") String OPENVIDU_SECRET) {
@@ -127,5 +133,17 @@ public class OpenViduUtil {
             }
         }
         return null;
+    }
+
+    public Recording startRecording(String sessionId, RecordingProperties properties) {
+        try{
+            Recording recording = this.openVidu.startRecording(sessionId, properties);
+            this.sessionRecordings.put(sessionId, true);
+
+            return recording;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 }
