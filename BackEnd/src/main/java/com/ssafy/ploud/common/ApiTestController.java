@@ -3,14 +3,16 @@ package com.ssafy.ploud.common;
 
 import com.ssafy.ploud.common.response.ApiResponse;
 import com.ssafy.ploud.common.response.ResponseStatus;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "api test", description = "응답 test")
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/test")
+@RequestMapping("/api/test")
 public class ApiTestController {
 
   @GetMapping("/ok")

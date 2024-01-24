@@ -39,9 +39,16 @@ public class SecurityConfig {
     return (web) -> web.ignoring()
         .requestMatchers("/api/**")
         .requestMatchers("/", "/login", "/join")
-        .requestMatchers("/swagger-ui/**",
+        .requestMatchers(
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/configuration/ui",
+            "/configuration/security",
             "/v3/api-docs/**",
-            "/swagger-resources/**");
+            "swagger-resources",
+            "/swagger-resources/**",
+            "/webjars/**"
+        );
   }
 
   @Bean

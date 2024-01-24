@@ -2,22 +2,20 @@ package com.ssafy.ploud.domain.meeting.controller;
 
 import com.ssafy.ploud.common.response.ApiResponse;
 import com.ssafy.ploud.common.response.ResponseStatus;
-import com.ssafy.ploud.domain.meeting.dto.MeetingInfo;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingCreateRequest;
-import com.ssafy.ploud.domain.meeting.dto.request.MeetingLeaveRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingJoinRequest;
+import com.ssafy.ploud.domain.meeting.dto.request.MeetingLeaveRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingSearchRequest;
 import com.ssafy.ploud.domain.meeting.dto.response.MeetingInfoResponse;
 import com.ssafy.ploud.domain.meeting.service.MeetingService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/meeting")
+@RequestMapping("/api/meeting")
 @RequiredArgsConstructor
 public class MeetingController {
 
