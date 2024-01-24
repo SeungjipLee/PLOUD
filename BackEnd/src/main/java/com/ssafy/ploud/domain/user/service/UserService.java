@@ -2,9 +2,9 @@ package com.ssafy.ploud.domain.user.service;
 
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
-import com.ssafy.ploud.domain.user.dto.NicknameUpdateReqDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
 import com.ssafy.ploud.domain.user.dto.UserInfoResDto;
+import com.ssafy.ploud.domain.user.dto.UserInfoUpdateReqDto;
 
 public interface UserService {
 
@@ -20,7 +20,7 @@ public interface UserService {
 
   public UserInfoResDto findUserByUserId(String userId); // 회원 정보 조회
 
-  public String updateUserNickname(NicknameUpdateReqDto reqDto); // 회원 닉네임 수정
+  public String updateUserNickname(UserInfoUpdateReqDto reqDto); // 회원 닉네임 수정
 
 
 }

@@ -3,9 +3,9 @@ package com.ssafy.ploud.domain.user.dto;
 import lombok.Data;
 
 @Data
-public class NicknameUpdateReqDto {
+public class UserInfoUpdateReqDto {
 
   private String userId;
-  private String newNickname;
+  private String newValue;
 
 }

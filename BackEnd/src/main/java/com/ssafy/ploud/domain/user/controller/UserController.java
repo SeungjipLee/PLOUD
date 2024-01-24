@@ -5,9 +5,9 @@ import com.ssafy.ploud.common.response.ApiResponse;
 import com.ssafy.ploud.common.response.ResponseStatus;
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
-import com.ssafy.ploud.domain.user.dto.NicknameUpdateReqDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
 import com.ssafy.ploud.domain.user.dto.UserInfoResDto;
+import com.ssafy.ploud.domain.user.dto.UserInfoUpdateReqDto;
 import com.ssafy.ploud.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -101,7 +101,7 @@ public class UserController {
 
   @Operation(summary = "회원 정보 수정", description = "회원 정보(닉네임) 수정")
   @PatchMapping("/nickname")
-  public ApiResponse<String> updateUserNickname(@RequestBody NicknameUpdateReqDto reqDto) {
+  public ApiResponse<String> updateUserNickname(@RequestBody UserInfoUpdateReqDto reqDto) {
     try {
       return ApiResponse.ok("닉네임 수정 완료", userService.updateUserNickname(reqDto));
     } catch (UserNotFoundException e) {

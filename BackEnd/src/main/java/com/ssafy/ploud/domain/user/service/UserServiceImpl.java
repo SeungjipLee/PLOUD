@@ -4,9 +4,9 @@ import com.ssafy.ploud.common.exception.UserNotFoundException;
 import com.ssafy.ploud.domain.user.UserEntity;
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
-import com.ssafy.ploud.domain.user.dto.NicknameUpdateReqDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
 import com.ssafy.ploud.domain.user.dto.UserInfoResDto;
+import com.ssafy.ploud.domain.user.dto.UserInfoUpdateReqDto;
 import com.ssafy.ploud.domain.user.repository.UserRepository;
 import com.ssafy.ploud.jwt.JwtTokenProvider;
 import lombok.AllArgsConstructor;
@@ -71,10 +71,10 @@ public class UserServiceImpl implements UserService {
     return UserInfoResDto.toDto(user);
   }
 
-  public String updateUserNickname(NicknameUpdateReqDto reqDto) {
+  public String updateUserNickname(UserInfoUpdateReqDto reqDto) {
     UserEntity user = userRepository.findById(reqDto.getUserId())
         .orElseThrow(() -> new UserNotFoundException("해당 유저가 존재하지 않습니다."));
-    user.setNickname(reqDto.getNewNickname());
+    user.updateUserNickname(reqDto.getNewValue());
     return user.getNickname();
   }
 

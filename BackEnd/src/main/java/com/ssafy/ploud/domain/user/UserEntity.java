@@ -54,4 +54,8 @@ public class UserEntity {
     return newUser;
   }
 
+  public void updateUserNickname(String nickname) {
+    this.nickname = nickname;
+  }
+
 }
