@@ -31,18 +31,12 @@ public class UserController {
   @PostMapping("/login")
   public ApiResponse<JwtAuthResponse> login(@RequestBody LoginReqDto reqDto) {
     try {
-      String token = userService.login(reqDto);
-
-      JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
-      jwtAuthResponse.setAccessToken(token);
-
-      return ApiResponse.ok("로그인 성공", jwtAuthResponse);
+      JwtAuthResponse token = userService.login(reqDto);
+      return ApiResponse.ok("로그인 성공", token);
     } catch (AuthenticationException e) {
-      e.printStackTrace();
       return ApiResponse.failure("입력이 올바른지 확인해주세요", ResponseStatus.UNAUTHORIZED);
     } catch (Exception e) {
       e.printStackTrace();
-      ;
       return ApiResponse.error("로그인 에러");
     }
 

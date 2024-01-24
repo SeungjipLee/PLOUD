@@ -1,5 +1,6 @@
 package com.ssafy.ploud.jwt;
 
+import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -17,23 +18,36 @@ public class JwtTokenProvider {
   private String jwtSecret;
 
   @Value("${spring.jwt.accessTokenExperation}")
-  private long jwtExpirationDate;
+  private long accessTokenExpirationDate;
+
+  @Value("${spring.jwt.refreshTokenExperation}")
+  private long refreshTokenExpirationDate;
 
   // generate JWT Token
-  public String generateToken(Authentication authentication) {
+  public JwtAuthResponse generateToken(Authentication authentication) {
 
+    // access token 생성
     String userId = authentication.getName();
     Date currentDate = new Date();
-    Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
+    Date accessTokenExpireDate = new Date(currentDate.getTime() + accessTokenExpirationDate);
 
-    String token = Jwts.builder()
+    String accessToken = Jwts.builder()
         .subject(userId)
         .issuedAt(new Date())
-        .expiration(expireDate)
+        .expiration(accessTokenExpireDate)
         .signWith(key())
         .compact();
 
-    return token;
+    // refresh token 생성
+    Date refreshTokenExpireDate = new Date(currentDate.getTime() + refreshTokenExpirationDate);
+    String refreshToken = Jwts.builder()
+        .subject(userId)
+        .issuedAt(new Date())
+        .expiration(refreshTokenExpireDate)
+        .signWith(key())
+        .compact();
+
+    return new JwtAuthResponse(refreshToken, accessToken, "Bearer");
   }
 
   private Key key() {

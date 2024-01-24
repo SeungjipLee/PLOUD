@@ -1,6 +1,7 @@
 package com.ssafy.ploud.domain.user.service;
 
 import com.ssafy.ploud.domain.user.UserEntity;
+import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
 import com.ssafy.ploud.domain.user.repository.UserRepository;
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public String login(LoginReqDto reqDto) {
+  public JwtAuthResponse login(LoginReqDto reqDto) {
     Authentication authentication = authenticateManager.authenticate(
         new UsernamePasswordAuthenticationToken(
             reqDto.getUserId(),
@@ -39,8 +40,6 @@ public class UserServiceImpl implements UserService {
         ));
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
-    String token = jwtTokenProvider.generateToken(authentication);
-
-    return token;
+    return jwtTokenProvider.generateToken(authentication);
   }
 }
