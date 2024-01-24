@@ -1,9 +1,10 @@
 package com.ssafy.ploud.domain.user.service;
 
-import com.ssafy.ploud.common.UserNotFoundException;
+import com.ssafy.ploud.common.exception.UserNotFoundException;
 import com.ssafy.ploud.domain.user.UserEntity;
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
+import com.ssafy.ploud.domain.user.dto.NicknameUpdateReqDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
 import com.ssafy.ploud.domain.user.dto.UserInfoResDto;
 import com.ssafy.ploud.domain.user.repository.UserRepository;
@@ -68,6 +69,13 @@ public class UserServiceImpl implements UserService {
       throw new UserNotFoundException("User not found with userId: " + userId);
     }
     return UserInfoResDto.toDto(user);
+  }
+
+  public String updateUserNickname(NicknameUpdateReqDto reqDto) {
+    UserEntity user = userRepository.findById(reqDto.getUserId())
+        .orElseThrow(() -> new UserNotFoundException("해당 유저가 존재하지 않습니다."));
+    user.setNickname(reqDto.getNewNickname());
+    return user.getNickname();
   }
 
 }

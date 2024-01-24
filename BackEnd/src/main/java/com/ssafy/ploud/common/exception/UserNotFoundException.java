@@ -1,4 +1,4 @@
-package com.ssafy.ploud.common;
+package com.ssafy.ploud.common.exception;
 
 public class UserNotFoundException extends RuntimeException {
 

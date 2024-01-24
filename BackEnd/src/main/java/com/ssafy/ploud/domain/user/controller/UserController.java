@@ -1,10 +1,11 @@
 package com.ssafy.ploud.domain.user.controller;
 
-import com.ssafy.ploud.common.UserNotFoundException;
+import com.ssafy.ploud.common.exception.UserNotFoundException;
 import com.ssafy.ploud.common.response.ApiResponse;
 import com.ssafy.ploud.common.response.ResponseStatus;
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
+import com.ssafy.ploud.domain.user.dto.NicknameUpdateReqDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
 import com.ssafy.ploud.domain.user.dto.UserInfoResDto;
 import com.ssafy.ploud.domain.user.service.UserService;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -94,6 +96,19 @@ public class UserController {
       return ApiResponse.failure("해당 유저가 존재하지 않습니다", ResponseStatus.NOT_FOUND);
     } catch (Exception e) {
       return ApiResponse.error("회원 정보 조회 중 에러 발생");
+    }
+  }
+
+  @Operation(summary = "회원 정보 수정", description = "회원 정보(닉네임) 수정")
+  @PatchMapping("/nickname")
+  public ApiResponse<String> updateUserNickname(@RequestBody NicknameUpdateReqDto reqDto) {
+    try {
+      return ApiResponse.ok("닉네임 수정 완료", userService.updateUserNickname(reqDto));
+    } catch (UserNotFoundException e) {
+      return ApiResponse.failure("해당 유저가 존재하지 않습니다", ResponseStatus.NOT_FOUND);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return ApiResponse.error("닉네임 수정 중 오류 발생");
     }
   }
 
