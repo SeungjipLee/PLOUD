@@ -40,7 +40,6 @@ public class SecurityConfig {
     return (web) -> web.ignoring()
         .requestMatchers("/api/**")
         .requestMatchers("/", "/login", "/join");
-//        .antMatchers("회원가입url", "로그인url");
   }
 
   @Bean
@@ -55,15 +54,6 @@ public class SecurityConfig {
     http
         .httpBasic((auth) -> auth.disable());
 
-    /*
-    http
-        .authorizeHttpRequests((auth) -> auth
-            .requestMatchers("/api/**", "/").permitAll()
-                .requestMatchers("/", "/login", "/join").permitAll()
-            .requestMatchers("/admin").hasRole("ADMIN")
-            .anyRequest().authenticated());
-     */
-
     http
         .authorizeHttpRequests((authorize) -> {
           authorize.requestMatchers("/api/**").permitAll();
@@ -74,10 +64,6 @@ public class SecurityConfig {
     http
         .exceptionHandling(exception -> exception
             .authenticationEntryPoint(authenticationEntryPoint));
-
-//    http
-//            .addFilterAt(new LoginFilter(authenticationManager(authenticatinoConfiguration)),
-//                    UsernamePasswordAuthenticationFilter.class);
 
     http
         .sessionManagement((session) -> session

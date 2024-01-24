@@ -42,4 +42,19 @@ public class UserServiceImpl implements UserService {
     SecurityContextHolder.getContext().setAuthentication(authentication);
     return jwtTokenProvider.generateToken(authentication);
   }
+
+  @Override
+  public boolean isUserIdAvailable(String userId) {
+    return !userRepository.existsByUserId(userId);
+  }
+
+  @Override
+  public boolean isNicknameAvailable(String nickname) {
+    return !userRepository.existsByNickname(nickname);
+  }
+
+  @Override
+  public boolean isUserEmailAvailable(String userEmail) {
+    return !userRepository.existsByEmail(userEmail);
+  }
 }

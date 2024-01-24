@@ -6,6 +6,7 @@ import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
 import com.ssafy.ploud.domain.user.service.UserService;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
@@ -40,6 +41,36 @@ public class UserController {
       return ApiResponse.error("로그인 에러");
     }
 
+  }
+
+  @PostMapping("/nickname")
+  public ApiResponse<?> isNicknameAvailable(@RequestBody Map<String, String> request) {
+    String nickname = request.get("nickname");
+    boolean isAvailable = userService.isNicknameAvailable(nickname);
+    if (isAvailable) {
+      return ApiResponse.ok("OK");
+    }
+    return ApiResponse.failure("해당 닉네임이 이미 존재합니다", ResponseStatus.CONFLICT);
+  }
+
+  @PostMapping("/userId")
+  public ApiResponse<?> isUserIdAvailable(@RequestBody Map<String, String> request) {
+    String userId = request.get("userId");
+    boolean isAvailable = userService.isUserIdAvailable(userId);
+    if (isAvailable) {
+      return ApiResponse.ok("OK");
+    }
+    return ApiResponse.failure("해당 아이디는 이미 존재합니다", ResponseStatus.CONFLICT);
+  }
+
+  @PostMapping("/email")
+  public ApiResponse<?> isUserEmailAvailable(@RequestBody Map<String, String> request) {
+    String email = request.get("email");
+    boolean isAvailable = userService.isUserEmailAvailable(email);
+    if (isAvailable) {
+      return ApiResponse.ok("OK");
+    }
+    return ApiResponse.failure("해당 이메일은 이미 존재합니다", ResponseStatus.CONFLICT);
   }
 
 }
