@@ -363,7 +363,6 @@ code {
 }
 .Page > header a:before {
   color: #000;
-  content: "<";
   font-weight: 700;
 }
 .Page > main {
@@ -372,7 +371,6 @@ code {
 }
 .Page > footer {
   bottom: 0;
-  position: fixed;
   width: 100%;
 }
 .ProductPage main {
