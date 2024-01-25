@@ -104,11 +104,14 @@ public class UserController {
     }
   }
 
-  @Operation(summary = "회원 정보 수정", description = "회원 정보(닉네임) 수정")
+  @Operation(summary = "닉네임 수정")
   @PatchMapping("/nickname")
-  public ApiResponse<String> updateUserNickname(@RequestBody UserInfoUpdateReqDto reqDto) {
+  public ApiResponse<Map<String, String>> updateUserNickname(
+      @RequestBody UserInfoUpdateReqDto reqDto) {
     try {
-      return ApiResponse.ok("닉네임 수정 완료", userService.updateUserNickname(reqDto));
+      Map<String, String> res = new HashMap<>();
+      res.put("nickname", userService.updateUserNickname(reqDto));
+      return ApiResponse.ok("닉네임 수정 완료", res);
     } catch (UserNotFoundException e) {
       return ApiResponse.failure("해당 유저가 존재하지 않습니다", ResponseStatus.NOT_FOUND);
     } catch (Exception e) {
