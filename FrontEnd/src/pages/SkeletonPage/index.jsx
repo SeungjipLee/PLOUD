@@ -1,20 +1,20 @@
 import React from 'react'
+import Navbar from '../../components/Navbar';
 
 class SkeletonPage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state ={
+  constructor() {
+    super();
+    this.state = {};
+  }
 
-        }   
-    }
-
-    render() {
-        return (
-            <div className="SkeletonPage">
-                
-            </div>
-        )
-    }
+  render() {
+    return (
+      <>
+        <Navbar />
+        <h1>페이지</h1>
+      </>
+    );
+  }
 }
 
-export default SkeletonPage
+export default SkeletonPage;
