@@ -58,4 +58,8 @@ public class UserEntity {
     this.nickname = nickname;
   }
 
+  public void updateUserProfileImg(String profileImg) {
+    this.profileImg = profileImg;
+  }
+
 }

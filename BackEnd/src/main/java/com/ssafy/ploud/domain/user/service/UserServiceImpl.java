@@ -9,6 +9,11 @@ import com.ssafy.ploud.domain.user.dto.UserInfoResDto;
 import com.ssafy.ploud.domain.user.dto.UserInfoUpdateReqDto;
 import com.ssafy.ploud.domain.user.repository.UserRepository;
 import com.ssafy.ploud.jwt.JwtTokenProvider;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +22,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @AllArgsConstructor
@@ -46,21 +53,25 @@ public class UserServiceImpl implements UserService {
     return jwtTokenProvider.generateToken(authentication);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public boolean isUserIdAvailable(String userId) {
     return !userRepository.existsByUserId(userId);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public boolean isNicknameAvailable(String nickname) {
     return !userRepository.existsByNickname(nickname);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public boolean isUserEmailAvailable(String userEmail) {
     return !userRepository.existsByEmail(userEmail);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public UserInfoResDto findUserByUserId(String userId) {
 
@@ -78,4 +89,30 @@ public class UserServiceImpl implements UserService {
     return user.getNickname();
   }
 
+  @Override
+  public byte[] saveProfilePicture(MultipartFile file, String userId) throws IOException {
+
+    UserEntity user = userRepository.findById(userId)
+        .orElseThrow(() -> new UserNotFoundException("해당 유저가 존재하지 않습니다."));
+
+    // TODO: imagePath 배포 환경에 맞게 변경
+    String extension = StringUtils.getFilenameExtension(
+        file.getOriginalFilename());
+    String imagePath =
+        "C://ploud_img/profile_image_" + userId + "." + extension;
+
+    file.transferTo(new File(imagePath));
+
+    user.updateUserProfileImg(imagePath);
+
+    return readImage(imagePath, extension);
+  }
+
+  public byte[] readImage(String imagePath, String extension) throws IOException {
+    BufferedImage bImage = ImageIO.read(new File(imagePath));
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    ImageIO.write(bImage, extension, bos);
+
+    return bos.toByteArray();
+  }
 }
