@@ -1,10 +1,13 @@
 package com.ssafy.ploud.jwt;
 
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
+import java.time.LocalDateTime;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,21 +58,37 @@ public class JwtTokenProvider {
   }
 
   // get userId from Jwt Token
-  public String getUserId(String token) {
+  public String getUserId(String accessToken) {
+    return getAllClaims(accessToken)
+        .getSubject();
+  }
+
+  public Claims getAllClaims(String token) {
     return Jwts.parser()
         .verifyWith((SecretKey) key())
         .build()
         .parseSignedClaims(token)
-        .getPayload()
-        .getSubject();
+        .getPayload();
   }
 
   // validate Jwt Token
   public boolean validateToken(String token) {
-    Jwts.parser()
-        .verifyWith((SecretKey) key())
-        .build()
-        .parse(token);
-    return true;
+    try {
+      Jwts.parser()
+          .verifyWith((SecretKey) key())
+          .build()
+          .parse(token);
+      return true;
+    } catch (JwtException e) {
+      e.printStackTrace();
+      return false;
+    }
   }
+
+  public boolean isExpired(String token) {
+    return getAllClaims(token)
+        .getExpiration()
+        .before(java.sql.Timestamp.valueOf(LocalDateTime.now()));
+  }
+
 }

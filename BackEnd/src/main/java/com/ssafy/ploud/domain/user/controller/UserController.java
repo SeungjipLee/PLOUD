@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -136,6 +138,14 @@ public class UserController {
     } catch (Exception e) {
       return ApiResponse.error("프로필 사진 수정 중 오류 발생");
     }
+  }
+
+  @Operation(summary = "사용자 인증", description = "request Header의 Authorization에 Bearer {accessToken}을 추가해서 요청을 보내면 사용자 아이디를 조회 가능")
+  @GetMapping("/getUserId")
+  public ApiResponse<?> getUserId() {
+    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    String username = ((UserDetails) principal).getUsername();
+    return ApiResponse.ok("로그인 사용자 아이디", username);
   }
 
 }

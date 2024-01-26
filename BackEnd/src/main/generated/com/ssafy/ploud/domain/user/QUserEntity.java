@@ -39,6 +39,8 @@ public class QUserEntity extends EntityPathBase<UserEntity> {
 
     public final DateTimePath<java.time.LocalDateTime> restrictDate = createDateTime("restrictDate", java.time.LocalDateTime.class);
 
+    public final EnumPath<Role> role = createEnum("role", Role.class);
+
     public final StringPath userId = createString("userId");
 
     public QUserEntity(String variable) {

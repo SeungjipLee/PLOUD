@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
+  // AuthenticationEntryPoint를 구현하여 인증에 실패한 사용자의 response에 HttpServletResponse.SC_UnAUTHORIZED를 담아준다
 
   @Override
   public void commence(HttpServletRequest request, HttpServletResponse response,

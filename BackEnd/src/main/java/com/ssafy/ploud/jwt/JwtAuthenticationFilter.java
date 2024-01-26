@@ -30,16 +30,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   protected void doFilterInternal(HttpServletRequest request,
       HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
+    // 헤더에서 가져온 토큰이 유효한지 검증
+    // 토큰을 이용하여 계정을 가져오고 유저정보를 가져와 SecurityContext에 Authentication(인증 객체) 저장
 
     // Get JWT token from HTTP request
     String token = getTokenFromRequest(request);
 
     // Validate Token
-    if(StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)){
+    if (token != null && StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
       // get username from token
-      String username = jwtTokenProvider.getUserId(token);
-
-      UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+      String userId = jwtTokenProvider.getUserId(token);
+      System.out.println("Filter: " + userId);
+      UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
 
       UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
           userDetails,
@@ -51,6 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
       SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
+    // TODO: access token 만료되었다면 refresh token 재발급
 
     filterChain.doFilter(request, response);
   }
@@ -59,7 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     String bearerToken = request.getHeader("Authorization");
 
     if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")){
-      return bearerToken.substring(7, bearerToken.length());
+      return bearerToken.substring(7);
     }
 
     return null;
