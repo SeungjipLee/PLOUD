@@ -1,11 +1,25 @@
-import Button from "../../components/Button";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+
 
 const SocialLogin = () => {
   return (
-    <div className="SocialLogin">
-      <div className="KakaoLogin"><Button>카카오 로그인</Button></div>
-      <div className="GoogleLogin"><Button>구글 로그인</Button></div>
-    </div>
+        <GoogleOAuthProvider 
+          clientId="392523178125-21b3u9bb52injjfa9kjdb3a0vbijcidg.apps.googleusercontent.com"
+          onScriptLoadError={() => console.log("실패")}
+          onScriptLoadSuccess={() => console.log("성공")}
+          >
+
+          <GoogleLogin
+            
+            onSuccess={credentialResponse => {
+              console.log(credentialResponse);
+            }}
+            onError={() => {
+              console.log('Login Failed');
+            }}
+          />
+        </GoogleOAuthProvider>
+        
   );
 };
 

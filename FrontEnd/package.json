@@ -11,6 +11,7 @@
   "author": "Junhyung Bae <wnsgud0895@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^2.1.0",
     "axios": "^1.6.5",
     "react": "^18.2.0",
