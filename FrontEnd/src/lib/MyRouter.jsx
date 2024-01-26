@@ -6,6 +6,7 @@ import BoardPage from "../pages/BoardPage";
 import StudyPage from "../pages/StudyPage";
 import PracticePage from "../pages/PracticePage";
 import FindPwPage from "../pages/LoginPage/Findpw";
+import MyPage from "../pages/MyPage";
 
 const Router = () => {
   return (
@@ -18,6 +19,7 @@ const Router = () => {
         <Route path="/study" element={<StudyPage />} />
         <Route path="/practice" element={<PracticePage />} />
         <Route path="/findpw" element={<FindPwPage />} />
+        <Route path="/mypage" element={<MyPage />} />
       </Routes>
     </BrowserRouter>
   );
