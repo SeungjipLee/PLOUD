@@ -70,7 +70,7 @@ export default function SignIn() {
             noValidate
             sx={{ mt: 1 }}
           >
-            <TextField
+            <input
               margin="normal"
               required
               fullWidth
@@ -98,7 +98,7 @@ export default function SignIn() {
               type="submit"
               fullWidth
               variant="contained"
-            //   color=""
+              //   color=""
               sx={{ mt: 3, mb: 2 }}
             >
               로그인
