@@ -54,4 +54,12 @@ public class UserEntity {
     return newUser;
   }
 
+  public void updateUserNickname(String nickname) {
+    this.nickname = nickname;
+  }
+
+  public void updateUserProfileImg(String profileImg) {
+    this.profileImg = profileImg;
+  }
+
 }
