@@ -70,7 +70,7 @@ export default function SignIn() {
             noValidate
             sx={{ mt: 1 }}
           >
-            <input
+            <TextField
               margin="normal"
               required
               fullWidth

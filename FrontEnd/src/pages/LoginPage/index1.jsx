@@ -1,13 +1,13 @@
-import React from 'react'
+import React from "react";
 import Page from "../../components/Page";
 import Footer from "../../components/Footer";
 import { Link } from "react-router-dom";
 import MainPage from "../MainPage";
 import SignUpPage from "../SingUpPage";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 import SignIn from "./LoginMain";
-import Logo from './Logo';
-import SocialLogin from './SocialLogin';
+import Logo from "./Logo";
+import SocialLogin from "./SocialLogin";
 
 class LoginPage extends React.Component {
   constructor(props) {
@@ -16,7 +16,14 @@ class LoginPage extends React.Component {
   }
   render() {
     return (
-      <Page header={<Link to="/"><Logo /></Link>} footer={<Footer />}>
+      <Page
+        header={
+          <Link to="/">
+            <Logo />
+          </Link>
+        }
+        footer={<Footer />}
+      >
         <SignIn />
         <SocialLogin />
       </Page>
@@ -25,4 +32,3 @@ class LoginPage extends React.Component {
 }
 
 export default LoginPage;
-
