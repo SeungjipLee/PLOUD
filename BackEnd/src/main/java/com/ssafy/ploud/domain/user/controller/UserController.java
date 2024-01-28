@@ -5,6 +5,7 @@ import com.ssafy.ploud.common.response.ApiResponse;
 import com.ssafy.ploud.common.response.ResponseStatus;
 import com.ssafy.ploud.domain.user.dto.FindIdReqDto;
 import com.ssafy.ploud.domain.user.dto.FindIdResDto;
+import com.ssafy.ploud.domain.user.dto.FindPwReqDto;
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -169,5 +171,18 @@ public class UserController {
     }
   }
 
-
+  @Operation(summary = "비밀번호 찾기", description = "사용자가 회원가입 시 입력한 이메일로 임시 비밀번호를 전송합니다")
+  @PostMapping("/find-pw")
+  public ApiResponse<?> getUserPasswordByEmailAndId(@RequestBody FindPwReqDto reqDto) {
+    try {
+      userService.getUserPasswordByEmailAndId(reqDto.getEmail(), reqDto.getUserId());
+    } catch (UserNotFoundException e) {
+      e.printStackTrace();
+      return ApiResponse.failure("유저가 존재하지 않습니다", ResponseStatus.NOT_FOUND);
+    } catch (MessagingException e) {
+      e.printStackTrace();
+      return ApiResponse.error("메일을 전송하지 못했습니다");
+    }
+    return ApiResponse.ok("임시 비밀번호 발급 성공");
+  }
 }

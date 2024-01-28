@@ -14,7 +14,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import javax.mail.MessagingException;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -125,5 +127,15 @@ public class UserServiceImpl implements UserService {
         .orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없습니다"));
     return new FindIdResDto(user.getUserId());
   }
+
+  public void getUserPasswordByEmailAndId(String email, String userId) throws MessagingException {
+    UserEntity user = userRepository.findByEmailAndUserId(email, userId)
+        .orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없습니다"));
+    String tempPassword = RandomStringUtils.randomAlphanumeric(10);    // generate temp password
+    System.out.println("임시 비밀번호: " + tempPassword);
+    EmailSenderService.SendResetPasswordMail(user.getEmail(), tempPassword); // send mail
+    user.updateUserPassword(bCryptPasswordEncoder.encode(tempPassword));     // update users table
+  }
+
 
 }

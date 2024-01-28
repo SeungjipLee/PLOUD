@@ -6,6 +6,7 @@ import com.ssafy.ploud.domain.user.dto.LoginReqDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
 import com.ssafy.ploud.domain.user.dto.UserInfoResDto;
 import java.io.IOException;
+import javax.mail.MessagingException;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
@@ -30,5 +31,8 @@ public interface UserService {
   public void updateUserPassword(String userId, String newPassword); // 회원 비밀번호 수정
 
   public FindIdResDto getUserIdByEmailAndName(String email, String name); // 회원 아이디 찾기
+
+  public void getUserPasswordByEmailAndId(String email, String userId)
+      throws MessagingException; // 회원 비밀번호 찾기
 
 }
