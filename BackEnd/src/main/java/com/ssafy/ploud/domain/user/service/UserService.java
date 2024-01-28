@@ -1,5 +1,6 @@
 package com.ssafy.ploud.domain.user.service;
 
+import com.ssafy.ploud.domain.user.dto.FindIdResDto;
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
@@ -27,4 +28,7 @@ public interface UserService {
       throws IOException; // 프로필 사진 등록
 
   public void updateUserPassword(String userId, String newPassword); // 회원 비밀번호 수정
+
+  public FindIdResDto getUserIdByEmailAndName(String email, String name); // 회원 아이디 찾기
+
 }

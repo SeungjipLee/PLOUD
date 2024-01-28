@@ -2,6 +2,7 @@ package com.ssafy.ploud.domain.user.service;
 
 import com.ssafy.ploud.common.exception.UserNotFoundException;
 import com.ssafy.ploud.domain.user.UserEntity;
+import com.ssafy.ploud.domain.user.dto.FindIdResDto;
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
@@ -14,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import lombok.AllArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,6 @@ public class UserServiceImpl implements UserService {
 
   private UserRepository userRepository;
   private BCryptPasswordEncoder bCryptPasswordEncoder;
-  private AuthenticationManager authenticateManager;
   private JwtTokenProvider jwtTokenProvider;
   private PasswordEncoder passwordEncoder;
 
@@ -119,4 +118,12 @@ public class UserServiceImpl implements UserService {
         .orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없습니다"));
     user.updateUserPassword(bCryptPasswordEncoder.encode(newPassword));
   }
+
+  @Transactional(readOnly = true)
+  public FindIdResDto getUserIdByEmailAndName(String email, String name) {
+    UserEntity user = userRepository.findByEmailAndName(email, name)
+        .orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없습니다"));
+    return new FindIdResDto(user.getUserId());
+  }
+
 }

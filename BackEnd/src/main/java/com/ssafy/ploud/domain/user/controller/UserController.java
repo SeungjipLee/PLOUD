@@ -3,6 +3,8 @@ package com.ssafy.ploud.domain.user.controller;
 import com.ssafy.ploud.common.exception.UserNotFoundException;
 import com.ssafy.ploud.common.response.ApiResponse;
 import com.ssafy.ploud.common.response.ResponseStatus;
+import com.ssafy.ploud.domain.user.dto.FindIdReqDto;
+import com.ssafy.ploud.domain.user.dto.FindIdResDto;
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
@@ -154,6 +156,17 @@ public class UserController {
   @GetMapping("/getUserId")
   public ApiResponse<?> getUserId(@AuthenticationPrincipal UserDetails loginUser) {
     return ApiResponse.ok("로그인 사용자 아이디", loginUser.getUsername());
+  }
+
+  @Operation(summary = "아이디 찾기", description = "사용자가 입력한 이메일, 이름을 바탕으로 사용자의 아이디를 반환합니다")
+  @PostMapping("/find-id")
+  public ApiResponse<FindIdResDto> getUserIdByEmailAndName(@RequestBody FindIdReqDto reqDto) {
+    try {
+      return ApiResponse.ok("아이디 조회 성공",
+          userService.getUserIdByEmailAndName(reqDto.getEmail(), reqDto.getName()));
+    } catch (UserNotFoundException e) {
+      return ApiResponse.failure("사용자 정보와 일치하는 아이디가 없습니다", ResponseStatus.NOT_FOUND);
+    }
   }
 
 
