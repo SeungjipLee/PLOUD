@@ -1,4 +1,4 @@
-package com.ssafy.ploud.domain.user.jwt;
+package com.ssafy.ploud.domain.user.security;
 
 import com.ssafy.ploud.common.exception.JwtCustomException;
 import com.ssafy.ploud.common.exception.UserNotFoundException;

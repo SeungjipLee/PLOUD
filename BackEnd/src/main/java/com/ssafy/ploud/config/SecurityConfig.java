@@ -1,6 +1,6 @@
 package com.ssafy.ploud.config;
 
-import com.ssafy.ploud.domain.user.jwt.JwtAuthenticationFilter;
+import com.ssafy.ploud.domain.user.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

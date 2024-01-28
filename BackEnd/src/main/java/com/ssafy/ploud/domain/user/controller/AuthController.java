@@ -4,7 +4,7 @@ import com.ssafy.ploud.common.exception.JwtCustomException;
 import com.ssafy.ploud.common.response.ApiResponse;
 import com.ssafy.ploud.common.response.ResponseStatus;
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
-import com.ssafy.ploud.domain.user.jwt.JwtTokenProvider;
+import com.ssafy.ploud.domain.user.security.JwtTokenProvider;
 import com.ssafy.ploud.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-public class JwtController {
+public class AuthController {
 
   private final UserService userService;
   private final JwtTokenProvider jwtTokenProvider;
