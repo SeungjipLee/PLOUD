@@ -6,7 +6,6 @@ import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
 import com.ssafy.ploud.domain.user.dto.UserInfoResDto;
-import com.ssafy.ploud.domain.user.dto.UserInfoUpdateReqDto;
 import com.ssafy.ploud.domain.user.repository.UserRepository;
 import com.ssafy.ploud.domain.user.security.JwtTokenProvider;
 import java.awt.image.BufferedImage;
@@ -81,10 +80,10 @@ public class UserServiceImpl implements UserService {
     return UserInfoResDto.toDto(user);
   }
 
-  public String updateUserNickname(UserInfoUpdateReqDto reqDto) {
-    UserEntity user = userRepository.findById(reqDto.getUserId())
+  public String updateUserNickname(String userId, String newNickname) {
+    UserEntity user = userRepository.findById(userId)
         .orElseThrow(() -> new UserNotFoundException("해당 유저가 존재하지 않습니다."));
-    user.updateUserNickname(reqDto.getNewValue());
+    user.updateUserNickname(newNickname);
     return user.getNickname();
   }
 

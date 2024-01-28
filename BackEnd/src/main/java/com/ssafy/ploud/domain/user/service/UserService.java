@@ -4,7 +4,6 @@ import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
 import com.ssafy.ploud.domain.user.dto.UserInfoResDto;
-import com.ssafy.ploud.domain.user.dto.UserInfoUpdateReqDto;
 import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +21,7 @@ public interface UserService {
 
   public UserInfoResDto findUserByUserId(String userId); // 회원 정보 조회
 
-  public String updateUserNickname(UserInfoUpdateReqDto reqDto); // 회원 닉네임 수정
+  public String updateUserNickname(String userId, String newNickname); // 회원 닉네임 수정
 
   public byte[] saveProfilePicture(MultipartFile file, String userId)
       throws IOException; // 프로필 사진 등록

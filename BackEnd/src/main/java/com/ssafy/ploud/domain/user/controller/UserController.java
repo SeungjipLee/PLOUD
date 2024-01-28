@@ -22,7 +22,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -95,10 +94,11 @@ public class UserController {
   }
 
   @Operation(summary = "회원 정보 조회")
-  @GetMapping("profile/{userId}")
-  public ApiResponse<UserInfoResDto> findUserByUserId(@PathVariable("userId") String userId) {
+  @GetMapping("/profile")
+  public ApiResponse<UserInfoResDto> findUserByUserId(
+      @AuthenticationPrincipal UserDetails loginUser) {
     try {
-      return ApiResponse.ok("회원 정보 조회 성공", userService.findUserByUserId(userId));
+      return ApiResponse.ok("회원 정보 조회 성공", userService.findUserByUserId(loginUser.getUsername()));
     } catch (UserNotFoundException e) {
       return ApiResponse.failure("해당 유저가 존재하지 않습니다", ResponseStatus.NOT_FOUND);
     } catch (Exception e) {
@@ -109,10 +109,12 @@ public class UserController {
   @Operation(summary = "닉네임 수정")
   @PatchMapping("/nickname")
   public ApiResponse<Map<String, String>> updateUserNickname(
+      @AuthenticationPrincipal UserDetails loginUser,
       @RequestBody UserInfoUpdateReqDto reqDto) {
     try {
       Map<String, String> res = new HashMap<>();
-      res.put("nickname", userService.updateUserNickname(reqDto));
+      res.put("nickname", userService.updateUserNickname(loginUser.getUsername(),
+          reqDto.getNewValue()));
       return ApiResponse.ok("닉네임 수정 완료", res);
     } catch (UserNotFoundException e) {
       return ApiResponse.failure("해당 유저가 존재하지 않습니다", ResponseStatus.NOT_FOUND);
@@ -123,19 +125,20 @@ public class UserController {
   }
 
   @Operation(summary = "회원 프로필 사진 수정", description = "window C 폴더 하위에 ploud_img 폴더를 먼저 만들어야 합니다")
-  @PostMapping(value = "/{userId}/img", consumes = {MediaType.APPLICATION_JSON_VALUE,
+  @PostMapping(value = "/img", consumes = {MediaType.APPLICATION_JSON_VALUE,
       MediaType.MULTIPART_FORM_DATA_VALUE})
   public ApiResponse<?> updateUserProfileImg(
-      @PathVariable("userId") String userId,
-      @RequestPart(value = "file") MultipartFile multipartFile)
+      @AuthenticationPrincipal UserDetails loginUser,
+      @RequestPart(value = "file", required = false) MultipartFile multipartFile)
       throws IOException {
     try {
       Map<String, byte[]> res = new HashMap<>();
-      res.put("profileImg", userService.saveProfilePicture(multipartFile, userId));
-      return ApiResponse.ok("파일 수정 완료", res);
+      res.put("profileImg", userService.saveProfilePicture(multipartFile, loginUser.getUsername()));
+      return ApiResponse.ok("프로필 사진 수정 완료", res);
     } catch (UserNotFoundException e) {
       return ApiResponse.failure("해당 사용자가 존재하지 않습니다", ResponseStatus.NOT_FOUND);
     } catch (Exception e) {
+      e.printStackTrace();
       return ApiResponse.error("프로필 사진 수정 중 오류 발생");
     }
   }

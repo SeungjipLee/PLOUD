@@ -63,10 +63,13 @@ public class SecurityConfig {
                 .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs",
                     "/api-docs/**", "/v3/api-docs/**")
                 .permitAll()
+//                .requestMatchers("/api/user/signup", "/api/user/login", "/api/user/userId",
+//                    "/api/user/email", "/api/user/nickname")
+//                .permitAll()
                 .requestMatchers("/**")
                 .permitAll()
-//            .anyRequest()
-//            .authenticated()
+//                .anyRequest()
+//                .authenticated()
         )
         .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
     ;
