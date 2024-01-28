@@ -1,7 +1,6 @@
 package com.ssafy.ploud.config;
 
-import com.ssafy.ploud.jwt.JwtAuthenticationEntryPoint;
-import com.ssafy.ploud.jwt.JwtAuthenticationFilter;
+import com.ssafy.ploud.domain.user.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,17 +9,18 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-  private JwtAuthenticationEntryPoint authenticationEntryPoint;
-  private JwtAuthenticationFilter authenticationFilter;
+  private final JwtAuthenticationFilter authenticationFilter;
 
   @Bean
   public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -54,36 +54,25 @@ public class SecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     // csrf disable
     http
-        .csrf((auth) -> auth.disable()); // session을 stateless로 관리
-
-    http
-        .formLogin((auth) -> auth.disable());
-
-    http
-        .httpBasic((auth) -> auth.disable());
-
-
-    /*
-
-    http
-        .authorizeHttpRequests((authorize) -> {
-          authorize.requestMatchers("/api/**").permitAll();
-//          authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-          authorize.anyRequest().authenticated();
-        }).httpBasic(Customizer.withDefaults());
-*/
-    http
-        .exceptionHandling(exception -> exception
-            .authenticationEntryPoint(authenticationEntryPoint));
-
-    http
-        .sessionManagement((session) -> session
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-    http
-        .cors(cors -> cors.disable());
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .csrf(AbstractHttpConfigurer::disable)
+        .formLogin(AbstractHttpConfigurer::disable)
+        .httpBasic(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs",
+                    "/api-docs/**", "/v3/api-docs/**")
+                .permitAll()
+                .requestMatchers("/**")
+                .permitAll()
+//            .anyRequest()
+//            .authenticated()
+        )
+        .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+    ;
 
     return http.build();
+
   }
 
 }

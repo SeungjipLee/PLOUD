@@ -7,8 +7,8 @@ import com.ssafy.ploud.domain.user.dto.LoginReqDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
 import com.ssafy.ploud.domain.user.dto.UserInfoResDto;
 import com.ssafy.ploud.domain.user.dto.UserInfoUpdateReqDto;
+import com.ssafy.ploud.domain.user.jwt.JwtTokenProvider;
 import com.ssafy.ploud.domain.user.repository.UserRepository;
-import com.ssafy.ploud.jwt.JwtTokenProvider;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -16,10 +16,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -34,6 +32,7 @@ public class UserServiceImpl implements UserService {
   private BCryptPasswordEncoder bCryptPasswordEncoder;
   private AuthenticationManager authenticateManager;
   private JwtTokenProvider jwtTokenProvider;
+  private PasswordEncoder passwordEncoder;
 
   @Override
   public void signUp(SignUpReqDto reqDto) {
@@ -43,14 +42,14 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public JwtAuthResponse login(LoginReqDto reqDto) {
-    Authentication authentication = authenticateManager.authenticate(
-        new UsernamePasswordAuthenticationToken(
-            reqDto.getUserId(),
-            reqDto.getPassword()
-        ));
-
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-    return jwtTokenProvider.generateToken(authentication);
+    UserEntity user = userRepository.findById(reqDto.getUserId())
+        .orElseThrow(() -> new UserNotFoundException("아이디를 다시 입력"));
+    if (!passwordEncoder.matches(reqDto.getPassword(), user.getPassword())) {
+      throw new UserNotFoundException("비밀번호를 다시 입력");
+    }
+    JwtAuthResponse res = jwtTokenProvider.generateToken(user.getUserId());
+    user.setRefreshToken(res.getRefreshToken());
+    return res;
   }
 
   @Transactional(readOnly = true)

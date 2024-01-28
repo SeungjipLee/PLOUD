@@ -1,4 +1,4 @@
-package com.ssafy.ploud.jwt;
+package com.ssafy.ploud.domain.user.jwt;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
