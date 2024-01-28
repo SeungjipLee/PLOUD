@@ -17,9 +17,11 @@ public interface UserService {
 
   public boolean isUserIdAvailable(String userId); // 아이디 중복 체크
 
+  public boolean verifyEmail(String userEmail, String verificationCode); // 이메일 인증코드 검증
+
   public boolean isNicknameAvailable(String nickname); // 닉네임 중복 체크
 
-  public boolean isUserEmailAvailable(String userEmail); // 이메일 중복 체크
+  public boolean isUserEmailAvailable(String userEmail) throws MessagingException; // 이메일 중복 체크
 
   public UserInfoResDto findUserByUserId(String userId); // 회원 정보 조회
 

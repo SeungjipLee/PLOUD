@@ -3,6 +3,7 @@ package com.ssafy.ploud.domain.user.controller;
 import com.ssafy.ploud.common.exception.UserNotFoundException;
 import com.ssafy.ploud.common.response.ApiResponse;
 import com.ssafy.ploud.common.response.ResponseStatus;
+import com.ssafy.ploud.domain.user.dto.EmailVerifyReqDto;
 import com.ssafy.ploud.domain.user.dto.FindIdReqDto;
 import com.ssafy.ploud.domain.user.dto.FindIdResDto;
 import com.ssafy.ploud.domain.user.dto.FindPwReqDto;
@@ -85,15 +86,29 @@ public class UserController {
     return ApiResponse.failure("해당 아이디는 이미 존재합니다", ResponseStatus.CONFLICT);
   }
 
-  @Operation(summary = "이메일 중복 검사")
+  @Operation(summary = "이메일 중복 검사", description = "이메일 중복 검사를 진행합니다. 이메일을 사용할 수 있다면, 해당 이메일로 인증 코드를 전송합니다.")
   @PostMapping("/email")
   public ApiResponse<?> isUserEmailAvailable(@RequestBody Map<String, String> request) {
     String email = request.get("email");
-    boolean isAvailable = userService.isUserEmailAvailable(email);
-    if (isAvailable) {
-      return ApiResponse.ok("OK");
+    try {
+      boolean isAvailable = userService.isUserEmailAvailable(email);
+      if (isAvailable) {
+        return ApiResponse.ok("이메일로 인증 코드 전송 성공");
+      }
+      return ApiResponse.failure("해당 이메일은 이미 존재합니다", ResponseStatus.CONFLICT);
+    } catch (MessagingException e) {
+      e.printStackTrace();
+      return ApiResponse.error("인증 코드 전송 실패");
     }
-    return ApiResponse.failure("해당 이메일은 이미 존재합니다", ResponseStatus.CONFLICT);
+  }
+
+  @Operation(summary = "이메일 인증코드 체크", description = "사용자 이메일로 전송한 인증코드와 사용자가 입력한 인증코드가 동일한지 검사합니다")
+  @PostMapping("/verify-email")
+  public ApiResponse<?> verifyCode(@RequestBody EmailVerifyReqDto reqDto) {
+    if (userService.verifyEmail(reqDto.getEmail(), reqDto.getCode())) {
+      return ApiResponse.ok("이메일 인증 완료");
+    }
+    return ApiResponse.failure("인증코드를 확인해주세요", ResponseStatus.BAD_REQUEST);
   }
 
   @Operation(summary = "회원 정보 조회")

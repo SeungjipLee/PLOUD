@@ -13,6 +13,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.mail.MessagingException;
 import lombok.AllArgsConstructor;
@@ -33,6 +35,7 @@ public class UserServiceImpl implements UserService {
   private BCryptPasswordEncoder bCryptPasswordEncoder;
   private JwtTokenProvider jwtTokenProvider;
   private PasswordEncoder passwordEncoder;
+  private final Map<String, String> emailVerificationCodes = new HashMap<>();
 
   @Override
   public void signUp(SignUpReqDto reqDto) {
@@ -66,8 +69,24 @@ public class UserServiceImpl implements UserService {
 
   @Transactional(readOnly = true)
   @Override
-  public boolean isUserEmailAvailable(String userEmail) {
-    return !userRepository.existsByEmail(userEmail);
+  public boolean isUserEmailAvailable(String userEmail) throws MessagingException {
+    if (!userRepository.existsByEmail(userEmail)) {
+      String verificationCode = RandomStringUtils.randomAlphanumeric(6);
+      EmailSenderService.sendEmailVerificationCode(userEmail, verificationCode);
+      emailVerificationCodes.put(userEmail, verificationCode);
+      return true;
+    }
+    return false;
+  }
+
+  public boolean verifyEmail(String userEmail, String verificationCode) {
+    String storedVerificationCode = emailVerificationCodes.get(userEmail);
+    boolean verified =
+        storedVerificationCode != null && storedVerificationCode.equals(verificationCode);
+    if (verified) {
+      emailVerificationCodes.clear();
+    }
+    return verified;
   }
 
   @Transactional(readOnly = true)
@@ -133,7 +152,7 @@ public class UserServiceImpl implements UserService {
         .orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없습니다"));
     String tempPassword = RandomStringUtils.randomAlphanumeric(10);    // generate temp password
     System.out.println("임시 비밀번호: " + tempPassword);
-    EmailSenderService.SendResetPasswordMail(user.getEmail(), tempPassword); // send mail
+    EmailSenderService.sendResetPasswordMail(user.getEmail(), tempPassword); // send mail
     user.updateUserPassword(bCryptPasswordEncoder.encode(tempPassword));     // update users table
   }
 
