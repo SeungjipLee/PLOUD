@@ -113,4 +113,10 @@ public class UserServiceImpl implements UserService {
 
     return bos.toByteArray();
   }
+
+  public void updateUserPassword(String userId, String newPassword) {
+    UserEntity user = userRepository.findById(userId)
+        .orElseThrow(() -> new UserNotFoundException("유저를 찾을 수 없습니다"));
+    user.updateUserPassword(bCryptPasswordEncoder.encode(newPassword));
+  }
 }

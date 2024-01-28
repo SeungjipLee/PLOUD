@@ -68,4 +68,8 @@ public class UserEntity {
     this.profileImg = profileImg;
   }
 
+  public void updateUserPassword(String password) {
+    this.password = password;
+  }
+
 }

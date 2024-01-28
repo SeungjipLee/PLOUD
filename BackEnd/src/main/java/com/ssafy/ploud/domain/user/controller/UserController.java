@@ -17,7 +17,6 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +50,7 @@ public class UserController {
     try {
       JwtAuthResponse token = userService.login(reqDto);
       return ApiResponse.ok("로그인 성공", token);
-    } catch (AuthenticationException e) {
+    } catch (UserNotFoundException e) {
       return ApiResponse.failure("입력이 올바른지 확인해주세요", ResponseStatus.UNAUTHORIZED);
     } catch (Exception e) {
       e.printStackTrace();
@@ -141,6 +140,14 @@ public class UserController {
       e.printStackTrace();
       return ApiResponse.error("프로필 사진 수정 중 오류 발생");
     }
+  }
+
+  @Operation(summary = "비밀번호 변경")
+  @PatchMapping("/pw")
+  public ApiResponse<?> updateUserPassword(@AuthenticationPrincipal UserDetails loginUser,
+      @RequestBody UserInfoUpdateReqDto reqDto) {
+    userService.updateUserPassword(loginUser.getUsername(), reqDto.getNewValue());
+    return ApiResponse.ok("비밀번호 수정 완료");
   }
 
   @Operation(summary = "사용자 인증", description = "request Header의 Authorization에 Bearer {accessToken}을 추가해서 요청을 보내면 사용자 아이디를 조회 가능")

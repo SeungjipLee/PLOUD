@@ -25,4 +25,6 @@ public interface UserService {
 
   public byte[] saveProfilePicture(MultipartFile file, String userId)
       throws IOException; // 프로필 사진 등록
+
+  public void updateUserPassword(String userId, String newPassword); // 회원 비밀번호 수정
 }
