@@ -7,6 +7,7 @@ import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.security.JwtTokenProvider;
 import com.ssafy.ploud.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,6 +25,7 @@ public class AuthController {
   private final UserService userService;
   private final JwtTokenProvider jwtTokenProvider;
 
+  @SecurityRequirement(name = "Bearer Authentication")
   @Operation(summary = "access token 재발급", description = "access token이 만료되면 JWT token expired 메시지를 클라이언트로 보냅니다. 클라이언트에서 요청 header에 Bearer {refresh token}을 보내면 access token을 재발급합니다. 만약 refresh token도 만료되었을 경우 JWT token expired 메시지를 클라이언트로 보냅니다.")
   @GetMapping("/reissue")
   public ApiResponse<JwtAuthResponse> reissueAccessToken(HttpServletRequest request,
