@@ -24,6 +24,10 @@ const login = (id, password) => {
     });
 };
 
+const logout = () => {
+  localStorage.removeItem("user");
+}
+
 const getCurrentUser = () => {
   return JSON.parse(localStorage.getItem("user"));
 };
@@ -31,6 +35,7 @@ const getCurrentUser = () => {
 const AuthService = {
   login,
   getCurrentUser,
+  logout
 };
 
 export default AuthService;
