@@ -6,16 +6,15 @@ import MainPage from "../MainPage";
 import SignUpPage from "../SingUpPage";
 import Button from "../../../src/components/Button";
 import SocialLogin from "./SocialLogin";
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getToken, getUserId } from '../../features/user/userSlice'
+import { getToken, getUserId } from "../../features/user/userSlice";
 import { useState } from "react";
 import AuthService from "../LoginPage/Service/AuthService";
 
 const LoginPage = () => {
   let navigate = useNavigate();
-  const token = useSelector((state) => state.userReducer.token)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const [Id, setId] = useState(""); // 입력받은 Id
   const [Pw, setPw] = useState(""); // 입력받은 Pw
@@ -25,8 +24,8 @@ const LoginPage = () => {
 
     AuthService.login(Id, Pw)
       .then((res) => {
-        dispatch(getToken(res))
-        dispatch(getUserId(Id))
+        dispatch(getToken(res));
+        dispatch(getUserId(Id));
         navigate("/");
       })
       .catch((e) => {

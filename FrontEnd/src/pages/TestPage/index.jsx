@@ -1,41 +1,24 @@
-import React from 'react'
+import React, { useState } from "react";
 import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
 import Footer from "../../components/Footer";
-import { Link } from "react-router-dom";
-import PracticePage from "../PracticePage";
-import StudyPage from "../StudyPage";
-import API from '../../services/Api';
-import axios from 'axios'
 
+const TestPage = () => {
+  const[isLogined, setIsLogined] = useState(false)
 
-export const login = async (code) => {
-    const { data } = await API.post('url',
-          JSON.stringify(code)
-    );
-    return data;
-}
-
-class TestPage extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      depositProducts: '',
-    };
+  const onClickHandler = () => {
+    setIsLogined(!isLogined)
+    console.log(isLogined)
   }
-
-
-  render() {
-    return (
-      <div className="Main">
-        <Page header={<Navbar />} footer={<Footer />}>
-          <h1>테스트페이지</h1>
-        </Page>
-      </div>
-    );
-  }
-}
-
-
+  return (
+    <div className="Main">
+      <Page header={<Navbar />} footer={<Footer />}>
+        <h1>테스트페이지</h1>
+        {!isLogined && <div onClick={onClickHandler}>false인 상태</div>}
+        {isLogined && <div onClick={onClickHandler}>true인 상태</div>}
+      </Page>
+    </div>
+  );
+};
 
 export default TestPage;

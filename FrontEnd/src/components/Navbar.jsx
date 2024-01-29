@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "./Button";
-import AuthService from "../pages/LoginPage/Service/AuthService";
 import { useSelector, useDispatch } from "react-redux";
 import { expireToken } from "../features/user/userSlice";
 
@@ -12,7 +11,7 @@ const Navbar = () => {
 
   const onClickHandler = () => {
     dispatch(expireToken());
-    // console.log(isLogined);
+    // 브라우저 로컬스토리지에서도 토큰을 삭제해야함
   };
   return (
     <div className="Navbar">
