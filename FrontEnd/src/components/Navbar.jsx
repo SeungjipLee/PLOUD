@@ -21,6 +21,7 @@ const Navbar = () => {
         <Link to="/board">게시판</Link>
         <Link to="/study">스터디</Link>
         <Link to="/practice">연습</Link>
+        <Link to="/test">테스트</Link>
         {!isLogined && <Link to="/login">로그인</Link>}
         {!isLogined && <Link to="/signup">회원가입</Link>}
         {isLogined && <h3>{user_id}님</h3>}
