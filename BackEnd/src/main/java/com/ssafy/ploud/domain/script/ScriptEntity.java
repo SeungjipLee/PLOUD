@@ -1,6 +1,7 @@
 package com.ssafy.ploud.domain.script;
 
 import com.ssafy.ploud.domain.script.dto.response.ScriptCategoriesResDto;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,6 +27,7 @@ public class ScriptEntity {
 
   private String title; // 대본 제목
 
+  @Column(columnDefinition = "LONGTEXT")
   private String content; // 대본 내용
 
   private String originalVideo; // 원본 영상
