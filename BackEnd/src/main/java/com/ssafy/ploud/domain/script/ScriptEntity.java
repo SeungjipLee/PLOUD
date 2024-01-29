@@ -1,11 +1,13 @@
 package com.ssafy.ploud.domain.script;
 
 import com.ssafy.ploud.domain.script.dto.response.ScriptCategoriesResDto;
+import com.ssafy.ploud.domain.script.dto.response.ScriptInfoDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.util.Arrays;
@@ -19,7 +21,7 @@ import lombok.Getter;
 public class ScriptEntity {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id; // 대본 번호
 
   @Enumerated(EnumType.STRING)
@@ -37,6 +39,13 @@ public class ScriptEntity {
         .map(category -> new ScriptCategoriesResDto(category.getCategoryId(),
             category.getCategoryName()))
         .collect(Collectors.toList());
+  }
+
+  public ScriptInfoDto toDto() {
+    return ScriptInfoDto.builder()
+        .scriptId(this.getId())
+        .scriptTitle(this.getTitle())
+        .build();
   }
 
 }
