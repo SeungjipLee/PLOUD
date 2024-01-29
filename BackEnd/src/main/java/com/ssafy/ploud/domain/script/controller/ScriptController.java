@@ -5,6 +5,7 @@ import com.ssafy.ploud.common.response.ResponseStatus;
 import com.ssafy.ploud.domain.script.ScriptCategory;
 import com.ssafy.ploud.domain.script.ScriptEntity;
 import com.ssafy.ploud.domain.script.dto.response.ScriptCategoriesResDto;
+import com.ssafy.ploud.domain.script.dto.response.ScriptDetailResDto;
 import com.ssafy.ploud.domain.script.dto.response.ScriptListResDto;
 import com.ssafy.ploud.domain.script.service.ScriptService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,10 +46,21 @@ public class ScriptController {
     ScriptListResDto res = new ScriptListResDto();
     res.setCategoryId(categoryId);
     res.setCategoryName(categoryName);
-    res.setScriptInfoDtoList(
+    res.setScripts(
         scriptService.getScriptListByCategory(ScriptCategory.fromCategoryId(categoryId)));
 
     return ApiResponse.ok("대본 리스트 조회 성공", res);
+  }
+
+  @Operation(summary = "대본 상세 조회", description = "scriptId번 대본 상세 정보 조회")
+  @GetMapping("/{scriptId}")
+  public ApiResponse<ScriptDetailResDto> getScriptDetailInfo(
+      @PathVariable("scriptId") int scriptId) {
+    try {
+      return ApiResponse.ok("대본 상세 조회 성공", scriptService.getScriptDetailById(scriptId));
+    } catch (Exception e) {
+      return ApiResponse.failure("대본이 존재하지 않습니다", ResponseStatus.NOT_FOUND);
+    }
   }
 
 }

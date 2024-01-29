@@ -14,6 +14,6 @@ public class ScriptListResDto {
 
   private int categoryId;
   private String categoryName;
-  private List<ScriptInfoDto> scriptInfoDtoList;
+  private List<ScriptInfoDto> scripts;
 
 }

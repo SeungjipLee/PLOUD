@@ -1,6 +1,7 @@
 package com.ssafy.ploud.domain.script;
 
 import com.ssafy.ploud.domain.script.dto.response.ScriptCategoriesResDto;
+import com.ssafy.ploud.domain.script.dto.response.ScriptDetailResDto;
 import com.ssafy.ploud.domain.script.dto.response.ScriptInfoDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,10 +42,19 @@ public class ScriptEntity {
         .collect(Collectors.toList());
   }
 
-  public ScriptInfoDto toDto() {
+  public ScriptInfoDto toSummaryDto() {
     return ScriptInfoDto.builder()
         .scriptId(this.getId())
         .scriptTitle(this.getTitle())
+        .build();
+  }
+
+  public ScriptDetailResDto toDetailDto() {
+    return ScriptDetailResDto.builder()
+        .category(this.category.getCategoryName())
+        .title(this.title)
+        .content(this.content)
+        .originalVideo(this.originalVideo)
         .build();
   }
 
