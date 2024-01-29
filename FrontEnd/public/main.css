@@ -420,3 +420,9 @@ th, td {
 th {
   background-color: #f4f4f4;
 }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+}
