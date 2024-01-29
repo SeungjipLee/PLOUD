@@ -16,6 +16,8 @@ const SocialLogin = () => {
             
             onSuccess={credentialResponse => {
               console.log(credentialResponse);
+              localStorage.setItem('credential', credentialResponse.credential);
+              localStorage.setItem('clientId', credentialResponse.clientId);
             }}
             onError={() => {
               console.log('Login Failed');
