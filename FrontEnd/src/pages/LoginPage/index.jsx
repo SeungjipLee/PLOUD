@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Page from "../../components/Page";
 import Footer from "../../components/Footer";
 import { Link } from "react-router-dom";
@@ -6,21 +6,32 @@ import MainPage from "../MainPage";
 import SignUpPage from "../SingUpPage";
 import Button from "../../../src/components/Button";
 import SocialLogin from "./SocialLogin";
+import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from "react-router-dom";
+import { getToken, getUserId } from '../../features/user/userSlice'
+import { useState } from "react";
+import AuthService from "../LoginPage/Service/AuthService";
 
 const LoginPage = () => {
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
+  let navigate = useNavigate();
+  const token = useSelector((state) => state.userReducer.token)
+  const dispatch = useDispatch()
 
-  const onUserIdHandler = (event) => {
-    setUserId(event.target.value);
-  };
-  const onPasswordHandler = (event) => {
-    setPassword(event.target.value);
-  };
+  const [Id, setId] = useState(""); // 입력받은 Id
+  const [Pw, setPw] = useState(""); // 입력받은 Pw
 
-  const onSubmitHandler = (event) => {
-    console.log(event);
-    event.preventDefault();
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    AuthService.login(Id, Pw)
+      .then((res) => {
+        dispatch(getToken(res))
+        dispatch(getUserId(Id))
+        navigate("/");
+      })
+      .catch((e) => {
+        alert(e);
+      });
   };
 
   return (
@@ -30,24 +41,25 @@ const LoginPage = () => {
       </Link>
       <div className="Login">
         <h2>Login</h2>
-        <form onSubmit={onSubmitHandler}>
-          <div className="signup-input">
-            <input
-              type="text"
-              value={userId}
-              placeholder="id"
-              onChange={onUserIdHandler}
-            />
-            <Button>중복확인</Button>
-          </div>
-          <div className="signup-input">
-            <input
-              type="password"
-              value={password}
-              placeholder="password"
-              onChange={onPasswordHandler}
-            />
-          </div>
+        <form onSubmit={handleLogin}>
+          <input
+            type="text"
+            id="id"
+            placeholder="id"
+            onChange={(e) => {
+              setId(e.target.value);
+            }}
+          />
+          <br />
+          <input
+            type="password"
+            id="pw"
+            placeholder="password"
+            onChange={(e) => {
+              setPw(e.target.value);
+            }}
+          />
+          <br />
           <label>
             <input type="checkbox" />
             아이디 저장하기
@@ -56,6 +68,7 @@ const LoginPage = () => {
           <Button type="submit">Login</Button>
         </form>
       </div>
+
       <Link to="/findpw" element={<SignUpPage />}>
         아이디/비밀번호 찾기
       </Link>
