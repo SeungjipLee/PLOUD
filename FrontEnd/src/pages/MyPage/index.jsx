@@ -2,6 +2,8 @@ import Button from "../../components/Button";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
+import { Link } from "react-router-dom";
+
 
 const MyPage = () => {
   return (
@@ -10,7 +12,7 @@ const MyPage = () => {
         <h1>마이페이지</h1>
         <div className="mypage-1">
           <div className="profile">프로필
-            <Button>회원 정보 수정</Button>
+            <Button><Link to="/patchinfo">회원정보수정</Link></Button>
           </div>
           <div className="status">
             <div>학습현황</div>
