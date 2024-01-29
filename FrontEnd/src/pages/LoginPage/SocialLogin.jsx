@@ -12,7 +12,6 @@ const SocialLogin = () => {
           >
 
           <GoogleLogin
-            
             onSuccess={credentialResponse => {
               console.log(credentialResponse);
               localStorage.setItem('credential', credentialResponse.credential);
