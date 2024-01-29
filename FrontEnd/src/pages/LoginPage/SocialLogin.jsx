@@ -1,5 +1,4 @@
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import KakaoSignUp from "./KakaoLogin";
 
 
 
@@ -24,7 +23,6 @@ const SocialLogin = () => {
             }}
           />
         </GoogleOAuthProvider>
-        <KakaoSignUp />
     </>      
   );
 };

@@ -5,7 +5,7 @@ import Page from "../../components/Page";
 import { Link } from "react-router-dom";
 
 
-const PatchInfo = () => {
+const PatchInfoPage = () => {
   return (
     <div className="mypage">
       <Page header={<Navbar />} footer={<Footer />}>
@@ -25,7 +25,7 @@ const PatchInfo = () => {
         <Button>수정하기</Button>
         
         <br />
-        <Button>비밀번호 재설정</Button>
+        <Button><Link to="/resetpw">비밀번호 재설정</Link></Button>
         <Button><Link to="/mypage">마이페이지</Link></Button>
 
       </Page>
@@ -33,4 +33,4 @@ const PatchInfo = () => {
   );
 };
 
-export default PatchInfo;
+export default PatchInfoPage;

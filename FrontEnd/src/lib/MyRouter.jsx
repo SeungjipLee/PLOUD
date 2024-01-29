@@ -7,7 +7,8 @@ import StudyPage from "../pages/StudyPage";
 import PracticePage from "../pages/PracticePage";
 import FindPwPage from "../pages/LoginPage/Findpw";
 import MyPage from "../pages/MyPage";
-import PatchInfo from "../pages/MyPage/PatchInfo";
+import PatchInfoPage from "../pages/MyPage/PatchInfoPage";
+import ResetPwPage from "../pages/MyPage/ResetPwPage";
 
 const Router = () => {
   return (
@@ -21,7 +22,8 @@ const Router = () => {
         <Route path="/practice" element={<PracticePage />} />
         <Route path="/findpw" element={<FindPwPage />} />
         <Route path="/mypage" element={<MyPage />} />
-        <Route path="/patchinfo" element={<PatchInfo />} />
+        <Route path="/patchinfo" element={<PatchInfoPage />} />
+        <Route path="/resetpw" element={<ResetPwPage />} />
       </Routes>
     </BrowserRouter>
   );
