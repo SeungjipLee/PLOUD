@@ -1,5 +1,6 @@
 package com.ssafy.ploud.domain.script;
 
+import com.ssafy.ploud.domain.script.dto.response.ScriptCategoriesResDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -7,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 
 @Entity
@@ -27,10 +30,11 @@ public class ScriptEntity {
 
   private String originalVideo; // 원본 영상
 
-  public static String[] getAllScriptCategoryNames() {
+  public static List<ScriptCategoriesResDto> getAllScriptCategory() {
     return Arrays.stream(ScriptCategory.values())
-        .map(ScriptCategory::getCategoryName)
-        .toArray(String[]::new);
+        .map(category -> new ScriptCategoriesResDto(category.getCategoryId(),
+            category.getCategoryName()))
+        .collect(Collectors.toList());
   }
 
 }
