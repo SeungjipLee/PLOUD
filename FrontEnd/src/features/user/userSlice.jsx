@@ -1,32 +1,36 @@
-import { createSlice } from '@reduxjs/toolkit'
-import {request} from "../../lib/axios"
+import { createSlice } from "@reduxjs/toolkit";
+import { request } from "../../lib/axios";
+
+const initialState = {
+  isLogined: false,
+  token: { accessToken: "", refreshToken: "", tokenType: "" },
+  user_id: "",
+  email: "",
+  nickname: "",
+  name: "",
+  birth_year: "",
+};
 
 export const userSlice = createSlice({
-  name: 'user',
-  initialState: {
-    user_id: '',
-    email: '',
-    password: '',
-    nickname: '',
-    name: '',
-    token: '',
-    birth_year: '',    
-  },
+  name: "user",
+  initialState,
   reducers: {
-    signup: (state, action) => {
-      const USER_URL = "/api/user"
-      const data = request("post", USER_URL + "/signup", action.payload)
+    getToken: (state, action) => {
+      state.isLogined = true;
+      state.token = action.payload.data
     },
-    // login: (state) => {
-    // },
-    // logout: (state, action) => {
-    //   state.value += action.payload
-    // },
+    expireToken: (state) => {
+      state.isLogined = false;
+      state.token = { accessToken: "", refreshToken: "", tokenType: "" }
+    },
+    getUserId: (state, action) => {
+      state.user_id = action.payload
+    }
   },
-})
+});
 
-export const { signup } = userSlice.actions
-
+export const { getToken, expireToken, getUserId } = userSlice.actions;
+export default userSlice.reducer;
 // // The function below is called a thunk and allows us to perform async logic. It
 // // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
 // // will call the thunk with the `dispatch` function as the first argument. Async
@@ -41,5 +45,3 @@ export const { signup } = userSlice.actions
 // // the state. Selectors can also be defined inline where they're used instead of
 // // in the slice file. For example: `useSelector((state) => state.counter.value)`
 // export const selectCount = (state) => state.counter.value
-
-export default userSlice.reducer
