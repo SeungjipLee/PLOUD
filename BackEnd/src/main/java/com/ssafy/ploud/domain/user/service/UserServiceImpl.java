@@ -1,10 +1,12 @@
 package com.ssafy.ploud.domain.user.service;
 
+import com.ssafy.ploud.common.exception.DuplicateException;
 import com.ssafy.ploud.common.exception.UserNotFoundException;
 import com.ssafy.ploud.domain.user.UserEntity;
 import com.ssafy.ploud.domain.user.dto.FindIdResDto;
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
+import com.ssafy.ploud.domain.user.dto.LoginResDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
 import com.ssafy.ploud.domain.user.dto.UserInfoResDto;
 import com.ssafy.ploud.domain.user.repository.UserRepository;
@@ -44,7 +46,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public JwtAuthResponse login(LoginReqDto reqDto) {
+  public LoginResDto login(LoginReqDto reqDto) {
     UserEntity user = userRepository.findById(reqDto.getUserId())
         .orElseThrow(() -> new UserNotFoundException("아이디를 다시 입력"));
     if (!passwordEncoder.matches(reqDto.getPassword(), user.getPassword())) {
@@ -52,7 +54,8 @@ public class UserServiceImpl implements UserService {
     }
     JwtAuthResponse res = jwtTokenProvider.generateToken(user.getUserId());
     user.setRefreshToken(res.getRefreshToken());
-    return res;
+    return new LoginResDto(res.getRefreshToken(), res.getAccessToken(), "Bearer",
+        user.getNickname());
   }
 
   @Transactional(readOnly = true)
@@ -103,6 +106,9 @@ public class UserServiceImpl implements UserService {
   public String updateUserNickname(String userId, String newNickname) {
     UserEntity user = userRepository.findById(userId)
         .orElseThrow(() -> new UserNotFoundException("해당 유저가 존재하지 않습니다."));
+    if (!isNicknameAvailable(newNickname)) {
+      throw new DuplicateException();
+    }
     user.updateUserNickname(newNickname);
     return user.getNickname();
   }
