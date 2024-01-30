@@ -7,7 +7,6 @@ import { expireToken } from "../features/user/userSlice";
 const Navbar = () => {
   const { isLogined, user_id } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
-  console.log(isLogined, user_id)
 
   const onClickHandler = () => {
     dispatch(expireToken());
