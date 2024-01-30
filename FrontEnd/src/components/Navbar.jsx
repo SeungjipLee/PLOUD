@@ -5,9 +5,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { expireToken } from "../features/user/userSlice";
 
 const Navbar = () => {
-  const { isLogined, user_id } = useSelector((state) => state.userReducer);
+  const { isLogined, nickname } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
-  console.log(isLogined, user_id)
+  // console.log(isLogined, nickname);
 
   const onClickHandler = () => {
     dispatch(expireToken());
@@ -24,7 +24,7 @@ const Navbar = () => {
         <Link to="/test">테스트</Link>
         {!isLogined && <Link to="/login">로그인</Link>}
         {!isLogined && <Link to="/signup">회원가입</Link>}
-        {isLogined && <h3>{user_id}님</h3>}
+        {isLogined && <h3>{nickname}님</h3>}
         {isLogined && <Link to="/mypage">마이페이지</Link>}
         {isLogined && <Button onClick={onClickHandler}>로그아웃</Button>}
       </nav>

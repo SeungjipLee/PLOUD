@@ -1,11 +1,59 @@
+import { useSelector,useDispatch } from "react-redux";
+import React, { useState } from "react";
 import Button from "../../components/Button";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { refreshAccessToken } from "../../features/user/userSlice";
+
+
 
 
 const PatchInfoPage = () => {
+  const { isLogined, nickname } = useSelector((state) => state.userReducer);
+  const dispatch = useDispatch();
+  const [ newNickname, setNewNickname ] = useState(nickname)
+  const navigate = useNavigate();
+  const { token } = useSelector((state) => state.userReducer);
+
+  const changeHandler = (e) => {
+    setNewNickname(e.target.value)
+  }
+
+  const handleSubmit = async (e) => {
+    // 여기 액시오스 요청 보내서 회원정보 수정하는 걸로
+    e.preventDefault();
+    console.log(token)
+    try {
+      const formData = {newValue:newNickname}
+      const response = await axios.patch(
+        "http://localhost:8000/api/user/nickname",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token.accessToken}`
+          },
+          withCredentials: true
+        }
+      )
+      console.log(response)
+      if (response.data.status == "200") {
+        alert("닉네임이 변경되었습니다.")
+        navigate('/mypage')
+      } else {
+        alert("이미 사용 중인 닉네임입니다.")
+      }
+    } catch (error) {
+      console.error("Error sending data", error)
+      alert('토큰 만료면 일로옴')
+        dispatch(refreshAccessToken());
+        handleSubmit(e)
+    }
+  }
+
+
   return (
     <div className="mypage">
       <Page header={<Navbar />} footer={<Footer />}>
@@ -14,15 +62,16 @@ const PatchInfoPage = () => {
         <br />
         <Button>프로필 사진 변경</Button>
         <br />
-        <input
-            type="text"
-            id="id"
-            placeholder="id"
-            onChange={(e) => {
-              setId(e.target.value);
-            }}
+        <form onSubmit={handleSubmit}>
+          닉네임 :
+          <input
+              type="text"
+              id="nickname"
+              value={newNickname}
+              onChange={changeHandler}
           />
         <Button>수정하기</Button>
+        </form>
         
         <br />
         <Button><Link to="/resetpw">비밀번호 재설정</Link></Button>

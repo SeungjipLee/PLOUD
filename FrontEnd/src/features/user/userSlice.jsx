@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { request } from "../../lib/axios";
 
 const initialState = {
@@ -6,10 +6,30 @@ const initialState = {
   token: { accessToken: "", refreshToken: "", tokenType: "" },
   user_id: "",
   email: "",
-  nickname: "",
+  nickname: "", // 추가: nickname 정보를 저장할 필드 추가
   name: "",
   birth_year: "",
+  loading: false,
 };
+
+export const refreshAccessToken = createAsyncThunk(
+  'user/refreshAccessToken',
+  async (_, { getState, dispatch }) => {
+    const { refreshToken } = getState().user.token;
+    if (refreshToken) {
+      try {
+        const response = await request('GET', '/api/auth/reissue', { headers: {Authorization: `Bearer ${refreshToken}`}, withCredentials: true  });
+        if (response.status === 200) {
+          // const { accessToken } = response.data.data; 
+          dispatch(getNewToken({ response }));
+        }
+      } catch (e) {
+        console.error(e);
+        dispatch(expireToken());
+      }
+    }
+  }
+);
 
 export const userSlice = createSlice({
   name: "user",
@@ -17,31 +37,39 @@ export const userSlice = createSlice({
   reducers: {
     getToken: (state, action) => {
       state.isLogined = true;
+      state.token = {
+        accessToken: action.payload.data.accessToken,
+        refreshToken: action.payload.data.refreshToken,
+        tokenType: action.payload.data.tokenType
+      }
+      state.nickname = action.payload.data.nickname; // 추가: nickname 정보 저장
+      console.log(state.token, state.nickname)
+    },
+    getNewToken: (state, action) => {
       state.token = action.payload.data
     },
     expireToken: (state) => {
       state.isLogined = false;
-      state.token = { accessToken: "", refreshToken: "", tokenType: "" }
+      state.token = { accessToken: "", refreshToken: "", tokenType: "" };
+      state.nickname = ""; // 추가: 로그아웃 시 nickname 초기화
     },
     getUserId: (state, action) => {
-      state.user_id = action.payload
+      state.user_id = action.payload;
     }
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(refreshAccessToken.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(refreshAccessToken.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(refreshAccessToken.rejected, (state) => {
+        state.loading = false;
+      });
+  }
 });
 
-export const { getToken, expireToken, getUserId } = userSlice.actions;
+export const { getToken, expireToken, getUserId, getNewToken } = userSlice.actions;
 export default userSlice.reducer;
-// // The function below is called a thunk and allows us to perform async logic. It
-// // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
-// // will call the thunk with the `dispatch` function as the first argument. Async
-// // code can then be executed and other actions can be dispatched
-// export const incrementAsync = (amount) => (dispatch) => {
-//   setTimeout(() => {
-//     dispatch(incrementByAmount(amount))
-//   }, 1000)
-// }
-
-// // The function below is called a selector and allows us to select a value from
-// // the state. Selectors can also be defined inline where they're used instead of
-// // in the slice file. For example: `useSelector((state) => state.counter.value)`
-// export const selectCount = (state) => state.counter.value
