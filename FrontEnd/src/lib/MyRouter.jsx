@@ -12,6 +12,7 @@ import ResetPwPage from "../pages/MyPage/ResetPwPage";
 import News from "../pages/PracticePage/sidebar/News";
 import Speech from "../pages/PracticePage/sidebar/Speech";
 import TestPage from "../pages/TestPage";
+import TestPage2 from "../pages/TestPage2";
 
 const Router = () => {
   return (
@@ -30,6 +31,7 @@ const Router = () => {
         <Route path="/patchinfo" element={<PatchInfoPage />} />
         <Route path="/resetpw" element={<ResetPwPage />} />
         <Route path="/test" element={<TestPage />} />
+        <Route path="/test2" element={<TestPage2 />} />
       </Routes>
     </BrowserRouter>
   );

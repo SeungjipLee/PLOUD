@@ -16,12 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class SpeechServiceImpl implements SpeechService{
+    private final FfmpegUtil ffmpegUtil;
 
-    @Autowired
-    private FfmpegUtil ffmpegUtil;
-
-    @Autowired
-    private EtriUtil etriUtil;
+    private final EtriUtil etriUtil;
 
     private int cnt = 0;
 

@@ -2,7 +2,6 @@ package com.ssafy.ploud.domain.speech.util;
 
 import com.google.gson.Gson;
 import com.ssafy.ploud.domain.speech.dto.response.ClearityResponse;
-import jakarta.annotation.PostConstruct;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -20,7 +19,6 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -44,6 +42,7 @@ public class EtriUtil {
     public void setLanguageCode(String languageCode){
         this.languageCode = languageCode;
     }
+
 
     public static ClearityResponse getScore(String audioContents){
         Gson gson = new Gson();
