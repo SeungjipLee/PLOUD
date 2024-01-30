@@ -3,15 +3,18 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import store from "./app/store";
 import { Provider } from "react-redux";
-// import '@fontsource/roboto/300.css';
-// import '@fontsource/roboto/400.css';
-// import '@fontsource/roboto/500.css';
-// import '@fontsource/roboto/300.css';
+import { StrictMode } from "react";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor } from "./app/persistor";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-
+persistor;
 root.render(
+  <StrictMode>
     <Provider store={store}>
-      <App />
+      <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
+        <App />
+      </PersistGate>
     </Provider>
+  </StrictMode>
 );
