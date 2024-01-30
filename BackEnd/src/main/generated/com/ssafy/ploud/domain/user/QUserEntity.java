@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -40,6 +41,8 @@ public class QUserEntity extends EntityPathBase<UserEntity> {
     public final DateTimePath<java.time.LocalDateTime> restrictDate = createDateTime("restrictDate", java.time.LocalDateTime.class);
 
     public final EnumPath<Role> role = createEnum("role", Role.class);
+
+    public final ListPath<com.ssafy.ploud.domain.speech.SpeechEntity, com.ssafy.ploud.domain.speech.QSpeechEntity> speechEntityList = this.<com.ssafy.ploud.domain.speech.SpeechEntity, com.ssafy.ploud.domain.speech.QSpeechEntity>createList("speechEntityList", com.ssafy.ploud.domain.speech.SpeechEntity.class, com.ssafy.ploud.domain.speech.QSpeechEntity.class, PathInits.DIRECT2);
 
     public final StringPath userId = createString("userId");
 
