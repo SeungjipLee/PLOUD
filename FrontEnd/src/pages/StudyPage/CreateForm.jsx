@@ -10,10 +10,13 @@ const CreateForm = () => {
     isSecret: false,
   });
   const token = useSelector((state) => state.userReducer.token.accessToken);
+  const [FSD, setFSD] = useState(undefined)
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // 방 생성 엑시오스 요청보내기
+    setFSD(e)
+
   };
 
   const handleChange = (e) => {
@@ -23,7 +26,7 @@ const CreateForm = () => {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <label for="roomName">
+        <label htmlFor="roomName">
           <p>방 이름</p>
           <input
             type="text"
@@ -32,7 +35,7 @@ const CreateForm = () => {
             onChange={handleChange}
           />
         </label>
-        <label for="numberOfPeople">
+        <label htmlFor="numberOfPeople">
           <p>인원</p>
           <input
             type="number"
@@ -42,14 +45,14 @@ const CreateForm = () => {
             max="6"
           />
         </label>
-        <label for="category">
+        <label htmlFor="category">
           <p>카테고리</p>
           <select id="category">
             <option>면접</option>
             <option>발표</option>
           </select>
         </label>
-        <label for="password">
+        <label htmlFor="password">
           <p>비밀번호</p>
           <input
             type="password"
@@ -58,17 +61,13 @@ const CreateForm = () => {
             onChange={handleChange}
           />
         </label>
-        <form>
-          <label for="public">
-            <p>공개</p>
-            <input type="radio" id="public" onChange={handleChange} checked />
-          </label>
-          <label for="private">
-            <p>비공개</p>
-            <input type="radio" id="private" onChange={handleChange} />
-          </label>
-        </form>
+
+        <label htmlFor="public">공개</label>
+        <input type="radio" name="isSecret" id="public" value="false" onChange={handleChange} />
+        <label htmlFor="private">비공개</label>
+        <input type="radio" name="isSecret" id="private" value="true" onChange={handleChange} />
       </form>
+      {FSD}
     </>
   );
 };

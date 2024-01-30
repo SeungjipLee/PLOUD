@@ -54,3 +54,23 @@ useDispatch : dispatch action 수행
 
 1. axios 요청시 url 이 틀렸을 때 : localhost 사용자로그인 창이 뜸
 - backend url 확인 후 수정
+
+2. setState : 이벤트호출 시 상태를 변경하려면 이벤트 핸들러 함수는 따로 만들어서 사용
+
+- 오류 사례
+컴포넌트가 렌더링될 때 즉시 호출되는 코드 
+React의 상태 업데이트 함수가 이벤트 핸들러 내에서 호출되게끔 해야 함
+```jsx
+<div onClick={setIsUserIdValid(!isUserIdValid)}>취소</div>
+```
+- 해결
+```jsx
+// 컴포넌트 영역
+const handlerClick = () => {
+  setIsUserIdValid(!isUserIdValid)
+}
+// 리턴 영역
+<div onClick={handlerClick}>취소</div>
+// 혹은
+<div onClick={() => setIsUserIdValid(!isUserIdValid)}>취소</div>
+```
