@@ -3,23 +3,30 @@ import { useSelector } from "react-redux";
 
 const CreateForm = () => {
   const [formData, setFormData] = useState({
-    roomName: "",
-    numberOfPeople: 0,
-    category: "",
-    password: "",
-    isSecret: false,
+    roomName: undefined,
+    numberOfPeople: undefined,
+    category: undefined,
+    password: undefined,
   });
   const token = useSelector((state) => state.userReducer.token.accessToken);
-  const [FSD, setFSD] = useState(undefined)
+  const [FSD, setFSD] = useState(undefined);
+  const [isSecret, setIsSecret] = useState(false)
+
+  const handleClick = (e) => {
+    console.log("event", e.target.value)
+    setIsSecret(e.target.value == "true" ? true : false)
+    console.log("state", isSecret)
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // 방 생성 엑시오스 요청보내기
-    setFSD(e)
-
+    setFSD(e);
   };
 
   const handleChange = (e) => {
+    console.log(e);
+    console.log(formData.isSecret)
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -52,20 +59,44 @@ const CreateForm = () => {
             <option>발표</option>
           </select>
         </label>
+
         <label htmlFor="password">
           <p>비밀번호</p>
-          <input
-            type="password"
-            id="password"
-            value={formData.password}
-            onChange={handleChange}
-          />
+          {isSecret && (
+            <input
+              type="password"
+              id="password"
+              value={formData.password}
+              onChange={handleChange}
+            />
+          )}
+          {!isSecret && (
+            <input
+              type="password"
+              id="password"
+              value={formData.password}
+              onChange={handleChange}
+              disabled
+            />
+          )}
         </label>
 
         <label htmlFor="public">공개</label>
-        <input type="radio" name="isSecret" id="public" value="false" onChange={handleChange} />
+        <input
+          type="radio"
+          name="isSecret"
+          id="public"
+          value="false"
+          onClick={handleClick}
+        />
         <label htmlFor="private">비공개</label>
-        <input type="radio" name="isSecret" id="private" value="true" onChange={handleChange} />
+        <input
+          type="radio"
+          name="isSecret"
+          id="private"
+          value="true"
+          onClick={handleClick}
+        />
       </form>
       {FSD}
     </>

@@ -1,4 +1,4 @@
-function Modal({ title, children, onClose }) {
+function Modal({ title, children, onClose, buttonName }) {
   return (
     <div>
       <div
@@ -12,9 +12,10 @@ function Modal({ title, children, onClose }) {
           zIndex: 1000,
         }}
       >
+        <button onClick={onClose}>x</button>
         <h1>{title}</h1>
         {children}
-        <button onClick={onClose}>닫기</button>
+        <button>{buttonName}</button>
       </div>
     </div>
   );

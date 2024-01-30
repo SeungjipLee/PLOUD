@@ -74,3 +74,22 @@ const handlerClick = () => {
 // 혹은
 <div onClick={() => setIsUserIdValid(!isUserIdValid)}>취소</div>
 ```
+
+3. e.target.value 는 텍스트라서 "true" "false" 라 반환해도 boolean 값으로 사용할 수가 없더라
+그래서 
+```jsx
+setIsSecret(e.target.value == "true" ? true : false)
+```
+로 사용했음
+
+4. 미해결 - Redux non-serializable value 에 관한 이슈
+이게 뭘까....
+VM999:6 A non-serializable value was detected in an action, in the path: `register`. Value: ƒ register(key) {
+    _pStore.dispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_0__.REGISTER,
+      key: key
+    });
+  } 
+Take a look at the logic that dispatched this action:  {type: 'persist/PERSIST', register: ƒ, rehydrate: ƒ} 
+(See https://redux.js.org/faq/actions#why-should-type-be-a-string-or-at-least-serializable-why-should-my-action-types-be-constants) 
+(To allow non-serializable values see: https://redux-toolkit.js.org/usage/usage-guide#working-with-non-serializable-data)
