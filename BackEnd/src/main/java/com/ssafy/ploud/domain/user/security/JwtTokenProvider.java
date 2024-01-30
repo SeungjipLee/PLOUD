@@ -43,26 +43,9 @@ public class JwtTokenProvider {
   public JwtAuthResponse generateToken(String userId) {
 
     // access token 생성
-//    Date currentDate = new Date();
-//    Date accessTokenExpireDate = new Date(currentDate.getTime() + accessTokenExpirationDate);
-
     String accessToken = generateToken(userId, accessTokenExpirationDate);
-//    String accessToken = Jwts.builder()
-//        .subject(userId)
-//        .issuedAt(new Date())
-//        .expiration(accessTokenExpireDate)
-//        .signWith(key())
-//        .compact();
-
     // refresh token 생성
-//    Date refreshTokenExpireDate = new Date(currentDate.getTime() + refreshTokenExpirationDate);
     String refreshToken = generateToken(userId, refreshTokenExpirationDate);
-//    String refreshToken = Jwts.builder()
-//        .subject(userId)
-//        .issuedAt(new Date())
-//        .expiration(refreshTokenExpireDate)
-//        .signWith(key())
-//        .compact();
 
     return new JwtAuthResponse(refreshToken, accessToken, "Bearer");
   }

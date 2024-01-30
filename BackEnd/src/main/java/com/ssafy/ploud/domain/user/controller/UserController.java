@@ -1,5 +1,6 @@
 package com.ssafy.ploud.domain.user.controller;
 
+import com.ssafy.ploud.common.exception.DuplicateException;
 import com.ssafy.ploud.common.exception.UserNotFoundException;
 import com.ssafy.ploud.common.response.ApiResponse;
 import com.ssafy.ploud.common.response.ResponseStatus;
@@ -7,8 +8,8 @@ import com.ssafy.ploud.domain.user.dto.EmailVerifyReqDto;
 import com.ssafy.ploud.domain.user.dto.FindIdReqDto;
 import com.ssafy.ploud.domain.user.dto.FindIdResDto;
 import com.ssafy.ploud.domain.user.dto.FindPwReqDto;
-import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
+import com.ssafy.ploud.domain.user.dto.LoginResDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
 import com.ssafy.ploud.domain.user.dto.UserInfoResDto;
 import com.ssafy.ploud.domain.user.dto.UserInfoUpdateReqDto;
@@ -53,10 +54,10 @@ public class UserController {
 
   @Operation(summary = "로그인", description = "아이디, 비밀번호로 로그인한다")
   @PostMapping("/login")
-  public ApiResponse<JwtAuthResponse> login(@RequestBody LoginReqDto reqDto) {
+  public ApiResponse<LoginResDto> login(@RequestBody LoginReqDto reqDto) {
     try {
-      JwtAuthResponse token = userService.login(reqDto);
-      return ApiResponse.ok("로그인 성공", token);
+      LoginResDto loginRes = userService.login(reqDto);
+      return ApiResponse.ok("로그인 성공", loginRes);
     } catch (UserNotFoundException e) {
       return ApiResponse.failure("입력이 올바른지 확인해주세요", ResponseStatus.UNAUTHORIZED);
     } catch (Exception e) {
@@ -138,6 +139,8 @@ public class UserController {
       return ApiResponse.ok("닉네임 수정 완료", res);
     } catch (UserNotFoundException e) {
       return ApiResponse.failure("해당 유저가 존재하지 않습니다", ResponseStatus.NOT_FOUND);
+    } catch (DuplicateException e) {
+      return ApiResponse.failure("이미 등록된 닉네임입니다.", ResponseStatus.CONFLICT);
     } catch (Exception e) {
       e.printStackTrace();
       return ApiResponse.error("닉네임 수정 중 오류 발생");

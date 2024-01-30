@@ -1,8 +1,8 @@
 package com.ssafy.ploud.domain.user.service;
 
 import com.ssafy.ploud.domain.user.dto.FindIdResDto;
-import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
+import com.ssafy.ploud.domain.user.dto.LoginResDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
 import com.ssafy.ploud.domain.user.dto.UserInfoResDto;
 import java.io.IOException;
@@ -13,7 +13,7 @@ public interface UserService {
 
   public void signUp(SignUpReqDto reqDto);
 
-  public JwtAuthResponse login(LoginReqDto reqDto);
+  public LoginResDto login(LoginReqDto reqDto);
 
   public boolean isUserIdAvailable(String userId); // 아이디 중복 체크
 
