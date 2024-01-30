@@ -2,6 +2,8 @@ package com.ssafy.ploud.domain.user;
 
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -38,6 +40,9 @@ public class UserEntity {
   @NotNull
   private LocalDateTime joinDate;
 
+  @Enumerated(EnumType.STRING)
+  private Role role;
+
   public static UserEntity createNewUser(SignUpReqDto reqDto, String encryptedPassword) {
     UserEntity newUser = new UserEntity();
     newUser.userId = reqDto.getUserId();
@@ -51,7 +56,20 @@ public class UserEntity {
     newUser.complainCount = 0;
     newUser.restrictDate = null;
     newUser.joinDate = LocalDateTime.now();
+    newUser.role = Role.USER;
     return newUser;
+  }
+
+  public void updateUserNickname(String nickname) {
+    this.nickname = nickname;
+  }
+
+  public void updateUserProfileImg(String profileImg) {
+    this.profileImg = profileImg;
+  }
+
+  public void updateUserPassword(String password) {
+    this.password = password;
   }
 
 }

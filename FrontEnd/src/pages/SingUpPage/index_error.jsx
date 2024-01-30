@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { request } from "../../lib/axios";
 import { useSelector, useDispatch } from "react-redux";
 import { signup } from "../../features/user/userSlice";
 import Page from "../../components/Page";
@@ -8,52 +9,30 @@ import MainPage from "../MainPage";
 import Button from "../../components/Button";
 import SocialLogin from "../LoginPage/SocialLogin";
 
-const SignUpPage = () => {
-  const [userId, setUserId] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-  const [nickname, setNickname] = useState("");
-  const [name, setName] = useState("");
-  const dispatch = useDispatch();
+const SignUpPage = async () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    password2: "",
+    nickname: "",
+    userId: "",
+    birthYear: "",
+  });
 
-  const onUserIdHandler = (event) => {
-    setUserId(event.target.value);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  const onEmailHandler = (event) => {
-    setEmail(event.target.value);
-  };
-  const onPasswordHandler = (event) => {
-    setPassword(event.target.value);
-  };
-  const onPassword2Handler = (event) => {
-    setPassword2(event.target.value);
-  };
-  const onNicknameHandler = (event) => {
-    setNickname(event.target.value);
-  };
-  const onNameHandler = (event) => {
-    setName(event.target.value);
-  };
-  const onSubmitHandler = (event) => {
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (password === password2) {
-      let body = {
-        user_id: userId,
-        email: email,
-        name: name,
-        password: password,
-        nickname: nickname,
-      };
-      dispatch(signup(body))
-      // dispatch(signup(body)).then((response) => {
-      //   alert("가입이 정상적으로 완료되엇습니다.");
-      //   props.history.push("/login");
-      // });
-    } else {
+
+    if (formData.password !== formData.password2) {
       alert("비밀번호가 일치하지 않습니다.");
+      return;
     }
-    console.log(event);
+
+    request("post", "/user/signup", formData);
   };
 
   return (
@@ -63,40 +42,40 @@ const SignUpPage = () => {
       </Link>
       <div className="box">
         <h2>Sign Up</h2>
-        <form onSubmit={onSubmitHandler}>
+        <form onSubmit={handleSubmit}>
           <div className="signup-input">
             <input
               type="text"
-              value={userId}
+              value={formData.userId}
               placeholder="id"
-              onChange={onUserIdHandler}
+              onChange={handleChange}
             />
             <Button>중복확인</Button>
           </div>
           <div className="signup-input">
             <input
               type="email"
-              value={email}
+              value={formData.email}
               placeholder="email"
-              onChange={onEmailHandler}
+              onChange={handleChange}
             />
             <Button>이메일 확인</Button>
           </div>
           <div className="signup-input">
             <input
               type="text"
-              value={nickname}
+              value={formData.nickname}
               placeholder="nickname"
-              onChange={onNicknameHandler}
+              onChange={handleChange}
             />
             <Button>중복 확인</Button>
           </div>
           <div className="signup-input">
             <input
               type="text"
-              value={name}
+              value={formData.name}
               placeholder="name"
-              onChange={onNameHandler}
+              onChange={handleChange}
             />
           </div>
           <div className="signup-input">
@@ -106,18 +85,20 @@ const SignUpPage = () => {
             </p>
             <input
               type="password"
-              value={password}
+              value={formData.password}
               placeholder="password"
-              onChange={onPasswordHandler}
+              onChange={handleChange}
             />
           </div>
           <div className="signup-input">
-            {password !== password2 && <p>비밀번호가 일치하지 않습니다.</p>}
+            {formData.password !== formData.password2 && (
+              <p>비밀번호가 일치하지 않습니다.</p>
+            )}
             <input
               type="password"
-              value={password2}
+              value={formData.password2}
               placeholder="password check"
-              onChange={onPassword2Handler}
+              onChange={handleChange}
             />
           </div>
           <Button type="submit">Sign Up</Button>
@@ -128,4 +109,4 @@ const SignUpPage = () => {
   );
 };
 
-export default SignUpPage;
+// export default SignUpPage;

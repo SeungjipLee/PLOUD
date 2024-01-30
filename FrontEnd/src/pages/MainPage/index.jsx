@@ -55,7 +55,7 @@ class MainPage extends React.Component {
 
   render() {
     return (
-      <div className="MainPage">
+      <div className="Main">
         <Page header={<Navbar />} footer={<Footer />}>
           <div className="Main1">
             <img src="images/Main1.png" alt="Main1.png" />
