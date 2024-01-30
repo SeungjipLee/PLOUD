@@ -406,3 +406,23 @@ code {
   margin-bottom: 0;
 }
 /*# sourceMappingURL=main.e9124b97.css.map*/
+table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+}

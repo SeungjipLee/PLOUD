@@ -1,20 +1,16 @@
-import React from 'react'
-import Navbar from '../../components/Navbar';
+import React from "react";
+import { NavLink } from "react-router-dom";
+import Navbar from "../../components/Navbar";
+import Sidebar from "../../components/Sidebar";
 
-class PracticePage extends React.Component {
-  constructor() {
-    super();
-    this.state = {};
-  }
-
-  render() {
-    return (
-      <>
-        <Navbar />
-        <h1>연습페이지</h1>
-      </>
-    );
-  }
-}
+const PracticePage = () => {
+  return (
+    <>
+      <Navbar />
+      <h1>연습페이지</h1>
+      <Sidebar />
+    </>
+  );
+};
 
 export default PracticePage;

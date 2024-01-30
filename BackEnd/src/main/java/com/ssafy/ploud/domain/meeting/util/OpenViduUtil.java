@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,7 @@ public class OpenViduUtil {
     @Getter
     private Map<String, Boolean> sessionRecordings = new ConcurrentHashMap<>();
 
+    @Autowired
     public OpenViduUtil(@Value("${openvidu.url}") String OPENVIDU_URL,
         @Value("${openvidu.secret}") String OPENVIDU_SECRET) {
         this.openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);

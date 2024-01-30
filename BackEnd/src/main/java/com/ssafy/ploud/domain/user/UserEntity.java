@@ -1,19 +1,24 @@
 package com.ssafy.ploud.domain.user;
 
+import com.ssafy.ploud.domain.speech.SpeechEntity;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.Year;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name="Users")
+@Table(name = "users")
 @Getter
 @Setter
 public class UserEntity {
@@ -43,6 +48,9 @@ public class UserEntity {
   @Enumerated(EnumType.STRING)
   private Role role;
 
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  List<SpeechEntity> speechEntityList = new ArrayList<>();
+
   public static UserEntity createNewUser(SignUpReqDto reqDto, String encryptedPassword) {
     UserEntity newUser = new UserEntity();
     newUser.userId = reqDto.getUserId();
@@ -70,6 +78,11 @@ public class UserEntity {
 
   public void updateUserPassword(String password) {
     this.password = password;
+  }
+
+  public void addSpeech(SpeechEntity speech) {
+    speechEntityList.add(speech);
+    speech.setUser(this);
   }
 
 }
