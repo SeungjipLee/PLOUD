@@ -42,5 +42,4 @@ public class SpeechController {
         System.out.println("명료도 점수 : " + clearitySpeedRequset.getScore());
         return ApiResponse.ok("등록 완료");
     }
-    
 }
