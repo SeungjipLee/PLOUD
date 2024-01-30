@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState,  } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const DataSubmitForm = () => {
   const [formData, setFormData] = useState({
@@ -13,8 +13,8 @@ const DataSubmitForm = () => {
     password_check: undefined,
     birthYear: undefined,
   });
-
-  const [isUserIdValid, setIsUserIdValid] = useState(true);
+  const [isUserIdValid, setIsUserIdValid] = useState(false);
+  const [isEmailPass, setIsEmailPass] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(false);
   const validateUserId = () => /^[A-Za-z0-9]{4,15}$/.test(formData.userId);
   const validateNickname = () =>
@@ -26,13 +26,7 @@ const DataSubmitForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  useEffect(() => {
-    if (isUserIdValid) {
-      // isUserIdValid가 true일 때 수행할 작업
-      console.log("UserId is valid now");
-    }
-  }, [isUserIdValid]);
-
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (
@@ -61,6 +55,7 @@ const DataSubmitForm = () => {
         );
         console.log(response.data);
         // 추가적인 성공 처리 로직
+        navigate('/login')
       } catch (error) {
         console.error("Error sending data", error);
         // 에러 처리 로직
@@ -72,7 +67,6 @@ const DataSubmitForm = () => {
     e.preventDefault();
     if (!validateUserId()) {
       alert("아이디 형식을 확인해주세요.");
-      return;
     }
     // 아이디 중복 검사 로직
     try {
@@ -81,12 +75,10 @@ const DataSubmitForm = () => {
         { userId: formData.userId },
         { withCredentials: true }
       );
-      console.log(response.data.status);
       // 추가적인 성공 처리 로직
       if (response.data.status == "200") {
-        setIsUserIdValid(!isUserIdValid);
         alert("사용 가능한 아이디입니다.");
-        console.log(isUserIdValid);
+        setIsUserIdValid(true);
       } else {
         alert("이미 사용 중인 아이디입니다.");
       }
@@ -106,10 +98,10 @@ const DataSubmitForm = () => {
         { email: formData.email },
         { withCredentials: true }
       );
-      console.log(response);
       // 추가적인 성공 처리 로직
       if (response.data.status == "200") {
         alert("가입 가능한 이메일입니다. 메일로 인증번호를 보냈습니다.");
+        setIsEmailPass(true);
       } else if (response.data.status == "409") {
         alert("이미 가입된 이메일입니다.");
       } else {
@@ -130,14 +122,12 @@ const DataSubmitForm = () => {
         { email: formData.email, code: formData.emailCode },
         { withCredentials: true }
       );
-      console.log(response);
       // 추가적인 성공 처리 로직
       if (response.data.status == "200") {
         alert("이메일 인증이 완료되었습니다.");
         setIsEmailValid(true);
       } else {
         alert("코드를 다시 확인해주세요.");
-        console.log({ email: formData.email, code: formData.emailCode });
       }
     } catch (error) {
       console.error("Error sending data", error);
@@ -157,16 +147,16 @@ const DataSubmitForm = () => {
       <h1>회원가입</h1>
       <form onSubmit={handleSubmit}>
         아이디 :
-        {isUserIdValid && (
+        {isUserIdValid && 
           <input
             type="text"
             name="userId"
             value={formData.userId}
             onChange={handleChange}
-            placeholder=" ex) ssafy"
+            placeholder=""
             disabled
           />
-        )}
+        }
         {!isUserIdValid && (
           <input
             type="text"
@@ -176,32 +166,62 @@ const DataSubmitForm = () => {
             placeholder=" ex) ssafy"
           />
         )}
-        {!isUserIdValid && <div onClick={handleCheckId}>중복확인</div>}
-        {isUserIdValid && (
-          <div onClick={setIsUserIdValid(!isUserIdValid)}>취소</div>
+        {!isUserIdValid && (<span onClick={handleCheckId}>중복확인</span>)}
+        {isUserIdValid && (<span onClick={() => setIsUserIdValid(false)}>취소</span>)}
+        <br />
+        <br />
+        이메일 :
+        {isEmailPass && 
+          <input
+            type="email"
+            name="userId"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder=""
+            disabled
+          />
+        }
+        {!isEmailPass && (
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder=" ex) ssafy@ssafy.com"
+          />
         )}
-        <br />
-        <br /> 이메일 :
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          placeholder=" ex) ssafy@ssafy.com"
-        />
-        <div onClick={handleCheckEmail}>중복확인</div>
-        <br />
-        <br /> 이메일 코드 확인:
-        <input
-          type="text"
-          name="emailCode"
-          value={formData.emailCode}
-          onChange={handleChange}
-          placeholder=" ex) xAdsXZ"
-        />
-        <div onClick={handleCheckEmailCode}>이메일 인증</div>
+        {!isEmailPass && (<span onClick={handleCheckEmail}>중복확인</span>)}
+        {isEmailPass && (<span onClick={() => setIsEmailPass(false)}>취소</span>)}
         <br />
         <br />
+        이메일 코드 확인:
+        {isEmailValid && 
+          <input
+            type="text"
+            name="emailCode"
+            value={formData.emailCode}
+            onChange={handleChange}
+            placeholder=""
+            disabled
+          />
+        }
+        {!isEmailValid && (
+          <input
+            type="text"
+            name="emailCode"
+            value={formData.emailCode}
+            onChange={handleChange}
+            placeholder=" ex) xAdsXZ"
+          />
+        )}
+        {!isEmailValid && (<span onClick={handleCheckEmailCode}>인증</span>)}
+        {/* {isEmailValid && (<span onClick={() => setIsEmailValid(false)}>취소</span>)}
+         */}
+        <br />
+        <br />
+        
+        
+        
         이름 :
         <input
           type="text"
