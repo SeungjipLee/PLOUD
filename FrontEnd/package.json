@@ -2,11 +2,12 @@
   "name": "frontend",
   "version": "1.0.0",
   "description": "",
-  "main": "src/main.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack serve --env development",
-    "start": "set PORT=3000 && webpack serve --config ./webpack.config.js"
+    "start": "webpack --config ./webpack.config.js",
+    "build": "react-scripts build"
   },
   "author": "Junhyung Bae <wnsgud0895@gmail.com>",
   "license": "ISC",

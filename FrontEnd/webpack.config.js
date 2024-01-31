@@ -8,7 +8,7 @@ module.exports = {
   },
   // main.js를 대상으로 웹팩이 빌드를 수행
   entry: {
-    main: ["./src/main.js"],
+    main: ["./src/index.js"],
   },
   module: {
     rules: [
