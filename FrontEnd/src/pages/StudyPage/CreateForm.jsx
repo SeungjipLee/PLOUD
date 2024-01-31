@@ -10,23 +10,52 @@ const CreateForm = () => {
   });
   const token = useSelector((state) => state.userReducer.token.accessToken);
   const [FSD, setFSD] = useState(undefined);
-  const [isSecret, setIsSecret] = useState(false)
+  const [isSecret, setIsSecret] = useState(false);
+  const API_URL = "http://localhost:8000/api/meeting/";
 
   const handleClick = (e) => {
-    console.log("event", e.target.value)
-    setIsSecret(e.target.value == "true" ? true : false)
-    console.log("state", isSecret)
-  }
+    console.log("event", e.target.value);
+    setIsSecret(e.target.value == "true" ? true : false);
+    console.log("state", isSecret);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // 방 생성 엑시오스 요청보내기
+    axios
+      .post(
+        API_URL + "create",
+        {
+          managerId: "",
+          categoryId: "",
+          title: "",
+          maxPeoeple: 1,
+          isPrivate: false,
+          password: "",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.accessToken}`,
+          },
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        console.log(response);
+
+        if (response.data.status == 200) {
+          return response.data;
+        } else {
+          throw new Error("방 목록 조회 실패");
+        }
+      })
+      .catch((e) => console.log(e));
     setFSD(e);
   };
 
   const handleChange = (e) => {
     console.log(e);
-    console.log(formData.isSecret)
+    console.log(formData.isSecret);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 

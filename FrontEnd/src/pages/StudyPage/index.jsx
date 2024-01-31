@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 
 const StudyPage = () => {
   const [modal, setModal] = useState(false);
-  const [serachKeyword, setSearchKeyword] = useState(undefined)
+  const [serachKeyword, setSearchKeyword] = useState("")
   const dispatch = useDispatch();
   const API_URL = "http://localhost:8000/api/meeting/";
 
@@ -43,7 +43,6 @@ const StudyPage = () => {
 
   const handleChange = (e) => {
     setSearchKeyword(e.target.value)
-    console.log(serachKeyword)
   }
 
   const changeModalState = () => {
