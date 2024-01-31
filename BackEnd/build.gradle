@@ -68,7 +68,6 @@ dependencies {
 
     // JSON
     implementation 'org.json:json:20231013'
-
 }
 
 tasks.named('test') {
