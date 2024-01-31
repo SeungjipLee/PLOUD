@@ -5,7 +5,7 @@
   "main": "src/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "set PORT=3000 && webpack serve --env development",
+    "dev": "set port=3000 && webpack serve --env development",
     "build": "webpack --config ./webpack.config.js"
   },
   "author": "Junhyung Bae <wnsgud0895@gmail.com>",

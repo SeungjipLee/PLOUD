@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MeetingServiceImpl implements MeetingService {
 
-    private OpenViduUtil openViduUtil;
+    private final OpenViduUtil openViduUtil;
 
     @Override
     public List<MeetingInfo> list(MeetingSearchRequest request) {
