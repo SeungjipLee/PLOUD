@@ -1,7 +1,7 @@
 package com.ssafy.ploud.domain.speech;
 
 import com.ssafy.ploud.domain.feedback.FeedbackEntity;
-import com.ssafy.ploud.domain.score.ScoreEntity;
+import com.ssafy.ploud.domain.record.ScoreEntity;
 import com.ssafy.ploud.domain.script.ScriptEntity;
 import com.ssafy.ploud.domain.user.UserEntity;
 import com.ssafy.ploud.domain.video.VideoEntity;

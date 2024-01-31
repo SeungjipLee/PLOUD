@@ -1,5 +1,13 @@
 package com.ssafy.ploud.domain.speech.dto.request;
 
-public class SpeechEndRequest {
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@RequiredArgsConstructor
+public class SpeechEndRequest {
+    int speechId;
+    int[] decibels;
 }

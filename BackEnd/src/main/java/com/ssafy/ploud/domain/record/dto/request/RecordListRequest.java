@@ -7,11 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class RecordStartRequest {
-    String sessionId;
-    Boolean hasAudio;
-    Boolean hasVideo;
-
-    // COMPOSED, INDIVIDUAL, COMPOSED_QUICK_START
-    String outputMode;
+public class RecordListRequest {
+    String userId;
+    int pageSize;
 }

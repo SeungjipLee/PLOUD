@@ -1,16 +1,9 @@
 package com.ssafy.ploud.domain.record.service;
 
 import com.ssafy.ploud.domain.meeting.util.OpenViduUtil;
-import com.ssafy.ploud.domain.record.dto.request.RecordStartRequest;
-import io.openvidu.java.client.OpenViduHttpException;
-import io.openvidu.java.client.OpenViduJavaClientException;
 import io.openvidu.java.client.Recording;
 import io.openvidu.java.client.RecordingProperties;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class RecordStartResponse {
-    Recording recording;
+public class RecordListResponse {
+    // Speech Entity List
 }
