@@ -10,7 +10,8 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getToken, getUserId } from "../../features/user/userSlice";
 import { useState } from "react";
-import AuthService from "../LoginPage/Service/AuthService";
+// import AuthService from "../LoginPage/Service/AuthService";
+import { login } from "../../services/user";
 
 const LoginPage = () => {
   let navigate = useNavigate();
@@ -22,7 +23,7 @@ const LoginPage = () => {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    AuthService.login(Id, Pw)
+    login(Id, Pw)
       .then((res) => {
         dispatch(getToken(res));
         dispatch(getUserId(Id));
