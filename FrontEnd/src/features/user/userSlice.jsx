@@ -12,6 +12,53 @@ const initialState = {
   loading: false,
 };
 
+export const userSlice = createSlice({
+  name: "user",
+  initialState,
+  reducers: {
+    getToken: (state, action) => {
+      state.isLogined = true;
+      state.token = {
+        accessToken: action.payload.data.accessToken,
+        refreshToken: action.payload.data.refreshToken,
+        tokenType: action.payload.data.tokenType
+      }
+      state.nickname = action.payload.data.nickname; // 추가: nickname 정보 저장
+    },
+    getNewToken: (state, action) => {
+      state.token = action.payload.data
+    },
+    expireToken: (state) => {
+      state.isLogined = false;
+      state.token = { accessToken: "", refreshToken: "", tokenType: "" };
+      state.nickname = ""; // 추가: 로그아웃 시 nickname 초기화
+    },
+    getUserId: (state, action) => {
+      state.user_id = action.payload;
+    },
+    updateNickname: (state, action) => {
+      state.nickname = action.payload;
+    }
+  },
+});
+
+export const { getToken, expireToken, getUserId, getNewToken, updateNickname } = userSlice.actions;
+export default userSlice.reducer;
+
+
+  // extraReducers: (builder) => {
+  //   builder
+  //     .addCase(refreshAccessToken.pending, (state) => {
+  //       state.loading = true;
+  //     })
+  //     .addCase(refreshAccessToken.fulfilled, (state) => {
+  //       state.loading = false;
+  //     })
+  //     .addCase(refreshAccessToken.rejected, (state) => {
+  //       state.loading = false;
+  //     });
+  // }
+
 // export const refreshAccessToken = createAsyncThunk(
 //   'user/refreshAccessToken',
 //   async (_, { getState, dispatch }) => {
@@ -33,49 +80,3 @@ const initialState = {
 //     }
 //   }
 // );
-
-export const userSlice = createSlice({
-  name: "user",
-  initialState,
-  reducers: {
-    getToken: (state, action) => {
-      state.isLogined = true;
-      state.token = {
-        accessToken: action.payload.data.accessToken,
-        refreshToken: action.payload.data.refreshToken,
-        tokenType: action.payload.data.tokenType
-      }
-      state.nickname = action.payload.data.nickname; // 추가: nickname 정보 저장
-      console.log(state.token, state.nickname)
-    },
-    getNewToken: (state, action) => {
-      state.token = action.payload.data
-    },
-    expireToken: (state) => {
-      state.isLogined = false;
-      state.token = { accessToken: "", refreshToken: "", tokenType: "" };
-      state.nickname = ""; // 추가: 로그아웃 시 nickname 초기화
-    },
-    getUserId: (state, action) => {
-      state.user_id = action.payload;
-    },
-    updateNickname: (state, action) => {
-      state.nickname = action.payload;
-    }
-  },
-  // extraReducers: (builder) => {
-  //   builder
-  //     .addCase(refreshAccessToken.pending, (state) => {
-  //       state.loading = true;
-  //     })
-  //     .addCase(refreshAccessToken.fulfilled, (state) => {
-  //       state.loading = false;
-  //     })
-  //     .addCase(refreshAccessToken.rejected, (state) => {
-  //       state.loading = false;
-  //     });
-  // }
-});
-
-export const { getToken, expireToken, getUserId, getNewToken, updateNickname } = userSlice.actions;
-export default userSlice.reducer;

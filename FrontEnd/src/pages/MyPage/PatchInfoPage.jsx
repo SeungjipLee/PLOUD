@@ -26,32 +26,32 @@ const PatchInfoPage = () => {
 //   const handleSubmit = async (e) => {
 //     e.preventDefault();
   
-//     try {
-//       const formData = { newValue: newNickname };
-//       const response = await axios.patch(
-//         "http://localhost:8000/api/user/nickname",
-//         formData,
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token.accessToken}`
-//           },
-//           withCredentials: true
-//         }
-//       );
+  //   try {
+  //     const formData = { newValue: newNickname };
+  //     const response = await axios.patch(
+  //       "http://localhost:8000/api/user/nickname",
+  //       formData,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token.accessToken}`
+  //         },
+  //         withCredentials: true
+  //       }
+  //     );
   
-//       if (response.data.status === 200) {
-//         alert("닉네임이 변경되었습니다.");
-//         dispatch(updateNickname(newNickname));
-//         navigate('/mypage');
-//       } else {
-//         alert("이미 사용 중인 닉네임입니다.");
-//       }
-//     } catch (error) {
-//       console.log(error)
-//       await dispatch(refreshAccessToken()).unwrap();
-//       handleSubmit(e); // 토큰 갱신 후 다시 시도
-//     }
-//   };
+  //     if (response.data.status === 200) {
+  //       alert("닉네임이 변경되었습니다.");
+  //       dispatch(updateNickname(newNickname));
+  //       navigate('/mypage');
+  //     } else {
+  //       alert("이미 사용 중인 닉네임입니다.");
+  //     }
+  //   } catch (error) {
+  //     console.log(error)
+  //     await dispatch(refreshAccessToken()).unwrap();
+  //     handleSubmit(e); // 토큰 갱신 후 다시 시도
+  //   }
+  // };
 
 
   return (

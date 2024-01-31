@@ -1,28 +1,19 @@
 import API from "../utils/Api";
-import axios from "axios";
 
-export const login = (id, password) => {
+
+// data = { userId: String, password: String }
+export const login = (data, success, fail) => {
   return API(null)
-    .post("user/login", {
-      userId: id,
-      password: password,
-    })
-    .then((res) => {
-      console.log(res);
-      if (res.data.status == 200) {
-        localStorage.setItem("user", JSON.stringify(res.data)); // local에 userData 저장
-        return res.data;
-      } else {
-        throw new Error("로그인 실패");
-      }
-    });
-};
+    .post("user/login", data)
+    .then(success)
+    .catch(fail)
+}
 
 
-export const signup = (data, sucess, fail) => {
+export const signup = (data, success, fail) => {
   return API(null)
     .post("user/signup", data)
-    .then(sucess)
+    .then(success)
     .catch(fail);
 };
 
@@ -51,6 +42,7 @@ export const verifyEmail = (data, success, fail) => {
 }
 
 
+// data = { nickname: String }
 export const checkNickname = (data, success, fail) => {
   return API(null)
     .post("user/nickname", data)
@@ -60,15 +52,65 @@ export const checkNickname = (data, success, fail) => {
 
 
 export const getProfile = (token, success, fail) => {
-  console.log(`Bearer ${token.accessToken}`)
+  // console.log(`Bearer ${token.accessToken}`)
   // return API(`Bearer ${token.accessToken}`)
-  //   .get("user/profile")
-  //   .then(success)
-  //   .catch(fail)
-  return axios.get(
-    "http://localhost:8000/api/user/profile",
-    {headers: { Authorization: `Bearer ${token.accessToken}`,
-    withCredentials: true}}
-  )
+  return API(token)
+    .get("user/profile")
+    .then(success)
+    .catch(fail)
 }
-// {headers: { Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwNjY5MDQ0MiwiZXhwIjoxNzA2Njk0MDQyfQ.cJBQ85-twWxnbz4L8Bin37RrsfAyImE9fKG2Mgpg2UI"}}
+
+
+// data = { token: credentialResponse.credential }
+export const googleLogin = (data, success, fail) => {
+  return API(null)
+    .post("auth/google")
+    .then(success)
+    .catch(fail)
+}
+
+
+// data = { newValue : String }
+export const patchNickname = (token, data, success, fail) => {
+  return API(token)
+    .patch("user/nickname", data)
+    .then(success)
+    .catch(fail)
+}
+
+
+// data = { newValue : String }
+export const patchPassword = (token, data, success, fail) => {
+  return API(token)
+    .patch("user/pw", data)
+    .then(success)
+    .catch(fail)
+}
+
+
+// 수정해야 함
+// header "Authorization": Bearer {access token}, "Content-Type": "multipart/form-data"
+export const postProfileImage = (token, success, fail) => {
+  return API(token)
+    .post("user/img", data)
+    .then(success)
+    .catch(fail)
+}
+
+
+// data = { email: String, name: String }
+export const findId = (data, success, fail) => {
+  return API(null)
+    .post("user/find-id", data)
+    .then(success)
+    .catch(fail)
+}
+
+
+// data = { userId: String, email: String }
+export const findPw = (data, success, fail) => {
+  return API(null)
+    .post("user/find-pw", data)
+    .then(success)
+    .catch(fail)
+}

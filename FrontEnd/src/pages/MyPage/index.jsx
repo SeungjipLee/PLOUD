@@ -10,9 +10,10 @@ import { useSelector } from "react-redux";
 const MyPage = () => {
   const { token } = useSelector((state) => state.userReducer)
   const profile = undefined;
-
+  console.log(null ? 'a' : 'b')
   useEffect(() => {
     const response = getProfile(
+      token,
       (res) => res,
       (err) => err
     );

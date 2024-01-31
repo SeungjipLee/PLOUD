@@ -23,15 +23,16 @@ const LoginPage = () => {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    login(Id, Pw)
-      .then((res) => {
-        dispatch(getToken(res));
+    login(
+      {userId: Id, password: Pw},
+      (res) => {
+        localStorage.setItem("user", JSON.stringify(res.data)); // local에 userData 저장
+        dispatch(getToken(res.data));
         dispatch(getUserId(Id));
         navigate("/");
-      })
-      .catch((e) => {
-        alert(e);
-      });
+      },
+      (err) => alert("아이디 혹은 비밀번호가 일치하지 않습니다.")
+      );
   };
 
   return (
