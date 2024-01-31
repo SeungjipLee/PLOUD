@@ -1,7 +1,6 @@
 package com.ssafy.ploud.domain.speech.util;
 
 import com.google.gson.Gson;
-import com.ssafy.ploud.domain.speech.dto.response.ClearityResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;

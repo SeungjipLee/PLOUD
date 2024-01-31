@@ -1,14 +1,11 @@
 package com.ssafy.ploud.domain.speech.service;
 
-import com.ssafy.ploud.domain.speech.dto.response.ClearityResponse;
 import com.ssafy.ploud.domain.speech.util.EtriUtil;
 import com.ssafy.ploud.domain.speech.util.FfmpegUtil;
 import java.io.File;
 import java.io.FileOutputStream;
-import javax.sound.sampled.AudioInputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,7 +20,7 @@ public class SpeechServiceImpl implements SpeechService{
     private int cnt = 0;
 
     @Override
-    public ClearityResponse clearityRating(MultipartFile audioFile) {
+    public boolean clearityRating(MultipartFile audioFile) {
         // 파일 경로
         String inputWavFile = "D:\\path\\to\\your\\upload\\directory\\in_" + cnt + ".wav";
         String outputWavFile = "D:\\path\\to\\your\\upload\\directory\\out_" + cnt++ + ".wav";
@@ -42,10 +39,10 @@ public class SpeechServiceImpl implements SpeechService{
             String audioContent = EtriUtil.fileToBase64(outputWavFile);
 
             // api 요청
-            return EtriUtil.getScore(audioContent);
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return false;
         } finally {
             dest.delete();
         }
