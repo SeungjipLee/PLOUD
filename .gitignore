@@ -186,7 +186,7 @@ $RECYCLE.BIN/
 *.lnk
 
 ### Gradle ###
-.gradle
+BackEnd/.gradle/
 **/build/
 !src/**/build/
 
