@@ -37,4 +37,6 @@ public interface UserService {
   public void getUserPasswordByEmailAndId(String email, String userId)
       throws MessagingException; // 회원 비밀번호 찾기
 
+  public String getUserIdByEmail(String userEmail); // 이메일로 사용자 아이디 찾기
+
 }

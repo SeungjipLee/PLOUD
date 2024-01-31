@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import javax.imageio.ImageIO;
 import javax.mail.MessagingException;
 import lombok.AllArgsConstructor;
@@ -160,6 +161,16 @@ public class UserServiceImpl implements UserService {
     System.out.println("임시 비밀번호: " + tempPassword);
     EmailSenderService.sendResetPasswordMail(user.getEmail(), tempPassword); // send mail
     user.updateUserPassword(bCryptPasswordEncoder.encode(tempPassword));     // update users table
+  }
+
+  @Transactional(readOnly = true)
+  public String getUserIdByEmail(String userEmail) {
+    Optional<UserEntity> user = userRepository.findByEmail(userEmail);
+    if (user.isEmpty()) {
+      return null;
+    } else {
+      return user.get().getUserId();
+    }
   }
 
 
