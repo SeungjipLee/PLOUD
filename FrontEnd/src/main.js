@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { StrictMode } from "react";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor } from "./app/persistor";
+import "./index.css"
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 persistor;

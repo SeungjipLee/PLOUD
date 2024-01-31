@@ -6,8 +6,6 @@ import { Link } from "react-router-dom";
 import PracticePage from "../PracticePage";
 import StudyPage from "../StudyPage";
 import API from '../../services/Api';
-import axios from 'axios'
-
 // 메인페이지
 
 // 로그인 전과 후로 나뉘며
@@ -58,20 +56,25 @@ class MainPage extends React.Component {
       <div className="Main">
         <Page header={<Navbar />} footer={<Footer />}>
           <div className="Main1">
-            <img src="images/Main1.png" alt="Main1.png" />
+            <img src="images/Main1.png" alt="Main1.png" className='w-full h-full object-cover'/>
           </div>
           <div className="Main2">
-            <video src="videos/cat.mp4" autoPlay loop />
-            <div className="card">오늘의 발표 수</div>
+            <div className="video mx-16 ms-36 me-12">
+              <video src="videos/cat.mp4" autoPlay loop />
+            </div>
+          <div className='Main2Container'>
+            <div className="mainBlueB text-white card mx-16 me-36 ms-12 text-center pt-5">Carousel</div>
+            <div className="mainBlueB text-white card mx-16 me-36 ms-12 text-center pt-5">오늘의 발표 수</div>
+          </div>
           </div>
           <div className="Main3">
-            <h2>스피치 실력을 키워볼까요?</h2>
-            <div className="card">
+            <h2 className='text-6xl text-center pt-24'>스피치 실력을 키워볼까요?</h2>
+            <div className="notcard">
               <Link to="/practice" element={<PracticePage />}>
                 혼자연습
               </Link>
             </div>
-            <div className="card">
+            <div className="notcard">
               <Link to="/study" element={<StudyPage />}>
                 함께연습
               </Link>

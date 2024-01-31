@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.Main1 {
+    height: 800px;
+}
+.Main2 {
+    height: 800px;
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.Main2Container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.Main3 {
+    height: 800px;
+    background-color: #EBEAFA;
+}
+.video {
+    width: 50%;
+    flex:4;
+}
+
+.card {
+    width:200px;
+    height: 200px;
+    margin-top: 30px;
+}
+
+.mainBlueF {
+    color: #0C134F;
+}
+.mainBlueB {
+    background-color: #0C134F;
+}
