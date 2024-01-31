@@ -12,4 +12,5 @@ public class AssessRequset {
     int speechId;
     MultipartFile audioFile;
     boolean isLast;
+
 }

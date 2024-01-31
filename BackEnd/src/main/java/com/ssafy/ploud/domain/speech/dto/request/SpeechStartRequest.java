@@ -9,5 +9,9 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class SpeechStartRequest {
     String userId;
+    String title;
+    boolean personal;
+    int categoryId;
     String sessionId;
+    int scriptId;
 }

@@ -37,5 +37,4 @@ public class FeedbackEntity {
     this.speech = speech;
   }
 
-
 }

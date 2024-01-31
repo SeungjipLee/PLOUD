@@ -1,6 +1,7 @@
 package com.ssafy.ploud.domain.speech.util;
 
 import com.google.gson.Gson;
+import com.ssafy.ploud.domain.speech.dto.ClearityDto;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -43,7 +44,7 @@ public class EtriUtil {
     }
 
 
-    public static ClearityResponse getScore(String audioContents){
+    public static ClearityDto getScore(String audioContents){
         Gson gson = new Gson();
 
         Map<String, Object> request = new HashMap<>();
@@ -78,7 +79,6 @@ public class EtriUtil {
             log.debug("ERTI API RESPONSE CODE : " + responseCode);
 
             // JSON 파싱 후 response 객체에 담아서 return
-            ClearityResponse response = null;
             if(responseCode.equals(200)){
                 JSONObject obj = new JSONObject(responBody);
                 JSONObject returnObject = obj.getJSONObject("return_object");
@@ -86,7 +86,7 @@ public class EtriUtil {
                 String recognized = returnObject.getString("recognized");
                 String score = returnObject.getString("score");
 
-                int cnt = countKoreanCharacters(recognized);
+                int scriptCnt = countKoreanCharacters(recognized);
 
                 float floatScore;
 
@@ -96,9 +96,7 @@ public class EtriUtil {
                     floatScore = 0;
                 }
 
-                response = new ClearityResponse(recognized, cnt, floatScore);
-
-                return response;
+                return new ClearityDto(recognized, scriptCnt, floatScore);
             }else{
                 return null;
             }

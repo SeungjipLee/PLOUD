@@ -59,6 +59,11 @@ public class OpenViduUtil {
             .equals(request.getPassword())) {
             return "비밀번호 오류";
         }
+        // 현재 녹화가 진행 중
+//        else if(/* 녹화 진행 중*/){
+//
+//        }
+
         // 접속
         meetingInfo.setCurrentPeople(meetingInfo.getCurrentPeople() + 1);
 
