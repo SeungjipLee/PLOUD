@@ -28,7 +28,7 @@ public class MeetingController {
 
     @PostMapping("/detail")
     public ApiResponse<?> detailMeeting(@RequestBody String sessionId) {
-        if (meetingService.findBySessionId(sessionId) == null) {
+        if (meetingService.detail(sessionId) == null) {
             return ApiResponse.failure("방을 찾을 수 없음", ResponseStatus.NOT_FOUND);
         }
         return ApiResponse.ok("조회 성공", meetingService.detail(sessionId));

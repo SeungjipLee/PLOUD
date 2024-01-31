@@ -9,7 +9,7 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class MeetingCreateRequest {
     private String managerId;
-    private String categoryId;
+    private int categoryId;
     private String title;
     private int maxPeople;
     private Boolean isPrivate;

@@ -26,10 +26,15 @@ const TestPage = () => {
   const [totalCnt, setTotalCnt] = useState(0);
   const [totalScore, setTotalScore] = useState(0);
   const [requestCount, setRequestCount] = useState(0);
+  const [showDiv, setShowDiv] = useState(false);
 
   const [decibel, setDecibel] = useState(0);
 
   const startRecording = () => {
+    setShowDiv(false);
+    setScript("");
+    setTotalCnt(0);
+    setTotalScore(0);
     console.log("녹음 시작")
     isRecording.current = true; 
     audioChunksRef.current = []; // 오디오 청크를 새 배열로 초기화
@@ -82,6 +87,9 @@ const TestPage = () => {
           var average = sum / storedData.length;
 
           setDecibel(Math.max(Math.round(38 * Math.log10(average)), 0));
+          // 배열에 푸시하고
+          // decibel[]
+          //
           // const decibels = 38 * Math.log10(average);
 
           setTimeout(analyzeAudio, 100);
@@ -93,7 +101,7 @@ const TestPage = () => {
           if (recorder.state === "recording") {
             recorder.stop();
           }
-        }, 5000);
+        }, 3000);
       })
       .catch((error) => {
         console.error("오디오 스트림을 가져오는 중 오류 발생:", error);
@@ -101,6 +109,7 @@ const TestPage = () => {
   };
 
   const stopRecording = () => {
+    setShowDiv(true);
     console.log("녹음 중지");
     isRecording.current = false; // useRef를 사용하여 상태 업데이트
     if (mediaRecorder && mediaRecorder.state === "recording") {
@@ -175,14 +184,16 @@ const TestPage = () => {
       </div>
       <div>
       <div>
-          <h3>스크립트</h3>
+          <h3>결과</h3>
         {/* {script.split("\n").map	((line, index) => (
           <p key={index}>{line}</p>
         ))} */}
         </div>
-        <div>
-          <h3>음절 : {totalCnt}개 / 시간 : {totalRecordingTime}초 / 평균 점수 : {averageScore}점</h3>
-        </div>
+        {showDiv &&
+                <div>
+                    <h3>음절 : {totalCnt}개 / 시간 : {totalRecordingTime}초 / 평균 점수 : {averageScore}점</h3>
+                </div>
+            }
       </div>
     </div>
       </Page>

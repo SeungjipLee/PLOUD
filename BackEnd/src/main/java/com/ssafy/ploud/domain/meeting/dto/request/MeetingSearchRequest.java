@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class MeetingSearchRequest {
-
-    private String categoryId;
+    private int categoryId;
     private String word;
 }

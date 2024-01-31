@@ -24,13 +24,12 @@ public class MeetingServiceImpl implements MeetingService {
 
         List<MeetingInfo> res = new ArrayList<>();
 
-        String categoryId = request.getCategoryId();
+        int categoryId = request.getCategoryId();
         String word = request.getWord();
 
         for (int i = 0; i < list.size(); ++i) {
-            if (list.get(i).getCategoryId().equals(categoryId)) {
-                res.add(list.get(i));
-            } else if (list.get(i).getTitle().indexOf(word) != 0) {
+            if(!(categoryId != 0 && categoryId != list.get(i).getCategoryId())
+            && !(!word.isEmpty() && !list.get(i).getTitle().contains(word))){
                 res.add(list.get(i));
             }
         }

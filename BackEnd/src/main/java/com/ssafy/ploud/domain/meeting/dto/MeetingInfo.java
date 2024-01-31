@@ -9,7 +9,7 @@ import lombok.Setter;
 public class MeetingInfo {
     private String sessionId;
     private String managerId;
-    private String categoryId;
+    private int categoryId;
     private String title;
     private int currentPeople;
     private int maxPeople;

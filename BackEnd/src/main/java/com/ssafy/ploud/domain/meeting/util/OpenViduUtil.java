@@ -28,8 +28,11 @@ public class OpenViduUtil {
     private int num = 0;
     private OpenVidu openVidu;
     private Map<String, Session> mapSessions = new ConcurrentHashMap<>();
+
+    // session, token, role
     private Map<String, Map<String, OpenViduRole>> mapSessionIdsTokens = new ConcurrentHashMap<>();
 
+    // 현재 생성중인 방
     @Getter
     private List<MeetingInfo> meetingList = new ArrayList<>();
     @Getter
@@ -48,7 +51,7 @@ public class OpenViduUtil {
             return "방이 존재하지 않음";
         }
         // 인원 수 확인
-        else if (meetingInfo.getCurrentPeople() != meetingInfo.getMaxPeople()) {
+        else if (meetingInfo.getCurrentPeople() == meetingInfo.getMaxPeople()) {
             return "인원 수 제한";
         }
         // 비번 확인
@@ -100,6 +103,9 @@ public class OpenViduUtil {
 
             MeetingInfo meetingInfo = new MeetingInfo(sessionId, request);
             meetingList.add(meetingInfo);
+
+            //
+            System.out.println(meetingInfo.getTitle());
 
             return new MeetingInfoResponse(meetingInfo, token);
         } catch (Exception e) {
