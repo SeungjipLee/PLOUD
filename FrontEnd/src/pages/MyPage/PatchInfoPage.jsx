@@ -6,7 +6,7 @@ import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { refreshAccessToken } from "../../features/user/userSlice";
+import { refreshAccessToken, updateNickname } from "../../features/user/userSlice";
 
 
 
@@ -18,16 +18,16 @@ const PatchInfoPage = () => {
   const navigate = useNavigate();
   const { token } = useSelector((state) => state.userReducer);
 
+
   const changeHandler = (e) => {
     setNewNickname(e.target.value)
   }
 
   const handleSubmit = async (e) => {
-    // 여기 액시오스 요청 보내서 회원정보 수정하는 걸로
     e.preventDefault();
-    console.log(token)
+  
     try {
-      const formData = {newValue:newNickname}
+      const formData = { newValue: newNickname };
       const response = await axios.patch(
         "http://localhost:8000/api/user/nickname",
         formData,
@@ -37,21 +37,21 @@ const PatchInfoPage = () => {
           },
           withCredentials: true
         }
-      )
-      console.log(response)
-      if (response.data.status == "200") {
-        alert("닉네임이 변경되었습니다.")
-        navigate('/mypage')
+      );
+  
+      if (response.data.status === 200) {
+        alert("닉네임이 변경되었습니다.");
+        dispatch(updateNickname(newNickname));
+        navigate('/mypage');
       } else {
-        alert("이미 사용 중인 닉네임입니다.")
+        alert("이미 사용 중인 닉네임입니다.");
       }
     } catch (error) {
-      console.error("Error sending data", error)
-      alert('토큰 만료면 일로옴')
-        dispatch(refreshAccessToken());
-        handleSubmit(e)
+      console.log(error)
+      await dispatch(refreshAccessToken()).unwrap();
+      handleSubmit(e); // 토큰 갱신 후 다시 시도
     }
-  }
+  };
 
 
   return (

@@ -15,13 +15,16 @@ const initialState = {
 export const refreshAccessToken = createAsyncThunk(
   'user/refreshAccessToken',
   async (_, { getState, dispatch }) => {
-    const { refreshToken } = getState().user.token;
+    const { refreshToken } = getState().userReducer.token;
     if (refreshToken) {
       try {
-        const response = await request('GET', '/api/auth/reissue', { headers: {Authorization: `Bearer ${refreshToken}`}, withCredentials: true  });
+        const response = await request(
+          'GET', '/api/auth/reissue',
+          { headers: {Authorization: `Bearer ${refreshToken}`}, withCredentials: true  }
+          );
         if (response.status === 200) {
-          // const { accessToken } = response.data.data; 
-          dispatch(getNewToken({ response }));
+          const { accessToken, refreshToken, tokenType } = response.data.data; 
+          dispatch(getNewToken({ accessToken, refreshToken, tokenType }));
         }
       } catch (e) {
         console.error(e);
@@ -55,6 +58,9 @@ export const userSlice = createSlice({
     },
     getUserId: (state, action) => {
       state.user_id = action.payload;
+    },
+    updateNickname: (state, action) => {
+      state.nickname = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -71,5 +77,5 @@ export const userSlice = createSlice({
   }
 });
 
-export const { getToken, expireToken, getUserId, getNewToken } = userSlice.actions;
+export const { getToken, expireToken, getUserId, getNewToken, updateNickname } = userSlice.actions;
 export default userSlice.reducer;
