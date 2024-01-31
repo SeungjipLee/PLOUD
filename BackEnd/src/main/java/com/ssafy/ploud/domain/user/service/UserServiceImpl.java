@@ -1,7 +1,9 @@
 package com.ssafy.ploud.domain.user.service;
 
+import com.ssafy.ploud.common.exception.CustomException;
 import com.ssafy.ploud.common.exception.DuplicateException;
 import com.ssafy.ploud.common.exception.UserNotFoundException;
+import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.user.UserEntity;
 import com.ssafy.ploud.domain.user.dto.FindIdResDto;
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
@@ -49,7 +51,8 @@ public class UserServiceImpl implements UserService {
   @Override
   public LoginResDto login(LoginReqDto reqDto) {
     UserEntity user = userRepository.findById(reqDto.getUserId())
-        .orElseThrow(() -> new UserNotFoundException("아이디를 다시 입력"));
+        .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
+//        .orElseThrow(() -> new UserNotFoundException("아이디를 다시 입력"));
     if (!passwordEncoder.matches(reqDto.getPassword(), user.getPassword())) {
       throw new UserNotFoundException("비밀번호를 다시 입력");
     }

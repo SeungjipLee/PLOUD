@@ -1,7 +1,7 @@
 package com.ssafy.ploud.domain.script.controller;
 
 import com.ssafy.ploud.common.response.ApiResponse;
-import com.ssafy.ploud.common.response.ResponseStatus;
+import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.script.ScriptCategory;
 import com.ssafy.ploud.domain.script.ScriptEntity;
 import com.ssafy.ploud.domain.script.dto.response.ScriptCategoriesResDto;
@@ -39,7 +39,7 @@ public class ScriptController {
       @PathVariable("categoryId") int categoryId) {
 
     if (ScriptCategory.fromCategoryId(categoryId) == null) {
-      return ApiResponse.failure("categoryId에 해당하는 카테고리가 존재하지 않습니다", ResponseStatus.NOT_FOUND);
+      return ApiResponse.failure("categoryId에 해당하는 카테고리가 존재하지 않습니다", ResponseCode.NOT_FOUND);
     }
     String categoryName = ScriptCategory.fromCategoryId(categoryId).getCategoryName();
     ScriptListResDto res = new ScriptListResDto();
@@ -58,7 +58,7 @@ public class ScriptController {
     try {
       return ApiResponse.ok("대본 상세 조회 성공", scriptService.getScriptDetailById(scriptId));
     } catch (Exception e) {
-      return ApiResponse.failure("대본이 존재하지 않습니다", ResponseStatus.NOT_FOUND);
+      return ApiResponse.failure("대본이 존재하지 않습니다", ResponseCode.NOT_FOUND);
     }
   }
 

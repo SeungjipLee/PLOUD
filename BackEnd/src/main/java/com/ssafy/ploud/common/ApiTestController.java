@@ -2,7 +2,7 @@ package com.ssafy.ploud.common;
 
 
 import com.ssafy.ploud.common.response.ApiResponse;
-import com.ssafy.ploud.common.response.ResponseStatus;
+import com.ssafy.ploud.common.response.ResponseCode;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +27,7 @@ public class ApiTestController {
 
   @GetMapping("/fail")
   public ApiResponse<?> fail() {
-    return ApiResponse.failure("Not found message", ResponseStatus.NOT_FOUND);
+    return ApiResponse.failure("Not found message", ResponseCode.NOT_FOUND);
   }
 
   @GetMapping("/error")

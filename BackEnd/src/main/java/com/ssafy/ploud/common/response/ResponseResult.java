@@ -11,13 +11,13 @@ public class ResponseResult implements Serializable {
   private int status;
   private String message;
 
-  ResponseResult(ResponseStatus responseStatus) {
-    this.status = responseStatus.getCode();
-    this.message = responseStatus.getMessage();
+  ResponseResult(ResponseCode responseCode) {
+    this.status = responseCode.getCode();
+    this.message = responseCode.getMessage();
   }
 
-  ResponseResult(ResponseStatus responseStatus, String message) {
-    this.status = responseStatus.getCode();
+  ResponseResult(ResponseCode responseCode, String message) {
+    this.status = responseCode.getCode();
     this.message = message;
   }
 }

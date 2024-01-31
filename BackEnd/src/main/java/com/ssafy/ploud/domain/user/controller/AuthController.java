@@ -2,7 +2,7 @@ package com.ssafy.ploud.domain.user.controller;
 
 import com.ssafy.ploud.common.exception.JwtCustomException;
 import com.ssafy.ploud.common.response.ApiResponse;
-import com.ssafy.ploud.common.response.ResponseStatus;
+import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.user.dto.GoogleLoginReqDto;
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginResDto;
@@ -38,7 +38,7 @@ public class AuthController {
       return ApiResponse.ok("access token 재발급 완료", jwtTokenProvider.reissueAccessToken(request));
     } catch (JwtCustomException e) {
       System.out.println(e.getMessage());
-      return ApiResponse.failure(e.getMessage(), ResponseStatus.UNAUTHORIZED);
+      return ApiResponse.failure(e.getMessage(), ResponseCode.UNAUTHORIZED);
     }
   }
 
@@ -47,7 +47,7 @@ public class AuthController {
   public ApiResponse<?> googleLogin(@RequestBody GoogleLoginReqDto reqDto) {
     LoginResDto res = authService.loginByGoogleAccount(reqDto.getToken());
     if (res == null) {
-      return ApiResponse.failure("회원가입을 해주세요", ResponseStatus.NOT_FOUND);
+      return ApiResponse.failure("회원가입을 해주세요", ResponseCode.NOT_FOUND);
     }
     return ApiResponse.ok("로그인 성공", res);
   }

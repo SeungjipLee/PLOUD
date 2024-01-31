@@ -3,7 +3,7 @@ package com.ssafy.ploud.domain.user.controller;
 import com.ssafy.ploud.common.exception.DuplicateException;
 import com.ssafy.ploud.common.exception.UserNotFoundException;
 import com.ssafy.ploud.common.response.ApiResponse;
-import com.ssafy.ploud.common.response.ResponseStatus;
+import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.user.dto.EmailVerifyReqDto;
 import com.ssafy.ploud.domain.user.dto.FindIdReqDto;
 import com.ssafy.ploud.domain.user.dto.FindIdResDto;
@@ -59,7 +59,7 @@ public class UserController {
       LoginResDto loginRes = userService.login(reqDto);
       return ApiResponse.ok("로그인 성공", loginRes);
     } catch (UserNotFoundException e) {
-      return ApiResponse.failure("입력이 올바른지 확인해주세요", ResponseStatus.UNAUTHORIZED);
+      return ApiResponse.failure("입력이 올바른지 확인해주세요", ResponseCode.UNAUTHORIZED);
     } catch (Exception e) {
       e.printStackTrace();
       return ApiResponse.error("로그인 에러");
@@ -75,7 +75,7 @@ public class UserController {
     if (isAvailable) {
       return ApiResponse.ok("OK");
     }
-    return ApiResponse.failure("해당 닉네임이 이미 존재합니다", ResponseStatus.CONFLICT);
+    return ApiResponse.failure("해당 닉네임이 이미 존재합니다", ResponseCode.CONFLICT);
   }
 
   @Operation(summary = "아이디 중복 검사")
@@ -86,7 +86,7 @@ public class UserController {
     if (isAvailable) {
       return ApiResponse.ok("OK");
     }
-    return ApiResponse.failure("해당 아이디는 이미 존재합니다", ResponseStatus.CONFLICT);
+    return ApiResponse.failure("해당 아이디는 이미 존재합니다", ResponseCode.CONFLICT);
   }
 
   @Operation(summary = "이메일 중복 검사", description = "이메일 중복 검사를 진행합니다. 이메일을 사용할 수 있다면, 해당 이메일로 인증 코드를 전송합니다.")
@@ -98,7 +98,7 @@ public class UserController {
       if (isAvailable) {
         return ApiResponse.ok("이메일로 인증 코드 전송 성공");
       }
-      return ApiResponse.failure("해당 이메일은 이미 존재합니다", ResponseStatus.CONFLICT);
+      return ApiResponse.failure("해당 이메일은 이미 존재합니다", ResponseCode.CONFLICT);
     } catch (MessagingException e) {
       e.printStackTrace();
       return ApiResponse.error("인증 코드 전송 실패");
@@ -111,7 +111,7 @@ public class UserController {
     if (userService.verifyEmail(reqDto.getEmail(), reqDto.getCode())) {
       return ApiResponse.ok("이메일 인증 완료");
     }
-    return ApiResponse.failure("인증코드를 확인해주세요", ResponseStatus.BAD_REQUEST);
+    return ApiResponse.failure("인증코드를 확인해주세요", ResponseCode.BAD_REQUEST);
   }
 
   @Operation(summary = "회원 정보 조회")
@@ -121,7 +121,7 @@ public class UserController {
     try {
       return ApiResponse.ok("회원 정보 조회 성공", userService.findUserByUserId(loginUser.getUsername()));
     } catch (UserNotFoundException e) {
-      return ApiResponse.failure("해당 유저가 존재하지 않습니다", ResponseStatus.NOT_FOUND);
+      return ApiResponse.failure("해당 유저가 존재하지 않습니다", ResponseCode.NOT_FOUND);
     } catch (Exception e) {
       return ApiResponse.error("회원 정보 조회 중 에러 발생");
     }
@@ -138,9 +138,9 @@ public class UserController {
           reqDto.getNewValue()));
       return ApiResponse.ok("닉네임 수정 완료", res);
     } catch (UserNotFoundException e) {
-      return ApiResponse.failure("해당 유저가 존재하지 않습니다", ResponseStatus.NOT_FOUND);
+      return ApiResponse.failure("해당 유저가 존재하지 않습니다", ResponseCode.NOT_FOUND);
     } catch (DuplicateException e) {
-      return ApiResponse.failure("이미 등록된 닉네임입니다.", ResponseStatus.CONFLICT);
+      return ApiResponse.failure("이미 등록된 닉네임입니다.", ResponseCode.CONFLICT);
     } catch (Exception e) {
       e.printStackTrace();
       return ApiResponse.error("닉네임 수정 중 오류 발생");
@@ -159,7 +159,7 @@ public class UserController {
       res.put("profileImg", userService.saveProfilePicture(multipartFile, loginUser.getUsername()));
       return ApiResponse.ok("프로필 사진 수정 완료", res);
     } catch (UserNotFoundException e) {
-      return ApiResponse.failure("해당 사용자가 존재하지 않습니다", ResponseStatus.NOT_FOUND);
+      return ApiResponse.failure("해당 사용자가 존재하지 않습니다", ResponseCode.NOT_FOUND);
     } catch (Exception e) {
       e.printStackTrace();
       return ApiResponse.error("프로필 사진 수정 중 오류 발생");
@@ -187,7 +187,7 @@ public class UserController {
       return ApiResponse.ok("아이디 조회 성공",
           userService.getUserIdByEmailAndName(reqDto.getEmail(), reqDto.getName()));
     } catch (UserNotFoundException e) {
-      return ApiResponse.failure("사용자 정보와 일치하는 아이디가 없습니다", ResponseStatus.NOT_FOUND);
+      return ApiResponse.failure("사용자 정보와 일치하는 아이디가 없습니다", ResponseCode.NOT_FOUND);
     }
   }
 
@@ -198,7 +198,7 @@ public class UserController {
       userService.getUserPasswordByEmailAndId(reqDto.getEmail(), reqDto.getUserId());
     } catch (UserNotFoundException e) {
       e.printStackTrace();
-      return ApiResponse.failure("유저가 존재하지 않습니다", ResponseStatus.NOT_FOUND);
+      return ApiResponse.failure("유저가 존재하지 않습니다", ResponseCode.NOT_FOUND);
     } catch (MessagingException e) {
       e.printStackTrace();
       return ApiResponse.error("메일을 전송하지 못했습니다");
