@@ -5,7 +5,9 @@ import Footer from "../../components/Footer";
 import { Link } from "react-router-dom";
 import PracticePage from "../PracticePage";
 import StudyPage from "../StudyPage";
-import API from '../../services/Api';
+import API from '../../utils/Api';
+import axios from 'axios'
+
 // 메인페이지
 
 // 로그인 전과 후로 나뉘며
