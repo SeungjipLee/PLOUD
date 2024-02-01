@@ -1,12 +1,10 @@
 package com.ssafy.ploud.domain.meeting.controller;
 
 import com.ssafy.ploud.common.response.ApiResponse;
-import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingCreateRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingJoinRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingLeaveRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingSearchRequest;
-import com.ssafy.ploud.domain.meeting.dto.response.MeetingInfoResponse;
 import com.ssafy.ploud.domain.meeting.service.MeetingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,9 +26,6 @@ public class MeetingController {
 
     @PostMapping("/detail")
     public ApiResponse<?> detailMeeting(@RequestBody String sessionId) {
-        if (meetingService.detail(sessionId) == null) {
-            return ApiResponse.failure("방을 찾을 수 없음", ResponseCode.NOT_FOUND);
-        }
         return ApiResponse.ok("조회 성공", meetingService.detail(sessionId));
     }
 
@@ -41,18 +36,12 @@ public class MeetingController {
 
     @PostMapping("/leave")
     public ApiResponse<?> leaveMeeting(@RequestBody MeetingLeaveRequest request) {
-        if (meetingService.leave(request)) {
-            return ApiResponse.ok("종료 성공");
-        }
-        return ApiResponse.failure("종료 실패", ResponseCode.BAD_REQUEST);
+        meetingService.leave(request);
+        return ApiResponse.ok("종료 성공");
     }
 
     @PostMapping("/join")
     public ApiResponse<?> joinMeeting(@RequestBody MeetingJoinRequest request) {
-        Object object = meetingService.join(request);
-        if (object instanceof MeetingInfoResponse) {
-            return ApiResponse.ok("접속 성공", (MeetingInfoResponse) object);
-        }
-        return ApiResponse.failure((String) object, ResponseCode.BAD_REQUEST);
+        return ApiResponse.ok("접속 성공", meetingService.join(request));
     }
 }

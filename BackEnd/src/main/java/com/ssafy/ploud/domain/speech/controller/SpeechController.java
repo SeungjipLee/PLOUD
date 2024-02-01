@@ -32,7 +32,8 @@ public class SpeechController {
         if(clearityResponse != null){
             return ApiResponse.ok("성공", clearityResponse);
         }
-        return ApiResponse.error("평가 실패");
+//        return ApiResponse.error("평가 실패");
+        return null;
     }
 
     // 발화 속도 및 명료도 점수 얻기 (다른 게 추가 될 수 있으므로 구현 X)

@@ -23,6 +23,7 @@ public enum ResponseCode {
   USER_EMAIL_DUPLICATED(HttpStatus.SC_CONFLICT, "이미 등록된 이메일입니다"),
   CODE_INVALID_VALUE(HttpStatus.SC_BAD_REQUEST, "인증코드를 확인해주세요"),
   MAIL_SEND_ERROR(HttpStatus.SC_INTERNAL_SERVER_ERROR, "메일을 전송하지 못했습니다"),
+  USER_LOGIN_RERQUIRED(HttpStatus.SC_UNAUTHORIZED, "로그인이 필요합니다"),
 
   // 스터디 룸
   ROOM_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "방이 존재하지 않습니다"),
@@ -30,12 +31,23 @@ public enum ResponseCode {
   ROOM_CLOSE_ACCESS_DENIED(HttpStatus.SC_FORBIDDEN, "스터디룸 종료 권한이 없습니다"),
   ROOM_FULL(HttpStatus.SC_BAD_REQUEST, "자리 없음"),
   ROOM_INVALID_VALUE(HttpStatus.SC_BAD_REQUEST, "입력 내용을 다시 확인해주세요"),
+  ROOM_LEAVE_FAIL(HttpStatus.SC_BAD_REQUEST, "방 종료 실패"),
 
   // 녹화
   SESSION_NOT_FOUND(HttpStatus.SC_UNAUTHORIZED, "세선을 찾을 수 없음"),
-  RECORD_PROCEEDING(HttpStatus.SC_NOT_FOUND, "현재 녹화가 진행중임");
+  RECORD_PROCEEDING(HttpStatus.SC_NOT_FOUND, "현재 녹화가 진행중임"),
 
   // 게시글
+
+  // JWT
+  INVALID_JWT_TOKEN(HttpStatus.SC_UNAUTHORIZED, "invalid JWT token"),
+  UNSUPPORTED_JWT_TOKEN(HttpStatus.SC_UNAUTHORIZED, "unsupported JWT token"),
+  JWT_CLAIM_EMPTY(HttpStatus.SC_UNAUTHORIZED, "JWT claims string is empty"),
+  JWT_VALIDATION_FAIL(HttpStatus.SC_UNAUTHORIZED, "JWT signature validation fails"),
+  JWT_TOKEN_EXPIRED(HttpStatus.SC_UNAUTHORIZED, "JWT token expired"),
+  WRONG_REFRESH_TOKEN(HttpStatus.SC_UNAUTHORIZED, "wrong refresh token"),
+  REFRESH_TOKEN_EXPIRED(HttpStatus.SC_UNAUTHORIZED, "Refresh token expired");
+
 
   private final int code;
   private final String message;

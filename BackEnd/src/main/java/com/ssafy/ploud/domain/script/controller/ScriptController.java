@@ -1,7 +1,6 @@
 package com.ssafy.ploud.domain.script.controller;
 
 import com.ssafy.ploud.common.response.ApiResponse;
-import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.script.ScriptCategory;
 import com.ssafy.ploud.domain.script.ScriptEntity;
 import com.ssafy.ploud.domain.script.dto.response.ScriptCategoriesResDto;
@@ -38,9 +37,6 @@ public class ScriptController {
   public ApiResponse<ScriptListResDto> getAllScriptListByCategory(
       @PathVariable("categoryId") int categoryId) {
 
-    if (ScriptCategory.fromCategoryId(categoryId) == null) {
-      return ApiResponse.failure("categoryId에 해당하는 카테고리가 존재하지 않습니다", ResponseCode.NOT_FOUND);
-    }
     String categoryName = ScriptCategory.fromCategoryId(categoryId).getCategoryName();
     ScriptListResDto res = new ScriptListResDto();
     res.setCategoryId(categoryId);
@@ -55,11 +51,7 @@ public class ScriptController {
   @GetMapping("/{scriptId}")
   public ApiResponse<ScriptDetailResDto> getScriptDetailInfo(
       @PathVariable("scriptId") int scriptId) {
-    try {
-      return ApiResponse.ok("대본 상세 조회 성공", scriptService.getScriptDetailById(scriptId));
-    } catch (Exception e) {
-      return ApiResponse.failure("대본이 존재하지 않습니다", ResponseCode.NOT_FOUND);
-    }
+    return ApiResponse.ok("대본 상세 조회 성공", scriptService.getScriptDetailById(scriptId));
   }
 
 }

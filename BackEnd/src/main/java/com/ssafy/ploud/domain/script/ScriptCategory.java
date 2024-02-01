@@ -1,5 +1,7 @@
 package com.ssafy.ploud.domain.script;
 
+import com.ssafy.ploud.common.exception.CustomException;
+import com.ssafy.ploud.common.response.ResponseCode;
 import java.util.Arrays;
 import lombok.Getter;
 
@@ -20,14 +22,14 @@ public enum ScriptCategory {
     return Arrays.stream(values())
         .filter(category -> category.getCategoryName().equals(categoryName))
         .findFirst()
-        .orElse(null);
+        .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
   }
 
   public static ScriptCategory fromCategoryId(int categoryId) {
     return Arrays.stream(values())
         .filter(category -> category.getCategoryId() == categoryId)
         .findFirst()
-        .orElse(null);
+        .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
   }
 
 }

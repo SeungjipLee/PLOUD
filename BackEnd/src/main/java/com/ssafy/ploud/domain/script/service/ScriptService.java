@@ -9,6 +9,6 @@ public interface ScriptService {
 
   public List<ScriptInfoDto> getScriptListByCategory(ScriptCategory category);
 
-  public ScriptDetailResDto getScriptDetailById(int scriptId) throws Exception;
+  public ScriptDetailResDto getScriptDetailById(int scriptId);
 
 }
