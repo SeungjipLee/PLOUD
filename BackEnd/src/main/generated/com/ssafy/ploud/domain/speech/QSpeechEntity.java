@@ -26,19 +26,17 @@ public class QSpeechEntity extends EntityPathBase<SpeechEntity> {
 
     public final StringPath comment = createString("comment");
 
-    public final ListPath<com.ssafy.ploud.domain.feedback.FeedbackEntity, com.ssafy.ploud.domain.feedback.QFeedbackEntity> feedbackEntityList = this.<com.ssafy.ploud.domain.feedback.FeedbackEntity, com.ssafy.ploud.domain.feedback.QFeedbackEntity>createList("feedbackEntityList", com.ssafy.ploud.domain.feedback.FeedbackEntity.class, com.ssafy.ploud.domain.feedback.QFeedbackEntity.class, PathInits.DIRECT2);
-
     public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
     public final BooleanPath personal = createBoolean("personal");
 
     public final DateTimePath<java.time.LocalDateTime> recordTime = createDateTime("recordTime", java.time.LocalDateTime.class);
 
-    public final com.ssafy.ploud.domain.score.QScoreEntity score;
+    public final com.ssafy.ploud.domain.record.QScoreEntity score;
 
     public final com.ssafy.ploud.domain.script.QScriptEntity script;
 
-    public final com.ssafy.ploud.domain.video.QVideoEntity speechVideo;
+    public final com.ssafy.ploud.domain.record.QVideoEntity speechVideo;
 
     public final com.ssafy.ploud.domain.user.QUserEntity user;
 
@@ -60,9 +58,9 @@ public class QSpeechEntity extends EntityPathBase<SpeechEntity> {
 
     public QSpeechEntity(Class<? extends SpeechEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.score = inits.isInitialized("score") ? new com.ssafy.ploud.domain.score.QScoreEntity(forProperty("score"), inits.get("score")) : null;
+        this.score = inits.isInitialized("score") ? new com.ssafy.ploud.domain.record.QScoreEntity(forProperty("score")) : null;
         this.script = inits.isInitialized("script") ? new com.ssafy.ploud.domain.script.QScriptEntity(forProperty("script")) : null;
-        this.speechVideo = inits.isInitialized("speechVideo") ? new com.ssafy.ploud.domain.video.QVideoEntity(forProperty("speechVideo"), inits.get("speechVideo")) : null;
+        this.speechVideo = inits.isInitialized("speechVideo") ? new com.ssafy.ploud.domain.record.QVideoEntity(forProperty("speechVideo")) : null;
         this.user = inits.isInitialized("user") ? new com.ssafy.ploud.domain.user.QUserEntity(forProperty("user")) : null;
     }
 

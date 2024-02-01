@@ -1,15 +1,18 @@
 package com.ssafy.ploud.domain.record.dto.response;
 
+import java.util.List;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@Builder
 public class RecordDetailResponse {
-    // Speech Entity
-    // Video Entity
-    // Score Entity
-    // Feedback Entity
+
+  SpeechDetail speech;
+  VideoDetail video;
+  ScoreDetail score;
+  List<FeedbackDetail> feedbacks;
+
 }

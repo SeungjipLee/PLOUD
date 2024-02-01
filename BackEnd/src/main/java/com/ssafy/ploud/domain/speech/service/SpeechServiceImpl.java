@@ -41,6 +41,7 @@ public class SpeechServiceImpl implements SpeechService{
     private final EtriUtil etriUtil;
     private final SpeechAssessUtil speechAssessUtil;
 
+    private final UserRepository userRepository;
     private final SpeechRepository speechRepository;
     private final VideoRepository videoRepository;
     private final ScoreRepository scoreRepository;
@@ -56,12 +57,13 @@ public class SpeechServiceImpl implements SpeechService{
                 throw new CustomException(ResponseCode.RECORD_PROCEEDING);
             }
         }
-        UserEntity user = null;
+        UserEntity userEntity = userRepository.findByUserId(speechStartRequest.getUserId())
+            .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
         CategoryEntity category = null;
         ScriptEntity script = null;
 
         SpeechEntity speechEntity = SpeechEntity.createNewSpeech(speechStartRequest,
-                                    user, category, script);
+            userEntity, category, script);
 
         speechRepository.save(speechEntity);
 
@@ -86,19 +88,22 @@ public class SpeechServiceImpl implements SpeechService{
     public void feedback(FeedbackRequest feedbackRequest) {
         int speechId = openViduUtil.findSpeechIdBySessionId(feedbackRequest.getSessionId());
 
-        SpeechEntity speechEntity = speechRepository.findById(speechId);
-        UserEntity userEntity = null;
+        SpeechEntity speechEntity = speechRepository.findById(speechId)
+            .orElseThrow(() -> new CustomException(ResponseCode.BAD_REQUEST));
+        UserEntity userEntity = userRepository.findByUserId(feedbackRequest.getUserId())
+            .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
         // speechId, userId, content로 fb 등록
 
-        FeedbackEntity feedbackEntity = null;
-        speechEntity.addFeedBack(feedbackEntity);
+        FeedbackEntity feedbackEntity = FeedbackEntity.createNewFeedback(feedbackRequest.getContent(), userEntity, speechEntity);
+        feedbackRepository.save(feedbackEntity);
     }
 
     @Override
     public void comment(CommentRequest commentRequest) {
         int speechId = commentRequest.getSpeechId();
 
-        SpeechEntity speechEntity = speechRepository.findById(speechId);
+        SpeechEntity speechEntity = speechRepository.findById(speechId)
+            .orElseThrow(()-> new CustomException(ResponseCode.BAD_REQUEST));
         speechEntity.updateComment(commentRequest.getComment());
     }
 
@@ -127,9 +132,6 @@ public class SpeechServiceImpl implements SpeechService{
 
             if(isLast){
                 Map<String, Integer> scores = speechAssessUtil.assess(speechId);
-
-                scores.get("clearity");
-                scores.get("speed");
 
                 // 평가 등록하기
                 // scoreRepository.updateClearity(scores.get("clearity"));

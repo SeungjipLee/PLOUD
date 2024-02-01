@@ -1,4 +1,4 @@
-package com.ssafy.ploud.domain.video;
+package com.ssafy.ploud.domain.record;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -7,7 +7,6 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -16,9 +15,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QVideoEntity extends EntityPathBase<VideoEntity> {
 
-    private static final long serialVersionUID = 343394324L;
-
-    private static final PathInits INITS = PathInits.DIRECT2;
+    private static final long serialVersionUID = 82999864L;
 
     public static final QVideoEntity videoEntity = new QVideoEntity("videoEntity");
 
@@ -26,29 +23,18 @@ public class QVideoEntity extends EntityPathBase<VideoEntity> {
 
     public final NumberPath<Integer> playTime = createNumber("playTime", Integer.class);
 
-    public final com.ssafy.ploud.domain.speech.QSpeechEntity speech;
-
     public final StringPath videoPath = createString("videoPath");
 
     public QVideoEntity(String variable) {
-        this(VideoEntity.class, forVariable(variable), INITS);
+        super(VideoEntity.class, forVariable(variable));
     }
 
     public QVideoEntity(Path<? extends VideoEntity> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QVideoEntity(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QVideoEntity(PathMetadata metadata, PathInits inits) {
-        this(VideoEntity.class, metadata, inits);
-    }
-
-    public QVideoEntity(Class<? extends VideoEntity> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.speech = inits.isInitialized("speech") ? new com.ssafy.ploud.domain.speech.QSpeechEntity(forProperty("speech"), inits.get("speech")) : null;
+        super(VideoEntity.class, metadata);
     }
 
 }
