@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { checkEmail, checkId, signup, verifyEmail } from "../../services/user";
+import { checkId } from "../../services/user";
 import { useDispatch } from "react-redux";
 import { getIdPw, updateStep } from "../../features/user/signUpSlice";
 
 const Step1 = () => {
   const dispatch = useDispatch()
-  const navigate = useNavigate()
   // 입력 받는 변수
   const [formData, setFormData] = useState({
     userId: undefined,
@@ -14,7 +12,6 @@ const Step1 = () => {
     password_check: undefined,
   })
   // 보여주는 처리할 변수
-  const [isStep1Done, setIsStep1Done] = useState(false)
   const [isUserIdValid, setIsUserIdValid] = useState(false);
   const validateUserId = () => /^[A-Za-z0-9]{4,15}$/.test(formData.userId);
   const validatePassword = () => /^(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{6,15}$/.test(formData.password);

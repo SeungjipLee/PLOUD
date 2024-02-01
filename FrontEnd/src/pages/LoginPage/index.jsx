@@ -61,7 +61,7 @@ const LoginPage = () => {
               setPw(e.target.value);
             }}
           />
-          <span className="bg-sky-400 block mt-10 mb-5 text-white w-2/3 mx-auto rounded-md p-2 text-center hover:bg-sky-500">
+          <span onClick={handleLogin} className="bg-sky-400 block mt-10 mb-5 text-white w-2/3 mx-auto rounded-md p-2 text-center hover:bg-sky-500">
             <button type="submit">로그인</button>
           </span>
         </form>

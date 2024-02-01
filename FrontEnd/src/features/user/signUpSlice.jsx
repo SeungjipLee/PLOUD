@@ -7,7 +7,7 @@ const initialState = {
   nickname: "", // 추가: nickname 정보를 저장할 필드 추가
   name: "",
   birthYear: "",
-  password:"",
+  password: "",
   step: 1,
 };
 
@@ -16,16 +16,16 @@ export const signUpSlice = createSlice({
   initialState,
   reducers: {
     getIdPw: (state, action) => {
-      state.user_id = action.payload.user_id
+      state.userId = action.payload.userId
       state.password = action.payload.password
     },
     getEmail: (state, action) => {
       state.email = action.payload
     },
     getUserData: (state, action) => {
-      state.name = action.payload.name
       state.nickname = action.payload.nickname
-      state.birth_year = action.payload.birth_year
+      state.name = action.payload.name
+      state.birthYear = action.payload.birthYear
     },
     updateStep: (state, action) => {
       state.step = action.payload;
