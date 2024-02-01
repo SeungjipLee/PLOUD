@@ -29,10 +29,10 @@ public class MeetingServiceImpl implements MeetingService {
         int categoryId = request.getCategoryId();
         String word = request.getWord();
 
-        for (int i = 0; i < list.size(); ++i) {
-            if(!(categoryId != 0 && categoryId != list.get(i).getCategoryId())
-            && !(!word.isEmpty() && !list.get(i).getTitle().contains(word))){
-                res.add(list.get(i));
+        for (MeetingInfo meetingInfo : list) {
+            if (!(categoryId != 0 && categoryId != meetingInfo.getCategoryId())
+                && !(!word.isEmpty() && !meetingInfo.getTitle().contains(word))) {
+                res.add(meetingInfo);
             }
         }
 
@@ -48,7 +48,7 @@ public class MeetingServiceImpl implements MeetingService {
                 return list.get(i);
             }
         }
-        throw new CustomException(ResponseCode.ROOM_NOT_FOUND);//return null;
+        throw new CustomException(ResponseCode.ROOM_NOT_FOUND);
     }
 
     @Override
@@ -72,16 +72,7 @@ public class MeetingServiceImpl implements MeetingService {
     @Override
     public void leave(MeetingLeaveRequest request) {
         MeetingInfo meetingInfo = openViduUtil.findBySessionId(request.getSessionId());
-        boolean isTerminated;
-        // 방장인 경우
-        if(meetingInfo.getManagerId().equals(request.getUserId())){
-            isTerminated = openViduUtil.leave(request.getSessionId(), request.getToken(), true);
-        }else{
-            isTerminated = openViduUtil.leave(request.getSessionId(), request.getToken(), false);
-        }
-        if (!isTerminated) {
-            throw new CustomException(ResponseCode.ROOM_LEAVE_FAIL);
-        }
+        openViduUtil.leave(request.getSessionId(), request.getToken(), meetingInfo.getManagerId().equals(request.getUserId()));
     }
 
 }

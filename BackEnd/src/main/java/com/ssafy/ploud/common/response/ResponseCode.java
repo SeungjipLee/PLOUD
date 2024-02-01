@@ -30,8 +30,11 @@ public enum ResponseCode {
   ROOM_ALREADY_CLOSED(HttpStatus.SC_NOT_FOUND, "이미 종료된 스터디 룸"),
   ROOM_CLOSE_ACCESS_DENIED(HttpStatus.SC_FORBIDDEN, "스터디룸 종료 권한이 없습니다"),
   ROOM_FULL(HttpStatus.SC_BAD_REQUEST, "자리 없음"),
+  ROOM_PASSWORD_ERROR(HttpStatus.SC_BAD_REQUEST, "비밀번호가 틀렸습니다."),
   ROOM_INVALID_VALUE(HttpStatus.SC_BAD_REQUEST, "입력 내용을 다시 확인해주세요"),
   ROOM_LEAVE_FAIL(HttpStatus.SC_BAD_REQUEST, "방 종료 실패"),
+  OPENBVIDU_TOKEN_ERROR(HttpStatus.SC_BAD_REQUEST, "openvidu token이 올바르지 않습니다."),
+  OPENVIDU_ERROR(HttpStatus.SC_BAD_REQUEST, "openVidu Error"),
 
   // 녹화
   SESSION_NOT_FOUND(HttpStatus.SC_UNAUTHORIZED, "세선을 찾을 수 없음"),

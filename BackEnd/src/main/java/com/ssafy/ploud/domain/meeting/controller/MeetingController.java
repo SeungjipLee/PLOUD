@@ -7,6 +7,8 @@ import com.ssafy.ploud.domain.meeting.dto.request.MeetingLeaveRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingSearchRequest;
 import com.ssafy.ploud.domain.meeting.service.MeetingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,18 +32,24 @@ public class MeetingController {
     }
 
     @PostMapping("/create")
-    public ApiResponse<?> createMeeting(@RequestBody MeetingCreateRequest request) {
+    public ApiResponse<?> createMeeting(@AuthenticationPrincipal UserDetails loginUser,
+        @RequestBody MeetingCreateRequest request) {
+        request.setManagerId(loginUser.getUsername());
         return ApiResponse.ok("방 생성 성공", meetingService.create(request));
     }
 
     @PostMapping("/leave")
-    public ApiResponse<?> leaveMeeting(@RequestBody MeetingLeaveRequest request) {
+    public ApiResponse<?> leaveMeeting(@AuthenticationPrincipal UserDetails loginUser,
+        @RequestBody MeetingLeaveRequest request) {
+        request.setUserId(loginUser.getUsername());
         meetingService.leave(request);
         return ApiResponse.ok("종료 성공");
     }
 
     @PostMapping("/join")
-    public ApiResponse<?> joinMeeting(@RequestBody MeetingJoinRequest request) {
+    public ApiResponse<?> joinMeeting(@AuthenticationPrincipal UserDetails loginUser,
+        @RequestBody MeetingJoinRequest request) {
+        request.setUserId(loginUser.getUsername());
         return ApiResponse.ok("접속 성공", meetingService.join(request));
     }
 }

@@ -20,8 +20,8 @@ const TestPage = () => {
   const [mediaRecorder, setMediaRecorder] = useState(null);
 
   // 녹화 시간 및 측정
-  const [recordingTime, setRecordingTime] = useState(0);
-  const [recordingInterval, setRecordingInterval] = useState(null);
+  // const [recordingTime, setRecordingTime] = useState(0);
+  // const [recordingInterval, setRecordingInterval] = useState(null);
 
   // 오디오 데이터 정보
   const audioChunksRef = useRef([]);
@@ -34,28 +34,20 @@ const TestPage = () => {
   /// 데시벨 추가
   const addDecibel = (newDecibel) => {
     setDecibels([...decibels, newDecibel]);
+    console.log(newDecibel);
   };
-
-  // 요청 객체
-  const req = {
-    speechId: 1,
-    audioFile: audioBlob,
-    isLast: false
-  }
-
 
   // 녹화 시작 버튼
   const startRecording = () => {
-    console.log("녹음 시작")
     isRecording.current = true; 
     audioChunksRef.current = []; // 오디오 청크를 새 배열로 초기화
-    setRecordingTime(0);
 
     // recordTime 측정
-    const interval = setInterval(() => {
-      setRecordingTime((prevTime) => prevTime + 1);
-    }, 1000);
-    setRecordingInterval(interval);
+    // setRecordingTime(0);
+    // const interval = setInterval(() => {
+    //   setRecordingTime((prevTime) => prevTime + 1);
+    // }, 1000);
+    // setRecordingInterval(interval);
 
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then((stream) => {
@@ -94,7 +86,7 @@ const TestPage = () => {
           const storedData = new Uint8Array(analyzer.frequencyBinCount);
           analyzer.getByteFrequencyData(storedData);
           
-          const sum = 0;
+          let sum = 0;
           for (let i = 0; i < storedData.length; i++) {
             sum += storedData[i];
           }
@@ -107,7 +99,7 @@ const TestPage = () => {
 
           setTimeout(analyzeAudio, 100);
         }
-            
+        
         analyzeAudio();
 
         // 일정 주기마다 중지&재시작
@@ -130,31 +122,29 @@ const TestPage = () => {
       mediaRecorder.stop();
     }
 
-    clearInterval(recordingInterval); // 타이머 중지
-  
-    // 타이머 상태를 null로 초기화하여 다음 녹음에 영향을 주지 않도록 함
-    setRecordingInterval(null);
+    // clearInterval(recordingInterval);
+    // setRecordingInterval(null);
   };
   
   // 서버로 오디오 데이터 전송 함수
   const uploadAudio= async (data) => {
-    setIsUploading(true);
-
     try {
       var tmp = [];
       tmp.push(data);
 
       const audioBlob = new Blob(tmp, { type: "audio/wav" });
+
+      const serverURL = "http://localhost:8000/api/speech/assess";
+
       const formData = new FormData();
-
-      var name = "tset" + new Date().getMinutes + new Date().getSeconds();
-
-      formData.append("audioFile", req, name);
-
-      const serverURL = "http://localhost:8000/api/speech/cl";
+      formData.append("audioFile", audioBlob);
+      formData.append("speechId", "1");
+      formData.append("isLast", "false");
+  
       const response = await axios.post(serverURL, formData);
 
-      console.log(response.data);
+      console.log(response.data.data);
+      setScore(response.data.data);
 
       // 응답 데이터 처리
     } catch (error) {
@@ -169,7 +159,7 @@ const TestPage = () => {
       <div style={{padding: "100px"}}>
         <div>
           <h1>음성 녹음 및 업로드</h1>
-          <h3>녹음 시간: {recordingTime} 초</h3>
+          {/* <h3>녹음 시간: {recordingTime} 초</h3> */}
           <div>
             <button style={{ border: '1px solid black', marginRight:"10px" }} onClick={startRecording} disabled={isRecording.current}>
               녹음 시작
@@ -182,7 +172,7 @@ const TestPage = () => {
         <div>
           <h3>결과</h3>
           <div>
-            <h3>평균 점수 : {score}점</h3>
+            <h3>점수 : {score}점</h3>
           </div>
         </div>
       </div>

@@ -23,11 +23,11 @@ public class RecordServiceImpl implements RecordService{
         // speech 조회
         // recordDetailResponse.setSpeech(조회);
 
-        // video 조회
+        // video 조회(없어도 ok)
 
         // score 조회
 
-        // feedback 조회
+        // feedback 조회(스터디인 경우만)
 
         return recordDetailResponse;
     }
@@ -47,6 +47,8 @@ public class RecordServiceImpl implements RecordService{
         // Video Table에서 speechId에 해당하는 video path 가져오기
 
         // DB 삭제
+
+        // 영상 정보가 없을 경우 Exception
 
         // video path 반환
 
