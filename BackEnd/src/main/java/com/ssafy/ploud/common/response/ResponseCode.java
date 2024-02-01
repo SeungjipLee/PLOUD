@@ -40,6 +40,9 @@ public enum ResponseCode {
   SESSION_NOT_FOUND(HttpStatus.SC_UNAUTHORIZED, "세선을 찾을 수 없음"),
   RECORD_PROCEEDING(HttpStatus.SC_NOT_FOUND, "현재 녹화가 진행중임"),
 
+  // 평가
+  ETRI_ERROR(HttpStatus.SC_BAD_REQUEST, "평가 결과를 알 수 없습니다."),
+
   // 게시글
 
   // JWT
@@ -49,8 +52,10 @@ public enum ResponseCode {
   JWT_VALIDATION_FAIL(HttpStatus.SC_UNAUTHORIZED, "JWT signature validation fails"),
   JWT_TOKEN_EXPIRED(HttpStatus.SC_UNAUTHORIZED, "JWT token expired"),
   WRONG_REFRESH_TOKEN(HttpStatus.SC_UNAUTHORIZED, "wrong refresh token"),
-  REFRESH_TOKEN_EXPIRED(HttpStatus.SC_UNAUTHORIZED, "Refresh token expired");
+  REFRESH_TOKEN_EXPIRED(HttpStatus.SC_UNAUTHORIZED, "Refresh token expired"),
 
+  // FFMPEG
+  FILE_CONVERT_ERROR(HttpStatus.SC_BAD_REQUEST, "파일 변환 중 에러");
 
   private final int code;
   private final String message;

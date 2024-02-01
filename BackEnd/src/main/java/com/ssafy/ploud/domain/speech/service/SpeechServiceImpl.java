@@ -1,14 +1,32 @@
 package com.ssafy.ploud.domain.speech.service;
 
+import com.ssafy.ploud.common.exception.CustomException;
+import com.ssafy.ploud.common.response.ResponseCode;
+import com.ssafy.ploud.domain.meeting.dto.MeetingInfo;
+import com.ssafy.ploud.domain.meeting.util.OpenViduUtil;
+import com.ssafy.ploud.domain.record.FeedbackEntity;
+import com.ssafy.ploud.domain.record.repository.FeedbackRepository;
+import com.ssafy.ploud.domain.record.repository.ScoreRepository;
+import com.ssafy.ploud.domain.record.repository.VideoRepository;
+import com.ssafy.ploud.domain.script.ScriptEntity;
+import com.ssafy.ploud.domain.speech.CategoryEntity;
+import com.ssafy.ploud.domain.speech.SpeechEntity;
 import com.ssafy.ploud.domain.speech.dto.ClearityDto;
 import com.ssafy.ploud.domain.speech.dto.request.CommentRequest;
 import com.ssafy.ploud.domain.speech.dto.request.FeedbackRequest;
 import com.ssafy.ploud.domain.speech.dto.request.SpeechEndRequest;
 import com.ssafy.ploud.domain.speech.dto.request.SpeechStartRequest;
+import com.ssafy.ploud.domain.speech.repository.SpeechRepository;
 import com.ssafy.ploud.domain.speech.util.EtriUtil;
 import com.ssafy.ploud.domain.speech.util.FfmpegUtil;
+import com.ssafy.ploud.domain.speech.util.SpeechAssessUtil;
+import com.ssafy.ploud.domain.user.UserEntity;
+import com.ssafy.ploud.domain.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,44 +36,70 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class SpeechServiceImpl implements SpeechService{
+    private final OpenViduUtil openViduUtil;
     private final FfmpegUtil ffmpegUtil;
-
     private final EtriUtil etriUtil;
+    private final SpeechAssessUtil speechAssessUtil;
+
+    private final SpeechRepository speechRepository;
+    private final VideoRepository videoRepository;
+    private final ScoreRepository scoreRepository;
+    private final FeedbackRepository feedbackRepository;
 
     private int cnt = 0;
 
     @Override
+    @Transactional
     public int start(SpeechStartRequest speechStartRequest) {
-        // 스터디 녹화인 경우
-        // 현재 녹화중인 목록을 확인
-        // sessionId - speechId가 존재하는지 확인
-            // Speech Table 생성 및 SpeechId 반환
+        if(speechStartRequest.isPersonal()){
+            if(openViduUtil.findSpeechIdBySessionId(speechStartRequest.getSessionId()) != -1){
+                throw new CustomException(ResponseCode.RECORD_PROCEEDING);
+            }
+        }
+        UserEntity user = null;
+        CategoryEntity category = null;
+        ScriptEntity script = null;
 
-        // 개인 녹화인 경우
-            // Speech Table 생성 후 SpeechId 반환
+        SpeechEntity speechEntity = SpeechEntity.createNewSpeech(speechStartRequest,
+                                    user, category, script);
 
-        return 0;
+        speechRepository.save(speechEntity);
+
+        return speechEntity.getId();
     }
 
     @Override
     public void endAndDecibel(SpeechEndRequest speechEndRequest) {
-        // sessionId - speechId 삭제(메모리)
+        String sessionId = speechEndRequest.getSessionId();
+        if(!sessionId.isEmpty()){
+            MeetingInfo meetingInfo = openViduUtil.findBySessionId(sessionId);
+            meetingInfo.setSpeechId(-1);
+        }
 
-        // Decibel 평가 진행
+        // 데시벨 평가
+        int volume = speechAssessUtil.decibels(speechEndRequest.getDecibels());
 
-        // 평가 등록
+//        scoreRepository.updateVolume(volume);
     }
 
     @Override
     public void feedback(FeedbackRequest feedbackRequest) {
-        // sessionId로 speechId 조회
+        int speechId = openViduUtil.findSpeechIdBySessionId(feedbackRequest.getSessionId());
 
+        SpeechEntity speechEntity = speechRepository.findById(speechId);
+        UserEntity userEntity = null;
         // speechId, userId, content로 fb 등록
+
+        FeedbackEntity feedbackEntity = null;
+        speechEntity.addFeedBack(feedbackEntity);
     }
 
     @Override
     public void comment(CommentRequest commentRequest) {
-        // speechId에 comment 등록
+        int speechId = commentRequest.getSpeechId();
+
+        SpeechEntity speechEntity = speechRepository.findById(speechId);
+        speechEntity.updateComment(commentRequest.getComment());
     }
 
     @Override
@@ -79,16 +123,24 @@ public class SpeechServiceImpl implements SpeechService{
 
             ClearityDto clearityDto = etriUtil.getScore(audioContent);
 
-            // clearityDto 값을 speechId 값을 key로 임시 저장해야함.
-//            speechId
+            speechAssessUtil.addClearity(speechId, clearityDto);
 
-            // isLast일 경우 평가 종합 진행
-//            if(isLast){}
+            if(isLast){
+                Map<String, Integer> scores = speechAssessUtil.assess(speechId);
 
+                scores.get("clearity");
+                scores.get("speed");
+
+                // 평가 등록하기
+                // scoreRepository.updateClearity(scores.get("clearity"));
+                // scoreRepository.updateSpeed(scores.get("speed"));
+            }
+            if(clearityDto != null){
+                throw new CustomException(ResponseCode.ETRI_ERROR);
+            }
             return clearityDto.getFloatScore();
         } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
+            throw new CustomException(ResponseCode.FILE_CONVERT_ERROR);
         } finally {
             dest.delete();
         }

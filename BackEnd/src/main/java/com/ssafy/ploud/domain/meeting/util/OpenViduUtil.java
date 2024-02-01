@@ -141,4 +141,8 @@ public class OpenViduUtil {
         }
         throw new CustomException(ResponseCode.SESSION_NOT_FOUND);
     }
+
+    public int findSpeechIdBySessionId(String sessionId) {
+        return findBySessionId(sessionId).getSpeechId();
+    }
 }

@@ -1,6 +1,7 @@
 package com.ssafy.ploud.domain.record;
 
 import com.ssafy.ploud.domain.speech.SpeechEntity;
+import com.ssafy.ploud.domain.speech.dto.request.FeedbackRequest;
 import com.ssafy.ploud.domain.user.UserEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,7 +34,7 @@ public class FeedbackEntity {
 
   private Time timeLog; // 영상에서의 시간
 
-  public void setSpeech(SpeechEntity speech) {
+    public void setSpeech(SpeechEntity speech) {
     this.speech = speech;
   }
 

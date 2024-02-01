@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class ClearitySpeedRequset {
-    int scriptCnt;
-    float recordTime;
-    String score;
+    private int scriptCnt;
+    private float recordTime;
+    private String score;
 }

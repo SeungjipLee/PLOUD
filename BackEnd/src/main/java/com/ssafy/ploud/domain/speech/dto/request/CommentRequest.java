@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class CommentRequest {
-    int speechId;
-    String comment;
+    private int speechId;
+    private String comment;
 }

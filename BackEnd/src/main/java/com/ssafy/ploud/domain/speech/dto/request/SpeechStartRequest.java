@@ -8,10 +8,10 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class SpeechStartRequest {
-    String userId;
-    String title;
-    boolean personal;
-    int categoryId;
-    String sessionId;
-    int scriptId;
+    private String userId;
+    private String title;
+    private boolean personal;
+    private int categoryId;
+    private String sessionId;
+    private int scriptId;
 }

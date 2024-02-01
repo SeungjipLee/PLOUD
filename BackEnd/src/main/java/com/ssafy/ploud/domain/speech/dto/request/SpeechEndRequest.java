@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class SpeechEndRequest {
-    String sessionId;
-    int speechId;
-    int[] decibels;
+    private String sessionId;
+    private int speechId;
+    private int[] decibels;
 }
