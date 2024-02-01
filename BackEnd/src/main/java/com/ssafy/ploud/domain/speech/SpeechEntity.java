@@ -1,10 +1,10 @@
 package com.ssafy.ploud.domain.speech;
 
-import com.ssafy.ploud.domain.feedback.FeedbackEntity;
+import com.ssafy.ploud.domain.record.FeedbackEntity;
 import com.ssafy.ploud.domain.record.ScoreEntity;
+import com.ssafy.ploud.domain.record.VideoEntity;
 import com.ssafy.ploud.domain.script.ScriptEntity;
 import com.ssafy.ploud.domain.user.UserEntity;
-import com.ssafy.ploud.domain.video.VideoEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
