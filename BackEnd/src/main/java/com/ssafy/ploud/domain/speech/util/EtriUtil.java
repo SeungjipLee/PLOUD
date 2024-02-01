@@ -78,6 +78,8 @@ public class EtriUtil {
             responBody = new String(buffer);
             log.debug("ERTI API RESPONSE CODE : " + responseCode);
 
+            System.out.println(responBody);
+
             // JSON 파싱 후 response 객체에 담아서 return
             if(responseCode.equals(200)){
                 JSONObject obj = new JSONObject(responBody);

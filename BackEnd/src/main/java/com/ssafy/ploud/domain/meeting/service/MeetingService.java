@@ -16,9 +16,9 @@ public interface MeetingService {
 
     public MeetingInfoResponse create(MeetingCreateRequest request);
 
-  MeetingInfoResponse join(MeetingJoinRequest request);
+    MeetingInfoResponse join(MeetingJoinRequest request);
 
     MeetingInfo findBySessionId(String sessionId);
 
-  void leave(MeetingLeaveRequest request);
+    void leave(MeetingLeaveRequest request);
 }
