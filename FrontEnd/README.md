@@ -1,3 +1,8 @@
+# 고려사항
+
+1. 아이디, 이메일, 닉네임 중복 검사 시 즉시 입력 불가능하게 바꿔야함
+  - alert가 뜨기전에 안에 있던 내용 지울 수 있음
+
 # 시작하기
 
 ```bash
@@ -13,6 +18,31 @@ npm start
 - babel : ?
 - Webpack : 컴포넌트별로 나누어져있는 자바스크립트 코드를 하나의 js 파일로 합쳐서 전송해줌
 
+
+## 리액트 작성 시 유의사항
+
+### 순수함수와 컴포넌트
+
+#### 순수함수
+1. 입력이 같으면 결과가 같다.
+2. 부작용(부수효과)가 없다.
+- 함수는 결과값만을 반환해야 한다.   
+  함수가 특정 값(전역변수 등)를 변경하거나 부수효과를 발생시킨다면 기대한 결과가 아님
+#### 컴포넌트
+- 순수함수와 다른점 UI 를 표현하기 위해 돔을 변경 혹은 네트워크 요청을 보내야 함
+- 클래스 컴포넌트는 생명주기 메서드로 이를 처리함
+- 함수형 컴포넌트는 useEffect 훅을 사용
+
+
+### 리액트 훅
+
+- 컴포넌트가 마운트 되었을 때 어떤 동작이 하고 싶다면 useEffect 훅을 사용하고 두번째 인자로 빈 배열 전달
+```jsx
+  useEffect(() => {
+    console.log('마운트')
+  }, []) // 두번째 인자인 빈 배열은 마운트 될 때 한번만 실행되어야 함을 나타냄
+```
+
 ### 저장소 : 앱의 상태 저장
 ### 액션 : 무엇이 일어날지 서술하는 객체, 내부 상태를 변경하는 유일한 방법
 - type 필드를 가진 객체
@@ -24,6 +54,12 @@ const addTodoAction = {
 ```
 ### 리듀서 : 액션이 상태 트리를 어떻게 변경할지 명시
 ### 디스패치 : 상태 내의 무언가를 변경 (액션을 디스패치함)
+
+## axios
+
+- withCredentials 의미 : 서로 다른 도메인의 요청을 보낼 때 credential 정보가 포함되어 있는 요청을 보낼 것인가에 대한 설정
+  1. 쿠기를 첨부해서 보내는 요청
+  2. 헤더에 Authorization 항목이 있는 요청
 
 ## 프론트 일지
 
@@ -74,3 +110,22 @@ const handlerClick = () => {
 // 혹은
 <div onClick={() => setIsUserIdValid(!isUserIdValid)}>취소</div>
 ```
+
+3. e.target.value 는 텍스트라서 "true" "false" 라 반환해도 boolean 값으로 사용할 수가 없더라
+그래서 
+```jsx
+setIsSecret(e.target.value == "true" ? true : false)
+```
+로 사용했음
+
+4. 미해결 - Redux non-serializable value 에 관한 이슈
+이게 뭘까....
+VM999:6 A non-serializable value was detected in an action, in the path: `register`. Value: ƒ register(key) {
+    _pStore.dispatch({
+      type: _constants__WEBPACK_IMPORTED_MODULE_0__.REGISTER,
+      key: key
+    });
+  } 
+Take a look at the logic that dispatched this action:  {type: 'persist/PERSIST', register: ƒ, rehydrate: ƒ} 
+(See https://redux.js.org/faq/actions#why-should-type-be-a-string-or-at-least-serializable-why-should-my-action-types-be-constants) 
+(To allow non-serializable values see: https://redux-toolkit.js.org/usage/usage-guide#working-with-non-serializable-data)
