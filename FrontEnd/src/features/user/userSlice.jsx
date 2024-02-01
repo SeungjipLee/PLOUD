@@ -42,6 +42,7 @@ export const userSlice = createSlice({
   },
 });
 
+
 export const { getToken, expireToken, getUserId, getNewToken, updateNickname } = userSlice.actions;
 export default userSlice.reducer;
 
