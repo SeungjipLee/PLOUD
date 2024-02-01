@@ -1,10 +1,13 @@
 package com.ssafy.ploud.domain.record;
 
+import com.ssafy.ploud.domain.record.dto.response.FeedbackDetail;
 import com.ssafy.ploud.domain.speech.SpeechEntity;
 import com.ssafy.ploud.domain.user.UserEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -18,7 +21,8 @@ import lombok.Getter;
 public class FeedbackEntity {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "feedback_id")
   private int id; // 피드백 번호
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -35,6 +39,10 @@ public class FeedbackEntity {
 
   public void setSpeech(SpeechEntity speech) {
     this.speech = speech;
+  }
+
+  public FeedbackDetail toDto() {
+    return new FeedbackDetail(content, timeLog);
   }
 
 }
