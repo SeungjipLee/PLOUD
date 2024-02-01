@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { request } from "../../lib/axios";
+// import { request } from "../../lib/axios";
 
 const initialState = {
   isLogined: false,
@@ -11,28 +11,6 @@ const initialState = {
   birth_year: "",
   loading: false,
 };
-
-export const refreshAccessToken = createAsyncThunk(
-  'user/refreshAccessToken',
-  async (_, { getState, dispatch }) => {
-    const { refreshToken } = getState().userReducer.token;
-    if (refreshToken) {
-      try {
-        const response = await request(
-          'GET', '/api/auth/reissue',
-          { headers: {Authorization: `Bearer ${refreshToken}`}, withCredentials: true  }
-          );
-        if (response.status === 200) {
-          const { accessToken, refreshToken, tokenType } = response.data.data; 
-          dispatch(getNewToken({ accessToken, refreshToken, tokenType }));
-        }
-      } catch (e) {
-        console.error(e);
-        dispatch(expireToken());
-      }
-    }
-  }
-);
 
 export const userSlice = createSlice({
   name: "user",
@@ -46,7 +24,6 @@ export const userSlice = createSlice({
         tokenType: action.payload.data.tokenType
       }
       state.nickname = action.payload.data.nickname; // 추가: nickname 정보 저장
-      console.log(state.token, state.nickname)
     },
     getNewToken: (state, action) => {
       state.token = action.payload.data
@@ -63,19 +40,43 @@ export const userSlice = createSlice({
       state.nickname = action.payload;
     }
   },
-  extraReducers: (builder) => {
-    builder
-      .addCase(refreshAccessToken.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(refreshAccessToken.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(refreshAccessToken.rejected, (state) => {
-        state.loading = false;
-      });
-  }
 });
 
 export const { getToken, expireToken, getUserId, getNewToken, updateNickname } = userSlice.actions;
 export default userSlice.reducer;
+
+
+  // extraReducers: (builder) => {
+  //   builder
+  //     .addCase(refreshAccessToken.pending, (state) => {
+  //       state.loading = true;
+  //     })
+  //     .addCase(refreshAccessToken.fulfilled, (state) => {
+  //       state.loading = false;
+  //     })
+  //     .addCase(refreshAccessToken.rejected, (state) => {
+  //       state.loading = false;
+  //     });
+  // }
+
+// export const refreshAccessToken = createAsyncThunk(
+//   'user/refreshAccessToken',
+//   async (_, { getState, dispatch }) => {
+//     const { refreshToken } = getState().userReducer.token;
+//     if (refreshToken) {
+//       try {
+//         const response = await request(
+//           'GET', '/api/auth/reissue',
+//           { headers: {Authorization: `Bearer ${refreshToken}`}, withCredentials: true  }
+//           );
+//         if (response.status === 200) {
+//           const { accessToken, refreshToken, tokenType } = response.data.data; 
+//           dispatch(getNewToken({ accessToken, refreshToken, tokenType }));
+//         }
+//       } catch (e) {
+//         console.error(e);
+//         dispatch(expireToken());
+//       }
+//     }
+//   }
+// );

@@ -1,0 +1,53 @@
+import API from "../utils/Api";
+
+
+export const getCategoryList = (token, success, fail) => {
+  return API(token)
+    .get("script/list")
+    .then(success)
+    .catch(fail)
+}
+
+
+export const getScriptList = (token, categoryId, success, fail) => {
+  return API(token)
+    .get(`script/list/${categoryId}`)
+    .then(success)
+    .catch(fail)
+  }
+
+
+export const getScriptDetail = (token, scriptId, success, fail) => {
+  return API(token)
+    .get(`script/list/${scriptId}`)
+    .then(success)
+    .catch(fail)
+}
+
+
+//{ speechId: "int, 발표 번호", categoryId: "int, 카테고리 번호", title: "String, 대본 제목", 
+// videoUrl: "String, 발표 원본 영상", content: "String, 대본 내용" }
+export const registScript = (token, data, success, fail) => {
+  return API(token)
+    .post("script/regist", data)
+    .then(success)
+    .catch(fail)
+}
+
+
+// { categoryId: "int, 카테고리 번호", title: "String, 대본 제목", 
+// videoUrl: "String, 발표 원본 영상", content: "String, 대본 내용" }
+export const putScript = (token, data, scriptId, success, fail) => {
+  return API(token)
+    .put(`script/${scriptId}`, data)
+    .then(success)
+    .catch(fail)
+}
+
+
+export const deleteScript = (token, scriptId, success, fail) => {
+  return API(token)
+    .delete(`script/${scriptId}`)
+    .then(success)
+    .catch(fail)
+}

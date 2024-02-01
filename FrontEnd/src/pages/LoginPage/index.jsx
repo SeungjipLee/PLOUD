@@ -10,7 +10,8 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getToken, getUserId } from "../../features/user/userSlice";
 import { useState } from "react";
-import AuthService from "../LoginPage/Service/AuthService";
+// import AuthService from "../LoginPage/Service/AuthService";
+import { login } from "../../services/user";
 
 const LoginPage = () => {
   let navigate = useNavigate();
@@ -22,15 +23,16 @@ const LoginPage = () => {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    AuthService.login(Id, Pw)
-      .then((res) => {
-        dispatch(getToken(res));
+    login(
+      {userId: Id, password: Pw},
+      (res) => {
+        localStorage.setItem("user", JSON.stringify(res.data)); // local에 userData 저장
+        dispatch(getToken(res.data));
         dispatch(getUserId(Id));
         navigate("/");
-      })
-      .catch((e) => {
-        alert(e);
-      });
+      },
+      (err) => alert("아이디 혹은 비밀번호가 일치하지 않습니다.")
+      );
   };
 
   return (
