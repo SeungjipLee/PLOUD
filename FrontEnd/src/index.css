@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.Main2 {
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.Main2Container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.Main3 {
+    background-color: #EBEAFA;
+    font-style: white;
+}
+.Main4 {
+}
+
+.video {
+    width: 50%;
+    flex:4;
+}
+
+.card {
+    width:200px;
+    height: 200px;
+    margin-top: 30px;
+}
+
+.mainBlueF {
+    color: #0C134F;
+}
+.mainBlueB {
+    background-color: #0C134F;
+}
+
+.practice {
+    width:10%;
+    flex:1;
+}
+
+.pcard {
+    aspect-ratio: 3 / 2;
+    background-color: #2D24A8;
+    color: #EBEAFA;
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    padding-top: 3%;
+    font-size:xx-large;
+}
+
+.human1 {
+    display: flex;
+    flex-direction: row;
+    width: 20%;
+}
+
+.human2 {
+    flex: 1;
+}
+
+.footer {
+    background: #0C134F;
+    color: white;
+}
+
+.footerLogo {
+    height: 190px;
+}
+
+.Main1 {
+    height: 100%;
+}
