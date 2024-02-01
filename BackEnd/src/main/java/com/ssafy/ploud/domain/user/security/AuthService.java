@@ -1,5 +1,7 @@
 package com.ssafy.ploud.domain.user.security;
 
+import com.ssafy.ploud.common.exception.CustomException;
+import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.user.UserEntity;
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.dto.LoginResDto;
@@ -41,28 +43,24 @@ public class AuthService {
     Base64.Decoder decoder = Base64.getDecoder();
     String payload = new String(decoder.decode(check[1]));
 
-    try {
-      JSONObject jsonObject = new JSONObject(payload);
-      String email = jsonObject.getString("email");
-      String profileImg = jsonObject.getString("picture");
+    JSONObject jsonObject = new JSONObject(payload);
+    String email = jsonObject.getString("email");
+    String profileImg = jsonObject.getString("picture");
 
-      String userId  = userService.getUserIdByEmail(email);
-      if(userId != null) {
-        // 로그인
-        JwtAuthResponse res = jwtTokenProvider.generateToken(userId);
-        // user 테이블 refresh token 변경
-        UserEntity user = userRepository.findById(userId).get();
-        user.setRefreshToken(res.getRefreshToken());
+    String userId = userService.getUserIdByEmail(email);
+    if (userId != null) {
+      // 로그인
+      JwtAuthResponse res = jwtTokenProvider.generateToken(userId);
+      // user 테이블 refresh token 변경
+      UserEntity user = userRepository.findById(userId).get();
+      user.setRefreshToken(res.getRefreshToken());
 
-        // LoginResDto 반환
-        return new LoginResDto(res.getRefreshToken(), res.getAccessToken(), "Bearer", user.getNickname());
-      }
-
-    } catch(Exception e) {
-      e.printStackTrace();
+      // LoginResDto 반환
+      return new LoginResDto(res.getRefreshToken(), res.getAccessToken(), "Bearer",
+          user.getNickname());
+    } else {
+      throw new CustomException(ResponseCode.USER_SIGNUP_REQUIRE);
     }
-
-    return null;
   }
 
 }

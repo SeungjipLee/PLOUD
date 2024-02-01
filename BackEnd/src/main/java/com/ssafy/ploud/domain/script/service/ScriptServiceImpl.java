@@ -1,5 +1,7 @@
 package com.ssafy.ploud.domain.script.service;
 
+import com.ssafy.ploud.common.exception.CustomException;
+import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.script.ScriptCategory;
 import com.ssafy.ploud.domain.script.ScriptEntity;
 import com.ssafy.ploud.domain.script.dto.response.ScriptDetailResDto;
@@ -27,9 +29,9 @@ public class ScriptServiceImpl implements ScriptService {
   }
 
   @Override
-  public ScriptDetailResDto getScriptDetailById(int scriptId) throws Exception {
+  public ScriptDetailResDto getScriptDetailById(int scriptId) {
     ScriptEntity script = scriptRepository.findById(scriptId)
-        .orElseThrow(() -> new Exception("대본이 존재하지 않습니다"));
+        .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
     return script.toDetailDto();
   }
 

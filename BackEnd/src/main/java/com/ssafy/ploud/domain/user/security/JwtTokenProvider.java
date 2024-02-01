@@ -1,7 +1,7 @@
 package com.ssafy.ploud.domain.user.security;
 
-import com.ssafy.ploud.common.exception.JwtCustomException;
-import com.ssafy.ploud.common.exception.UserNotFoundException;
+import com.ssafy.ploud.common.exception.CustomException;
+import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.user.UserEntity;
 import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.repository.UserRepository;
@@ -89,19 +89,19 @@ public class JwtTokenProvider {
       return true;
     } catch (MalformedJwtException e) {
       log.error("Invalid JWT token");
-      throw new JwtCustomException("Invalid JWT token");
+      throw new CustomException(ResponseCode.INVALID_JWT_TOKEN);
     } catch (UnsupportedJwtException e) {
       log.error("Unsupported JWT token");
-      throw new JwtCustomException("Unsupported JWT token");
+      throw new CustomException(ResponseCode.UNSUPPORTED_JWT_TOKEN);
     } catch (IllegalArgumentException e) {
       log.error("JWT claims string is empty");
-      throw new JwtCustomException("JWT claims string is empty");
+      throw new CustomException(ResponseCode.JWT_CLAIM_EMPTY);
     } catch (SignatureException e) {
       log.error("JWS signature validation fails");
-      throw new JwtCustomException("JWS signature validation fails");
+      throw new CustomException(ResponseCode.JWT_VALIDATION_FAIL);
     } catch (ExpiredJwtException e) {
       log.error("JWT token expired");
-      throw new JwtCustomException("JWT token expired");
+      throw new CustomException(ResponseCode.JWT_TOKEN_EXPIRED);
     }
   }
 
@@ -111,23 +111,23 @@ public class JwtTokenProvider {
       if (validateToken(refreshToken)) {
         String userId = getUserId(refreshToken);
         UserEntity user = userRepository.findById(userId)
-            .orElseThrow(() -> new UserNotFoundException("해당 유저가 존재하지 않음"));
+            .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
         if (refreshToken.equals(user.getRefreshToken())) {
           // re-issue access token
           return JwtAuthResponse
               .builder()
               .refreshToken(refreshToken)
               .accessToken(generateToken(userId, accessTokenExpirationDate))
+              .tokenType("Bearer")
               .build();
         } else {
-          throw new JwtCustomException("wrong refresh token");
+          throw new CustomException(ResponseCode.WRONG_REFRESH_TOKEN);
         }
       }
     } catch (ExpiredJwtException e) {
-      throw new JwtCustomException("Refresh token expired");
+      throw new CustomException(ResponseCode.REFRESH_TOKEN_EXPIRED);
     } catch (Exception e) {
-      e.printStackTrace();
-      throw new JwtCustomException("refresh token parsing 중 오류 발생");
+      throw new CustomException(ResponseCode.WRONG_REFRESH_TOKEN);
     }
     return null;
   }

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "스피치 평가 API", description = "스피치 평가 관련 API")
 @RestController
@@ -28,7 +27,7 @@ public class SpeechController {
 
     @Operation(summary = "녹화 시작", description = "녹화 시작이 가능한 경우 speechId를 반환한다.")
     @PostMapping("/start")
-    public ApiResponse<?> startSpeech(@RequestParam SpeechStartRequest speechStartRequest){
+    public ApiResponse<?> startSpeech(@RequestParam SpeechStartRequest speechStartRequest) {
         return ApiResponse.ok("성공", speechService.start(speechStartRequest));
     }
 

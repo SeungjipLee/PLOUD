@@ -1,6 +1,6 @@
 package com.ssafy.ploud.domain.user.security;
 
-import com.ssafy.ploud.common.exception.JwtCustomException;
+import com.ssafy.ploud.common.exception.CustomException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
       }
-    } catch (JwtCustomException e) {
+    } catch (CustomException e) {
       setResponse(response, e.getMessage());
       return;
     }
