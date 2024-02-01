@@ -105,7 +105,7 @@ const DataSubmitForm = () => {
       } else if (response.data.status == "409") {
         alert("이미 가입된 이메일입니다.");
       } else {
-        alert("인증 코드 메일이 전송되지 않았습니다. 다시 실행 바랍니다.");
+        alert("(코드 전송되지 않음) 이메일 양식이 올바른지 확인하십시오.");
       }
     } catch (error) {
       console.error("Error sending data", error);
