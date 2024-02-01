@@ -1,4 +1,4 @@
-package com.ssafy.ploud.domain.feedback;
+package com.ssafy.ploud.domain.record;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QFeedbackEntity extends EntityPathBase<FeedbackEntity> {
 
-    private static final long serialVersionUID = 44033946L;
+    private static final long serialVersionUID = -1887851634L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
