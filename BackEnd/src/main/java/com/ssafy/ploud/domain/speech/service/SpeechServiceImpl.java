@@ -1,7 +1,6 @@
 package com.ssafy.ploud.domain.speech.service;
 
 import com.ssafy.ploud.domain.speech.dto.ClearityDto;
-import com.ssafy.ploud.domain.speech.dto.request.AssessRequset;
 import com.ssafy.ploud.domain.speech.dto.request.CommentRequest;
 import com.ssafy.ploud.domain.speech.dto.request.FeedbackRequest;
 import com.ssafy.ploud.domain.speech.dto.request.SpeechEndRequest;
@@ -13,7 +12,6 @@ import java.io.FileOutputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -49,7 +47,19 @@ public class SpeechServiceImpl implements SpeechService{
     }
 
     @Override
-    public float clearity(AssessRequset assessRequset) {
+    public void feedback(FeedbackRequest feedbackRequest) {
+        // sessionId로 speechId 조회
+
+        // speechId, userId, content로 fb 등록
+    }
+
+    @Override
+    public void comment(CommentRequest commentRequest) {
+        // speechId에 comment 등록
+    }
+
+    @Override
+    public float clearity(MultipartFile audioFile, Integer speechId, Boolean isLast) {
         // 파일 경로
         String inputWavFile = "D:\\path\\to\\your\\upload\\directory\\in_" + cnt + ".wav";
         String outputWavFile = "D:\\path\\to\\your\\upload\\directory\\out_" + cnt++ + ".wav";
@@ -59,7 +69,7 @@ public class SpeechServiceImpl implements SpeechService{
             // 파일로 저장
             dest = new File(inputWavFile);
             try (FileOutputStream fos = new FileOutputStream(dest)) {
-                fos.write(assessRequset.getAudioFile().getBytes());
+                fos.write(audioFile.getBytes());
             }
 
             // 파일 변환
@@ -70,10 +80,10 @@ public class SpeechServiceImpl implements SpeechService{
             ClearityDto clearityDto = etriUtil.getScore(audioContent);
 
             // clearityDto 값을 speechId 값을 key로 임시 저장해야함.
-            assessRequset.getSpeechId();
+//            speechId
 
             // isLast일 경우 평가 종합 진행
-//            if(assessRequset.getIsLast()){}
+//            if(isLast){}
 
             return clearityDto.getFloatScore();
         } catch (Exception e) {
@@ -82,17 +92,5 @@ public class SpeechServiceImpl implements SpeechService{
         } finally {
             dest.delete();
         }
-    }
-
-    @Override
-    public void feedback(FeedbackRequest feedbackRequest) {
-        // sessionId로 speechId 조회
-
-        // speechId, userId, content로 fb 등록
-    }
-
-    @Override
-    public void comment(CommentRequest commentRequest) {
-        // speechId에 comment 등록
     }
 }

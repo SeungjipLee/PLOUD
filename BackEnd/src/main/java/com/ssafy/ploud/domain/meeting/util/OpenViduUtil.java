@@ -1,5 +1,7 @@
 package com.ssafy.ploud.domain.meeting.util;
 
+import com.ssafy.ploud.common.exception.CustomException;
+import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.meeting.dto.MeetingInfo;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingCreateRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingJoinRequest;
@@ -7,6 +9,8 @@ import com.ssafy.ploud.domain.meeting.dto.response.MeetingInfoResponse;
 import io.openvidu.java.client.ConnectionProperties;
 import io.openvidu.java.client.ConnectionType;
 import io.openvidu.java.client.OpenVidu;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
 import io.openvidu.java.client.OpenViduRole;
 import io.openvidu.java.client.Recording;
 import io.openvidu.java.client.RecordingProperties;
@@ -46,22 +50,18 @@ public class OpenViduUtil {
 
     public Object join(MeetingJoinRequest request) {
         MeetingInfo meetingInfo = findBySessionId(request.getSessionId());
-        // 방 존재여부 확인
-        if (meetingInfo == null) {
-            return "방이 존재하지 않음";
-        }
+
         // 인원 수 확인
-        else if (meetingInfo.getCurrentPeople() == meetingInfo.getMaxPeople()) {
-            return "인원 수 제한";
+        if (meetingInfo.getCurrentPeople() == meetingInfo.getMaxPeople()) {
+            throw new CustomException(ResponseCode.ROOM_FULL);
         }
         // 비번 확인
         else if (meetingInfo.getIsPrivate() && !meetingInfo.getPassword()
             .equals(request.getPassword())) {
-            return "비밀번호 오류";
+            throw new CustomException(ResponseCode.ROOM_PASSWORD_ERROR);
         }
-        // 현재 녹화가 진행 중
 //        else if(/* 녹화 진행 중*/){
-//
+//            throw bew CustomException(ResponseCode.RECORD_PROCEEDING);
 //        }
 
         // 접속
@@ -81,8 +81,7 @@ public class OpenViduUtil {
 
             return new MeetingInfoResponse(meetingInfo, token);
         } catch (Exception e) {
-            e.printStackTrace();
-            return "에러 발생";
+            throw new CustomException(ResponseCode.OPENVIDU_ERROR);
         }
     }
 
@@ -114,29 +113,24 @@ public class OpenViduUtil {
 
             return new MeetingInfoResponse(meetingInfo, token);
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw new CustomException(ResponseCode.OPENVIDU_ERROR);
         }
     }
 
-    public boolean leave(String sessionId, String token, Boolean isManager) {
-        // 방이 존재
+    public void leave(String sessionId, String token, Boolean isManager) {
         if (this.mapSessions.get(sessionId) != null
             && this.mapSessionIdsTokens.get(sessionId) != null) {
-            // 접속 중
             if(this.mapSessionIdsTokens.get(sessionId).remove(token) != null){
                 if(isManager){
                     this.mapSessionIdsTokens.remove(sessionId);
                     this.mapSessions.remove(sessionId);
                 }
-                return true;
             } else{
-                // 토큰이 존재하지 않음.
-                return false;
+                throw new CustomException(ResponseCode.OPENBVIDU_TOKEN_ERROR);
             }
+        }else{
+            throw new CustomException(ResponseCode.SESSION_NOT_FOUND);
         }
-        // 세션이 존재하지 않음.
-        return false;
     }
 
     public MeetingInfo findBySessionId(String sessionId) {
@@ -145,18 +139,6 @@ public class OpenViduUtil {
                 return meetingInfo;
             }
         }
-        return null;
-    }
-
-    public Recording startRecording(String sessionId, RecordingProperties properties) {
-        try{
-            Recording recording = this.openVidu.startRecording(sessionId, properties);
-            this.sessionRecordings.put(sessionId, true);
-
-            return recording;
-        } catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }
+        throw new CustomException(ResponseCode.SESSION_NOT_FOUND);
     }
 }
