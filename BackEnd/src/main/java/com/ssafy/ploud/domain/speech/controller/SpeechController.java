@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,7 +29,9 @@ public class SpeechController {
 
     @Operation(summary = "녹화 시작", description = "녹화 시작이 가능한 경우 speechId를 반환한다.")
     @PostMapping("/start")
-    public ApiResponse<?> startSpeech(@RequestParam SpeechStartRequest speechStartRequest) {
+    public ApiResponse<?> startSpeech(@AuthenticationPrincipal UserDetails loginUser,
+        @RequestParam SpeechStartRequest speechStartRequest) {
+        speechStartRequest.setUserId(loginUser.getUsername());
         return ApiResponse.ok("성공", speechService.start(speechStartRequest));
     }
 

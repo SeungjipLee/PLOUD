@@ -15,6 +15,8 @@ public class MeetingInfo {
     private int maxPeople;
     private Boolean isPrivate;
     private String password;
+    private int speechId;
+
     public MeetingInfo(String sessionId, MeetingCreateRequest request) {
         this.sessionId = sessionId;
         this.managerId = request.getManagerId();
@@ -24,6 +26,7 @@ public class MeetingInfo {
         this.maxPeople = request.getMaxPeople();
         this.isPrivate = request.getIsPrivate();
         this.password = request.getPassword();
+        speechId = -1;
     }
 }
 

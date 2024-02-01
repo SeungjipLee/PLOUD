@@ -15,6 +15,7 @@ import io.openvidu.java.client.OpenViduRole;
 import io.openvidu.java.client.Recording;
 import io.openvidu.java.client.RecordingProperties;
 import io.openvidu.java.client.Session;
+import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
+@Transactional
 public class OpenViduUtil {
     private int num = 0;
     private OpenVidu openVidu;
@@ -60,9 +62,10 @@ public class OpenViduUtil {
             .equals(request.getPassword())) {
             throw new CustomException(ResponseCode.ROOM_PASSWORD_ERROR);
         }
-//        else if(/* 녹화 진행 중*/){
-//            throw bew CustomException(ResponseCode.RECORD_PROCEEDING);
-//        }
+        // 녹화 확인
+        else if(meetingInfo.getSpeechId() != -1){
+            throw new CustomException(ResponseCode.RECORD_PROCEEDING);
+        }
 
         // 접속
         meetingInfo.setCurrentPeople(meetingInfo.getCurrentPeople() + 1);
@@ -107,9 +110,6 @@ public class OpenViduUtil {
 
             MeetingInfo meetingInfo = new MeetingInfo(sessionId, request);
             meetingList.add(meetingInfo);
-
-            //
-            System.out.println(meetingInfo.getTitle());
 
             return new MeetingInfoResponse(meetingInfo, token);
         } catch (Exception e) {
