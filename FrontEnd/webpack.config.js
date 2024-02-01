@@ -31,7 +31,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "[name].bundle.js",
+    filename: "index.bundle.js",
     clean: true,
   },
   devServer: {
