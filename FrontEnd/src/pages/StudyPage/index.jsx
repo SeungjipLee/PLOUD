@@ -6,44 +6,37 @@ import Card from "../../components/Card";
 import Button from "../../components/Button";
 import Modal from "../../components/Modal";
 import CreateForm from "./CreateForm";
-import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getMeetingList } from "../../services/meeting";
+
+const tag = "[StudyPage]";
 
 const StudyPage = () => {
   const [modal, setModal] = useState(false);
-  const [serachKeyword, setSearchKeyword] = useState("")
+  const token = useSelector((state) => state.userReducer.token);
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [categoryId, setCategoryId] = useState(0);
+  const [roomList, setRoomList] = useState([]);
   const dispatch = useDispatch();
-  const API_URL = "http://localhost:8000/api/meeting/";
+  let list = [];
 
+  useEffect(() => {
+    async function fetchData() {
+      // You can await here
+      const response = await getMeetingList(
+        token,
+        { categoryId: categoryId, word: searchKeyword },
+        (res) => res,
+        (err) => err
+      );
+      // const list = await response.json()
+      list = response.data.data;
+      console.log(tag, list);
+      setRoomList(list);
+    }
 
-  // useEffect(() => {
-  //   console.log('마운트')
-  //   axios
-  //   .post(
-  //     API_URL + "list",
-  //     {
-  //       categoryId: "a",
-  //       word: "a",
-  //     },
-  //     { headers : {
-  //       Authorization: `Bearer ${token.accessToken}`
-  //     },
-  //      withCredentials: true }
-  //   )
-  //   .then((response) => {
-  //     console.log(response);
-
-  //     if (response.data.status == 200) {
-  //       return response.data;
-  //     } else {
-  //       throw new Error("방 목록 조회 실패");
-  //     }
-  //   }).catch((e) => console.log(e));
-  // }, []) // 두번째 인자인 빈 배열은 마운트 될 때 한번만 실행되어야 함을 나타냄
-
-  const handleChange = (e) => {
-    setSearchKeyword(e.target.value)
-  }
+    fetchData();
+  }, []);
 
   const changeModalState = () => {
     setModal(!modal);
@@ -52,32 +45,87 @@ const StudyPage = () => {
   return (
     <div className="Study">
       <Page header={<Navbar />} footer={<Footer />}>
-        <div>
-          <div>
-            <Button>전체</Button>
-            <Button>면접</Button>
-            <Button>발표</Button>
-            <Button>기타</Button>
+        <div className="study-main">
+          <div className="flex place-content-between">
+            <div className="flex">
+              <Button
+                onClick={() => {
+                  setCategoryId(0);
+                }}
+                styleType={
+                  categoryId === 0
+                    ? "study-category-button study-category-button-activate"
+                    : "study-category-button study-category-button-deactivate"
+                }
+              >
+                전체
+              </Button>
+              <Button
+                onClick={() => {
+                  setCategoryId(1);
+                }}
+                styleType={
+                  categoryId === 1
+                    ? "study-category-button study-category-button-activate"
+                    : "study-category-button study-category-button-deactivate"
+                }
+              >
+                발표
+              </Button>
+              <Button
+                onClick={() => {
+                  setCategoryId(2);
+                }}
+                styleType={
+                  categoryId === 2
+                    ? "study-category-button study-category-button-activate"
+                    : "study-category-button study-category-button-deactivate"
+                }
+              >
+                면접
+              </Button>
+              <Button
+                onClick={() => {
+                  setCategoryId(3);
+                }}
+                styleType={
+                  categoryId === 3
+                    ? "study-category-button study-category-button-activate"
+                    : "study-category-button study-category-button-deactivate"
+                }
+              >
+                기타
+              </Button>
+            </div>
+            <div className="container">
+              <input
+                className="search-room-input"
+                type="text"
+                placeholder="방 이름으로 검색"
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+              />
+            </div>
           </div>
-          <input type="text" placeholder="방 코드로 검색" value={serachKeyword} onChange={handleChange}/>
-        </div>
 
-        <div className="grid">
-          {[...Array(9)].map((_, index) => (
-            <Card key={index}>Card {index + 1}</Card>
-          ))}
-        </div>
-        <Button onClick={changeModalState}>방 생성하기</Button>
-        {modal && (
-          <Modal
-            title="방 생성"
-            onClose={changeModalState}
-            buttonName="방 만들기"
-          >
-            <CreateForm />
-          </Modal>
-        )}
-        {/* <div class="pagination">
+          <div className="grid">
+            {roomList.map((data, index) => (
+              <Card key={index}>
+                Card {data.sessionId} {index + 1}
+              </Card>
+            ))}
+          </div>
+          <Button onClick={changeModalState}>방 생성하기</Button>
+          {modal && (
+            <Modal
+              title="방 생성"
+              onClose={changeModalState}
+              buttonName="방 만들기"
+            >
+              <CreateForm />
+            </Modal>
+          )}
+          {/* <div class="pagination">
           <button onClick={currentPage > 1 ? currentPage-- : null}>
             Previous
           </button>
@@ -85,6 +133,7 @@ const StudyPage = () => {
             Next
           </button>
         </div> */}
+        </div>
       </Page>
     </div>
   );
