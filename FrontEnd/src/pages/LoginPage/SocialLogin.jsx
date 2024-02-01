@@ -1,4 +1,5 @@
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { googleLogin } from "../../services/user";
 
 
 
@@ -16,6 +17,11 @@ const SocialLogin = () => {
               console.log(credentialResponse);
               localStorage.setItem('credential', credentialResponse.credential);
               localStorage.setItem('clientId', credentialResponse.clientId);
+              googleLogin(
+                {token: credentialResponse.credential},
+                (res) => res,
+                (err) => err
+                )
             }}
             onError={() => {
               console.log('Login Failed');

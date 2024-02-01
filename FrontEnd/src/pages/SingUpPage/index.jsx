@@ -1,6 +1,7 @@
-import React, { useState,  } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { checkEmail, checkId, signup, verifyEmail } from "../../services/user";
 
 const DataSubmitForm = () => {
   const [formData, setFormData] = useState({
@@ -48,14 +49,14 @@ const DataSubmitForm = () => {
           nickname: formData.nickname,
           birthYear: formData.birthYear,
         };
-        const response = await axios.post(
-          "http://localhost:8000/api/user/signup",
+        const response = await signup(
           inputForm,
-          { withCredentials: true }
+          (res) => res,
+          (err) => err
         );
-        console.log(response.data);
+
         // 추가적인 성공 처리 로직
-        navigate('/login')
+        navigate("/login");
       } catch (error) {
         console.error("Error sending data", error);
         // 에러 처리 로직
@@ -70,11 +71,12 @@ const DataSubmitForm = () => {
     }
     // 아이디 중복 검사 로직
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/user/userId",
+      const response = await checkId(
         { userId: formData.userId },
-        { withCredentials: true }
+        (res) => res,
+        (err) => err
       );
+      console.log(response);
       // 추가적인 성공 처리 로직
       if (response.data.status == "200") {
         alert("사용 가능한 아이디입니다.");
@@ -93,10 +95,10 @@ const DataSubmitForm = () => {
     e.preventDefault();
     // 이메일 중복 검사 로직
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/user/email",
+      const response = await checkEmail(
         { email: formData.email },
-        { withCredentials: true }
+        (res) => res,
+        (err) => err
       );
       // 추가적인 성공 처리 로직
       if (response.data.status == "200") {
@@ -117,10 +119,10 @@ const DataSubmitForm = () => {
   const handleCheckEmailCode = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/user/verify-email",
+      const response = await verifyEmail(
         { email: formData.email, code: formData.emailCode },
-        { withCredentials: true }
+        (res) => res,
+        (err) => err
       );
       // 추가적인 성공 처리 로직
       if (response.data.status == "200") {
@@ -147,7 +149,7 @@ const DataSubmitForm = () => {
       <h1>회원가입</h1>
       <form onSubmit={handleSubmit}>
         아이디 :
-        {isUserIdValid && 
+        {isUserIdValid && (
           <input
             type="text"
             name="userId"
@@ -156,7 +158,7 @@ const DataSubmitForm = () => {
             placeholder=""
             disabled
           />
-        }
+        )}
         {!isUserIdValid && (
           <input
             type="text"
@@ -166,12 +168,14 @@ const DataSubmitForm = () => {
             placeholder=" ex) ssafy"
           />
         )}
-        {!isUserIdValid && (<span onClick={handleCheckId}>중복확인</span>)}
-        {isUserIdValid && (<span onClick={() => setIsUserIdValid(false)}>취소</span>)}
+        {!isUserIdValid && <span onClick={handleCheckId}>중복확인</span>}
+        {isUserIdValid && (
+          <span onClick={() => setIsUserIdValid(false)}>취소</span>
+        )}
         <br />
         <br />
         이메일 :
-        {isEmailPass && 
+        {isEmailPass && (
           <input
             type="email"
             name="userId"
@@ -180,7 +184,7 @@ const DataSubmitForm = () => {
             placeholder=""
             disabled
           />
-        }
+        )}
         {!isEmailPass && (
           <input
             type="email"
@@ -190,12 +194,12 @@ const DataSubmitForm = () => {
             placeholder=" ex) ssafy@ssafy.com"
           />
         )}
-        {!isEmailPass && (<span onClick={handleCheckEmail}>중복확인</span>)}
-        {isEmailPass && (<span onClick={() => setIsEmailPass(false)}>취소</span>)}
+        {!isEmailPass && <span onClick={handleCheckEmail}>중복확인</span>}
+        {isEmailPass && <span onClick={() => setIsEmailPass(false)}>취소</span>}
         <br />
         <br />
         이메일 코드 확인:
-        {isEmailValid && 
+        {isEmailValid && (
           <input
             type="text"
             name="emailCode"
@@ -204,7 +208,7 @@ const DataSubmitForm = () => {
             placeholder=""
             disabled
           />
-        }
+        )}
         {!isEmailValid && (
           <input
             type="text"
@@ -214,14 +218,11 @@ const DataSubmitForm = () => {
             placeholder=" ex) xAdsXZ"
           />
         )}
-        {!isEmailValid && (<span onClick={handleCheckEmailCode}>인증</span>)}
+        {!isEmailValid && <span onClick={handleCheckEmailCode}>인증</span>}
         {/* {isEmailValid && (<span onClick={() => setIsEmailValid(false)}>취소</span>)}
          */}
         <br />
         <br />
-        
-        
-        
         이름 :
         <input
           type="text"
