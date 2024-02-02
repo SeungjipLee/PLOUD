@@ -13,7 +13,7 @@ import { getMeetingList } from "../../services/meeting";
 const tag = "[StudyPage]";
 
 const StudyPage = () => {
-  const [modal, setModal] = useState(true);
+  const [modal, setModal] = useState(false);
   const token = useSelector((state) => state.userReducer.token);
   const studyList = useSelector((state) => state.studyReducer.studyList);
 
@@ -29,7 +29,7 @@ const StudyPage = () => {
 
   // 엔터키 입력 시 검색
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       searchStudyList();
     }
   };
@@ -38,121 +38,121 @@ const StudyPage = () => {
   const searchStudyList = () => {
     const data = { categoryId, word };
 
-    getMeetingList(token, data, 
+    getMeetingList(
+      token,
+      data,
       (response) => {
         console.log(response.data.data);
         dispatch(getStudyList(response.data.data));
-      }, 
-      (error) => console.log(error));
-  }
+      },
+      (error) => console.log(error)
+    );
+  };
 
-  useEffect(() => {
-    // 모달 외부 클릭 감지 함수
-    const handleClickOutside = (event) => {
-      if (modal && !event.target.closest(".Modal")) {
-        changeModalState(false);
-      }
-    };
+  // useEffect(() => {
+  //   // 모달 외부 클릭 감지 함수
+  //   const handleClickOutside = (event) => {
+  //     if (modal && !event.target.closest(".Modal")) {
+  //       changeModalState(false);
+  //     }
+  //   };
 
-    // 모달이 활성화되어 있을 때만 이벤트 리스너 추가
-    if (modal) {
-      window.addEventListener("click", handleClickOutside);
-    }
+  //   // 모달이 활성화되어 있을 때만 이벤트 리스너 추가
+  //   if (modal) {
+  //     window.addEventListener("click", handleClickOutside);
+  //   }
 
-    // 컴포넌트가 언마운트되거나 모달이 닫힐 때 이벤트 리스너 제거
-    return () => {
-      window.removeEventListener("click", handleClickOutside);
-    };
-  }, [modal]);
+  //   // 컴포넌트가 언마운트되거나 모달이 닫힐 때 이벤트 리스너 제거
+  //   return () => {
+  //     window.removeEventListener("click", handleClickOutside);
+  //   };
+  // }, [modal]);
 
   const changeModalState = () => {
     setModal(!modal);
-    console.log(modal)
+    console.log(modal);
   };
 
   return (
-    <div className="Study">
-      <Page header={<Navbar />} footer={<Footer />}>
-        <div className="study-main">
-          <div className="flex place-content-between">
-            <div className="flex">
-              <Button
-                onClick={() => {
-                  setCategoryId(0);
-                }}
-                styleType={
-                  categoryId === 0
-                    ? "study-category-button study-category-button-activate"
-                    : "study-category-button study-category-button-deactivate"
-                }
-              >
-                전체
-              </Button>
-              <Button
-                onClick={() => {
-                  setCategoryId(1);
-                }}
-                styleType={
-                  categoryId === 1
-                    ? "study-category-button study-category-button-activate"
-                    : "study-category-button study-category-button-deactivate"
-                }
-              >
-                발표
-              </Button>
-              <Button
-                onClick={() => {
-                  setCategoryId(2);
-                }}
-                styleType={
-                  categoryId === 2
-                    ? "study-category-button study-category-button-activate"
-                    : "study-category-button study-category-button-deactivate"
-                }
-              >
-                면접
-              </Button>
-              <Button
-                onClick={() => {
-                  setCategoryId(3);
-                }}
-                styleType={
-                  categoryId === 3
-                    ? "study-category-button study-category-button-activate"
-                    : "study-category-button study-category-button-deactivate"
-                }
-              >
-                기타
-              </Button>
+    <>
+      <div
+        className="Study"
+        style={{
+          opacity: modal ? "0.6" : "1",
+        }}
+      >
+        <Page header={<Navbar />} footer={<Footer />}>
+          <div className="study-main">
+            <div className="flex place-content-between">
+              <div className="flex">
+                <Button
+                  onClick={() => {
+                    setCategoryId(0);
+                  }}
+                  styleType={
+                    categoryId === 0
+                      ? "study-category-button study-category-button-activate"
+                      : "study-category-button study-category-button-deactivate"
+                  }
+                >
+                  전체
+                </Button>
+                <Button
+                  onClick={() => {
+                    setCategoryId(1);
+                  }}
+                  styleType={
+                    categoryId === 1
+                      ? "study-category-button study-category-button-activate"
+                      : "study-category-button study-category-button-deactivate"
+                  }
+                >
+                  발표
+                </Button>
+                <Button
+                  onClick={() => {
+                    setCategoryId(2);
+                  }}
+                  styleType={
+                    categoryId === 2
+                      ? "study-category-button study-category-button-activate"
+                      : "study-category-button study-category-button-deactivate"
+                  }
+                >
+                  면접
+                </Button>
+                <Button
+                  onClick={() => {
+                    setCategoryId(3);
+                  }}
+                  styleType={
+                    categoryId === 3
+                      ? "study-category-button study-category-button-activate"
+                      : "study-category-button study-category-button-deactivate"
+                  }
+                >
+                  기타
+                </Button>
+              </div>
+              <div className="container">
+                <input
+                  className="search-room-input"
+                  type="text"
+                  placeholder="방 이름으로 검색"
+                  value={word}
+                  onChange={(e) => setWord(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                />
+              </div>
             </div>
-            <div className="container">
-              <input
-                className="search-room-input"
-                type="text"
-                placeholder="방 이름으로 검색"
-                value={word}
-                onChange={(e) => setWord(e.target.value)}
-                onKeyDown={handleKeyDown}
-              />
-            </div>
-          </div>
 
-          <div className="grid">
-            {studyList.map((data, index) => (
-              <Card key={index}>
-              </Card>
-            ))}
+            <div className="grid">
+              {studyList.map((data, index) => (
+                <Card key={index}></Card>
+              ))}
+            </div>
+            <Button onClick={changeModalState}>방 생성하기</Button>
           </div>
-          <Button onClick={changeModalState}>방 생성하기</Button>
-          {modal && (
-            <Modal
-              title="방 생성"
-              // onClose={changeModalState}
-              buttonName="방 만들기"
-            >
-              <CreateForm />
-            </Modal>
-          )}
           {/* <div class="pagination">
           <button onClick={currentPage > 1 ? currentPage-- : null}>
             Previous
@@ -161,9 +161,14 @@ const StudyPage = () => {
             Next
           </button>
         </div> */}
-        </div>
-      </Page>
-    </div>
+        </Page>
+      </div>
+      {modal && (
+        <Modal title="방 생성" onClose={changeModalState}>
+          <CreateForm onClose={changeModalState} />
+        </Modal>
+      )}
+    </>
   );
 };
 

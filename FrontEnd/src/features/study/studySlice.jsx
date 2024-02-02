@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   studyList: [],
+  studyInfo: undefined,
 };
 
 export const studySlice = createSlice({
@@ -11,8 +12,12 @@ export const studySlice = createSlice({
     getStudyList: (state, action) => {
       state.studyList = action.payload;
     },
+    getStudy: (state, action) => {
+      console.log(action.payload);
+      state.studyInfo = action.payload;
+    }
   },
 });
 
-export const { getStudyList } = studySlice.actions;
+export const { getStudyList, getStudy } = studySlice.actions;
 export default studySlice.reducer;
