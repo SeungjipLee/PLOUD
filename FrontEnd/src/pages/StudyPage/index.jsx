@@ -150,7 +150,7 @@ const StudyPage = () => {
             <div className="grid">
               {studyList.map((data, index) => (
                 <RoomCard key={index} data={data} />
-              ))}
+              ))}  
             </div>
             <div className="study-button-container">
               <Button onClick={changeModalState}>방 만들기</Button>
