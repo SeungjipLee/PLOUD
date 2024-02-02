@@ -55,7 +55,10 @@ public class RecordController {
     // 통계 조회
     @Operation(summary = "마이페이지 스피치 통계 조회", description = "마이페이지에 표시할 스피치 통계 정보를 조회한다.")
     @PostMapping("/score")
-    public ApiResponse<?> scoreSpeech(){
-        return ApiResponse.ok("성공", recordService.getSpeechScore());
+    public ApiResponse<?> scoreSpeech(@AuthenticationPrincipal UserDetails loginUser) {
+        if (loginUser == null) {
+            throw new CustomException(ResponseCode.USER_LOGIN_RERQUIRED);
+        }
+        return ApiResponse.ok("성공", recordService.getSpeechScore(loginUser.getUsername()));
     }
 }

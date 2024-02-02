@@ -15,5 +15,5 @@ public interface RecordService {
 
     String deleteVideo(int speechId); // 영상 삭제
 
-    TotalScoreResponse getSpeechScore(); // 마이페이지 스피치 통계 조회
+    TotalScoreResponse getSpeechScore(String userId); // 마이페이지 스피치 통계 조회
 }

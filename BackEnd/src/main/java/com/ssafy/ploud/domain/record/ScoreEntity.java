@@ -7,6 +7,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.Getter;
 
 @Entity
@@ -37,6 +39,17 @@ public class ScoreEntity {
         .clarity(clarity)
         .eye(eye)
         .grade((volume + speed + clarity) / 3)
+        .build();
+  }
+
+  public ScoreDetail toDtoWithSpeechDate(LocalDateTime speechDate) {
+    return ScoreDetail.builder()
+        .volume(volume)
+        .speed(speed)
+        .clarity(clarity)
+        .eye(eye)
+        .grade((volume + speed + clarity) / 3)
+        .date(speechDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")))
         .build();
   }
 

@@ -86,7 +86,7 @@ public class SpeechEntity {
         .speechId(id)
         .userId(user.getUserId())
         .speechMode(mode)
-        .startsAt(recordTime.format(DateTimeFormatter.ofPattern("yyyy.mm.dd hh:mm")))
+        .startsAt(recordTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")))
         .comment(comment)
         .build();
   }

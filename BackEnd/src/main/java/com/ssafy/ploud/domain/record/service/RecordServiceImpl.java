@@ -3,11 +3,13 @@ package com.ssafy.ploud.domain.record.service;
 import com.ssafy.ploud.common.exception.CustomException;
 import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.record.FeedbackEntity;
+import com.ssafy.ploud.domain.record.ScoreEntity;
 import com.ssafy.ploud.domain.record.VideoEntity;
 import com.ssafy.ploud.domain.record.dto.request.RecordListRequest;
 import com.ssafy.ploud.domain.record.dto.response.FeedbackDetail;
 import com.ssafy.ploud.domain.record.dto.response.RecordDetailResponse;
 import com.ssafy.ploud.domain.record.dto.response.RecordListResponse;
+import com.ssafy.ploud.domain.record.dto.response.ScoreDetail;
 import com.ssafy.ploud.domain.record.dto.response.SpeechDetail;
 import com.ssafy.ploud.domain.record.dto.response.TotalScoreResponse;
 import com.ssafy.ploud.domain.record.dto.response.VideoDetail;
@@ -91,12 +93,21 @@ public class RecordServiceImpl implements RecordService{
     }
 
     @Override
-    public TotalScoreResponse getSpeechScore() {
+    public TotalScoreResponse getSpeechScore(String userId) {
 
-        // 음... score db에서 조회해서
+        // userId 사용자가 했던 모든 speechId 찾기 -> speech entity 찾기
+        List<SpeechEntity> speechList = speechRepository.findAllByUser_userIdOrderByRecordTimeAsc(userId);
+        // TODO: 연습, 스터디 시간 리턴
 
-        // 가공 후에 반환하기
+        TotalScoreResponse res = new TotalScoreResponse();
 
-        return null;
+        List<ScoreDetail> dtoList = new ArrayList<>();
+        for (SpeechEntity speech : speechList) {
+            ScoreEntity score = speech.getScore();
+            dtoList.add(score.toDtoWithSpeechDate(speech.getRecordTime()));
+        }
+
+        res.setScoreChange(dtoList);
+        return res;
     }
 }
