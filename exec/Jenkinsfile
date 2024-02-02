@@ -7,14 +7,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout Source Code') {
-            steps {
-                echo 'Checking out code...'
-                checkout([$class: 'GitSCM', branches: [[name: 'infra/jenkins']],
-                userRemoteConfigs: [[url: 'https://lab.ssafy.com/s10-webmobile1-sub2/S10P12E207.git']]])
-            }
-        }
-
         stage('Build BE') {
             steps {
                 echo 'Building BE...'
