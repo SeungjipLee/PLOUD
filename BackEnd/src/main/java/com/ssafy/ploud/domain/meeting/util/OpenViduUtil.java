@@ -124,6 +124,12 @@ public class OpenViduUtil {
                 if(isManager){
                     this.mapSessionIdsTokens.remove(sessionId);
                     this.mapSessions.remove(sessionId);
+
+                    for(int i = 0; i < meetingList.size(); ++i){
+                        if(meetingList.get(i).getSessionId().equals(sessionId)){
+                            meetingList.remove(i);
+                        }
+                    }
                 }
             } else{
                 throw new CustomException(ResponseCode.OPENBVIDU_TOKEN_ERROR);
