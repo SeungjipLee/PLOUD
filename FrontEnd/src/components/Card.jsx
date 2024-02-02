@@ -1,5 +1,5 @@
 const Card = ({ header, footer, children }) => (
-    <div className="Card">
+    <div>
       {header && <header>{header}</header>}
       <main>
         {children}
@@ -8,5 +8,16 @@ const Card = ({ header, footer, children }) => (
     </div>
   );
   
-  export default Card;
+export default Card;
   
+// {
+//   categoryId: 1,
+//   currentPeople: 1,
+//   isPrivate: false,
+//   managerId: "kyd1126",
+//   maxPeople: 3,
+//   password: null,
+//   sessionId: "session0",
+//   speechId: -1,
+//   title: "asdfasdf",
+// },

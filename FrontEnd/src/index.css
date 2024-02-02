@@ -131,8 +131,24 @@ a {
 }
 
 .study-main {
+  display: inline-block;
   margin: 100px 25%;
     height: 100%;
+  
+}
+
+.study-button-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.study-button-container > button{
+  width: 100px;
+  margin: 0px 20px;
+  background-color: #2d24a8;
+  color: white;
+  font-weight: bold;
 }
 
 .LoginBox {
@@ -166,3 +182,18 @@ a {
     right: 95px;
     font-size: small;
 }
+
+.card-study-room-info {
+  width: 280px;
+  height: 160px;
+  border-radius: 15px;
+  padding: 20px;
+  background-color: #1D267D;
+  color: white;
+  margin: 10px 20px
+}
+
+.card-study-room-info > h1{
+  font-size: 40px;
+}
+

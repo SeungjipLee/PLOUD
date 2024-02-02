@@ -7,18 +7,21 @@ import Button from "../../components/Button";
 import Modal from "../../components/Modal";
 import CreateForm from "./CreateForm";
 import { useDispatch, useSelector } from "react-redux";
+import { getStudyList } from "../../features/study/studySlice";
 import { getMeetingList } from "../../services/meeting";
+import RoomCard from "./roomCard";
+
+// 방 목록이 리렌더링 되야하는 시점
+// 방을 클릭했을 때 - 방에 사람이 다 들어가서 들어갈 수 없을 때 다시 렌더링되서 보여줘야함
 
 const tag = "[StudyPage]";
 
 const StudyPage = () => {
   const [modal, setModal] = useState(false);
   const token = useSelector((state) => state.userReducer.token);
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const studyList = useSelector((state) => state.studyReducer.studyList);
+  const [word, setWord] = useState("");
   const [categoryId, setCategoryId] = useState(0);
-  const [roomList, setRoomList] = useState([]);
-  const dispatch = useDispatch();
-  let list = [];
   const studyrooms = [
     {
       categoryId: 1,
@@ -26,6 +29,7 @@ const StudyPage = () => {
       isPrivate: false,
       managerId: "kyd1126",
       maxPeople: 3,
+      password: null,
       sessionId: "session0",
       speechId: -1,
       title: "asdfasdf",
@@ -36,6 +40,7 @@ const StudyPage = () => {
       isPrivate: false,
       managerId: "kyd1126",
       maxPeople: 3,
+      password: null,
       sessionId: "session0",
       speechId: -1,
       title: "asdfasdf",
@@ -46,28 +51,51 @@ const StudyPage = () => {
       isPrivate: false,
       managerId: "kyd1126",
       maxPeople: 3,
+      password: null,
+      sessionId: "session0",
+      speechId: -1,
+      title: "asdfasdf",
+    },
+    {
+      categoryId: 1,
+      currentPeople: 1,
+      isPrivate: false,
+      managerId: "kyd1126",
+      maxPeople: 3,
+      password: null,
       sessionId: "session0",
       speechId: -1,
       title: "asdfasdf",
     },
   ];
-  useEffect(() => {
-    async function fetchData() {
-      // You can await here
-      const response = await getMeetingList(
-        token,
-        { categoryId: categoryId, word: searchKeyword },
-        (res) => res,
-        (err) => err
-      );
-      // const list = await response.json()
-      list = response.data.data;
-      console.log(tag, list);
-      setRoomList(list);
-    }
+  const dispatch = useDispatch();
 
-    fetchData();
-  }, []);
+  // 최초 마운트, 카테고리 변경 시 검색
+  useEffect(() => {
+    searchStudyList();
+    console.log(studyrooms);
+  }, [categoryId]);
+
+  // 엔터키 입력 시 검색
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      searchStudyList();
+    }
+  };
+
+  // 스터디 리스트 요청
+  const searchStudyList = () => {
+    const data = { categoryId, word };
+
+    getMeetingList(
+      token,
+      data,
+      (response) => {
+        dispatch(getStudyList(response.data.data));
+      },
+      (error) => console.log(error)
+    );
+  };
 
   // useEffect(() => {
   //   // 모달 외부 클릭 감지 함수
@@ -153,36 +181,30 @@ const StudyPage = () => {
                 className="search-room-input"
                 type="text"
                 placeholder="방 이름으로 검색"
-                value={searchKeyword}
-                onChange={(e) => setSearchKeyword(e.target.value)}
+                value={word}
+                onChange={(e) => setWord(e.target.value)}
+                onKeyDown={handleKeyDown}
               />
             </div>
           </div>
 
           <div className="grid">
             {studyrooms.map((data, index) => (
-              <Card key={index}>
-                <p>{studyrooms.categoryId}</p>
-                <p>{studyrooms.currentPeople}</p>
-                <p>{studyrooms.isPrivate}</p>
-                <p>{studyrooms.managerId}</p>
-                <p>{studyrooms.maxPeople}</p>
-                <p>{studyrooms.sessionId}</p>
-                <p>{studyrooms.speechId}</p>
-                <p>{studyrooms.title}</p>
-              </Card>
+              <RoomCard key={index} data={data} />
             ))}
           </div>
-          <Button onClick={changeModalState}>방 생성하기</Button>
-          {modal && (
-            <Modal
-              title="방 생성"
-              onClose={changeModalState}
-              buttonName="방 만들기"
-            >
-              <CreateForm />
-            </Modal>
-          )}
+          <div className="study-button-container">
+            <Button onClick={changeModalState}>방 만들기</Button>
+            {modal && (
+              <Modal
+                title="방 생성"
+                onClose={changeModalState}
+                buttonName="방 만들기"
+              >
+                <CreateForm />
+              </Modal>
+            )}
+          </div>
           {/* <div class="pagination">
           <button onClick={currentPage > 1 ? currentPage-- : null}>
             Previous
