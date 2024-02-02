@@ -12,7 +12,7 @@ import { getMeetingList } from "../../services/meeting";
 const tag = "[StudyPage]";
 
 const StudyPage = () => {
-  const [modal, setModal] = useState(false);
+  const [modal, setModal] = useState(true);
   const token = useSelector((state) => state.userReducer.token);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [categoryId, setCategoryId] = useState(0);
@@ -38,8 +38,28 @@ const StudyPage = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    // 모달 외부 클릭 감지 함수
+    const handleClickOutside = (event) => {
+      if (modal && !event.target.closest(".Modal")) {
+        changeModalState(false);
+      }
+    };
+
+    // 모달이 활성화되어 있을 때만 이벤트 리스너 추가
+    if (modal) {
+      window.addEventListener("click", handleClickOutside);
+    }
+
+    // 컴포넌트가 언마운트되거나 모달이 닫힐 때 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener("click", handleClickOutside);
+    };
+  }, [modal]);
+
   const changeModalState = () => {
     setModal(!modal);
+    console.log(modal)
   };
 
   return (
@@ -119,7 +139,7 @@ const StudyPage = () => {
           {modal && (
             <Modal
               title="방 생성"
-              onClose={changeModalState}
+              // onClose={changeModalState}
               buttonName="방 만들기"
             >
               <CreateForm />
