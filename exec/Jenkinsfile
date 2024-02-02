@@ -42,7 +42,7 @@ pipeline {
 
         stage('Deploy FE') {
             steps {
-            echo 'Deploying BE...'
+            echo 'Deploying FE...'
                 script {
                     sh 'docker stop ploud-react-app || true'
                     sh 'docker rm ploud-react-app || true'
