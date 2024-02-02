@@ -1,13 +1,8 @@
-const Card = ({ header, data = [], footer }) => (
+const Card = ({ header, footer, children }) => (
     <div className="Card">
       {header && <header>{header}</header>}
       <main>
-        {data.map(({ term, description }) => (
-          <dl key={term}>
-            <dt>{term}</dt>
-            <dd>{description}</dd>
-          </dl>
-        ))}
+        {children}
       </main>
       {footer && <footer>{footer}</footer>}
     </div>

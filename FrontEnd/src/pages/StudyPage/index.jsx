@@ -12,14 +12,45 @@ import { getMeetingList } from "../../services/meeting";
 const tag = "[StudyPage]";
 
 const StudyPage = () => {
-  const [modal, setModal] = useState(true);
+  const [modal, setModal] = useState(false);
   const token = useSelector((state) => state.userReducer.token);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [categoryId, setCategoryId] = useState(0);
   const [roomList, setRoomList] = useState([]);
   const dispatch = useDispatch();
   let list = [];
-
+  const studyrooms = [
+    {
+      categoryId: 1,
+      currentPeople: 1,
+      isPrivate: false,
+      managerId: "kyd1126",
+      maxPeople: 3,
+      sessionId: "session0",
+      speechId: -1,
+      title: "asdfasdf",
+    },
+    {
+      categoryId: 1,
+      currentPeople: 1,
+      isPrivate: false,
+      managerId: "kyd1126",
+      maxPeople: 3,
+      sessionId: "session0",
+      speechId: -1,
+      title: "asdfasdf",
+    },
+    {
+      categoryId: 1,
+      currentPeople: 1,
+      isPrivate: false,
+      managerId: "kyd1126",
+      maxPeople: 3,
+      sessionId: "session0",
+      speechId: -1,
+      title: "asdfasdf",
+    },
+  ];
   useEffect(() => {
     async function fetchData() {
       // You can await here
@@ -38,28 +69,28 @@ const StudyPage = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    // 모달 외부 클릭 감지 함수
-    const handleClickOutside = (event) => {
-      if (modal && !event.target.closest(".Modal")) {
-        changeModalState(false);
-      }
-    };
+  // useEffect(() => {
+  //   // 모달 외부 클릭 감지 함수
+  //   const handleClickOutside = (event) => {
+  //     if (modal && !event.target.closest(".Modal")) {
+  //       changeModalState(false);
+  //     }
+  //   };
 
-    // 모달이 활성화되어 있을 때만 이벤트 리스너 추가
-    if (modal) {
-      window.addEventListener("click", handleClickOutside);
-    }
+  //   // 모달이 활성화되어 있을 때만 이벤트 리스너 추가
+  //   if (modal) {
+  //     window.addEventListener("click", handleClickOutside);
+  //   }
 
-    // 컴포넌트가 언마운트되거나 모달이 닫힐 때 이벤트 리스너 제거
-    return () => {
-      window.removeEventListener("click", handleClickOutside);
-    };
-  }, [modal]);
+  //   // 컴포넌트가 언마운트되거나 모달이 닫힐 때 이벤트 리스너 제거
+  //   return () => {
+  //     window.removeEventListener("click", handleClickOutside);
+  //   };
+  // }, [modal]);
 
   const changeModalState = () => {
     setModal(!modal);
-    console.log(modal)
+    console.log(modal);
   };
 
   return (
@@ -129,9 +160,16 @@ const StudyPage = () => {
           </div>
 
           <div className="grid">
-            {roomList.map((data, index) => (
+            {studyrooms.map((data, index) => (
               <Card key={index}>
-                Card {data.sessionId} {index + 1}
+                <p>{studyrooms.categoryId}</p>
+                <p>{studyrooms.currentPeople}</p>
+                <p>{studyrooms.isPrivate}</p>
+                <p>{studyrooms.managerId}</p>
+                <p>{studyrooms.maxPeople}</p>
+                <p>{studyrooms.sessionId}</p>
+                <p>{studyrooms.speechId}</p>
+                <p>{studyrooms.title}</p>
               </Card>
             ))}
           </div>
@@ -139,7 +177,7 @@ const StudyPage = () => {
           {modal && (
             <Modal
               title="방 생성"
-              // onClose={changeModalState}
+              onClose={changeModalState}
               buttonName="방 만들기"
             >
               <CreateForm />
