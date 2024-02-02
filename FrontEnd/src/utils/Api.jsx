@@ -2,7 +2,7 @@ import axios from "axios";
 // import { useDispatch } from "react-redux";
 // import { getNewToken } from "../features/user/userSlice";
 
-const DOMAIN = "https://i10e207.p.ssafy.io";
+const DOMAIN = "http://localhost:8000";
 // const { refreshToken } = useSelector((state) => state.userReducer.token);
 
 const API = (token) => {

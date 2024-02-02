@@ -22,17 +22,12 @@ const Navbar = () => {
         </div>
       </Link>
       <nav className="ml-30">
-        <Link to="/board" style={{color: '#0C134F'}} className="hover:bg-slate-100">게시판</Link>
-        <Link to="/study" style={{color: '#0C134F'}} className="hover:bg-slate-100">스터디</Link>
-        <Link to="/practice" style={{color: '#0C134F'}} className="hover:bg-slate-100">연습</Link>
-        <Link to="/test" style={{color: '#0C134F'}} className="hover:bg-slate-100">테스트</Link>
+        <Link to="/board" style={{color: '#0C134F'}} className="link hover:bg-slate-100">게시판</Link>
+        <Link to="/study" style={{color: '#0C134F'}} className="link hover:bg-slate-100">스터디</Link>
+        <Link to="/practice" style={{color: '#0C134F'}} className="link hover:bg-slate-100">연습</Link>
+        <Link to="/test" style={{color: '#0C134F'}} className="link hover:bg-slate-100">테스트</Link>
       </nav>
       <nav>
-        {!isLogined && (
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <h3 className="font-thin" style={{ color: "#0C134F" }}>
-              로그인이 필요합니다.</h3>
-          </div>)}
         {!isLogined && (
           <div
             style={{
@@ -48,19 +43,14 @@ const Navbar = () => {
             </Link>
           </div>)}
 
-        {isLogined && (
-          <div style={{ display: "flex", justifyContent: "center" }}>
-          <h3 className="font-thin" style={{ color: "#0C134F" }}>
-            {nickname}님</h3>
-          </div>)}
-        {isLogined && (
+          {isLogined && (
           <div
             style={{
               display: "flex",
               justifyContent: "center",
               whiteSpace: "nowrap",
             }}>
-            <Link to="/mypage" style={{ padding:0, paddingRight: 5, color: "#0C134F"}}>마이페이지</Link>
+            <Link to="/mypage" style={{ padding:0, paddingRight: 5, color: "#0C134F"}}>{nickname}님</Link>
             <span onClick={onClickHandler} style={{ padding: 0, color: "#0C134F", marginLeft: "10px", cursor: "pointer" }}>로그아웃</span>
           </div>)}
       </nav>

@@ -41,7 +41,7 @@ export const leaveMeeting = (token, data, success, fail) => {
 // { userId: String, sessionId: String, password: String }
 export const joinMeeting = (token, data, success, fail) => {
   return API(token)
-    .post("meeting/leave", data)
+    .post("meeting/join", data)
     .then(success)
     .catch(fail)
 }
