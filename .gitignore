@@ -187,8 +187,11 @@ $RECYCLE.BIN/
 
 ### Gradle ###
 BackEnd/.gradle/
-**/build/
+BackEnd/build/
 !src/**/build/
+
+### ssafy-log ###
+BackEnd/ssafy-web.log.*
 
 # Ignore Gradle GUI config
 gradle-app.setting

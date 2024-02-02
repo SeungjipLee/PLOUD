@@ -1,13 +1,13 @@
 package com.ssafy.ploud.domain.user.security;
 
-import com.ssafy.ploud.common.exception.UserNotFoundException;
+import com.ssafy.ploud.common.exception.CustomException;
+import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.user.UserEntity;
 import com.ssafy.ploud.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,9 +19,9 @@ public class CustomUserDetailsService implements UserDetailsService {
   private final UserRepository userRepository;
 
   @Override
-  public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+  public UserDetails loadUserByUsername(String userId) throws CustomException {
     UserEntity loginUser = userRepository.findById(userId)
-        .orElseThrow(() -> new UserNotFoundException("유저가 존재하지 않습니다"));
+        .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 
     return User.builder()
         .username(loginUser.getUserId())

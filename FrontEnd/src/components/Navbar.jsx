@@ -22,10 +22,10 @@ const Navbar = () => {
         </div>
       </Link>
       <nav className="ml-30">
-        <Link to="/board" style={{color: '#0C134F'}} className="hover:bg-slate-100">게시판</Link>
-        <Link to="/study" style={{color: '#0C134F'}} className="hover:bg-slate-100">스터디</Link>
-        <Link to="/practice" style={{color: '#0C134F'}} className="hover:bg-slate-100">연습</Link>
-        <Link to="/test" style={{color: '#0C134F'}} className="hover:bg-slate-100">테스트</Link>
+        <Link to="/board" style={{color: '#0C134F'}} className="link hover:bg-slate-100">게시판</Link>
+        <Link to="/study" style={{color: '#0C134F'}} className="link hover:bg-slate-100">스터디</Link>
+        <Link to="/practice" style={{color: '#0C134F'}} className="link hover:bg-slate-100">연습</Link>
+        <Link to="/test" style={{color: '#0C134F'}} className="link hover:bg-slate-100">테스트</Link>
       </nav>
       <nav>
         {!isLogined && (
