@@ -57,13 +57,18 @@ public class RecordServiceImpl implements RecordService{
 
 
     @Override
-    public RecordListResponse getSpeechList(RecordListRequest recordListRequest) {
+    public List<SpeechDetail> getSpeechList(String userId) {
 
         // DB에서 목록 조회
+        List<SpeechEntity> speechList = speechRepository.findTop5ByUser_userIdOrderByRecordTimeDesc(
+            userId);
 
-        // pgno, size에 맞게 조회
+        List<SpeechDetail> dtoList = new ArrayList<>();
+        for(SpeechEntity entity:speechList) {
+            dtoList.add(entity.toDto());
+        }
 
-        return null;
+        return dtoList;
     }
 
     @Override
