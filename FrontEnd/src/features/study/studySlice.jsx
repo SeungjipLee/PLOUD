@@ -1,12 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { request } from "../../lib/axios";
 
 const initialState = {
   studyList: [],
 };
 
 export const studySlice = createSlice({
-  name: "user",
+  name: "study",
   initialState,
   reducers: {
     getStudyList: (state, action) => {

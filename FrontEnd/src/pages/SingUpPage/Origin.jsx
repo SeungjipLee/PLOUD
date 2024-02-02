@@ -1,22 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { checkEmail, checkId, signup, verifyEmail } from "../../services/user";
-import Step1 from "./Step1";
-import Step2 from "./Step2";
-import Step3 from "./Step3";
-import { useSelector, useDispatch } from "react-redux";
-import { updateStep } from "../../features/user/signUpSlice";
-
-
-
 
 const DataSubmitForm = () => {
-  const dispatch = useDispatch()
-  const {step} = useSelector((state) => state.signUpReducer)
-  useEffect(()=>{
-    dispatch(updateStep(1))
-  }, [])
   const [formData, setFormData] = useState({
     userId: undefined,
     email: undefined,
@@ -113,7 +100,6 @@ const DataSubmitForm = () => {
         (res) => res,
         (err) => err
       );
-      console.log(formData.email)
       // 추가적인 성공 처리 로직
       if (response.data.status == "200") {
         alert("가입 가능한 이메일입니다. 메일로 인증번호를 보냈습니다.");
@@ -159,9 +145,138 @@ const DataSubmitForm = () => {
 
   return (
     <>
-      {step === 1 && <Step1 />}
-      {step === 2 && <Step2 />}
-      {step === 3 && <Step3 />}
+      <Link to="/">PLOUD</Link>
+      <h1>회원가입</h1>
+      <form onSubmit={handleSubmit}>
+        아이디 :
+        {isUserIdValid && (
+          <input
+            type="text"
+            name="userId"
+            value={formData.userId}
+            onChange={handleChange}
+            placeholder=""
+            disabled
+          />
+        )}
+        {!isUserIdValid && (
+          <input
+            type="text"
+            name="userId"
+            value={formData.userId}
+            onChange={handleChange}
+            placeholder=" ex) ssafy"
+          />
+        )}
+        {!isUserIdValid && <span onClick={handleCheckId}>중복확인</span>}
+        {isUserIdValid && (
+          <span onClick={() => setIsUserIdValid(false)}>취소</span>
+        )}
+        <br />
+        <br />
+        이메일 :
+        {isEmailPass && (
+          <input
+            type="email"
+            name="userId"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder=""
+            disabled
+          />
+        )}
+        {!isEmailPass && (
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder=" ex) ssafy@ssafy.com"
+          />
+        )}
+        {!isEmailPass && <span onClick={handleCheckEmail}>중복확인</span>}
+        {isEmailPass && <span onClick={() => setIsEmailPass(false)}>취소</span>}
+        <br />
+        <br />
+        이메일 코드 확인:
+        {isEmailValid && (
+          <input
+            type="text"
+            name="emailCode"
+            value={formData.emailCode}
+            onChange={handleChange}
+            placeholder=""
+            disabled
+          />
+        )}
+        {!isEmailValid && (
+          <input
+            type="text"
+            name="emailCode"
+            value={formData.emailCode}
+            onChange={handleChange}
+            placeholder=" ex) xAdsXZ"
+          />
+        )}
+        {!isEmailValid && <span onClick={handleCheckEmailCode}>인증</span>}
+        {/* {isEmailValid && (<span onClick={() => setIsEmailValid(false)}>취소</span>)}
+         */}
+        <br />
+        <br />
+        이름 :
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          placeholder=" ex) 김싸피"
+        />
+        <br />
+        <br /> 닉네임 :
+        <input
+          type="text"
+          minLength="2"
+          maxLength="8"
+          name="nickname"
+          value={formData.nickname}
+          onChange={handleChange}
+          placeholder=" ex) 싸피"
+        />
+        <br />
+        <br /> 비밀번호 :
+        <input
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          placeholder="*********"
+        />
+        <br />
+        <br /> 비밀번호 확인 :
+        <input
+          type="password"
+          name="password_check"
+          value={formData.password_check}
+          onChange={handleChange}
+          placeholder="*********"
+        />
+        <br />
+        <br /> 출생연도 :
+        <select
+          name="birthYear"
+          value={formData.birthYear}
+          onChange={handleChange}
+        >
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+        <br />
+        <br />
+        <button type="submit">회원가입</button>
+      </form>
     </>
   );
 };

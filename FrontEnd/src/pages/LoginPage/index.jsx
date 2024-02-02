@@ -37,47 +37,46 @@ const LoginPage = () => {
 
   return (
     <Page footer={<Footer />}>
-      <Link to="/" element={<MainPage />}>
-        PLOUD
-      </Link>
-      <div className="Login">
-        <h2>Login</h2>
+      <div className="flex justify-center">
+        <a href="/"><img src="images/ICON_similar_white.png" className="w-36 mt-24"/></a>
+      </div>
+      <div className="LoginBox mb-36 py-4 rounded-xl mx-auto">
+        <h2 className="text-white text-3xl text-center py-5">Login</h2>
         <form onSubmit={handleLogin}>
           <input
             type="text"
             id="id"
+            className="block w-2/3 rounded-md border-0 py-1 pl-7 pr-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mx-auto my-5"
             placeholder="id"
             onChange={(e) => {
               setId(e.target.value);
             }}
           />
-          <br />
           <input
             type="password"
             id="pw"
+            className="block w-2/3 rounded-md border-0 py-1 pl-7 pr-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mx-auto my-5"
             placeholder="password"
             onChange={(e) => {
               setPw(e.target.value);
             }}
           />
-          <br />
-          <label>
-            <input type="checkbox" />
-            아이디 저장하기
-          </label>
-          <br />
-          <Button type="submit">Login</Button>
+          <span onClick={handleLogin} className="bg-sky-400 block mt-10 mb-5 text-white w-2/3 mx-auto rounded-md p-2 text-center hover:bg-sky-500">
+            <button type="submit">로그인</button>
+          </span>
         </form>
+        <div className="text-slate-200 py-5 LoginAnother justify-center">
+          <span className="pe-5 hover:text-white">
+            <Link to="/findpw" element={<SignUpPage />}>아이디/비밀번호 찾기</Link>
+          </span>
+          <span className="pe-8 hover:text-white">
+            <Link to="/signup" element={<SignUpPage />}>회원가입</Link>
+          </span>
+        </div>
+        <div className="mx-auto w-1/2 mb-5">
+          <SocialLogin />
+        </div>
       </div>
-
-      <Link to="/findpw" element={<SignUpPage />}>
-        아이디/비밀번호 찾기
-      </Link>
-      <br />
-      <Link to="/signup" element={<SignUpPage />}>
-        회원가입
-      </Link>
-      <SocialLogin />
     </Page>
   );
 };

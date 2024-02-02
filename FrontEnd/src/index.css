@@ -132,4 +132,37 @@ a {
 
 .study-main {
   margin: 100px 25%;
+    height: 100%;
+}
+
+.LoginBox {
+    background-color: #0C134F;
+    margin-top: 3%;
+    width: 450px;
+}
+
+.LoginAnother {
+    display: flex;
+}
+
+.LoginSocial {
+    display: flex;
+}
+
+.textsmall {
+    font-size: 13px;
+}
+
+.moveButton {
+    position: absolute;
+    top:118px;
+    right: 95px;
+    font-size: small;
+}
+
+.moveButton1 {
+    position: absolute;
+    top:178px;
+    right: 95px;
+    font-size: small;
 }
