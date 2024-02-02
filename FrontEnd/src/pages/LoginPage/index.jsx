@@ -31,7 +31,8 @@ const LoginPage = () => {
         dispatch(getUserId(Id));
         navigate("/");
       },
-      (err) => alert("아이디 혹은 비밀번호가 일치하지 않습니다.")
+      (err) => console.log(err)
+      // alert("아이디 혹은 비밀번호가 일치하지 않습니다.")
       );
   };
 
@@ -54,7 +55,7 @@ const LoginPage = () => {
           />
           <input
             type="password"
-            id="pw"
+            id="password"
             className="block w-2/3 rounded-md border-0 py-1 pl-7 pr-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mx-auto my-5"
             placeholder="password"
             onChange={(e) => {

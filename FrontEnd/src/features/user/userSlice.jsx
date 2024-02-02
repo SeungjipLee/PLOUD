@@ -17,6 +17,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     getToken: (state, action) => {
+      console.log(token)
       state.isLogined = true;
       state.token = {
         accessToken: action.payload.data.accessToken,

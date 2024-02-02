@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getStudyList } from "../../features/study/studySlice";
 import { getMeetingList } from "../../services/meeting";
 import RoomCard from "./roomCard";
+import RoomJoinModal from "./RoomJoinModal";
 
 // 방 목록이 리렌더링 되야하는 시점
 // 방을 클릭했을 때 - 방에 사람이 다 들어가서 들어갈 수 없을 때 다시 렌더링되서 보여줘야함
@@ -18,6 +19,7 @@ const tag = "[StudyPage]";
 
 const StudyPage = () => {
   const [modal, setModal] = useState(false);
+  const [isClickRoom, setIsClickRoom] = useState(false)
   const token = useSelector((state) => state.userReducer.token);
   const studyList = useSelector((state) => state.studyReducer.studyList);
   const [word, setWord] = useState("");
@@ -36,6 +38,11 @@ const StudyPage = () => {
       searchStudyList();
     }
   };
+
+  const handleClickCard = (e) => {
+    console.log(tag, "카드 클릭")
+    setIsClickRoom(true)
+  }
 
   // 스터디 리스트 요청
   const searchStudyList = () => {
@@ -149,7 +156,7 @@ const StudyPage = () => {
             </div>
             <div className="grid">
               {studyList.map((data, index) => (
-                <RoomCard key={index} data={data} />
+                <RoomCard onclick={handleClickCard} key={index} data={data} />
               ))}  
             </div>
             <div className="study-button-container">
@@ -170,6 +177,10 @@ const StudyPage = () => {
         <Modal title="방 생성" onClose={changeModalState}>
           <CreateForm />
         </Modal>
+      )}
+      {isClickRoom && (
+        <RoomJoinModal title="방에 참여하시겠습니까?" onClose={changeModalState}>
+        </RoomJoinModal>
       )}
     </>
   );

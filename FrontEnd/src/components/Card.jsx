@@ -1,5 +1,5 @@
-const Card = ({ header, footer, children }) => (
-    <div>
+const Card = ({ header, footer, children, onClick }) => (
+    <div className="custom-card" onClick={onClick}>
       {header && <header>{header}</header>}
       <main>
         {children}

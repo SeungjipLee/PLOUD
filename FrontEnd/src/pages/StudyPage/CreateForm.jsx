@@ -6,7 +6,7 @@ import { getStudy } from "../../features/study/studySlice";
 import { useNavigate } from "react-router";
 
 const CreateForm = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     categoryId: undefined,
     title: undefined,
@@ -18,10 +18,12 @@ const CreateForm = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.userReducer.token);
 
-  const [isSecret, setIsSecret] = useState(false);
-
-  const handleClick = (e) => {
-    setIsSecret(e.target.value == "true" ? true : false);
+  // isPrivate 값을 업데이트하는 함수
+  const updateIsPrivate = (newIsPrivateValue) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData, // 기존 formData의 다른 필드들을 유지
+      isPrivate: newIsPrivateValue, // isPrivate 필드만 새로운 값으로 업데이트
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -36,7 +38,8 @@ const CreateForm = () => {
       (response) => {
         console.log(response.data.data);
         dispatch(getStudy(response.data.data));
-        navigate("/study/room")
+        console.log(formData.isPrivate);
+        // navigate("/study/room")
       },
       (error) => {
         console.log(error);
@@ -66,7 +69,7 @@ const CreateForm = () => {
               id="title"
               name="title"
               value={formData.title}
-              style={{color: "black", paddingLeft: "10px"}}
+              style={{ color: "black", paddingLeft: "10px" }}
               onChange={handleChange}
             />
           </label>
@@ -111,6 +114,7 @@ const CreateForm = () => {
               <option value="0">전체</option>
               <option value="1">면접</option>
               <option value="2">발표</option>
+              <option value="3">기타</option>
             </select>
           </label>
         </div>
@@ -128,7 +132,7 @@ const CreateForm = () => {
             style={{ display: "flex", alignItems: "center" }}
           >
             <p style={{ margin: "0", marginRight: "20px" }}>비밀번호</p>
-            {isSecret ? (
+            {formData.isPrivate ? (
               <input
                 type="password"
                 id="password"
@@ -158,8 +162,8 @@ const CreateForm = () => {
               type="radio"
               name="isPrivate"
               id="public"
-              value="false"
-              onClick={handleClick}
+              value={false}
+              onChange={() => updateIsPrivate(false)}
               defaultChecked
             />
             <label htmlFor="private" style={{ margin: "0 5px" }}>
@@ -169,8 +173,8 @@ const CreateForm = () => {
               type="radio"
               name="isPrivate"
               id="private"
-              value="true"
-              onClick={handleClick}
+              value={true}
+              onChange={() => updateIsPrivate(true)}
             />
           </div>
         </div>
@@ -188,14 +192,13 @@ const CreateForm = () => {
               color: "black",
               padding: "5px",
               fontWeight: "bold",
-              borderRadius: "5px"
+              borderRadius: "5px",
             }}
           >
             방 만들기
           </button>
         </div>
       </form>
-
     </>
   );
 };
