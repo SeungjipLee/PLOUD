@@ -24,6 +24,7 @@ export const userSlice = createSlice({
         tokenType: action.payload.data.tokenType
       }
       state.nickname = action.payload.data.nickname; // 추가: nickname 정보 저장
+      console.log(state.nickname, action.payload.data)
     },
     getNewToken: (state, action) => {
       state.token = action.payload.data

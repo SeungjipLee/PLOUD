@@ -2,9 +2,7 @@ import React from "react";
 import Page from "../../components/Page";
 import Footer from "../../components/Footer";
 import { Link } from "react-router-dom";
-import MainPage from "../MainPage";
 import SignUpPage from "../SingUpPage";
-import Button from "../../../src/components/Button";
 import SocialLogin from "./SocialLogin";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -41,22 +39,22 @@ const LoginPage = () => {
         <a href="/"><img src="images/ICON_similar_white.png" className="w-36 mt-24"/></a>
       </div>
       <div className="LoginBox mb-36 py-4 rounded-xl mx-auto">
-        <h2 className="text-white text-3xl text-center py-5">Login</h2>
+        <h2 className="text-white text-3xl text-center py-5">로그인</h2>
         <form onSubmit={handleLogin}>
           <input
             type="text"
             id="id"
             className="block w-2/3 rounded-md border-0 py-1 pl-7 pr-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mx-auto my-5"
-            placeholder="id"
+            placeholder="아이디"
             onChange={(e) => {
               setId(e.target.value);
             }}
           />
           <input
             type="password"
-            id="pw"
+            id="password"
             className="block w-2/3 rounded-md border-0 py-1 pl-7 pr-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mx-auto my-5"
-            placeholder="password"
+            placeholder="비밀번호"
             onChange={(e) => {
               setPw(e.target.value);
             }}
@@ -71,7 +69,7 @@ const LoginPage = () => {
           </span>
           <span className="pe-8 hover:text-white">
             <Link to="/signup" element={<SignUpPage />}>회원가입</Link>
-          </span>
+          </span> 
         </div>
         <div className="mx-auto w-1/2 mb-5">
           <SocialLogin />

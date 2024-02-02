@@ -3,10 +3,7 @@ import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
 import Footer from "../../components/Footer";
 import { Link } from "react-router-dom";
-import PracticePage from "../PracticePage";
-import StudyPage from "../StudyPage";
 import API from '../../utils/Api';
-import axios from 'axios'
 
 // 메인페이지
 
@@ -25,21 +22,6 @@ export const login = async (code) => {
     return data;
 }
 
-// export const getDeposit = function () {
-//   axios({
-//     method: "get",
-//     url: "http://127.0.0.1:8000/finance/deposits",
-//   })
-//     .then((response) => {
-//       this.setState({
-//         depositProducts: response.data
-//       })
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//     });
-// };
-
 class MainPage extends React.Component {
   constructor() {
     super();
@@ -48,9 +30,7 @@ class MainPage extends React.Component {
     };
   }
 
-  // componentDidMount() {
-  //   getDeposit();
-  // }
+
 
 
   render() {
@@ -65,28 +45,24 @@ class MainPage extends React.Component {
               <video src="videos/cat.mp4" autoPlay loop />
             </div>
             <div className='Main2Container'>
-              <div className="mainBlueB text-white card mx-16 me-36 ms-12 text-center pt-5">Carousel</div>
-              <div className="mainBlueB text-white card mx-16 me-36 ms-12 text-center pt-5">오늘의 발표 수</div>
+              <div className="mainBlueB text-white card mx-16 me-36 ms-12 text-center pt-5 my-5">Carousel</div>
+              <div className="mainBlueB text-white card mx-16 me-36 ms-12 text-center pt-5 my-5">오늘의 발표 수</div>
             </div>
           </div>
           <div className="Main3">
-            <h2 className='text-5xl text-center pt-24 '>스피치 실력을 키워볼까요?</h2>
-            <div className="Main2 mb-24 text-center">
-              <div className="pcard practice py-5 m-36 me-24">
-              <Link to="/practice">혼자연습</Link>
-                <div className='human1 py-5'>
-                  <img src="images/person.PNG"/>
-                </div>
-                연습하러 바로가기
+            <h2 className='text-5xl text-center pt-24 font-bold'>스피치 실력을 키워볼까요?</h2>
+            <div className='Main3_1 mt-32'>
+              <div class="subtitleImg me-12 mb-24">
+                <Link to="/practice">
+                <img src="images/solo.png"/>
+                <div class="text">연습모드 바로가기</div>
+                </Link>
               </div>
-              <div className='pcard practice py-5 me-36'>
-                <Link to="/study">함께연습</Link>
-                <div className='human1 justify-center py-5'>
-                  <img src="images/person.PNG" className='human2'/>
-                  <img src="images/person.PNG" className='human2'/>
-                  <img src="images/person.PNG" className='human2'/>
-                </div>
-                스터디룸 바로가기
+              <div class="subtitleImg mb-24">
+                <Link to="/study">
+                <img src="images/study.png"/>
+                <div class="text">스터디룸 바로가기</div>
+                </Link>
               </div>
             </div>
           </div>

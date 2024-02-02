@@ -13,7 +13,6 @@ import News from "../pages/PracticePage/sidebar/News";
 import Speech from "../pages/PracticePage/sidebar/Speech";
 import TestPage from "../pages/TestPage";
 import TestPage2 from "../pages/TestPage2";
-import StudyRoomPage from "../pages/StudyRoomPage"
 
 const Router = () => {
   return (
@@ -24,7 +23,6 @@ const Router = () => {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/board" element={<BoardPage />} />
         <Route path="/study" element={<StudyPage />} />
-        <Route path="/study/room" element={<StudyRoomPage />} />
         <Route path="/practice" element={<PracticePage />} />
         <Route path="/practice/news" element={<News />} />
         <Route path="/practice/speech" element={<Speech />} />

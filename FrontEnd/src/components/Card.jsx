@@ -1,23 +1,17 @@
-const Card = ({ header, footer, children }) => (
-    <div>
+const Card = ({ header, data = [], footer }) => (
+    <div className="Card">
       {header && <header>{header}</header>}
       <main>
-        {children}
+        {data.map(({ term, description }) => (
+          <dl key={term}>
+            <dt>{term}</dt>
+            <dd>{description}</dd>
+          </dl>
+        ))}
       </main>
       {footer && <footer>{footer}</footer>}
     </div>
   );
   
-export default Card;
+  export default Card;
   
-// {
-//   categoryId: 1,
-//   currentPeople: 1,
-//   isPrivate: false,
-//   managerId: "kyd1126",
-//   maxPeople: 3,
-//   password: null,
-//   sessionId: "session0",
-//   speechId: -1,
-//   title: "asdfasdf",
-// },

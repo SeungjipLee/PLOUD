@@ -1,138 +1,132 @@
-import Footer from "../../components/Footer";
+import React from "react";
 import Page from "../../components/Page";
-import Button from "../../components/Button";
-import SignUpPage from "../SingUpPage";
+import Footer from "../../components/Footer";
+import { Link } from "react-router-dom";
 import LoginPage from ".";
-import MainPage from "../MainPage";
-import { Link, useNavigate } from "react-router-dom";
-import React, {useState} from "react";
-import axios from "axios";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-
+import SignUpPage from "../SingUpPage";
+import SocialLogin from "./SocialLogin";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { findId, findPw } from "../../services/user";
 
 const FindPwPage = () => {
-  const [formData, setFormData] = useState({
-    name: undefined,
-    idEmail: undefined,
-    userId: undefined,
-    pwEmail: undefined,
-    });
-  
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  let navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [id, setId] = useState("");
+  const [isIdFind, setIsIdFind] = useState(false)
+
+  const handleFindId = (e) => {
+    e.preventDefault();
+    findId(
+      {email: email, name: name},
+      (res) => {
+        alert(`아이디는 ${res.data.data.userId}입니다.`)
+      },
+      (err) => {
+        alert("이름이나 이메일 정보가 올바르지 않습니다.")
+      }
+    );
   };
-  
-  const navigate = useNavigate()
 
-  const handleSubmitId = async (e) => {
+  const handleFindPw = (e) => {
     e.preventDefault();
-    try {
-      const inputForm = {
-        email: formData.idEmail,
-        name: formData.name
+    findPw(
+      {userId:id, email:email},
+      (res) => {
+        alert('(비밀번호 초기화) 메일로 새비밀번호를 전송하였습니다.')
+        navigate('/')
+      },
+      (err) => {
+        alert("아이디나 이메일 정보가 올바르지 않습니다.")
       }
-      const response = await axios.post(
-        "http://localhost:8000/api/user/find-id",
-        inputForm,
-        { withCredentials: true }
-      );
-      console.log(response.data.data.userId)
-      if (response.data.status == "200") {
-        alert(`찾으시는 아이디는 ${response.data.data.userId}입니다.`)
-      } else if (response.data.status == "404") {
-        alert('해당 정보로 가입된 아이디가 존재하지 않습니다.')
-      } else {
-        alert('입력이 올바른지 확인해주세요')
-      }
-    } catch (error) {
-      console.error("Error sending data", error);
-      alert("해당 정보로 가입된 아이디가 존재하지 않습니다.")
-    }
+    )
   }
 
-  const handleSubmitPw = async (e) => {
-    e.preventDefault();
-    try {
-      const inputForm = {
-        userId: formData.userId,
-        email: formData.pwEmail
-      }
-      const response = await axios.post(
-        "http://localhost:8000/api/user/find-pw",
-        inputForm,
-        { withCredentials: true }
-      );
-      console.log(response.data)
-      if (response.data.status == "200") {
-        alert(`임시 비밀번호 변경 완료. 이메일 확인 바랍니다.`)
-        navigate('/login')
-      } else if (response.data.status == "404") {
-        alert('입력된 정보가 올바른지 확인해주시길 바랍니다.')
-      } else {
-        alert('잠시 후 다시 진행해주시길 바랍니다.')
-      }
-    } catch (error) {
-      console.error("Error sending data", error);
-      alert("(오류 발생) 잠시 후 다시 진행해주시길 바랍니다.")
-    }
+  const changeId = () => {
+    setIsIdFind(false)
   }
 
+  const changePw = () => {
+    setIsIdFind(true)
+  }
 
   return (
-    <>
-      <Page footer={<Footer />}>
-        <Link to="/">PLOUD</Link>
-        <div>
-          <h2>아이디 찾기</h2>
-          <form onSubmit={handleSubmitId}>
-            이름 :
-            <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder=" ex) 김싸피" />
-            <br /><br />
-            이메일 :
-            <input type="email" name="idEmail" value={formData.idEmail} onChange={handleChange} placeholder=" ex) ssafy@ssafy.com" />
-            <br /><br />
-            <Button>아이디 찾기</Button>
-          </form>
-          <br /><br />
-          <h2>비밀번호 찾기</h2>
-          <form onSubmit={handleSubmitPw}>
-            아이디 :
-            <input type="text" name="userId" value={formData.userId} onChange={handleChange} placeholder=" ex) ssafy" />
-            <br /><br />
-            이메일 :
-            <input type="email" name="pwEmail" value={formData.pwEmail} onChange={handleChange} placeholder=" ex) ssafy@ssafy.com" />
-            <br /><br />
-            <Button>비밀번호 찾기</Button>
-          </form>
-          <br /><br />
-          <Link to="/signup" element={<SignUpPage />}>
-            회원가입
-          </Link>
-          <br /><br />
-          <Link to="/login" element={<LoginPage />}>
-            로그인
-          </Link>
+    <Page footer={<Footer />}>
+      <div className="flex justify-center">
+        <a href="/"><img src="images/ICON_similar_white.png" className="w-36 mt-24"/></a>
+      </div>
+      <div className="LoginBox mb-36 py-4 rounded-xl mx-auto">
+        <h2 className="text-white text-2xl text-center py-5">
+          {!isIdFind&&<span className="mx-5 font-extrabold" onClick={changeId}>아이디 찾기</span>}
+          {isIdFind&&<span className="mx-5 text-gray-300" onClick={changeId}>아이디 찾기</span>}
+          {!isIdFind&&<span className="mx-5  text-gray-300" onClick={changePw}>비밀번호 찾기</span>}
+          {isIdFind&&<span className="mx-5 font-extrabold" onClick={changePw}>비밀번호 찾기</span>}
+          </h2>
+        {!isIdFind&&<form onSubmit={handleFindId}>
+          <input
+            type="text"
+            id="name"
+            className="block w-2/3 rounded-md border-0 py-1 pl-7 pr-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mx-auto my-5"
+            placeholder="이름"
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+          />
+          <input
+            type="email"
+            id="email"
+            className="block w-2/3 rounded-md border-0 py-1 pl-7 pr-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mx-auto my-5"
+            placeholder="이메일"
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+          />
+          <span onClick={handleFindId} className="bg-sky-400 block mt-10 mb-5 text-white w-2/3 mx-auto rounded-md p-2 text-center hover:bg-sky-500">
+            <button type="submit">아이디 찾기</button>
+          </span>
+        </form>}
 
-          <GoogleOAuthProvider 
-          clientId="392523178125-21b3u9bb52injjfa9kjdb3a0vbijcidg.apps.googleusercontent.com"
-          onScriptLoadError={() => console.log("실패")}
-          onScriptLoadSuccess={() => console.log("성공")}
-          >
-            <GoogleLogin
-              onSuccess={credentialResponse => {
-                console.log(credentialResponse);
-                localStorage.setItem('credential', credentialResponse.credential);
-                localStorage.setItem('clientId', credentialResponse.clientId);
-              }}
-              onError={() => {
-                console.log('Login Failed');
-              }}
-            />
-          </GoogleOAuthProvider>
-          
+        {isIdFind&&<form onSubmit={handleFindPw}>
+          <input
+            type="text"
+            id="id"
+            className="block w-2/3 rounded-md border-0 py-1 pl-7 pr-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mx-auto my-5"
+            placeholder="아이디"
+            onChange={(e) => {
+              setId(e.target.value);
+            }}
+          />
+          <input
+            type="email"
+            id="email"
+            className="block w-2/3 rounded-md border-0 py-1 pl-7 pr-7 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mx-auto my-5"
+            placeholder="이메일"
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+          />
+          <span onClick={handleFindPw} className="bg-sky-400 block mt-10 mb-5 text-white w-2/3 mx-auto rounded-md p-2 text-center hover:bg-sky-500">
+            <button type="submit">비밀번호 찾기</button>
+          </span>
+        </form>}
+        
+        <div className="text-slate-200 my-5 LoginAnother justify-center">
+          <span className="pe-5 hover:text-white">
+            <Link to="/login" element={<LoginPage />}>로그인</Link>
+          </span>
+          <span className="pe-8 hover:text-white">
+            <Link to="/signup" element={<SignUpPage />}>회원가입</Link>
+          </span> 
         </div>
-      </Page>
-    </>
+        <div className="mx-auto w-1/2 mb-5">
+          <SocialLogin />
+        </div>
+      </div>
+    </Page>
   );
 };
 

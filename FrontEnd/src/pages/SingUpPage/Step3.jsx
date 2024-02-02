@@ -58,7 +58,7 @@ const Step3 = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (validateName() && isNicknameValid) {
+    if (validateName() && isNicknameValid && validateNickname()) {
       dispatch(getUserData({ nickname: formData.nickname, name: formData.name, birthYear: formData.birthYear }))
       // 여기서 완전 회원가입 요청 ㄱㄱ
       const inputForm = {
@@ -73,6 +73,7 @@ const Step3 = () => {
         res => res,
         err => err)
       console.log(response)
+      alert('회원가입이 성공적으로 완료되었습니다.')
       navigate("/login")
     } else {
       alert("이름을 다시 확인해주세요. 이름은 특수문자 제외 2~10자 이내입니다.")
@@ -130,9 +131,9 @@ const Step3 = () => {
           </select>
         </div>
         <button className="moveButton" onClick={handleCheckNickname}>중복확인</button>
-        <div className="w-80 mx-auto my-10"><img src="images/Step3.png" /></div>
+        <div className="w-80 mx-auto mt-5 mb-10"><img src="images/Step3.png" /></div>
         <div className="flex justify-center-10">
-          <button type="submit" onClick={handleSubmit} className="bg-sky-400 block mb-16 text-white w-2/3 mx-auto rounded-md p-2 text-center hover:bg-sky-500">가입 완료</button>
+          <button type="submit" onClick={handleSubmit} className="bg-sky-400 block mb-10 text-white w-2/3 mx-auto rounded-md p-2 text-center hover:bg-sky-500">가입 완료</button>
         </div>
 
       </div>

@@ -96,9 +96,9 @@ const Step1 = () => {
           onChange={handleChange}
         />
         <button className="moveButton" onClick={handleCheckId}>중복확인</button>
-        <div className="w-80 mx-auto my-10"><img src="images/Step1.png" /></div>
+        <div className="w-80 mx-auto mt-5 mb-10"><img src="images/Step1.png" /></div>
         <div className="flex justify-center-10">
-          <button type="submit" onClick={handleSubmit} className="bg-sky-400 block mb-16 text-white w-2/3 mx-auto rounded-md p-2 text-center hover:bg-sky-500">다음 단계</button>
+          <button type="submit" onClick={handleSubmit} className="bg-sky-400 block mb-10 text-white w-2/3 mx-auto rounded-md p-2 text-center hover:bg-sky-500">다음 단계</button>
         </div>
 
       </div>

@@ -1,201 +1,133 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { createMeeting } from "../../services/meeting";
-import { useDispatch } from "react-redux";
-import { getStudy } from "../../features/study/studySlice";
-import { useNavigate } from "react-router";
 
 const CreateForm = () => {
-  const navigate = useNavigate()
   const [formData, setFormData] = useState({
-    categoryId: undefined,
-    title: undefined,
-    maxPeople: undefined,
-    isPrivate: false,
+    roomName: undefined,
+    numberOfPeople: undefined,
+    category: undefined,
     password: undefined,
   });
-
-  const dispatch = useDispatch();
-  const token = useSelector((state) => state.userReducer.token);
-
+  const token = useSelector((state) => state.userReducer.token.accessToken);
+  const [FSD, setFSD] = useState(undefined);
   const [isSecret, setIsSecret] = useState(false);
+  const API_URL = "http://localhost:8000/api/meeting/";
 
   const handleClick = (e) => {
+    console.log("event", e.target.value);
     setIsSecret(e.target.value == "true" ? true : false);
+    console.log("state", isSecret);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // 방 생성 엑시오스 요청보내기
+    axios
+      .post(
+        API_URL + "create",
+        {
+          managerId: "",
+          categoryId: "",
+          title: "",
+          maxPeoeple: 1,
+          isPrivate: false,
+          password: "",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token.accessToken}`,
+          },
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        console.log(response);
 
-    console.log("전송 ");
-    console.log(formData);
-
-    createMeeting(
-      token,
-      formData,
-      (response) => {
-        console.log(response.data.data);
-        dispatch(getStudy(response.data.data));
-        navigate("/study/room")
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+        if (response.data.status == 200) {
+          return response.data;
+        } else {
+          throw new Error("방 목록 조회 실패");
+        }
+      })
+      .catch((e) => console.log(e));
+    setFSD(e);
   };
 
   const handleChange = (e) => {
-    console.log(e.target.name, e.target.value);
+    console.log(e);
+    console.log(formData.isSecret);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "30px" }}>
-          <label htmlFor="title">
-            <span
-              style={{
-                marginRight: "30px",
-              }}
-            >
-              방 제목
-            </span>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={formData.title}
-              style={{color: "black", paddingLeft: "10px"}}
-              onChange={handleChange}
-            />
-          </label>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            marginBottom: "20px",
-            marginRight: "20px",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <label
-            htmlFor="maxPeople"
-            style={{ display: "flex", alignItems: "center" }}
-          >
-            <span style={{ marginRight: "20px" }}>인원설정</span>
-            <input
-              type="number"
-              id="maxPeople"
-              name="maxPeople"
-              value={formData.maxPeople}
-              defaultValue={0}
-              onChange={handleChange}
-              style={{ color: "black", paddingLeft: "10px", width: "40px" }}
-              min="1"
-              max="6"
-            />
-          </label>
-          <label
-            htmlFor="categoryId"
-            style={{ display: "flex", alignItems: "center" }}
-          >
-            <p style={{ marginRight: "15px" }}>카테고리</p>
-            <select
-              id="categoryId"
-              name="categoryId"
-              style={{ color: "black" }}
-              onChange={handleChange}
-            >
-              <option value="0">전체</option>
-              <option value="1">면접</option>
-              <option value="2">발표</option>
-            </select>
-          </label>
-        </div>
+        <label htmlFor="roomName">
+          <p>방 이름</p>
+          <input
+            type="text"
+            id="roomName"
+            value={formData.roomName}
+            onChange={handleChange}
+          />
+        </label>
+        <label htmlFor="numberOfPeople">
+          <p>인원</p>
+          <input
+            type="number"
+            id="numberOfPeople"
+            onChange={handleChange}
+            min="1"
+            max="6"
+          />
+        </label>
+        <label htmlFor="category">
+          <p>카테고리</p>
+          <select id="category">
+            <option>면접</option>
+            <option>발표</option>
+          </select>
+        </label>
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "10px",
-          }}
-        >
-          <label
-            htmlFor="password"
-            style={{ display: "flex", alignItems: "center" }}
-          >
-            <p style={{ margin: "0", marginRight: "20px" }}>비밀번호</p>
-            {isSecret ? (
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                style={{ width: "150px", color: "black", paddingLeft: "10px" }}
-                onChange={handleChange}
-              />
-            ) : (
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                style={{ width: "150px" }}
-                onChange={handleChange}
-                disabled
-              />
-            )}
-          </label>
+        <label htmlFor="password">
+          <p>비밀번호</p>
+          {isSecret && (
+            <input
+              type="password"
+              id="password"
+              value={formData.password}
+              onChange={handleChange}
+            />
+          )}
+          {!isSecret && (
+            <input
+              type="password"
+              id="password"
+              value={formData.password}
+              onChange={handleChange}
+              disabled
+            />
+          )}
+        </label>
 
-          <div style={{ marginRight: "20px" }}>
-            <label htmlFor="public" style={{ margin: "0 5px" }}>
-              공개
-            </label>
-            <input
-              type="radio"
-              name="isPrivate"
-              id="public"
-              value="false"
-              onClick={handleClick}
-              defaultChecked
-            />
-            <label htmlFor="private" style={{ margin: "0 5px" }}>
-              비공개
-            </label>
-            <input
-              type="radio"
-              name="isPrivate"
-              id="private"
-              value="true"
-              onClick={handleClick}
-            />
-          </div>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "40px",
-          }}
-        >
-          <button
-            type="submit"
-            style={{
-              backgroundColor: "white",
-              color: "black",
-              padding: "5px",
-              fontWeight: "bold",
-              borderRadius: "5px"
-            }}
-          >
-            방 만들기
-          </button>
-        </div>
+        <label htmlFor="public">공개</label>
+        <input
+          type="radio"
+          name="isSecret"
+          id="public"
+          value="false"
+          onClick={handleClick}
+        />
+        <label htmlFor="private">비공개</label>
+        <input
+          type="radio"
+          name="isSecret"
+          id="private"
+          value="true"
+          onClick={handleClick}
+        />
       </form>
-
+      {FSD}
     </>
   );
 };
