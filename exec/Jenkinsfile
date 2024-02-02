@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    options {
+        gitLabConnection('xw2nana')
+    }
+
     stages {
 
         stage('Checkout Source Code') {
