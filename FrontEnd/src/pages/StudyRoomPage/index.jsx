@@ -8,3 +8,5 @@ const StudyRoomPage = () => {
         <div></div>
     );
 }
+
+export default StudyRoomPage

@@ -168,7 +168,7 @@ const StudyPage = () => {
       </div>
       {modal && (
         <Modal title="방 생성" onClose={changeModalState}>
-          <CreateForm onClose={changeModalState} />
+          <CreateForm />
         </Modal>
       )}
     </>

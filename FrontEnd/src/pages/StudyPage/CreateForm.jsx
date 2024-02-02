@@ -3,8 +3,10 @@ import { useSelector } from "react-redux";
 import { createMeeting } from "../../services/meeting";
 import { useDispatch } from "react-redux";
 import { getStudy } from "../../features/study/studySlice";
+import { useNavigate } from "react-router";
 
-const CreateForm = ({ onClose }) => {
+const CreateForm = () => {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     categoryId: undefined,
     title: undefined,
@@ -34,7 +36,7 @@ const CreateForm = ({ onClose }) => {
       (response) => {
         console.log(response.data.data);
         dispatch(getStudy(response.data.data));
-        onClose();
+        navigate("/study/room")
       },
       (error) => {
         console.log(error);
