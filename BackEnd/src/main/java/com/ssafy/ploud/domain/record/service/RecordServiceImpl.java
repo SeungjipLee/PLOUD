@@ -19,12 +19,12 @@ import com.ssafy.ploud.domain.speech.repository.SpeechRepository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class RecordServiceImpl implements RecordService{
 
     private final SpeechRepository speechRepository;
@@ -37,31 +37,18 @@ public class RecordServiceImpl implements RecordService{
         // speech 조회
         SpeechEntity speechEntity = speechRepository.findById(speechId)
             .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
-        SpeechDetail speechDetail = speechEntity.toDto();
 
         // video 조회(없어도 ok)
         VideoEntity video = speechEntity.getSpeechVideo();
         VideoDetail videoDetail = (video == null) ? null : video.toDto();
 
-        // score 조회
-//        ScoreEntity score = speechEntity.getScore();
-//        score.toDto();
-
-        // feedback 조회(스터디인 경우만)
-//        List<FeedbackDetail> feedbackDetailList = new ArrayList<>();
-//        if (!speechEntity.isPersonal()) {
-//
-//            for (FeedbackEntity feedbackEntity : speechEntity.getFeedbackEntityList()) {
-//                feedbackDetailList.add(feedbackEntity.toDto());
-//            }
-//        }
         List<FeedbackDetail> feedbackDetailList = new ArrayList<>();
         for (FeedbackEntity feedback : feedbackRepository.findBySpeechId(speechId)) {
             feedbackDetailList.add(feedback.toDto());
         }
 
         return RecordDetailResponse.builder()
-            .speech(speechDetail)
+            .speech(speechEntity.toDto())
             .video(videoDetail)
             .score(speechEntity.getScore().toDto())
             .feedbacks(feedbackDetailList)
@@ -80,16 +67,22 @@ public class RecordServiceImpl implements RecordService{
     }
 
     @Override
+    @Transactional
     public String deleteVideo(int speechId) {
         // Video Table에서 speechId에 해당하는 video path 가져오기
+        SpeechEntity speech = speechRepository.findById(speechId)
+            .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
+
+        VideoEntity video = speech.getSpeechVideo();
+        if(video==null) throw new CustomException(ResponseCode.NOT_FOUND); // 영상 정보가 없을 경우 Exception
+        String videoPath = video.getVideoPath();
 
         // DB 삭제
-
-        // 영상 정보가 없을 경우 Exception
+        speech.setVideo(null);
+        videoRepository.delete(video);
 
         // video path 반환
-
-        return "video_path";
+        return videoPath;
     }
 
     @Override
