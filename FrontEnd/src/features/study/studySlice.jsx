@@ -9,8 +9,7 @@ export const studySlice = createSlice({
   initialState,
   reducers: {
     getStudyList: (state, action) => {
-      state.studyList = []
-      state.List.push(action.payload.data)
+      state.studyList = action.payload;
     },
   },
 });
