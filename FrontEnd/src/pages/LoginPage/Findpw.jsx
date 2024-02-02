@@ -25,6 +25,7 @@ const FindPwPage = () => {
       {email: email, name: name},
       (res) => {
         alert(`아이디는 ${res.data.data.userId}입니다.`)
+        setIsIdFind(true)
       },
       (err) => {
         alert("이름이나 이메일 정보가 올바르지 않습니다.")

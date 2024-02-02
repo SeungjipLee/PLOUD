@@ -170,3 +170,47 @@
 .subtitleImg:hover .text {
     opacity: 1;  /* 호버 시 텍스트를 보이게 합니다. */
 }
+
+.container1 {
+    width: 950px;
+    height: 300px;
+    background-color: #EEEEEE;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 30px;
+}
+.box1{
+    width:400px;
+    height:240px;
+}
+.box2{
+    width:550px;
+    height:240px;
+}
+.box3{
+    width:950px;
+    height:300px;
+    margin-bottom: 50px;
+}
+.box4{
+    width:860px;
+    height:260px;
+    background-color: white;
+    margin-top:auto;
+    margin-bottom: auto;
+}
+.box1, .box2, .box3{
+    transition: transform 0.3s; /* 변환 효과에 대한 지연 시간 설정 */
+}
+
+.box1:hover, .box2:hover, .box3:hover {
+    transform: scale(1.05); /* 원본 크기의 10% 증가 */
+}
+.Recard {
+    transition:transform 0.3s, background-color 0.3s;
+}
+
+.Recard:hover {
+    transform:scale(1.05);
+    background-color: #fffed1;
+}
