@@ -14,5 +14,5 @@ FROM openjdk:17-jdk
 #COPY ${JAR_FILE} app.jar
 
 # jar file Copy
-COPY --from=builder build/libs/*.jar /app.jar
+COPY --from=builder /backend/build/libs/*.jar /backend/app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
