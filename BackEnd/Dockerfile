@@ -13,6 +13,8 @@ FROM openjdk:17-jdk
 #ARG JAR_FILE=build/libs/*.jar
 #COPY ${JAR_FILE} app.jar
 
+WORKDIR /backend
+
 # jar file Copy
 COPY --from=builder /backend/build/libs/*.jar /backend/app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
