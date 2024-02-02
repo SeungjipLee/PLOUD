@@ -91,4 +91,7 @@ public class SpeechEntity {
         .build();
   }
 
+    public void setUser(UserEntity userEntity) {
+      this.user = userEntity;
+    }
 }
