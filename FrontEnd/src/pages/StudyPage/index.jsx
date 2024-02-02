@@ -22,58 +22,12 @@ const StudyPage = () => {
   const studyList = useSelector((state) => state.studyReducer.studyList);
   const [word, setWord] = useState("");
   const [categoryId, setCategoryId] = useState(0);
-  const studyrooms = [
-    {
-      categoryId: 1,
-      currentPeople: 1,
-      isPrivate: false,
-      managerId: "kyd1126",
-      maxPeople: 3,
-      password: null,
-      sessionId: "session0",
-      speechId: -1,
-      title: "asdfasdf",
-    },
-    {
-      categoryId: 1,
-      currentPeople: 1,
-      isPrivate: false,
-      managerId: "kyd1126",
-      maxPeople: 3,
-      password: null,
-      sessionId: "session0",
-      speechId: -1,
-      title: "asdfasdf",
-    },
-    {
-      categoryId: 1,
-      currentPeople: 1,
-      isPrivate: false,
-      managerId: "kyd1126",
-      maxPeople: 3,
-      password: null,
-      sessionId: "session0",
-      speechId: -1,
-      title: "asdfasdf",
-    },
-    {
-      categoryId: 1,
-      currentPeople: 1,
-      isPrivate: false,
-      managerId: "kyd1126",
-      maxPeople: 3,
-      password: null,
-      sessionId: "session0",
-      speechId: -1,
-      title: "asdfasdf",
-    },
-  ];
+  
   const dispatch = useDispatch();
 
   // 최초 마운트, 카테고리 변경 시 검색
   useEffect(() => {
     searchStudyList();
-    console.log(studyrooms);
   }, [categoryId]);
 
   // 엔터키 입력 시 검색
@@ -122,100 +76,102 @@ const StudyPage = () => {
   };
 
   return (
-    <div className="Study">
-      <Page header={<Navbar />} footer={<Footer />}>
-        <div className="study-main">
-          <div className="flex place-content-between">
-            <div className="flex">
-              <Button
-                onClick={() => {
-                  setCategoryId(0);
-                }}
-                styleType={
-                  categoryId === 0
-                    ? "study-category-button study-category-button-activate"
-                    : "study-category-button study-category-button-deactivate"
-                }
-              >
-                전체
-              </Button>
-              <Button
-                onClick={() => {
-                  setCategoryId(1);
-                }}
-                styleType={
-                  categoryId === 1
-                    ? "study-category-button study-category-button-activate"
-                    : "study-category-button study-category-button-deactivate"
-                }
-              >
-                발표
-              </Button>
-              <Button
-                onClick={() => {
-                  setCategoryId(2);
-                }}
-                styleType={
-                  categoryId === 2
-                    ? "study-category-button study-category-button-activate"
-                    : "study-category-button study-category-button-deactivate"
-                }
-              >
-                면접
-              </Button>
-              <Button
-                onClick={() => {
-                  setCategoryId(3);
-                }}
-                styleType={
-                  categoryId === 3
-                    ? "study-category-button study-category-button-activate"
-                    : "study-category-button study-category-button-deactivate"
-                }
-              >
-                기타
-              </Button>
+    <>
+      <div
+        className="Study"
+        style={{
+          opacity: modal ? "0.6" : "1",
+        }}
+      >
+        <Page header={<Navbar />} footer={<Footer />}>
+          <div className="study-main">
+            <div className="flex place-content-between">
+              <div className="flex">
+                <Button
+                  onClick={() => {
+                    setCategoryId(0);
+                  }}
+                  styleType={
+                    categoryId === 0
+                      ? "study-category-button study-category-button-activate"
+                      : "study-category-button study-category-button-deactivate"
+                  }
+                >
+                  전체
+                </Button>
+                <Button
+                  onClick={() => {
+                    setCategoryId(1);
+                  }}
+                  styleType={
+                    categoryId === 1
+                      ? "study-category-button study-category-button-activate"
+                      : "study-category-button study-category-button-deactivate"
+                  }
+                >
+                  발표
+                </Button>
+                <Button
+                  onClick={() => {
+                    setCategoryId(2);
+                  }}
+                  styleType={
+                    categoryId === 2
+                      ? "study-category-button study-category-button-activate"
+                      : "study-category-button study-category-button-deactivate"
+                  }
+                >
+                  면접
+                </Button>
+                <Button
+                  onClick={() => {
+                    setCategoryId(3);
+                  }}
+                  styleType={
+                    categoryId === 3
+                      ? "study-category-button study-category-button-activate"
+                      : "study-category-button study-category-button-deactivate"
+                  }
+                >
+                  기타
+                </Button>
+              </div>
+              <div className="container">
+                <input
+                  className="search-room-input"
+                  type="text"
+                  placeholder="방 이름으로 검색"
+                  value={word}
+                  onChange={(e) => setWord(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                />
+              </div>
             </div>
-            <div className="container">
-              <input
-                className="search-room-input"
-                type="text"
-                placeholder="방 이름으로 검색"
-                value={word}
-                onChange={(e) => setWord(e.target.value)}
-                onKeyDown={handleKeyDown}
-              />
+            <div className="grid">
+              {studyList.map((data, index) => (
+                <RoomCard key={index} data={data} />
+              ))}
             </div>
-          </div>
-
-          <div className="grid">
-            {studyrooms.map((data, index) => (
-              <RoomCard key={index} data={data} />
-            ))}
-          </div>
-          <div className="study-button-container">
-            <Button onClick={changeModalState}>방 만들기</Button>
-            {modal && (
-              <Modal
-                title="방 생성"
-                onClose={changeModalState}
-                buttonName="방 만들기"
-              >
-                <CreateForm />
-              </Modal>
-            )}
-          </div>
-          {/* <div class="pagination">
+            <div className="study-button-container">
+              <Button onClick={changeModalState}>방 만들기</Button>
+            </div>
+            {/* <div class="pagination">
           <button onClick={currentPage > 1 ? currentPage-- : null}>
-            Previous
+          Previous
           </button>
           <button onClick={currentPage < maxPage ? currentPage++ : null}>
-            Next
+          Next
           </button>
         </div> */}
-        </div>
-      </Page>
-    </div>
+          </div>
+        </Page>
+      </div>
+      {modal && (
+        <Modal title="방 생성" onClose={changeModalState}>
+          <CreateForm onClose={changeModalState} />
+        </Modal>
+      )}
+    </>
   );
 };
 
