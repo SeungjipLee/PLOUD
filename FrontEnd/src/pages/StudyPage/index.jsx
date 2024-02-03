@@ -46,13 +46,14 @@ const StudyPage = () => {
 
   // 스터디 리스트 요청
   const searchStudyList = () => {
-    const data = { categoryId, word };
-
+    const data = { categoryId: categoryId, word: word };
+    console.log(data)
     getMeetingList(
       token,
       data,
       (response) => {
-        dispatch(getStudyList(response.data.data));
+        console.log(response)
+        // dispatch(getStudyList(response.data.data));
       },
       (error) => console.log(error)
     );
@@ -79,7 +80,7 @@ const StudyPage = () => {
 
   const changeModalState = () => {
     setModal(!modal);
-    console.log(modal);
+    // console.log(modal);
   };
 
   return (
@@ -156,7 +157,8 @@ const StudyPage = () => {
             </div>
             <div className="grid">
               {studyList.map((data, index) => (
-                <RoomCard onclick={handleClickCard} key={index} data={data} />
+                // <RoomCard onclick={handleClickCard} key={index} data={data} />
+                <RoomCard onclick={handleClickCard} key={index}/>
               ))}  
             </div>
             <div className="study-button-container">

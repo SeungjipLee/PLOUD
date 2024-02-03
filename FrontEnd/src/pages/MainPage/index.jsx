@@ -18,12 +18,12 @@ import axios from 'axios'
 // 로그인 되어 있지 않으면 게시판, 연습, 스터디로 가는 버튼이
 // 로그인페이지로 향하게 된다
 
-export const login = async (code) => {
-    const { data } = await API.post('url',
-          JSON.stringify(code)
-    );
-    return data;
-}
+// export const login = async (code) => {
+//     const { data } = await API.post('url',
+//           JSON.stringify(code)
+//     );
+//     return data;
+// }
 
 // export const getDeposit = function () {
 //   axios({

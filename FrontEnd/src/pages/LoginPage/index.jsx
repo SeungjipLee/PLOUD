@@ -31,7 +31,7 @@ const LoginPage = () => {
         dispatch(getUserId(Id));
         navigate("/");
       },
-      (err) => console.log(err)
+      (err) => console.log("로그인페이지", err)
       // alert("아이디 혹은 비밀번호가 일치하지 않습니다.")
       );
   };
@@ -75,7 +75,7 @@ const LoginPage = () => {
           </span>
         </div>
         <div className="mx-auto w-1/2 mb-5">
-          <SocialLogin />
+          {/* <SocialLogin /> */}
         </div>
       </div>
     </Page>

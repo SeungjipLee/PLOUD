@@ -2,8 +2,8 @@ import API from "../utils/Api";
 
 
 // { categoryId: int, word: String }
-export const getMeetingList = (token, data, success, fail) => {
-  return API(token)
+export const getMeetingList = async (token, data, success, fail) => {
+  return await API(token)
     .post("meeting/list", data)
     .then(success)
     .catch(fail)
@@ -11,8 +11,8 @@ export const getMeetingList = (token, data, success, fail) => {
 
 
 // { sessionId: String }
-export const getMeetingDetail = (token, data, success, fail) => {
-  return API(token)
+export const getMeetingDetail = async (token, data, success, fail) => {
+  return await API(token)
     .post("meeting/detail", data)
     .then(success)
     .catch(fail)
@@ -21,8 +21,8 @@ export const getMeetingDetail = (token, data, success, fail) => {
 
 // { managerId: String, categoryId: int, title: String. maxPeople: int, 
 // isPrivate: Boolean , password: String }
-export const createMeeting = (token, data, success, fail) => {
-  return API(token)
+export const createMeeting = async (token, data, success, fail) => {
+  return await API(token)
     .post("meeting/create", data)
     .then(success)
     .catch(fail)
@@ -30,8 +30,8 @@ export const createMeeting = (token, data, success, fail) => {
 
 
 // { userId: String, sessionId: String, token: String }
-export const leaveMeeting = (token, data, success, fail) => {
-  return API(token)
+export const leaveMeeting = async (token, data, success, fail) => {
+  return await API(token)
     .post("meeting/leave", data)
     .then(success)
     .catch(fail)
@@ -39,9 +39,9 @@ export const leaveMeeting = (token, data, success, fail) => {
 
 
 // { userId: String, sessionId: String, password: String }
-export const joinMeeting = (token, data, success, fail) => {
-  return API(token)
-    .post("meeting/leave", data)
+export const joinMeeting = async (token, data, success, fail) => {
+  return await API(token)
+    .post("meeting/join", data)
     .then(success)
     .catch(fail)
 }
