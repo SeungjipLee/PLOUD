@@ -169,3 +169,4 @@ const StudyRoomPage = () => {
 };
 
 export default StudyRoomPage;
+
