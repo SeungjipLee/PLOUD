@@ -110,9 +110,9 @@ const Step2 = () => {
         />
         <button className="moveButton" onClick={handleCheckEmail}>코드전송</button>
         <button className="moveButton1" onClick={handleCheckEmailCode}>인증하기</button>
-        <div className="w-80 mx-auto my-10"><img src="images/Step2.png" /></div>
+        <div className="w-80 mx-auto mt-5 mb-10"><img src="images/Step2.png" /></div>
         <div className="flex justify-center-10">
-          <button type="submit" onClick={handleSubmit} className="bg-sky-400 block mb-16 text-white w-2/3 mx-auto rounded-md p-2 text-center hover:bg-sky-500">다음 단계</button>
+          <button type="submit" onClick={handleSubmit} className="bg-sky-400 block mb-10 text-white w-2/3 mx-auto rounded-md p-2 text-center hover:bg-sky-500">다음 단계</button>
         </div>
 
       </div>

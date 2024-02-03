@@ -111,7 +111,6 @@ const DataSubmitForm = () => {
         (res) => res,
         (err) => err
       );
-      console.log(formData.email)
       // 추가적인 성공 처리 로직
       if (response.data.status == "200") {
         alert("가입 가능한 이메일입니다. 메일로 인증번호를 보냈습니다.");

@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   studyList: [],
-  studyInfo: undefined,
 };
 
 export const studySlice = createSlice({
