@@ -7,7 +7,7 @@ const PracticePage = () => {
   return (
     <>
       <Navbar />
-      <h1>연습페이지</h1>
+      <h1>연습페이지 만들기</h1>
       <Sidebar />
     </>
   );
