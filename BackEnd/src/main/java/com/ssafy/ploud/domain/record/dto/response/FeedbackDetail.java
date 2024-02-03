@@ -1,6 +1,7 @@
 package com.ssafy.ploud.domain.record.dto.response;
 
 import java.sql.Time;
+import java.time.Duration;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -13,5 +14,5 @@ import lombok.Setter;
 public class FeedbackDetail {
 
   String content;
-  Time timeLog;
+  Duration timeLog;
 }

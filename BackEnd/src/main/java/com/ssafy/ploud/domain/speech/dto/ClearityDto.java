@@ -8,8 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class ClearityDto {
-    String recognized;
-    int cnt;
-    float floatScore;
-
+    private String recognized;
+    private int cnt;
+    private float floatScore;
 }

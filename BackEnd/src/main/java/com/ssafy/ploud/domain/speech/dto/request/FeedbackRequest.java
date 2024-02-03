@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class FeedbackRequest {
-    int userId;
-    String sessionId;
-    String content;
+    private String userId;
+    private String sessionId;
+    private String content;
 }

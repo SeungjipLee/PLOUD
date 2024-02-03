@@ -2,6 +2,7 @@ package com.ssafy.ploud.domain.record;
 
 import com.ssafy.ploud.domain.record.dto.response.FeedbackDetail;
 import com.ssafy.ploud.domain.speech.SpeechEntity;
+import com.ssafy.ploud.domain.speech.dto.request.FeedbackRequest;
 import com.ssafy.ploud.domain.user.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,6 +14,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.sql.Time;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Entity
@@ -35,7 +38,18 @@ public class FeedbackEntity {
 
   private String content;
 
-  private Time timeLog; // 영상에서의 시간
+  private Duration timeLog; // 영상에서의 시간
+
+  public static FeedbackEntity createNewFeedback(String content, UserEntity user, SpeechEntity speech){
+    FeedbackEntity feedbackEntity = new FeedbackEntity();
+
+    feedbackEntity.user = user;
+    feedbackEntity.speech = speech;
+    feedbackEntity.content = content;
+    feedbackEntity.timeLog = Duration.between(speech.getRecordTime(), LocalDateTime.now());
+
+    return feedbackEntity;
+  }
 
   public void setSpeech(SpeechEntity speech) {
     this.speech = speech;

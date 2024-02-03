@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MeetingInfoResponse {
-    MeetingInfo meetingInfo;
-    String token;
+    private MeetingInfo meetingInfo;
+    private String token;
 
     public MeetingInfoResponse(MeetingInfo meetingInfo, String token) {
         this.meetingInfo = meetingInfo;
