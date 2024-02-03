@@ -21,6 +21,8 @@ const StudyPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [page, setPage] = useState(1);
+  const [maxPage, setMaxPage] = useState(1);
   const [modal, setModal] = useState(false);
   const token = useSelector((state) => state.userReducer.token);
   const studyList = useSelector((state) => state.studyReducer.studyList);
@@ -30,7 +32,7 @@ const StudyPage = () => {
   // 최초 마운트, 카테고리 변경 시 검색
   useEffect(() => {
     searchStudyList();
-  }, [categoryId]);
+  }, [categoryId, page]);
 
   // 엔터키 입력 시 검색
   const handleKeyDown = (e) => {
@@ -40,19 +42,24 @@ const StudyPage = () => {
   };
 
   const handleClickCard = (e) => {
-    console.log(tag, "카드 클릭")
-    setIsClickRoom(true)
-  }
+    console.log(tag, "카드 클릭");
+    setIsClickRoom(true);
+  };
 
   // 스터디 리스트 요청
   const searchStudyList = () => {
     const data = { categoryId: categoryId, word: word };
-    console.log(data)
     getMeetingList(
       token,
       data,
       (response) => {
         dispatch(getStudyList(response.data.data));
+        setMaxPage(
+          response.data.data.length > 9
+            ? Math.floor(response.data.data.length / 9) + 1
+            : 1
+        );
+        
       },
       (error) => console.log(error)
     );
@@ -90,12 +97,14 @@ const StudyPage = () => {
       sessionId: data.sessionId,
       password: "",
     };
-
+    if (data.currentPeople === data.maxPeople) {
+      alert("입장 인원 초과")
+      return
+    }
     joinMeeting(
       token,
       param,
       (response) => {
-        console.log(response);
         dispatch(getStudy(response.data));
         navigate("/study/room");
       },
@@ -177,25 +186,37 @@ const StudyPage = () => {
                 />
               </div>
             </div>
-            <div className="grid">
-              {studyList.map((data, index) => (
+            <div className="grid room-list">
+              {studyList.slice((page-1)*9, page*9).map((data, index) => (
                 <div key={index}>
-                  <RoomCard data={data} />
-                  <div onClick={() => joinStudyRoom(data)}>입장</div>
+                  <RoomCard data={data}>
+                    <div
+                      className="enter-room"
+                      onClick={() => joinStudyRoom(data)}
+                    >
+                      입장
+                    </div>
+                  </RoomCard>
                 </div>
               ))}
             </div>
-            <div className="study-button-container">
+            <div className="pagination">
+              <button onClick={(e) => (page > 1 ? setPage(page - 1) : null)}>
+                &lt;
+              </button>
+              {page > 1 && <span onClick={(e) => setPage(page - 1)}>{page - 1}</span>}
+              <span>{page}</span>
+              {maxPage > page && <span onClick={(e) => setPage(page + 1)}>{page + 1}</span>}
+              {maxPage > page+1 && <span onClick={(e) => setPage(page + 2)}>{page + 2}</span>}
+              <button
+                onClick={(e) => (page < maxPage ? setPage(page + 1) : null)}
+              >
+                &gt;
+              </button>
+            </div>
+            <div className="create-room-button">
               <Button onClick={changeModalState}>방 만들기</Button>
             </div>
-            {/* <div class="pagination">
-          <button onClick={currentPage > 1 ? currentPage-- : null}>
-          Previous
-          </button>
-          <button onClick={currentPage < maxPage ? currentPage++ : null}>
-          Next
-          </button>
-        </div> */}
           </div>
         </Page>
       </div>

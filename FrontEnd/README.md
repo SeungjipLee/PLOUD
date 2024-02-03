@@ -119,7 +119,7 @@ setIsSecret(e.target.value == "true" ? true : false)
 로 사용했음
 
 4. 미해결 - Redux non-serializable value 에 관한 이슈
-이게 뭘까....
+
 VM999:6 A non-serializable value was detected in an action, in the path: `register`. Value: ƒ register(key) {
     _pStore.dispatch({
       type: _constants__WEBPACK_IMPORTED_MODULE_0__.REGISTER,
@@ -129,3 +129,29 @@ VM999:6 A non-serializable value was detected in an action, in the path: `regist
 Take a look at the logic that dispatched this action:  {type: 'persist/PERSIST', register: ƒ, rehydrate: ƒ} 
 (See https://redux.js.org/faq/actions#why-should-type-be-a-string-or-at-least-serializable-why-should-my-action-types-be-constants) 
 (To allow non-serializable values see: https://redux-toolkit.js.org/usage/usage-guide#working-with-non-serializable-data)
+
+Redux 액션은 일반적으로 순수한 객체로, 모든 값이 JSON으로 직렬화 가능해야 합니다. 함수, Promise, 기타 비직렬화 가능한 객체는 포함되어서는 안 됩니다.
+
+```jsx
+import { configureStore } from '@reduxjs/toolkit';
+
+export const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+});
+```
+임시로 비직렬화 객체에 대해 경고를 하지 않도록 비활성화
+
+## StudyRoomPage
+
+보여줄 비디오 종류 3
+MainStreamManager ???? 카메라 누르면 메인으로 전환되고 
+SubScribers 상대방 화면
+Publisher 내 화면
+
+초기 설정 main, publisher 나
+subsriber 상대방
+main 은 바꿀 수 있다

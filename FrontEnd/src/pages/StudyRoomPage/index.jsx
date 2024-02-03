@@ -8,9 +8,10 @@ import UserVideoComponent from "./component/UserVideoComponent";
 const StudyRoomPage = () => {
   const navigate = useNavigate();
 
+  const tag = "[StudyRoomPage]";
+
   const OV = useRef(null);
   const session = useRef(null); // session을 useRef로 선언
-
 
   // 기본 정보
   const token = useSelector((state) => state.userReducer.token);
@@ -36,7 +37,7 @@ const StudyRoomPage = () => {
 
     // On every new Stream received...
     session.current.on("streamCreated", (event) => {
-      console.log("누가 접속했어요");
+      console.log(tag, "누가 접속했어요");
 
       var subscriber = session.current.subscribe(event.stream, undefined);
       setSubscriberse([...subscribers, subscriber]);
@@ -44,13 +45,13 @@ const StudyRoomPage = () => {
 
     // On every Stream destroyed...
     session.current.on("streamDestroyed", (event) => {
-      console.log("누가 떠났어요");
+      console.log(tag, "누가 떠났어요");
       deleteSubscriber(event.stream.streamManager);
     });
 
     // On every asynchronous exception...
     session.current.on("exception", (exception) => {
-      console.warn(exception);
+      console.warn(tag, exception);
     });
 
     session.current
@@ -89,21 +90,21 @@ const StudyRoomPage = () => {
         setMainStreamManager(tmpPublisher);
         setPublisher(tmpPublisher);
 
-          // currentVideoDevice: currentVideoDevice,
+        // currentVideoDevice: currentVideoDevice,
       })
       .catch((error) => {
-        console.log(error);
+        console.log(tag, error);
       });
   };
 
   const leaveSession = () => {
-    console.log("leaveSession");
+    console.log(tag, "leaveSession");
 
     leaveMeeting(
       token,
       { sessionId: room.sessionId, token: ovToken },
       (response) => {
-        console.log(response);
+        console.log(tag, response);
         session.current.disconnect();
 
         session.current = null;
@@ -112,7 +113,7 @@ const StudyRoomPage = () => {
         navigate("/study");
       },
       (error) => {
-        console.log(error);
+        console.log(tag, error);
       }
     );
   };
@@ -125,48 +126,54 @@ const StudyRoomPage = () => {
   };
 
   return (
-    <div>
-      <h2>임시임시바바바바</h2>
-      <div style={{ display: "flex" }}>
-        <button
-          onClick={leaveSession}
-          style={{
-            width: "100px",
-            height: "50px",
-          }}
-        >
-          세션 나가기
-        </button>
+    <div className="RoomPage">
+      <div className="flex">
+        <div className="ploud-icon">PLOUD</div>
       </div>
-      <div>
-        <h2>화면 단</h2>
-        <div>
-          {mainStreamManager !== undefined ? (
-            <div id="main-video" className="col-md-6">
-              <UserVideoComponent streamManager={mainStreamManager} />
+      <div className="video-flex">
+        <div id="main-video" className="col-md-6">
+          <UserVideoComponent streamManager={mainStreamManager} />
+        </div>
+        <div id="main-video" className="col-md-6">
+          <UserVideoComponent streamManager={mainStreamManager} />
+        </div>
+        {mainStreamManager !== undefined ? (
+          <div id="main-video" className="col-md-6">
+            <UserVideoComponent streamManager={mainStreamManager} />
+          </div>
+        ) : null}
+        <div id="video-container" className="col-md-6">
+          {publisher !== undefined ? (
+            <div className="stream-container col-md-6 col-xs-6">
+              <UserVideoComponent streamManager={publisher} />
             </div>
           ) : null}
-          <div id="video-container" className="col-md-6">
-            {publisher !== undefined ? (
-              <div className="stream-container col-md-6 col-xs-6">
-                <UserVideoComponent streamManager={publisher} />
-              </div>
-            ) : null}
-            {subscribers.map((sub, i) => (
-              <div key={sub.id} className="stream-container col-md-6 col-xs-6">
-                <span>{sub.id}</span>
-                <UserVideoComponent streamManager={sub} />
-              </div>
-            ))}
-          </div>
+          {subscribers.map((sub, i) => (
+            <div key={sub.id} className="stream-container col-md-6 col-xs-6">
+              <span>{sub.id}</span>
+              <UserVideoComponent streamManager={sub} />
+            </div>
+          ))}
         </div>
       </div>
-      <div>
-        <h2>밑단 마이크 등등</h2>
+
+      <div className="flex justify-between video-room-button">
+        <div className="button-empty items-center space-x-4"></div>
+        <div className="flex items-center space-x-6">
+          <img src="../images/micbutton.PNG" alt="" />
+          <img src="../images/videobutton.PNG" alt="" />
+          <img src="../images/sharebutton.PNG" alt="" />
+          <img src="../images/recordbutton.PNG" alt="" />
+          <img onClick={leaveSession} src="../images/exitbutton.PNG" alt="" />
+        </div>
+        <div className="flex items-center space-x-4">
+          <img src="../images/resultbutton.PNG" alt="" />
+          <img src="../images/reportbutton.PNG" alt="" />
+          <img src="../images/chatbutton.PNG" alt="" />
+        </div>
       </div>
     </div>
   );
 };
 
 export default StudyRoomPage;
-

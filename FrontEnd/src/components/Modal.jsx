@@ -3,7 +3,7 @@ function Modal({ title, children, onClose }) {
       <div
         style={{
           position: "fixed",
-          top: "50%",
+          top: "35%",
           left: "50%",
           transform: "translate(-50%, -50%)",
           backgroundColor: "#001356",

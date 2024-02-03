@@ -109,15 +109,15 @@ a {
 }
 
 .container {
-  display: flex;         /* Flexbox 사용 */
+  display: flex; /* Flexbox 사용 */
   justify-content: flex-end;
-  align-items: center;   /* 수직 방향 중앙 정렬 */
-  height:45px;         /* 컨테이너의 높이 설정, 필요에 따라 조정 */
+  align-items: center; /* 수직 방향 중앙 정렬 */
+  height: 45px; /* 컨테이너의 높이 설정, 필요에 따라 조정 */
 }
 
 .search-room-input {
   border-radius: 15px;
-  background-color: #EBEAFA;
+  background-color: #ebeafa;
   padding: 5px;
   padding-left: 20px;
   padding-right: 20px;
@@ -132,68 +132,84 @@ a {
 
 .study-main {
   display: inline-block;
+  width: 980px;
   margin: 100px 25%;
-    height: 100%;
-  
+  height: 100%;
 }
 
-.study-button-container {
+.pagination {
+  padding-top: 20px;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: center;
+  font-size: 15px;
 }
 
-.study-button-container > button{
-  width: 100px;
-  margin: 0px 20px;
+.pagination > span {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.pagination > button {
+  padding: 0px 30px;
+}
+
+.create-room-button {
+  position: relative;
+}
+
+.create-room-button > button {
+  position: absolute;
   background-color: #2d24a8;
   color: white;
   font-weight: bold;
+  right: 30px;
+  bottom: -10px;
 }
 
 .LoginBox {
-    background-color: #0C134F;
-    margin-top: 3%;
-    width: 450px;
+  background-color: #0c134f;
+  margin-top: 3%;
+  width: 450px;
 }
 
 .LoginAnother {
-    display: flex;
+  display: flex;
 }
 
 .LoginSocial {
-    display: flex;
+  display: flex;
 }
 
 .textsmall {
-    font-size: 13px;
+  font-size: 13px;
 }
 
 .moveButton {
-    position: absolute;
-    top:118px;
-    right: 95px;
-    font-size: small;
+  position: absolute;
+  top: 118px;
+  right: 95px;
+  font-size: small;
 }
 
 .moveButton1 {
-    position: absolute;
-    top:178px;
-    right: 95px;
-    font-size: small;
+  position: absolute;
+  top: 178px;
+  right: 95px;
+  font-size: small;
 }
 
 .card-study-room-info {
+  position: relative;
   width: 280px;
   height: 160px;
   border-radius: 15px;
   padding: 20px;
-  background-color: #1D267D;
+  background-color: #1d267d;
   color: white;
-  margin: 10px 20px
+  margin: 10px 20px;
 }
 
-.card-study-room-info > h1{
+.card-study-room-info > h1 {
   font-size: 25px;
 }
 
@@ -204,4 +220,54 @@ a {
 
 .private-icon {
   width: 20px;
+}
+
+.RoomPage {
+  padding: 30px;
+  background-color: #0c134f;
+  width: 100%;
+  height: 1080px;
+}
+
+/* pLoud */
+.ploud-icon {
+  width: 327px;
+  height: 87px;
+  left: 65px;
+
+  font-family: "Notable";
+  font-style: normal;
+  font-weight: bold;
+  font-size: 60px;
+  text-align: center;
+
+  color: #818f8a;
+}
+
+.video-flex {
+  display: flex;
+  height: 680px;
+  padding: 60px;
+}
+
+.video-room-button img {
+  width: 70px;
+}
+
+.video-room-button {
+  margin: 0px 30px;
+}
+
+.button-empty {
+  width: 210px;
+}
+
+.enter-room {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+}
+
+.room-list {
+  height: 560px;
 }

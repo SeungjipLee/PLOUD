@@ -8,11 +8,11 @@ import { useNavigate } from "react-router";
 const CreateForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    categoryId: undefined,
-    title: undefined,
-    maxPeople: undefined,
+    categoryId: "",
+    title: "",
+    maxPeople: 0,
     isPrivate: false,
-    password: undefined,
+    password: "",
   });
 
   const dispatch = useDispatch();
@@ -36,9 +36,7 @@ const CreateForm = () => {
       token,
       formData,
       (response) => {
-        console.log(response.data);
         dispatch(getStudy(response.data));
-        console.log(formData.isPrivate);
         navigate("/study/room")
       },
       (error) => {
@@ -48,7 +46,6 @@ const CreateForm = () => {
   };
 
   const handleChange = (e) => {
-    console.log(e.target.name, e.target.value);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -92,7 +89,6 @@ const CreateForm = () => {
               type="number"
               id="maxPeople"
               name="maxPeople"
-              value={formData.maxPeople}
               defaultValue={0}
               onChange={handleChange}
               style={{ color: "black", paddingLeft: "10px", width: "40px" }}

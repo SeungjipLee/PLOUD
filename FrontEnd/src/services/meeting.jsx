@@ -39,13 +39,8 @@ export const leaveMeeting = async (token, data, success, fail) => {
 
 
 // { userId: String, sessionId: String, password: String }
-<<<<<<< HEAD
-export const joinMeeting = (token, data, success, fail) => {
-  return API(token)
-=======
 export const joinMeeting = async (token, data, success, fail) => {
   return await API(token)
->>>>>>> fe/feature/save
     .post("meeting/join", data)
     .then(success)
     .catch(fail)

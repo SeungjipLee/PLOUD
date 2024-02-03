@@ -4,17 +4,18 @@ import { useDispatch } from "react-redux";
 import { getIdPw, updateStep } from "../../features/user/signUpSlice";
 
 const Step1 = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   // 입력 받는 변수
   const [formData, setFormData] = useState({
     userId: undefined,
     password: undefined,
     password_check: undefined,
-  })
+  });
   // 보여주는 처리할 변수
   const [isUserIdValid, setIsUserIdValid] = useState(false);
   const validateUserId = () => /^[A-Za-z0-9]{4,15}$/.test(formData.userId);
-  const validatePassword = () => /^(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{6,15}$/.test(formData.password);
+  const validatePassword = () =>
+    /^(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{6,15}$/.test(formData.password);
 
   // form과 소통하는 함수
   const handleChange = (e) => {
@@ -24,7 +25,7 @@ const Step1 = () => {
   // Id 중복여부 함수
   const handleCheckId = async (e) => {
     e.preventDefault();
-    if (validateUserId()) {    
+    if (validateUserId()) {
       // 아이디 중복 검사 로직
       try {
         const response = await checkId(
@@ -47,24 +48,33 @@ const Step1 = () => {
     } else {
       alert("아이디 형식을 확인해주세요. 아이디는 4~15자 이내입니다.");
     }
-  }
-  
+  };
 
-  // 다음 단계를 누르면 작동할 함수 
+  // 다음 단계를 누르면 작동할 함수
   const handleSubmit = (e) => {
-    e.preventDefault()
-    if (isUserIdValid && (formData.password == formData.password_check) && validatePassword()) {
-      dispatch(getIdPw({userId: formData.userId, password: formData.password}))
-      dispatch(updateStep(2))
+    e.preventDefault();
+    if (
+      isUserIdValid &&
+      formData.password == formData.password_check &&
+      validatePassword()
+    ) {
+      dispatch(
+        getIdPw({ userId: formData.userId, password: formData.password })
+      );
+      dispatch(updateStep(2));
     } else {
-      alert("비밀번호를 다시 확인해주세요. 비밀번호는 특수문자를 포함 6~15자 이내입니다.")
+      alert(
+        "비밀번호를 다시 확인해주세요. 비밀번호는 특수문자를 포함 6~15자 이내입니다."
+      );
     }
-  }
+  };
 
   return (
     <>
       <div className="flex justify-center">
-        <a href="/"><img src="images/ICON_similar_white.png" className="w-36 mt-24" /></a>
+        <a href="/">
+          <img src="images/ICON_similar_white.png" className="w-36 mt-24" />
+        </a>
       </div>
       <div className="LoginBox mb-36 py-4 rounded-xl mx-auto relative">
         <h2 className="text-white text-3xl text-center py-5">회원가입</h2>
@@ -95,14 +105,23 @@ const Step1 = () => {
           placeholder="비밀번호 확인"
           onChange={handleChange}
         />
-        <button className="moveButton" onClick={handleCheckId}>중복확인</button>
-        <div className="w-80 mx-auto my-10"><img src="images/Step1.png" /></div>
-        <div className="flex justify-center-10">
-          <button type="submit" onClick={handleSubmit} className="bg-sky-400 block mb-16 text-white w-2/3 mx-auto rounded-md p-2 text-center hover:bg-sky-500">다음 단계</button>
+        <button className="moveButton" onClick={handleCheckId}>
+          중복확인
+        </button>
+        <div className="w-80 mx-auto my-10">
+          <img src="images/Step1.png" />
         </div>
-
+        <div className="flex justify-center-10">
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="bg-sky-400 block mb-16 text-white w-2/3 mx-auto rounded-md p-2 text-center hover:bg-sky-500"
+          >
+            다음 단계
+          </button>
+        </div>
       </div>
     </>
-  )
-}
+  );
+};
 export default Step1;

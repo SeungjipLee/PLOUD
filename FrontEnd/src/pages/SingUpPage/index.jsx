@@ -9,8 +9,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateStep } from "../../features/user/signUpSlice";
 
 
-
-
 const DataSubmitForm = () => {
   const dispatch = useDispatch()
   const {step} = useSelector((state) => state.signUpReducer)

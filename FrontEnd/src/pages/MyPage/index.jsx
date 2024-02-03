@@ -9,17 +9,28 @@ import { useSelector } from "react-redux";
 
 const MyPage = () => {
   const { token } = useSelector((state) => state.userReducer)
-  const profile = undefined;
-  console.log(null ? 'a' : 'b')
+  const [ profile, setProfile ] = useState({})
+
   useEffect(() => {
-    const response = getProfile(
-      token,
-      (res) => res,
-      (err) => err
-    );
-    console.log(response);
+    const fetchData = async () => {
+      try {
+        const response = await getProfile(
+          token,
+          (res) => res,
+          (err) => err
+        );
+        setProfile(response.data.data)
+      } catch (error) {
+        console.error("Profile fetch failed:", error);
+      }
+    };
+    
+    fetchData();
   }, []);
 
+  // useEffect(() => {
+  //   console.log(profile)
+  // }, [profile])
 
   return (
     <div className="mypage">
@@ -28,7 +39,6 @@ const MyPage = () => {
         <h1>마이페이지</h1>
         <div className="mypage-1">
           <div className="profile">
-            프로필
             {/* <Button>
               <Link to="/patchinfo">회원정보수정</Link>
             </Button> */}
@@ -36,6 +46,7 @@ const MyPage = () => {
           <div className="status">
             <div>학습현황</div>
             <div>학습시간</div>
+            {profile.name}
           </div>
         </div>
         <div className="mypage-2">

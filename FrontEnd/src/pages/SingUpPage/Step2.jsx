@@ -57,6 +57,7 @@ const Step2 = () => {
         (res) => res,
         (err) => err
       );
+      console.log(response)
       // 추가적인 성공 처리 로직
       if (response.data.status == "200") {
         alert("이메일 인증이 완료되었습니다.");

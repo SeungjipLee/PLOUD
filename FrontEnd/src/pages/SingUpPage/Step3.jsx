@@ -7,11 +7,14 @@ import { input } from "@material-tailwind/react";
 
 
 const Step3 = () => {
-  const { userId, password, email, name, nickname, birthYear } = useSelector((state) => state.signUpReducer)
+  const { userId, password, email } = useSelector((state) => state.signUpReducer)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   // 입력 받는 변수
   const [formData, setFormData] = useState({
+    userId: userId,
+    password: password,
+    email: email,
     nickname: undefined,
     name: undefined,
     birthYear: undefined,
@@ -59,17 +62,8 @@ const Step3 = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (validateName() && isNicknameValid) {
-      dispatch(getUserData({ nickname: formData.nickname, name: formData.name, birthYear: formData.birthYear }))
       // 여기서 완전 회원가입 요청 ㄱㄱ
-      const inputForm = {
-        userId: userId,
-        password: password,
-        email: email,
-        name: name,
-        nickname: nickname,
-        birthYear: birthYear
-      }
-      const response = await signup(inputForm,
+      const response = await signup(formData,
         res => res,
         err => err)
       console.log(response)
@@ -78,7 +72,6 @@ const Step3 = () => {
       alert("이름을 다시 확인해주세요. 이름은 특수문자 제외 2~10자 이내입니다.")
     }
   }
-
 
   // 시간 관련 변수
   const years = Array.from(

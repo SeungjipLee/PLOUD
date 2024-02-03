@@ -15,11 +15,14 @@ const API = (token) => {
   });
 //   const dispatch = useDispatch();
 
-  instance.interceptors.request.use(
-    (response) => response,
+  instance.interceptors.response.use(
+    (response) => {console.log("[intercept 성공]", response) 
+    return response},
     async (error) => {
+      console.log("[intercept 실패]", error)
+      console.log(token)
       const originalRequest = error.config;
-      if (error.response.status === 401 && !originalRequest._retry) {
+      if (!originalRequest._retry) {
         originalRequest._retry = true;
         const refreshToken = token.refreshToken; // 리프레시 토큰을 어디서 가져올지에 대한 로직 필요
         // 리프레시 토큰으로 새 액세스 토큰 요청
