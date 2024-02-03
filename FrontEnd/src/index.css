@@ -194,6 +194,14 @@ a {
 }
 
 .card-study-room-info > h1{
-  font-size: 40px;
+  font-size: 25px;
 }
 
+.card-study-room-div1 {
+  display: flex;
+  justify-content: space-between;
+}
+
+.private-icon {
+  width: 20px;
+}

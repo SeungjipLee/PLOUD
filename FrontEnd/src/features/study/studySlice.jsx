@@ -4,7 +4,6 @@ const initialState = {
   studyList: [],
   studyInfo: undefined,
 };
-
 const studyrooms = [
     {
       categoryId: 1,
@@ -59,7 +58,8 @@ export const studySlice = createSlice({
       state.studyList = [...studyrooms, ...action.payload];
     },
     getStudy: (state, action) => {
-      state.studyInfo = action.payload.data;
+      console.log(action.payload);
+      state.studyInfo = action.payload;
     }
   },
 });

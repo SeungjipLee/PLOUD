@@ -39,10 +39,15 @@ const StudyPage = () => {
     }
   };
 
+  const handleClickCard = (e) => {
+    console.log(tag, "카드 클릭")
+    setIsClickRoom(true)
+  }
+
   // 스터디 리스트 요청
   const searchStudyList = () => {
-    const data = { categoryId, word };
-
+    const data = { categoryId: categoryId, word: word };
+    console.log(data)
     getMeetingList(
       token,
       data,
