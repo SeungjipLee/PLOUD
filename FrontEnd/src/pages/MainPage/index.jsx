@@ -37,16 +37,16 @@ const MainPage = () => {
         <div className="Main3">
           <h2 className='text-5xl text-center pt-24 font-bold'>스피치 실력을 키워볼까요?</h2>
           <div className='Main3_1 mt-32'>
-            <div class="subtitleImg me-12 mb-24">
+            <div className="subtitleImg me-12 mb-24">
               <Link to="/practice">
               <img src="images/solo.png"/>
-              <div class="text">연습모드 바로가기</div>
+              <div className="text">연습모드 바로가기</div>
               </Link>
             </div>
-            <div class="subtitleImg mb-24">
+            <div className="subtitleImg mb-24">
               <Link to="/study">
               <img src="images/study.png"/>
-              <div class="text">스터디룸 바로가기</div>
+              <div className="text">스터디룸 바로가기</div>
               </Link>
             </div>
           </div>
