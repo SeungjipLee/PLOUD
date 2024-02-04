@@ -4,6 +4,7 @@ import com.ssafy.ploud.common.response.ApiResponse;
 import com.ssafy.ploud.domain.board.dto.request.BoardRequest;
 import com.ssafy.ploud.domain.board.dto.response.BoardResponse;
 import com.ssafy.ploud.domain.board.service.BoardService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +22,15 @@ public class BoardController {
 
   private final BoardService boardService;
 
+  @GetMapping("/")
+  public ApiResponse<List<BoardResponse>> getAllBoards() {
+    List<BoardResponse> boardResponses = boardService.getAllBoards();
+    return ApiResponse.ok("게시글 목록 불러오기 성공", boardResponses);
+  }
+
   @PostMapping("/create")
-  public ApiResponse<?> createBoard(@RequestBody BoardRequest boardRequest) {
+  public ApiResponse<?> createBoard(/*@RequestPart MultipartFile videoPath,*/
+      @RequestBody BoardRequest boardRequest) {
     boardService.createBoard(boardRequest, boardRequest.getUserId());
     return ApiResponse.ok("글쓰기 성공");
   }

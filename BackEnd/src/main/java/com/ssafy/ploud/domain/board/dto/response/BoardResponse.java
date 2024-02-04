@@ -15,7 +15,7 @@ public class BoardResponse {
   private String userId;
   private String title;
   private String content;
-  private String videoPath;
+  //private String videoPath;
   private LocalDateTime registerTime;
 
   public static BoardResponse fromEntity(BoardEntity boardEntity) {
@@ -24,7 +24,7 @@ public class BoardResponse {
         .userId(boardEntity.getUserId())
         .title(boardEntity.getTitle())
         .content(boardEntity.getContent())
-        .videoPath(boardEntity.getVideoPath())
+        //    .videoPath(boardEntity.getVideoPath())
         .registerTime(boardEntity.getRegisterTime())
         .build();
   }
