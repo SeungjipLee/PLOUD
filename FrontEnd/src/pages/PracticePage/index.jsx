@@ -4,6 +4,11 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { Button, Input, Textarea } from "@material-tailwind/react";
 import { useState, useRef } from "react";
+import {
+  getCategoryList,
+  getScriptList,
+  getScriptDetail,
+} from "../../services/script";
 
 const PracticePage = () => {
   const [currentPage, setCurrentPage] = useState("write");
@@ -59,14 +64,14 @@ const PracticePage = () => {
           </>
         )}
 
-        {currentPage === "write" && <Write />}
-        {currentPage === "select" && <Select />}
+        {currentPage === "write" && <ScriptWrite />}
+        {currentPage === "select" && <ScriptSelect />}
       </div>
     </>
   );
 };
 
-const Write = () => {
+const ScriptWrite = () => {
   return (
     <>
       <span className="ml-24 font-bold text-blue-950">단계</span>
@@ -83,6 +88,7 @@ const Write = () => {
           placeholder="제목: 제목을 입력해 주세요"
         />
         <Textarea
+          style={{ height: "300px" }}
           className="border border-blue-950 rounded p-2 h-80 bg-white"
           color="blue"
           placeholder="내용: 내용을 입력해 주세요. (최대 3000자)"
@@ -95,8 +101,14 @@ const Write = () => {
   );
 };
 
-const Select = () => {
-  return <div>대본선택</div>;
+const ScriptSelect = () => {
+  return (
+    <div
+      className=" bg-white"
+      style={{ paddingLeft: "10px", paddingRight: "10px", paddingTop: "20px" }}>
+      <Sidebar />
+    </div>
+  );
 };
 
 export default PracticePage;

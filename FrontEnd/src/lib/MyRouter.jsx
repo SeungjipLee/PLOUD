@@ -9,8 +9,6 @@ import FindPwPage from "../pages/LoginPage/Findpw";
 import MyPage from "../pages/MyPage";
 import PatchInfoPage from "../pages/MyPage/PatchInfoPage";
 import ResetPwPage from "../pages/MyPage/ResetPwPage";
-import News from "../pages/PracticePage/sidebar/News";
-import Speech from "../pages/PracticePage/sidebar/Speech";
 import TestPage from "../pages/TestPage";
 import TestPage2 from "../pages/TestPage2";
 
@@ -24,8 +22,6 @@ const Router = () => {
         <Route path="/board" element={<BoardPage />} />
         <Route path="/study" element={<StudyPage />} />
         <Route path="/practice" element={<PracticePage />} />
-        <Route path="/practice/news" element={<News />} />
-        <Route path="/practice/speech" element={<Speech />} />
         <Route path="/findpw" element={<FindPwPage />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/patchinfo" element={<PatchInfoPage />} />
