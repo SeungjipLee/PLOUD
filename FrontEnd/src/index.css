@@ -331,7 +331,7 @@
 .container1 {
     width: 950px;
     height: 300px;
-    background-color: #EEEEEE;
+    background-color: white;
     margin-left: auto;
     margin-right: auto;
     padding-top: 30px;
@@ -370,4 +370,75 @@
 .Recard:hover {
     transform:scale(1.05);
     background-color: #fffed1;
+}
+
+.outline1 {
+  width: 700px;
+}
+
+.outline2 {
+  width: 1000px;
+}
+
+.fetImg {
+  flex-direction: column;
+  align-items: center;
+}
+
+.checkPatch {
+   position: absolute;
+   top : 348px;
+   left : 365px;
+   font-size : x-small;
+}
+
+.underLine {
+  border-bottom: 3px black solid;
+}
+
+.OutBox {
+  width: 1000px;
+  height: 500px;
+}
+
+.searchForm {
+  position: absolute;
+  right:18%;
+}
+
+.searchBtn {
+  right: 15%;
+  bottom: -52px;
+}
+
+.writeBtn {
+  background-color: #1D267D;
+  color: white;
+}
+
+.writeBtn1 {
+  background-color: #ff0022;
+  color: white;
+}
+
+.write {
+  right:15%;
+}
+
+.creBoaOut {
+  width: 800px;
+  height: 800px;
+  background-color: rgb(255, 255, 255);
+}
+
+.createBtn {
+  display: flex;
+}
+
+.Detail {
+  height:1000px;
+}
+
+.Comment {
+  border: 2px solid black;
 }
