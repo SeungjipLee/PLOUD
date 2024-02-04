@@ -21,12 +21,16 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "speeches")
 public class SpeechEntity {
   
@@ -46,9 +50,11 @@ public class SpeechEntity {
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "score_id")
   private ScoreEntity score; // 발표에 대한 평가
+
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "video_id")
   private VideoEntity speechVideo;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "category_id")
   private CategoryEntity category; // 발표 카테고리
@@ -61,15 +67,16 @@ public class SpeechEntity {
 
   private String comment; // 개인 평가
 
-  public static SpeechEntity createNewSpeech(SpeechStartRequest request, UserEntity user, CategoryEntity category, ScriptEntity script){
-    SpeechEntity speechEntity = new SpeechEntity();
-    speechEntity.title = request.getTitle();
-    speechEntity.user = user;
-    speechEntity.category = category;
-    speechEntity.script = script;
-    speechEntity.recordTime = LocalDateTime.now();
-    return speechEntity;
-  }
+//  public static SpeechEntity createNewSpeech(SpeechStartRequest request, CategoryEntity category,
+//      ScriptEntity script) {
+//    SpeechEntity speechEntity;
+//    speechEntity.title = request.getTitle();
+////    speechEntity.user = user;
+//    speechEntity.category = category;
+//    speechEntity.script = script;
+//    speechEntity.recordTime = LocalDateTime.now();
+//    return speechEntity;
+//  }
 
   public void updateComment(String comment){
     this.comment = comment;
@@ -89,6 +96,10 @@ public class SpeechEntity {
         .startsAt(recordTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")))
         .comment(comment)
         .build();
+  }
+
+  public void setUser(UserEntity user) {
+    this.user = user;
   }
 
 }

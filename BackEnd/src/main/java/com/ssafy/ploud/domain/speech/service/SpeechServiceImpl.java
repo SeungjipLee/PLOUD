@@ -9,6 +9,7 @@ import com.ssafy.ploud.domain.record.repository.FeedbackRepository;
 import com.ssafy.ploud.domain.record.repository.ScoreRepository;
 import com.ssafy.ploud.domain.record.repository.VideoRepository;
 import com.ssafy.ploud.domain.script.ScriptEntity;
+import com.ssafy.ploud.domain.script.repository.ScriptRepository;
 import com.ssafy.ploud.domain.speech.CategoryEntity;
 import com.ssafy.ploud.domain.speech.SpeechEntity;
 import com.ssafy.ploud.domain.speech.dto.ClearityDto;
@@ -25,6 +26,7 @@ import com.ssafy.ploud.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -46,28 +48,42 @@ public class SpeechServiceImpl implements SpeechService{
     private final VideoRepository videoRepository;
     private final ScoreRepository scoreRepository;
     private final FeedbackRepository feedbackRepository;
+    private final ScriptRepository scriptRepository;
 
     private int cnt = 0;
 
     @Override
     @Transactional
     public int start(SpeechStartRequest speechStartRequest) {
-        if(speechStartRequest.isPersonal()){
-            if(openViduUtil.findSpeechIdBySessionId(speechStartRequest.getSessionId()) != -1){
+        if (speechStartRequest.isPersonal()) {
+            if (openViduUtil.findSpeechIdBySessionId(speechStartRequest.getSessionId()) != -1) {
                 throw new CustomException(ResponseCode.RECORD_PROCEEDING);
             }
         }
+        // user 정보 가져오기
         UserEntity userEntity = userRepository.findByUserId(speechStartRequest.getUserId())
             .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
-        CategoryEntity category = null;
+
+        // 대본 가져오기
         ScriptEntity script = null;
+        if (speechStartRequest.getScriptId() != -1) {
+            script = scriptRepository.findById(speechStartRequest.getScriptId())
+                .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
+        }
 
-        SpeechEntity speechEntity = SpeechEntity.createNewSpeech(speechStartRequest,
-            userEntity, category, script);
+        SpeechEntity speech = SpeechEntity.builder()
+            .title(speechStartRequest.getTitle())
+            .personal(speechStartRequest.isPersonal())
+            .recordTime(LocalDateTime.now())
+            .script(script)
+            // category
+            .build();
 
-        speechRepository.save(speechEntity);
+        speech.setUser(userEntity);
 
-        return speechEntity.getId();
+        speechRepository.save(speech);
+
+        return speech.getId();
     }
 
     @Override
@@ -87,18 +103,19 @@ public class SpeechServiceImpl implements SpeechService{
     @Override
     public void feedback(FeedbackRequest feedbackRequest) {
         int speechId = openViduUtil.findSpeechIdBySessionId(feedbackRequest.getSessionId());
-
+        log.info("SpeechServiceImpl feedback speechId; "+speechId);
         SpeechEntity speechEntity = speechRepository.findById(speechId)
             .orElseThrow(() -> new CustomException(ResponseCode.BAD_REQUEST));
-        UserEntity userEntity = userRepository.findByUserId(feedbackRequest.getUserId())
-            .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
         // speechId, userId, content로 fb 등록
 
-        FeedbackEntity feedbackEntity = FeedbackEntity.createNewFeedback(feedbackRequest.getContent(), userEntity, speechEntity);
+        FeedbackEntity feedbackEntity = FeedbackEntity.createNewFeedback(feedbackRequest.getUserId(), feedbackRequest.getContent(), speechEntity);
+        feedbackEntity.setSpeech(speechEntity);
+
         feedbackRepository.save(feedbackEntity);
     }
 
     @Override
+    @Transactional
     public void comment(CommentRequest commentRequest) {
         int speechId = commentRequest.getSpeechId();
 
