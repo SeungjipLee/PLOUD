@@ -5,12 +5,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class BoardRequest {
+public class CommentRequest {
 
   private int id;
+  private int boardId;
   private String userId;
-  private String title;
-  private String content;
-  // private MultipartFile videoPath;
+  private String comment;
   
 }
