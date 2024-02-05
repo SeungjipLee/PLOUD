@@ -15,6 +15,13 @@ const API = (token) => {
   });
 //   const dispatch = useDispatch();
 
+  instance.interceptors.response.use(
+    (response) => {return response},
+    (error) => {
+      console.log(error);
+    }
+  );
+
   // instance.interceptors.response.use(
   //   (response) => {
   //     // console.log("[intercept 성공]", response) 

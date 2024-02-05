@@ -58,7 +58,7 @@ const TestPage = () => {
         // sessionId: meetingInfo.sessionId,
       },
       (response) => {
-        console.log("speechId : " + response.data.data);
+        // console.log("speechId : " + response.data.data);
         speechId.current = response.data.data;
         decibels.current = [];
         // 녹화 시작
@@ -85,7 +85,7 @@ const TestPage = () => {
         decibels: decibels.current,
       },
       (response) => {
-        console.log(response);
+        // console.log(response);
       },
       (error) => {
         console.log(error);
@@ -102,7 +102,7 @@ const TestPage = () => {
         comment: comment,
       },
       (response) => {
-        console.log(response);
+        // console.log(response);
       },
       (error) => {
         console.log(error);
@@ -223,7 +223,7 @@ const TestPage = () => {
 
   // 녹화 종료
   const stopRecording = () => {
-    console.log("녹음 중지");
+    // console.log("녹음 중지");
     isRecording.current = false;
     if (mediaRecorder && mediaRecorder.state === "recording") {
       mediaRecorder.stop();
@@ -237,7 +237,7 @@ const TestPage = () => {
 
   // 10초 평가 요청
   const uploadAudio = async (data) => {
-    console.log("평가 요청");
+    // console.log("평가 요청");
     var tmp = [];
     tmp.push(data);
 
@@ -251,7 +251,7 @@ const TestPage = () => {
       token,
       formData,
       (response) => {
-        console.log(response.data);
+        // console.log(response.data);
       },
       (error) => {
         console.log(error);
