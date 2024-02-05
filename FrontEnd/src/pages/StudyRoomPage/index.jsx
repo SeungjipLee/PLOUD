@@ -7,6 +7,7 @@ import UserVideoComponent from "./component/UserVideoComponent";
 import Chat from "./component/Chat";
 import Report from "./component/Report";
 import ResultList from "./component/ResultList";
+import { SignalOptions, Signal } from "openvidu-browser";
 
 const StudyRoomPage = () => {
   const navigate = useNavigate();
@@ -45,6 +46,10 @@ const StudyRoomPage = () => {
     { userId: "test04", presenter: false },
   ]);
 
+  // 채팅 정보
+  const [chatvalue, setChatvalue] = useState("");
+  const [chatList, setChatList] = useState([]);
+
   // 배열 객체 상태 업데이트 함수
   const updateItemValue = (itemId, newValue) => {
     setItems((currentItems) =>
@@ -82,6 +87,10 @@ const StudyRoomPage = () => {
     session.current.on("streamCreated", (event) => {
       console.log(tag, "누가 접속했어요");
 
+      // 찍어 보고 채팅창에 추가하기
+      console.log(event.stream.connection.data);
+      setChatList([...chatList, "접속"]);
+
       var subscriber = session.current.subscribe(event.stream, undefined);
       setSubscriberse([...subscribers, subscriber]);
     });
@@ -89,12 +98,24 @@ const StudyRoomPage = () => {
     // On every Stream destroyed...
     session.current.on("streamDestroyed", (event) => {
       console.log(tag, "누가 떠났어요");
+
+      // 찍어 보고 채팅창에 추가하기
+      console.log(event.stream.connection.data);
+      setChatList([...chatList, "떠남"]);
+
       deleteSubscriber(event.stream.streamManager);
     });
 
     // On every asynchronous exception...
     session.current.on("exception", (exception) => {
       console.warn(tag, exception);
+    });
+
+    // 채팅 수신
+    session.current.on("signal:chat", (event) => {
+      // 닉네임은 안받아도 되지 않나? event.stream. ~~
+      console.log(event);
+      setChatList([...chatList, JSON.parse(event.data)]);
     });
 
     session.current
@@ -137,6 +158,7 @@ const StudyRoomPage = () => {
       })
       .catch((error) => {
         console.log(tag, error);
+        leaveSession();
       });
   };
 
@@ -152,13 +174,13 @@ const StudyRoomPage = () => {
 
         session.current = null;
         OV.current = null;
-
-        navigate("/study");
       },
       (error) => {
         console.log(tag, error);
       }
     );
+
+    navigate("/study");
   };
 
   const deleteSubscriber = (streamManager) => {
@@ -166,6 +188,31 @@ const StudyRoomPage = () => {
     if (index > -1) {
       setSubscriberse(subscribers.splice(index, 1));
     }
+  };
+
+  // 채팅 전송
+  const handleSubmit = async (e) => {
+    if (e.key !== "Enter") return;
+
+    const signalOptions = {
+      data: JSON.stringify({ chatvalue }),
+      type: Signal.CHAT,
+      to: undefined,
+    };
+
+    if (session.current) {
+      session.current
+        .signal(signalOptions)
+        .then(() => {
+          // console.log("메시지 전송 성공");
+        })
+        .catch((error) => {
+          // console.log("메시지 전송 실패");
+          // console.log(error)
+        });
+    }
+
+    setChatvalue("");
   };
 
   return (
@@ -292,7 +339,31 @@ const StudyRoomPage = () => {
           </div>
         </div>
       )}
-      {chat && <Chat />}
+      {/* {chat && <Chat />} */}
+      {chat && (
+        <Modal className="chat" title="채팅">
+          <div className="chat-area">
+            {chatList &&
+              chatList.map((item, index) => {
+                const { username, content } = item;
+                return (
+                  <p>
+                    {username} : {content}
+                  </p>
+                );
+              })}
+          </div>
+          <div>
+            <textarea
+              type="text"
+              value={chatvalue}
+              onChange={(e) => setChatvalue(e.target.value)}
+              onKeyDown={handleSubmit}
+              placeholder="댓글을 입력하세요."
+            />
+          </div>
+        </Modal>
+      )}
       {result && <ResultList />}
       {report && <Report />}
     </div>
