@@ -10,6 +10,7 @@ import com.ssafy.ploud.domain.user.dto.FindPwReqDto;
 import com.ssafy.ploud.domain.user.dto.LoginReqDto;
 import com.ssafy.ploud.domain.user.dto.LoginResDto;
 import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
+import com.ssafy.ploud.domain.user.dto.UpdatePwReqDto;
 import com.ssafy.ploud.domain.user.dto.UserInfoResDto;
 import com.ssafy.ploud.domain.user.dto.UserInfoUpdateReqDto;
 import com.ssafy.ploud.domain.user.service.UserService;
@@ -109,7 +110,7 @@ public class UserController {
     return ApiResponse.ok("닉네임 수정 완료", res);
   }
 
-  @Operation(summary = "회원 프로필 사진 수정", description = "window C 폴더 하위에 ploud_img 폴더를 먼저 만들어야 합니다")
+  @Operation(summary = "회원 프로필 사진 수정", description = "이미지: base64로 인코딩된 값을 리턴한다")
   @PostMapping(value = "/img", consumes = {MediaType.APPLICATION_JSON_VALUE,
       MediaType.MULTIPART_FORM_DATA_VALUE})
   public ApiResponse<?> updateUserProfileImg(
@@ -118,7 +119,7 @@ public class UserController {
     if (loginUser == null) {
       throw new CustomException(ResponseCode.USER_LOGIN_RERQUIRED);
     }
-    Map<String, byte[]> res = new HashMap<>();
+    Map<String, String> res = new HashMap<>();
     res.put("profileImg", userService.saveProfilePicture(multipartFile, loginUser.getUsername()));
     return ApiResponse.ok("프로필 사진 수정 완료", res);
 
@@ -127,11 +128,11 @@ public class UserController {
   @Operation(summary = "비밀번호 변경")
   @PatchMapping("/pw")
   public ApiResponse<?> updateUserPassword(@AuthenticationPrincipal UserDetails loginUser,
-      @RequestBody UserInfoUpdateReqDto reqDto) {
+      @RequestBody UpdatePwReqDto reqDto) {
     if (loginUser == null) {
       throw new CustomException(ResponseCode.USER_LOGIN_RERQUIRED);
     }
-    userService.updateUserPassword(loginUser.getUsername(), reqDto.getNewValue());
+    userService.updateUserPassword(loginUser.getUsername(), reqDto.getOldValue(), reqDto.getNewValue());
     return ApiResponse.ok("비밀번호 수정 완료");
   }
 

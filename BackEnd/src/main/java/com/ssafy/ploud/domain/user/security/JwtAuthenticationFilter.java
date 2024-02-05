@@ -63,7 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     response.setContentType("application/json;charset=UTF-8");
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     response.getWriter()
-        .write("{\"status\":401, \"message\": \"" + msg + "\", \"data\" : \"null\"}");
+        .write("{\"status\":401, \"message\": \"" + "msg" + "\", \"data\" : \"null\"}");
   }
 
 }

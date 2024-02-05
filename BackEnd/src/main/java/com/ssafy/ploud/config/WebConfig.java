@@ -17,8 +17,6 @@ public class WebConfig implements WebMvcConfigurer {
         .allowedMethods(ALLOWED_METHOD_NAMES.split(","))
         .allowCredentials(true)
         .exposedHeaders(HttpHeaders.LOCATION);
-
-//    ("https://i10e207.p.ssafy.io")
   }
 
 }
