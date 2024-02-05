@@ -90,6 +90,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
+}
+
+.Button, .Button:hover, .Button:active, .Button:focus {
+  text-decoration: none;
 }
 
 .study-category-button {
@@ -102,7 +107,7 @@
 }
 
 .study-category-button-activate {
-  background-color: #2d24a8;
+  background: linear-gradient(to right, #223872, #2f2468);
   color: white;
 }
 
@@ -181,9 +186,12 @@
 
 .create-room-button > button {
   position: absolute;
-  background-color: #2d24a8;
+  background: linear-gradient(to right, #223872, #2f2468);
   color: white;
   font-weight: bold;
+  border-radius: 10px;
+  width: 100px;
+  height: 40px;
   right: 30px;
   bottom: -10px;
 }
@@ -226,18 +234,36 @@
   height: 160px;
   border-radius: 15px;
   padding: 20px;
-  background-color: #1d267d;
+  /* background-color: #1d267d; */
+  background: linear-gradient(to right, #223872, #2f2468);
   color: white;
   margin: 10px 20px;
 }
 
-.card-study-room-info > h1 {
+.card-study-room-info img {
+  position: absolute;
+  right: 12px;
+  width: 40px;
+}
+
+.card-study-room-info h1 {
   font-size: 25px;
+  display: inline-block;
 }
 
 .card-study-room-div1 {
   display: flex;
   justify-content: space-between;
+}
+
+.card-study-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.card-study-title > img {
+  height: 40px;
 }
 
 .study-room-user-list {
@@ -275,6 +301,7 @@
   height: 1080px;
 }
 .RoomPage-mid {
+  height: 720px;
   display: flex;
   justify-content: center;
 }
@@ -304,7 +331,7 @@
 }
 
 .video-room-button img {
-  width: 70px;
+  width: 50px;
 }
 
 .video-room-button {
@@ -446,7 +473,7 @@
   top: 80px;
   right: 30px;
   width: 350px;
-  height: 700px;
+  height: 730px;
   background-color: #060515;
   color: white;
 }
@@ -479,7 +506,7 @@ p {
   top: 380px;
   right: 30px;
   width: 350px;
-  height: 400px;
+  height: 430px;
   background-color: #060515;
   color: white;
 }
@@ -511,7 +538,7 @@ p {
   top: 80px;
   right: 30px;
   width: 350px;
-  height: 700px;
+  height: 730px;
   background-color: #060515;
   color: white;
 }
@@ -657,4 +684,56 @@ p {
 
 .Comment {
   border: 2px solid black;
+}
+
+
+.overflow-ellipsis {
+  white-space: nowrap; /* 텍스트 줄 바꿈 비활성화 */
+  overflow: hidden; /* 넘치는 내용 숨김 */
+  text-overflow: ellipsis; /* 넘치는 텍스트에 줄임표 표시 */
+  max-width: 100%; /* div의 최대 너비 설정 */
+  width: 200px;
+  z-index: 100;
+  font-size: 25px;
+  font-weight: normal;
+}
+
+.overflow-ellipsis:hover {
+  position: absolute;
+  white-space: normal; /* 호버링 시 텍스트 줄 바꿈 활성화 */
+  overflow: visible; /* 호버링 시 텍스트 내용 표시 */
+  text-overflow: unset; /* 줄임표 제거 */
+  /* background-color: #B0B0B0; */
+  width: 241px;
+  height: 100px;
+  background: linear-gradient(to right, #223872, #2f2468);
+  border-radius: 5px;
+}
+
+.record-form {
+  border: rgb(85, 85, 85) solid 1px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 5px;
+  width: 400px;
+  height: 330px;
+  background-color: #060515;
+  color: white;
+  top: 40%; /* 상단 위치를 부모 요소의 중간으로 조정 */
+  left: 50%; /* 왼쪽 위치를 부모 요소의 중간으로 조정 */
+  transform: translate(-50%, -50%); /* 요소를 정확한 중앙으로 이동 */
+}
+
+.record-form input {
+  background-color: #272541;
+}
+
+.record-form p {
+  padding: 10px 0px;
+}
+
+.record-form button {
+  margin: 20px;
 }

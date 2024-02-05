@@ -13,6 +13,7 @@ import TestPage from "../pages/TestPage";
 import StudyRoomPage from "../pages/StudyRoomPage"
 import CreateBoard from "../pages/BoardPage/CreateBoard";
 import BoardDetail from "../pages/BoardPage/BoardDetail";
+import InterviewScreenPresenter from "../pages/StudyRoomPage/component/InterviewScreenPresenter";
 
 const Router = () => {
   return (
@@ -33,6 +34,7 @@ const Router = () => {
         <Route path="/createboard" element={<CreateBoard />} />
         <Route path="/test" element={<TestPage />} />
         <Route path="/board-detail" element={<BoardDetail />} />
+        <Route path="/interview" element={<InterviewScreenPresenter/>} />
       </Routes>
     </BrowserRouter>
   );

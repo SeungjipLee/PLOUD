@@ -9,6 +9,8 @@ import {
   getScriptList,
   getScriptDetail,
 } from "../../services/script";
+import Page from "../../components/Page";
+import Footer from "../../components/Footer";
 
 const PracticePage = () => {
   const [currentPage, setCurrentPage] = useState("write");
@@ -19,12 +21,12 @@ const PracticePage = () => {
   }, []);
 
   return (
-    <>
-      <Navbar />
+    <Page header={<Navbar />} footer={<Footer />}>
       <div style={{ paddingTop: "130px" }}></div>
       <div
         style={{ paddingLeft: "120px" }}
-        className="text-3xl text-sky-950 font-bold ">
+        className="text-3xl text-sky-950 font-bold "
+      >
         혼자 연습
       </div>
       <div style={{ paddingLeft: "120px", paddingRight: "120px" }}>
@@ -36,13 +38,15 @@ const PracticePage = () => {
               ref={buttonRef}
               variant="outlined"
               className="border border-blue-950  p-1 bg-white focus:text-blue-900"
-              onClick={() => setCurrentPage("write")}>
+              onClick={() => setCurrentPage("write")}
+            >
               대본입력
             </Button>
             <Button
               variant="outlined"
               className="border border-blue-950 p-1  bg-gray-400 text-white"
-              onClick={() => setCurrentPage("select")}>
+              onClick={() => setCurrentPage("select")}
+            >
               대본선택
             </Button>
           </>
@@ -52,13 +56,15 @@ const PracticePage = () => {
               ref={buttonRef}
               variant="outlined"
               className="border border-blue-950  p-1 bg-gray-400 text-white"
-              onClick={() => setCurrentPage("write")}>
+              onClick={() => setCurrentPage("write")}
+            >
               대본입력
             </Button>
             <Button
               variant="outlined"
               className="border border-blue-950 p-1  bg-white focus:text-blue-900"
-              onClick={() => setCurrentPage("select")}>
+              onClick={() => setCurrentPage("select")}
+            >
               대본선택
             </Button>
           </>
@@ -67,7 +73,7 @@ const PracticePage = () => {
         {currentPage === "write" && <ScriptWrite />}
         {currentPage === "select" && <ScriptSelect />}
       </div>
-    </>
+    </Page>
   );
 };
 
@@ -93,7 +99,7 @@ const ScriptWrite = () => {
           color="blue"
           placeholder="내용: 내용을 입력해 주세요. (최대 3000자)"
         />
-        <Button className="absolute bg-blue-950 text-white px-4 py-2 rounded z-10">
+        <Button className="bg-blue-950 text-white px-4 py-2 rounded z-10">
           녹화 화면 가기 (나중에 라우터로 이동시키기)
         </Button>
       </div>
@@ -105,7 +111,8 @@ const ScriptSelect = () => {
   return (
     <div
       className=" bg-white"
-      style={{ paddingLeft: "10px", paddingRight: "10px", paddingTop: "20px" }}>
+      style={{ paddingLeft: "10px", paddingRight: "10px", paddingTop: "20px" }}
+    >
       <Sidebar />
     </div>
   );

@@ -4,7 +4,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 const initialState = {
   isLogined: false,
   token: { accessToken: "", refreshToken: "", tokenType: "" },
-  user_id: "",
+  userId: "",
   email: "",
   nickname: "", // 추가: nickname 정보를 저장할 필드 추가
   name: "",
@@ -34,7 +34,7 @@ export const userSlice = createSlice({
       state.nickname = ""; // 추가: 로그아웃 시 nickname 초기화
     },
     getUserId: (state, action) => {
-      state.user_id = action.payload;
+      state.userId = action.payload;
     },
     updateNickname: (state, action) => {
       state.nickname = action.payload;
@@ -45,39 +45,3 @@ export const userSlice = createSlice({
 
 export const { getToken, expireToken, getUserId, getNewToken, updateNickname } = userSlice.actions;
 export default userSlice.reducer;
-
-
-  // extraReducers: (builder) => {
-  //   builder
-  //     .addCase(refreshAccessToken.pending, (state) => {
-  //       state.loading = true;
-  //     })
-  //     .addCase(refreshAccessToken.fulfilled, (state) => {
-  //       state.loading = false;
-  //     })
-  //     .addCase(refreshAccessToken.rejected, (state) => {
-  //       state.loading = false;
-  //     });
-  // }
-
-// export const refreshAccessToken = createAsyncThunk(
-//   'user/refreshAccessToken',
-//   async (_, { getState, dispatch }) => {
-//     const { refreshToken } = getState().userReducer.token;
-//     if (refreshToken) {
-//       try {
-//         const response = await request(
-//           'GET', '/api/auth/reissue',
-//           { headers: {Authorization: `Bearer ${refreshToken}`}, withCredentials: true  }
-//           );
-//         if (response.status === 200) {
-//           const { accessToken, refreshToken, tokenType } = response.data.data; 
-//           dispatch(getNewToken({ accessToken, refreshToken, tokenType }));
-//         }
-//       } catch (e) {
-//         console.error(e);
-//         dispatch(expireToken());
-//       }
-//     }
-//   }
-// );

@@ -12,20 +12,32 @@ const RoomCard = ({ data, children }) => {
     speechId,
     title,
   } = data;
-  
+
+  const categoryName = () => {
+    switch(categoryId){
+    case 0: return "전체"
+    case 1: return "면접"
+    case 2: return "발표"
+    case 3: return "기타"
+  }
+  }
+
   return (
     <>
       <Card>
         <div className="card-study-room-info">
-          <h1>{title}</h1>
-          <div>
-          <p>{managerId}</p>
-          <p>{currentPeople} / {maxPeople}</p>
+          <div className="card-study-title">
+            <div className="overflow-ellipsis">{title}</div>
+            {isPrivate && <img src="/images/private_icon.PNG" alt="" />}
           </div>
           <div>
-            {categoryId === 1 ? "발표" : "면접"}
+            <p>{managerId}</p>
+            <p>
+              {currentPeople} / {maxPeople}
+            </p>
           </div>
-          {children}  
+          <div>{categoryName()}</div>
+          {children}
         </div>
       </Card>
     </>

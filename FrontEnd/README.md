@@ -151,6 +151,14 @@ useDispatch : dispatch action 수행
     2. useState를 사용하고 싶다면 useEffect 로 상태 변경을 감지하면 실행되도록 해야 함
 
 
+
+## 오류
+
+스터디 화상회의 페이지에서 새로고침 시 아에 방으로 접근 불가
++ 뒤로가기로 나가면 방에서 나가지지 않음
+
+
+
 ## StudyRoomPage
 
 보여줄 비디오 종류 3
