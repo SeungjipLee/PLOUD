@@ -701,6 +701,6 @@ p {
   /* background-color: #B0B0B0; */
   width: 241px;
   height: 100px;
-  background-color: #1D267D;
+  background: linear-gradient(to right, #223872, #2f2468);
   border-radius: 5px;
 }
