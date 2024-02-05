@@ -5,8 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "set port=3000 && webpack serve --env development",
-    "build": "webpack --config ./webpack.config.js"
+    "dev": "webpack serve --env development",
+    "start": "webpack --config ./webpack.config.js",
+    "build": "react-scripts build"
   },
   "author": "Junhyung Bae <wnsgud0895@gmail.com>",
   "license": "ISC",
