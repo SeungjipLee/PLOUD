@@ -30,7 +30,9 @@ const StudyRoomPage = () => {
 
   // 기본 정보
   const token = useSelector((state) => state.userReducer.token);
+  const { nickname } = useSelector((state) => state.userReducer);
   const room = useSelector((state) => state.studyReducer.studyInfo.meetingInfo);
+  const studyInfo = useSelector((state) => state.studyReducer.studyInfo);
   const ovToken = useSelector((state) => state.studyReducer.studyInfo.token);
   const speechId = useSelector((state) => state.studyReducer.speechId);
 
@@ -49,6 +51,46 @@ const StudyRoomPage = () => {
   const [report, setReport] = useState(false);
   const [chat, setChat] = useState(false);
   const [user, setUser] = useState(false);
+
+  // 화면공유 여부 파악
+  const [screenShare, setScreenShare] = useState(false);
+
+  const handleScreenShare = async () => {
+    let tmpPublisher = await OV.current.initPublisherAsync(undefined, {
+      audioSource: undefined, // The source of audio. If undefined default microphone
+      videoSource:
+        navigator.userAgent.indexOf("Firefox") !== -1 ? "window" : "screen", // The source of video. If undefined default webcam
+      publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+      publishVideo: true, // Whether you want to start publishing with your video enabled or not
+      resolution: "640x480", // The resolution of your video
+      frameRate: 30, // The frame rate of your video
+      insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+      mirror: false, // Whether to mirror your local video or not
+    });
+
+    session.current.publish(tmpPublisher);
+    setMainStreamManager(tmpPublisher);
+    setPublisher(tmpPublisher);
+    setScreenShare(true);
+  };
+
+  const handleScreenShare2 = async () => {
+    let tmpPublisher = await OV.current.initPublisherAsync(undefined, {
+      audioSource: undefined, // The source of audio. If undefined default microphone
+      videoSource: undefined,
+      publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+      publishVideo: true, // Whether you want to start publishing with your video enabled or not
+      resolution: "640x480", // The resolution of your video
+      frameRate: 30, // The frame rate of your video
+      insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+      mirror: false, // Whether to mirror your local video or not
+    });
+
+    session.current.publish(tmpPublisher);
+    setMainStreamManager(tmpPublisher);
+    setPublisher(tmpPublisher);
+    setScreenShare(false);
+  };
 
   // 참가자 목록
   const [captain, setCaptain] = useState(true);
@@ -110,9 +152,9 @@ const StudyRoomPage = () => {
   // 녹화 시작
   const clickHandler = (e) => {
     startRecording();
-    setRecord(true)
-    setRecordForm(false)
-  }
+    setRecord(true);
+    setRecordForm(false);
+  };
 
   // 녹화 종료
   const handleClick = (e) => {
@@ -147,7 +189,7 @@ const StudyRoomPage = () => {
       setChatList([...chatList, "접속"]);
 
       var subscriber = session.current.subscribe(event.stream, undefined);
-      setSubscriberse([...subscribers, subscriber]);
+      setSubscriberse((subscribers) => [...subscribers, subscriber]);
     });
 
     // On every Stream destroyed...
@@ -173,9 +215,10 @@ const StudyRoomPage = () => {
     });
 
     session.current
-      .connect(ovToken, { clientData: token.nickname })
+      .connect(ovToken, { clientData: nickname })
       .then(async () => {
         // --- 5) Get your own camera stream ---
+        console.log("Session 연결중");
 
         console.log(token.nickname);
 
@@ -213,6 +256,7 @@ const StudyRoomPage = () => {
         // currentVideoDevice: currentVideoDevice,
       })
       .catch((error) => {
+        console.log("끄아아아앜");
         console.log(tag, error);
         leaveSession();
       });
@@ -478,13 +522,13 @@ const StudyRoomPage = () => {
                 <UserVideoComponent streamManager={publisher} />
               </div>
             ) : null}
-            {subscribers.map((sub, i) => (
-              <div key={sub.id} className="stream-container col-md-6 col-xs-6">
-                <span>{sub.id}</span>
-                <UserVideoComponent streamManager={sub} />
-              </div>
-            ))}
           </div>
+          {subscribers.map((sub, i) => (
+            <div key={sub.id} className="stream-container col-md-6 col-xs-6">
+              <span>{sub.id}</span>
+              <UserVideoComponent streamManager={sub} />
+            </div>
+          ))}
         </div>
       </div>
       <div className="flex justify-between video-room-button">
@@ -502,19 +546,26 @@ const StudyRoomPage = () => {
           )}
           {video ? (
             <img
-              onClick={(e) => setVideo(!video)}
-              src="/images/videobutton.png"
+              onClick={(e) => {
+                setVideo(!video);
+              }}
+              src="../images/videobutton.PNG"
             />
           ) : (
             <img
-              onClick={(e) => setVideo(!video)}
-              src="/images/videobutton_disabled.png"
+              onClick={(e) => {
+                setVideo(!video);
+              }}
+              src="../images/videobutton_disabled.PNG"
             />
           )}
-          <img
-            onClick={(e) => setScreen(!screen)}
-            src="/images/sharebutton.png"
-          />
+
+          {screenShare === false ? (
+            <img onClick={handleScreenShare} src="../images/sharebutton.PNG" />
+          ) : (
+            <img onClick={handleScreenShare2} src="../images/sharebutton.PNG" />
+          )}
+
           <img
             onClick={(e) => setRecordForm(true)}
             src="/images/recordbutton.png"
