@@ -24,11 +24,12 @@ const TestPage = () => {
   const [title, setTitle] = useState("");
 
   // ---------- Variables During Speech ----------
-  const [speechId, setSpeechId] = useState(0);
   const [feedback, setFeedback] = useState("");
   const [comment, setComment] = useState("");
 
+  const speechId = useRef(0);
   const isRecording = useRef(false); // 녹화 중
+  const isLast = useRef(false);
 
   const [mediaRecorder, setMediaRecorder] = useState(null); // 녹음
 
@@ -37,7 +38,7 @@ const TestPage = () => {
 
   const audioChunksRef = useRef([]); // 음성 정보
 
-  const [decibels, setDecibels] = useState([]); // decibel
+  const decibels = useRef([]);
 
   // ---------- Variables After Speech ----------
   const [showComment, setShowComment] = useState(true);
@@ -52,16 +53,14 @@ const TestPage = () => {
         title: title,
         personal: false,
         categoryId: 0,
-        sessionId: "session01",
+        sessionId: "session0",
         // categoryId: meetingInfo.categoryId,
         // sessionId: meetingInfo.sessionId,
       },
       (response) => {
-        console.log(response);
-
-        // 수정
-        setSpeechId(1);
-
+        console.log("speechId : " + response.data.data);
+        speechId.current = response.data.data;
+        decibels.current = [];
         // 녹화 시작
         startRecording();
       },
@@ -73,16 +72,17 @@ const TestPage = () => {
 
   // 녹화 종료 요청
   const speechEnd = () => {
+    isLast.current = true;
     // 녹화 중지 함수 실행
     stopRecording();
 
     endSpeech(
       token,
       {
-        sessionId: "session01",
+        sessionId: "session0",
         // sessionId: meetingInfo.sessionId,
-        speechId: speechId,
-        decibels: decibels,
+        speechId: speechId.current,
+        decibels: decibels.current,
       },
       (response) => {
         console.log(response);
@@ -98,7 +98,7 @@ const TestPage = () => {
     postComment(
       token,
       {
-        speechId: speechId,
+        speechId: speechId.current,
         comment: comment,
       },
       (response) => {
@@ -117,12 +117,12 @@ const TestPage = () => {
     postFeedback(
       token,
       {
-        sessionId: "session01",
+        sessionId: "session0",
         // sessionId: meetingInfo.sessionId,
         content: feedback,
       },
       (response) => {
-        console.log(response);
+        // console.log(response);
       },
       (error) => {
         console.log(error);
@@ -133,12 +133,13 @@ const TestPage = () => {
 
   // ---------- Speech Method ----------
   const addDecibel = (newDecibel) => {
-    setDecibels([...decibels, newDecibel]);
+    decibels.current.push(newDecibel);
   };
 
   // 녹화 시작
   const startRecording = () => {
     console.log("녹음 시작");
+    isLast.current = false;
     isRecording.current = true;
     audioChunksRef.current = []; // 오디오 청크를 새 배열로 초기화
     setRecordingTime(0);
@@ -180,8 +181,6 @@ const TestPage = () => {
 
         // 데시벨 측정
         function analyzeAudio() {
-          console.log("측정");
-
           if (!isRecording.current) {
             return; // 녹음이 중지되면 분석 중지
           }
@@ -209,7 +208,7 @@ const TestPage = () => {
           if (recorder.state === "recording") {
             recorder.stop();
           }
-        }, 3000);
+        }, 5000);
       })
       .catch((error) => {
         console.error("오디오 스트림을 가져오는 중 오류 발생:", error);
@@ -238,20 +237,21 @@ const TestPage = () => {
 
   // 10초 평가 요청
   const uploadAudio = async (data) => {
+    console.log("평가 요청");
     var tmp = [];
     tmp.push(data);
 
     const audioFile = new Blob(tmp, { type: "audio/wav" });
     const formData = new FormData();
     formData.append("audioFile", audioFile);
-    formData.append("speechId", speechId);
-    formData.append("isLast", !isRecording);
+    formData.append("speechId", speechId.current);
+    formData.append("isLast", isLast.current);
 
     assessSpeech(
       token,
       formData,
       (response) => {
-        console.log(response);
+        console.log(response.data);
       },
       (error) => {
         console.log(error);

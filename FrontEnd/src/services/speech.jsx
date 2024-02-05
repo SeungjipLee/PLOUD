@@ -5,6 +5,7 @@ import API from "../utils/Api";
  * @returns speechId
  */
 export const startSpeech = async (token, data, success, fail) => {
+  console.log(token);
   return await API(token)
     .post("speech/start", data)
     .then(success)
@@ -16,6 +17,7 @@ export const startSpeech = async (token, data, success, fail) => {
  * @returns ok
  */
 export const endSpeech = async (token, data, success, fail) => {
+  console.log(token);
   return await API(token)
     .post("speech/end", data)
     .then(success)

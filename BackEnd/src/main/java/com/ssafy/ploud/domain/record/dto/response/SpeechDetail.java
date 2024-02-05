@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class SpeechDetail {
-
+  String title;
   int speechId;
   String userId;
   String speechMode;

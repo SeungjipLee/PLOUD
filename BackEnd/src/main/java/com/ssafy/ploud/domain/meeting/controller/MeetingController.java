@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "스터디 룸 API", description = "스터디 룸 조회, 생성, 삭제, 접속, 종료")
 @RestController
 @SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping("/api/meeting")
