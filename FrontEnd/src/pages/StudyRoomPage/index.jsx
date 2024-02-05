@@ -7,6 +7,13 @@ import UserVideoComponent from "./component/UserVideoComponent";
 import Chat from "./component/Chat";
 import Report from "./component/Report";
 import ResultList from "./component/ResultList";
+import {
+  startSpeech,
+  endSpeech,
+  assessSpeech,
+  postFeedback,
+  postComment,
+} from "../../services/speech";
 
 const StudyRoomPage = () => {
   const navigate = useNavigate();
