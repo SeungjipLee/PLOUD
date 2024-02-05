@@ -286,6 +286,7 @@
   height: 1080px;
 }
 .RoomPage-mid {
+  height: 720px;
   display: flex;
   justify-content: center;
 }
@@ -315,7 +316,7 @@
 }
 
 .video-room-button img {
-  width: 70px;
+  width: 50px;
 }
 
 .video-room-button {
@@ -457,7 +458,7 @@
   top: 80px;
   right: 30px;
   width: 350px;
-  height: 700px;
+  height: 730px;
   background-color: #060515;
   color: white;
 }
@@ -490,7 +491,7 @@ p {
   top: 380px;
   right: 30px;
   width: 350px;
-  height: 400px;
+  height: 430px;
   background-color: #060515;
   color: white;
 }
@@ -522,7 +523,7 @@ p {
   top: 80px;
   right: 30px;
   width: 350px;
-  height: 700px;
+  height: 730px;
   background-color: #060515;
   color: white;
 }
