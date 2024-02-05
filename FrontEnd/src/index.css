@@ -181,9 +181,12 @@
 
 .create-room-button > button {
   position: absolute;
-  background-color: #2d24a8;
+  background: linear-gradient(to right, #223872, #2f2468);
   color: white;
   font-weight: bold;
+  border-radius: 10px;
+  width: 100px;
+  height: 40px;
   right: 30px;
   bottom: -10px;
 }
@@ -226,7 +229,8 @@
   height: 160px;
   border-radius: 15px;
   padding: 20px;
-  background-color: #1d267d;
+  /* background-color: #1d267d; */
+  background: linear-gradient(to right, #223872, #2f2468);
   color: white;
   margin: 10px 20px;
 }
