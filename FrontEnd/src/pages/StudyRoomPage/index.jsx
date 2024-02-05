@@ -8,6 +8,7 @@ import Chat from "./component/Chat";
 import Report from "./component/Report";
 import ResultList from "./component/ResultList";
 import { SignalOptions, Signal } from "openvidu-browser";
+import Modal from "../../components/Modal";
 
 const StudyRoomPage = () => {
   const navigate = useNavigate();
