@@ -89,10 +89,10 @@ const CreateForm = () => {
               type="number"
               id="maxPeople"
               name="maxPeople"
-              defaultValue={0}
+              defaultValue={2}
               onChange={handleChange}
               style={{ color: "black", paddingLeft: "10px", width: "40px" }}
-              min="1"
+              min="2"
               max="6"
             />
           </label>
