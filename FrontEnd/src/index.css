@@ -709,3 +709,31 @@ p {
   background: linear-gradient(to right, #223872, #2f2468);
   border-radius: 5px;
 }
+
+.record-form {
+  border: rgb(85, 85, 85) solid 1px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 5px;
+  width: 400px;
+  height: 330px;
+  background-color: #060515;
+  color: white;
+  top: 40%; /* 상단 위치를 부모 요소의 중간으로 조정 */
+  left: 50%; /* 왼쪽 위치를 부모 요소의 중간으로 조정 */
+  transform: translate(-50%, -50%); /* 요소를 정확한 중앙으로 이동 */
+}
+
+.record-form input {
+  background-color: #272541;
+}
+
+.record-form p {
+  padding: 10px 0px;
+}
+
+.record-form button {
+  margin: 20px;
+}
