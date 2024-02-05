@@ -125,7 +125,7 @@ const StudyRoomPage = () => {
       console.log(tag, "누가 접속했어요");
 
       var subscriber = session.current.subscribe(event.stream, undefined);
-      setSubscriberse([...subscribers, subscriber]);
+      setSubscriberse((subscribers) => [...subscribers, subscriber]);
     });
 
     // On every Stream destroyed...
@@ -236,13 +236,13 @@ const StudyRoomPage = () => {
                 <UserVideoComponent streamManager={publisher} />
               </div>
             ) : null}
-            {subscribers.map((sub, i) => (
-              <div key={sub.id} className="stream-container col-md-6 col-xs-6">
-                <span>{sub.id}</span>
-                <UserVideoComponent streamManager={sub} />
-              </div>
-            ))}
           </div>
+          {subscribers.map((sub, i) => (
+            <div key={sub.id} className="stream-container col-md-6 col-xs-6">
+              <span>{sub.id}</span>
+              <UserVideoComponent streamManager={sub} />
+            </div>
+          ))}
         </div>
       </div>
       <div className="flex justify-between video-room-button">
