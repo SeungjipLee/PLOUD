@@ -232,6 +232,8 @@
 }
 
 .card-study-room-info img {
+  position: absolute;
+  right: 12px;
   width: 40px;
 }
 
@@ -249,6 +251,10 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.card-study-title > img {
+  height: 40px;
 }
 
 .study-room-user-list {
@@ -669,4 +675,28 @@ p {
 
 .Comment {
   border: 2px solid black;
+}
+
+
+.overflow-ellipsis {
+  white-space: nowrap; /* 텍스트 줄 바꿈 비활성화 */
+  overflow: hidden; /* 넘치는 내용 숨김 */
+  text-overflow: ellipsis; /* 넘치는 텍스트에 줄임표 표시 */
+  max-width: 100%; /* div의 최대 너비 설정 */
+  width: 200px;
+  z-index: 100;
+  font-size: 25px;
+  font-weight: normal;
+}
+
+.overflow-ellipsis:hover {
+  position: absolute;
+  white-space: normal; /* 호버링 시 텍스트 줄 바꿈 활성화 */
+  overflow: visible; /* 호버링 시 텍스트 내용 표시 */
+  text-overflow: unset; /* 줄임표 제거 */
+  /* background-color: #B0B0B0; */
+  width: 241px;
+  height: 100px;
+  background-color: #1D267D;
+  border-radius: 5px;
 }
