@@ -186,9 +186,13 @@ public class UserServiceImpl implements UserService {
     return encoder.encodeToString(bos.toByteArray());
   }
 
-  public void updateUserPassword(String userId, String newPassword) {
+  public void updateUserPassword(String userId, String oldPassword, String newPassword) {
     UserEntity user = userRepository.findById(userId)
         .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
+    // db에 저장된 비밀번호와 사용자가 입력한 현재 비밀번호 비교
+    if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+      throw new CustomException(ResponseCode.INVALID_USER_PW);
+    }
     user.updateUserPassword(bCryptPasswordEncoder.encode(newPassword));
   }
 
