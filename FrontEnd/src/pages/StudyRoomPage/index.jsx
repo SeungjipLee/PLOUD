@@ -203,35 +203,35 @@ const StudyRoomPage = () => {
       </div>
       <div className="flex justify-between video-room-button">
         <div className="button-empty items-center space-x-4">
-          <img onClick={(e) => setUser(!user)} src="../images/user_icon.PNG" />
+          <img onClick={(e) => setUser(!user)} src="../images/user_icon.png" />
         </div>
         <div className="flex items-center space-x-6">
           {mic ? (
-            <img onClick={(e) => setMic(!mic)} src="../images/micbutton.PNG" />
+            <img onClick={(e) => setMic(!mic)} src="../images/micbutton.png" />
           ) : (
             <img
               onClick={(e) => setMic(!mic)}
-              src="/public/images/micbutton_disabled.PNG"
+              src="/public/images/micbutton_disabled.png"
             />
           )}
           {video ? (
             <img
               onClick={(e) => setVideo(!video)}
-              src="public/images/videobutton.PNG"
+              src="public/images/videobutton.png"
             />
           ) : (
             <img
               onClick={(e) => setVideo(!video)}
-              src="public/images/videobutton_disabled.PNG"
+              src="public/images/videobutton_disabled.png"
             />
           )}
           <img
             onClick={(e) => setScreen(!screen)}
-            src="public/images/sharebutton.PNG"
+            src="public/images/sharebutton.png"
           />
           <img
             onClick={(e) => setRecord(!record)}
-            src="public/images/recordbutton.PNG"
+            src="public/images/recordbutton.png"
           />
           <img onClick={leaveSession} src="../images/exitbutton.PNG" alt="" />
         </div>
@@ -241,21 +241,21 @@ const StudyRoomPage = () => {
               console.log(e);
               setResult(!result);
             }}
-            src="images/resultbutton.PNG"
+            src="images/resultbutton.png"
           />
           <img
             onClick={(e) => {
               console.log(e);
               setReport(!report);
             }}
-            src="images/reportbutton.PNG"
+            src="images/reportbutton.png"
           />
           <img
             onClick={(e) => {
               console.log(e);
               setChat(!chat);
             }}
-            src="images/chatbutton.PNG"
+            src="../images/chatbutton.png"
           />
         </div>
       </div>
