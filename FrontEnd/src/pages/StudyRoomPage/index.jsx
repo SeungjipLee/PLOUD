@@ -18,7 +18,9 @@ const StudyRoomPage = () => {
 
   // 기본 정보
   const token = useSelector((state) => state.userReducer.token);
+  const { nickname } = useSelector((state) => state.userReducer);
   const room = useSelector((state) => state.studyReducer.studyInfo.meetingInfo);
+  const studyInfo = useSelector((state) => state.studyReducer.studyInfo);
   const ovToken = useSelector((state) => state.studyReducer.studyInfo.token);
 
   // 비디오 정보
@@ -35,6 +37,46 @@ const StudyRoomPage = () => {
   const [report, setReport] = useState(false);
   const [chat, setChat] = useState(false);
   const [user, setUser] = useState(false);
+
+  // 화면공유 여부 파악
+  const [screenShare, setScreenShare] = useState(false);
+
+  const handleScreenShare = async () => {
+    let tmpPublisher = await OV.current.initPublisherAsync(undefined, {
+      audioSource: undefined, // The source of audio. If undefined default microphone
+      videoSource:
+        navigator.userAgent.indexOf("Firefox") !== -1 ? "window" : "screen", // The source of video. If undefined default webcam
+      publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+      publishVideo: true, // Whether you want to start publishing with your video enabled or not
+      resolution: "640x480", // The resolution of your video
+      frameRate: 30, // The frame rate of your video
+      insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+      mirror: false, // Whether to mirror your local video or not
+    });
+
+    session.current.publish(tmpPublisher);
+    setMainStreamManager(tmpPublisher);
+    setPublisher(tmpPublisher);
+    setScreenShare(true);
+  };
+
+  const handleScreenShare2 = async () => {
+    let tmpPublisher = await OV.current.initPublisherAsync(undefined, {
+      audioSource: undefined, // The source of audio. If undefined default microphone
+      videoSource: undefined,
+      publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+      publishVideo: true, // Whether you want to start publishing with your video enabled or not
+      resolution: "640x480", // The resolution of your video
+      frameRate: 30, // The frame rate of your video
+      insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+      mirror: false, // Whether to mirror your local video or not
+    });
+
+    session.current.publish(tmpPublisher);
+    setMainStreamManager(tmpPublisher);
+    setPublisher(tmpPublisher);
+    setScreenShare(false);
+  };
 
   // 참가자 목록
   const [captain, setCaptain] = useState(true);
@@ -60,7 +102,7 @@ const StudyRoomPage = () => {
     const users = userList.map((u, i) => {
       if (u.presenter) return { ...u, presenter: false };
       else if (index === i) return { ...u, presenter: true };
-      return u
+      return u;
     });
     console.log(users);
     setUserList(users);
@@ -97,10 +139,17 @@ const StudyRoomPage = () => {
       console.warn(tag, exception);
     });
 
+    console.log(ovToken);
+    // console.log(nickname);
+
+    console.log("==============================");
+    console.log(studyInfo);
+    console.log(session);
     session.current
-      .connect(ovToken, { clientData: token.nickname })
+      .connect(ovToken, { clientData: nickname })
       .then(async () => {
         // --- 5) Get your own camera stream ---
+        console.log("Session 연결중");
 
         let tmpPublisher = await OV.current.initPublisherAsync(undefined, {
           audioSource: undefined, // The source of audio. If undefined default microphone
@@ -136,6 +185,7 @@ const StudyRoomPage = () => {
         // currentVideoDevice: currentVideoDevice,
       })
       .catch((error) => {
+        console.log("끄아아아앜");
         console.log(tag, error);
       });
   };
@@ -175,12 +225,6 @@ const StudyRoomPage = () => {
       </div>
       <div className="RoomPage-mid">
         <div className="video-flex">
-          <div id="main-video" className="col-md-6">
-            <UserVideoComponent streamManager={mainStreamManager} />
-          </div>
-          <div id="main-video" className="col-md-6">
-            <UserVideoComponent streamManager={mainStreamManager} />
-          </div>
           {mainStreamManager !== undefined ? (
             <div id="main-video" className="col-md-6">
               <UserVideoComponent streamManager={mainStreamManager} />
@@ -206,14 +250,36 @@ const StudyRoomPage = () => {
           <img onClick={(e) => setUser(!user)} src="../images/user_icon.PNG" />
         </div>
         <div className="flex items-center space-x-6">
-          { mic ? <img onClick={(e) => setMic(!mic)} src="../images/micbutton.PNG" /> :
-          <img onClick={(e) => setMic(!mic)} src="../images/micbutton_disabled.PNG" />}
-          { video ? <img onClick={(e) => setVideo(!video)} src="../images/videobutton.PNG" /> :
-          <img onClick={(e) => setVideo(!video)} src="../images/videobutton_disabled.PNG" /> }
-          <img
-            onClick={(e) => setScreen(!screen)}
-            src="../images/sharebutton.PNG"
-          />
+          {mic ? (
+            <img onClick={(e) => setMic(!mic)} src="../images/micbutton.PNG" />
+          ) : (
+            <img
+              onClick={(e) => setMic(!mic)}
+              src="../images/micbutton_disabled.PNG"
+            />
+          )}
+          {video ? (
+            <img
+              onClick={(e) => {
+                setVideo(!video);
+              }}
+              src="../images/videobutton.PNG"
+            />
+          ) : (
+            <img
+              onClick={(e) => {
+                setVideo(!video);
+              }}
+              src="../images/videobutton_disabled.PNG"
+            />
+          )}
+
+          {screenShare === false ? (
+            <img onClick={handleScreenShare} src="../images/sharebutton.PNG" />
+          ) : (
+            <img onClick={handleScreenShare2} src="../images/sharebutton.PNG" />
+          )}
+
           <img
             onClick={(e) => setRecord(!record)}
             src="../images/recordbutton.PNG"
