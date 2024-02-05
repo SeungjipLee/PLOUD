@@ -2,50 +2,155 @@ import React, { useState, useRef } from "react";
 import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
 import Footer from "../../components/Footer";
-import axios from "axios";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  startSpeech,
+  endSpeech,
+  assessSpeech,
+  postFeedback,
+  postComment,
+} from "../../services/speech";
+
+import Record from "./Record";
+import SpeechResult from "./SpeechResult";
 
 const TestPage = () => {
-  const[isLogined, setIsLogined] = useState(false)
+  const token = useSelector((state) => state.userReducer.token);
+  const meetingInfo = useSelector(
+    (state) => state.studyReducer.studyInfo.meetingInfo
+  );
 
-  const onClickHandler = () => {
-    setIsLogined(!isLogined)
-    // console.log(isLogined)
-  }
+  // ---------- Variables Before Speech ----------
+  const [title, setTitle] = useState("");
 
-  const isRecording = useRef(false);
-  const [mediaRecorder, setMediaRecorder] = useState(null);
-  const [isUploading, setIsUploading] = useState(false);
-  // const [audioURL, setAudioURL] = useState(null);
-  const [recordingTime, setRecordingTime] = useState(0);
+  // ---------- Variables During Speech ----------
+  const [speechId, setSpeechId] = useState(0);
+  const [feedback, setFeedback] = useState("");
+  const [comment, setComment] = useState("");
+
+  const isRecording = useRef(false); // 녹화 중
+
+  const [mediaRecorder, setMediaRecorder] = useState(null); // 녹음
+
+  const [recordingTime, setRecordingTime] = useState(0); // 녹화 시간
   const [recordingInterval, setRecordingInterval] = useState(null);
-  const audioChunksRef = useRef([]);
-  const [totalRecordingTime, setTotalRecordingTime] = useState(0);
 
-  const [script, setScript] = useState("");
-  const [totalCnt, setTotalCnt] = useState(0);
-  const [totalScore, setTotalScore] = useState(0);
-  const [requestCount, setRequestCount] = useState(0);
-  const [showDiv, setShowDiv] = useState(false);
+  const audioChunksRef = useRef([]); // 음성 정보
 
-  const [decibel, setDecibel] = useState(0);
+  const [decibels, setDecibels] = useState([]); // decibel
 
+  // ---------- Variables After Speech ----------
+  const [showComment, setShowComment] = useState(true);
+
+  // ---------- Speech API Method ----------
+
+  // 녹화 시작 요청
+  const speechStart = () => {
+    startSpeech(
+      token,
+      {
+        title: title,
+        personal: false,
+        categoryId: 0,
+        sessionId: "session01",
+        // categoryId: meetingInfo.categoryId,
+        // sessionId: meetingInfo.sessionId,
+      },
+      (response) => {
+        console.log(response);
+
+        // 수정
+        setSpeechId(1);
+
+        // 녹화 시작
+        startRecording();
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  };
+
+  // 녹화 종료 요청
+  const speechEnd = () => {
+    // 녹화 중지 함수 실행
+    stopRecording();
+
+    endSpeech(
+      token,
+      {
+        sessionId: "session01",
+        // sessionId: meetingInfo.sessionId,
+        speechId: speechId,
+        decibels: decibels,
+      },
+      (response) => {
+        console.log(response);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  };
+
+  // 코멘트 등록 요청
+  const commentPost = () => {
+    postComment(
+      token,
+      {
+        speechId: speechId,
+        comment: comment,
+      },
+      (response) => {
+        console.log(response);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+
+    setShowComment(false);
+  };
+
+  // 피드백 등록 요청
+  const feebackPost = () => {
+    postFeedback(
+      token,
+      {
+        sessionId: "session01",
+        // sessionId: meetingInfo.sessionId,
+        content: feedback,
+      },
+      (response) => {
+        console.log(response);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+    setFeedback("");
+  };
+
+  // ---------- Speech Method ----------
+  const addDecibel = (newDecibel) => {
+    setDecibels([...decibels, newDecibel]);
+  };
+
+  // 녹화 시작
   const startRecording = () => {
-    setShowDiv(false);
-    setScript("");
-    setTotalCnt(0);
-    setTotalScore(0);
-    console.log("녹음 시작")
-    isRecording.current = true; 
+    console.log("녹음 시작");
+    isRecording.current = true;
     audioChunksRef.current = []; // 오디오 청크를 새 배열로 초기화
     setRecordingTime(0);
 
+    // recordTime 측정
     const interval = setInterval(() => {
       setRecordingTime((prevTime) => prevTime + 1);
     }, 1000);
     setRecordingInterval(interval);
 
-    navigator.mediaDevices.getUserMedia({ audio: true })
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
       .then((stream) => {
         const audioContext = new AudioContext();
         const source = audioContext.createMediaStreamSource(stream);
@@ -56,14 +161,16 @@ const TestPage = () => {
         const recorder = new MediaRecorder(stream);
         setMediaRecorder(recorder);
 
+        // 녹음한 데이터를 upload한다.(서버에 전송한다.)
         recorder.ondataavailable = (e) => {
           if (e.data.size > 0) {
             uploadAudio(e.data);
           }
         };
 
+        // 녹음 중지, 중지 버튼을 누른게 아닌 경우 자동으로 다시 녹음 시작
         recorder.onstop = () => {
-          stream.getTracks().forEach(track => track.stop());
+          stream.getTracks().forEach((track) => track.stop());
           if (isRecording.current) {
             startRecording(); // 자동으로 다시 녹음 시작
           }
@@ -71,32 +178,33 @@ const TestPage = () => {
 
         recorder.start();
 
-        function analyzeAudio(){
+        // 데시벨 측정
+        function analyzeAudio() {
+          console.log("측정");
+
           if (!isRecording.current) {
-            return;  // 녹음이 중지되면 분석 중지
+            return; // 녹음이 중지되면 분석 중지
           }
 
           const storedData = new Uint8Array(analyzer.frequencyBinCount);
           analyzer.getByteFrequencyData(storedData);
-          
-          var sum = 0;
+
+          let sum = 0;
           for (let i = 0; i < storedData.length; i++) {
             sum += storedData[i];
           }
-          
-          var average = sum / storedData.length;
 
-          setDecibel(Math.max(Math.round(38 * Math.log10(average)), 0));
-          // 배열에 푸시하고
-          // decibel[]
-          //
-          // const decibels = 38 * Math.log10(average);
+          const average = sum / storedData.length;
+
+          // 배열의 뒤에 추가
+          addDecibel(calcDecibel(average));
 
           setTimeout(analyzeAudio, 100);
         }
-            
+
         analyzeAudio();
 
+        // 일정 주기마다 중지&재시작
         setTimeout(() => {
           if (recorder.state === "recording") {
             recorder.stop();
@@ -108,94 +216,112 @@ const TestPage = () => {
       });
   };
 
+  // 데시벨 계산 후 추가하기
+  const calcDecibel = (average) => {
+    var decibel = Math.max(Math.round(38 * Math.log10(average)), 0);
+    return decibel;
+  };
+
+  // 녹화 종료
   const stopRecording = () => {
-    setShowDiv(true);
     console.log("녹음 중지");
-    isRecording.current = false; // useRef를 사용하여 상태 업데이트
+    isRecording.current = false;
     if (mediaRecorder && mediaRecorder.state === "recording") {
       mediaRecorder.stop();
     }
 
     clearInterval(recordingInterval); // 타이머 중지
-    setTotalRecordingTime(recordingTime); // 총 녹음 시간 업데이트
-  
+
     // 타이머 상태를 null로 초기화하여 다음 녹음에 영향을 주지 않도록 함
     setRecordingInterval(null);
   };
-  
-  // 서버로 오디오 데이터 전송 함수
-  const uploadAudio= async (data) => {
-    setIsUploading(true);
 
-    try {
-      var tmp = [];
-      tmp.push(data);
+  // 10초 평가 요청
+  const uploadAudio = async (data) => {
+    var tmp = [];
+    tmp.push(data);
 
-      const audioBlob = new Blob(tmp, { type: "audio/wav" });
-      const formData = new FormData();
+    const audioFile = new Blob(tmp, { type: "audio/wav" });
+    const formData = new FormData();
+    formData.append("audioFile", audioFile);
+    formData.append("speechId", speechId);
+    formData.append("isLast", !isRecording);
 
-      var name = "tset" + new Date().getMinutes + new Date().getSeconds();
-
-      formData.append("audioFile", audioBlob, name);
-
-      const serverURL = "http://localhost:8000/api/speech/cl";
-      const response = await axios.post(serverURL, formData);
-
-      console.log(response.data.data);
-
-      // 응답 데이터 처리
-      const { script: newScript, scriptCnt: newCnt, score: newScore } = response.data.data;
-      setScript(prevScript => prevScript + (prevScript ? "\n" : "") + newScript);
-      setTotalCnt(prevCnt => prevCnt + newCnt);
-      setTotalScore(prevScore => prevScore + newScore);
-      setRequestCount(prevCount => prevCount + 1);
-    } catch (error) {
-      console.error("오류 발생:", error);
-    } finally {
-      setIsUploading(false);
-    }
+    assessSpeech(
+      token,
+      formData,
+      (response) => {
+        console.log(response);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   };
-
-  // 평균 점수 계산
-  const averageScore = requestCount > 0 ? (totalScore / requestCount).toFixed(2) : 0;
 
   return (
     <div className="Main">
       <Page header={<Navbar />} footer={<Footer />}>
-      <Link to="/test2">테스트 2</Link>
-      <div style={{margin: "20px"}}>
-      <h1>음성 녹음 및 업로드</h1>
-      <h3>녹음 시간: {recordingTime} 초</h3>
-      <h1>데시벨: {decibel}</h1>
-      <div>
-      <button style={{marginRight: "10px"}} onClick={startRecording} disabled={isRecording.current}>
-        녹음 시작
-      </button>
-      <button style={{marginRight: "10px"}} onClick={stopRecording} disabled={!isRecording.current}>
-        녹음 중지
-      </button>
-        {/* {audioURL && (
-          <div>
-            <h3>녹음된 오디오</h3>
-            <audio src={audioURL} controls />
-          </div>
-        )} */}
-        {isUploading && <p>업로드 중...</p>}
-      </div>
-      <div>
-      <div>
-          <h3>결과</h3>
-        {/* {script.split("\n").map	((line, index) => (
-          <p key={index}>{line}</p>
-        ))} */}
+        <div style={{ padding: "200px" }}>
+          <input
+            type="text"
+            id="title"
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+          />
+          <div style={{ marginTop: "20px" }}></div>
+          <button
+            style={{ border: "1px solid black", marginRight: "10px" }}
+            onClick={speechStart}
+            // disabled={isRecording.current}
+          >
+            녹음 시작
+          </button>
+          <button
+            style={{ border: "1px solid black" }}
+            onClick={speechEnd}
+            // disabled={!isRecording.current}
+          >
+            녹음 종료
+          </button>
+          <div style={{ marginTop: "20px" }}></div>
+          <input
+            type="text"
+            id="feedback"
+            value={feedback}
+            onChange={(e) => {
+              setFeedback(e.target.value);
+            }}
+          />
+          <div style={{ marginTop: "20px" }}></div>
+          <button style={{ border: "1px solid black" }} onClick={feebackPost}>
+            피드백 입력
+          </button>
+          <div style={{ marginTop: "20px" }}></div>
+          {showComment && (
+            <div>
+              <input
+                type="text"
+                id="comment"
+                onChange={(e) => {
+                  setComment(e.target.value);
+                }}
+              />
+              <div style={{ marginTop: "20px" }}></div>
+              <button
+                style={{ border: "1px solid black" }}
+                onClick={commentPost}
+              >
+                코멘트 입력
+              </button>
+            </div>
+          )}
         </div>
-        {showDiv &&
-                <div>
-                    <h3>음절 : {totalCnt}개 / 시간 : {totalRecordingTime}초 / 평균 점수 : {averageScore}점</h3>
-                </div>
-            }
-      </div>
-    </div>
+        <div style={{ marginTop: "20px" }}></div>
+        <Record />
+        <div style={{ marginTop: "20px" }}></div>
+        <SpeechResult />
       </Page>
     </div>
   );

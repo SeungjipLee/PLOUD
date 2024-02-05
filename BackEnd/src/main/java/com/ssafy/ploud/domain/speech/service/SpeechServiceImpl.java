@@ -19,6 +19,7 @@ import com.ssafy.ploud.domain.speech.dto.request.CommentRequest;
 import com.ssafy.ploud.domain.speech.dto.request.FeedbackRequest;
 import com.ssafy.ploud.domain.speech.dto.request.SpeechEndRequest;
 import com.ssafy.ploud.domain.speech.dto.request.SpeechStartRequest;
+import com.ssafy.ploud.domain.speech.dto.response.ClearityResponse;
 import com.ssafy.ploud.domain.speech.repository.SpeechRepository;
 import com.ssafy.ploud.domain.speech.util.EtriUtil;
 import com.ssafy.ploud.domain.speech.util.FfmpegUtil;
@@ -90,7 +91,6 @@ public class SpeechServiceImpl implements SpeechService{
         System.out.println("speech id; "+id);
         openViduUtil.findBySessionId(speechStartRequest.getSessionId()).setSpeechId(id);
 
-
         return speech.getId();
     }
 
@@ -134,7 +134,7 @@ public class SpeechServiceImpl implements SpeechService{
     }
 
     @Override
-    public float clearity(MultipartFile audioFile, Integer speechId, Boolean isLast) {
+    public ClearityResponse clearity(MultipartFile audioFile, Integer speechId, Boolean isLast) {
 
         // 파일 경로
         String inputWavFile = "D:\\path\\to\\your\\upload\\directory\\in_" + cnt + ".wav";
@@ -171,13 +171,12 @@ public class SpeechServiceImpl implements SpeechService{
             if(clearityDto != null){
                 throw new CustomException(ResponseCode.ETRI_ERROR);
             }
-            return clearityDto.getFloatScore();
+
+            return new ClearityResponse(clearityDto);
         } catch (Exception e) {
             throw new CustomException(ResponseCode.FILE_CONVERT_ERROR);
         } finally {
             dest.delete();
         }
-
-
     }
 }
