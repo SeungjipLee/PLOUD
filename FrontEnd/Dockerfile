@@ -10,5 +10,5 @@ RUN npm run build
 FROM nginx
 EXPOSE 80
 
-COPY --from=builder /frontend/dist /var/www/html
+COPY --from=builder /frontend/build /var/www/html
 COPY ./default.conf /etc/nginx/conf.d/default.conf
