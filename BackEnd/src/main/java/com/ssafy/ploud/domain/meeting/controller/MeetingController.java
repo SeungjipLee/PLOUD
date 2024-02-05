@@ -6,6 +6,8 @@ import com.ssafy.ploud.domain.meeting.dto.request.MeetingJoinRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingLeaveRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingSearchRequest;
 import com.ssafy.ploud.domain.meeting.service.MeetingService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping("/api/meeting")
 @RequiredArgsConstructor
 public class MeetingController {

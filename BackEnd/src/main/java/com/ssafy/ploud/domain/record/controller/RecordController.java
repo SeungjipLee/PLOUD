@@ -1,6 +1,8 @@
 package com.ssafy.ploud.domain.record.controller;
 
+import com.ssafy.ploud.common.exception.CustomException;
 import com.ssafy.ploud.common.response.ApiResponse;
+import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.record.dto.request.RecordListRequest;
 import com.ssafy.ploud.domain.record.service.RecordService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,6 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,10 +36,13 @@ public class RecordController {
     }
 
     // 결과 목록 조회
-    @Operation(summary = "스피치 결과 목록 조회", description = "스피치 결과 목록을 조회한다.")
+    @Operation(summary = "스피치 결과 목록 조회", description = "가장 최근 스피치 5개 결과를 조회한다.")
     @PostMapping()
-    public ApiResponse<?> listSpeech(RecordListRequest recordListRequest){
-        return ApiResponse.ok("성공", recordService.getSpeechList(recordListRequest));
+    public ApiResponse<?> listSpeech(@AuthenticationPrincipal UserDetails loginUser) {
+        if (loginUser == null) {
+            throw new CustomException(ResponseCode.USER_LOGIN_RERQUIRED);
+        }
+        return ApiResponse.ok("성공", recordService.getSpeechList(loginUser.getUsername()));
     }
 
     // 영상 데이터 삭제
@@ -48,7 +55,10 @@ public class RecordController {
     // 통계 조회
     @Operation(summary = "마이페이지 스피치 통계 조회", description = "마이페이지에 표시할 스피치 통계 정보를 조회한다.")
     @PostMapping("/score")
-    public ApiResponse<?> scoreSpeech(){
-        return ApiResponse.ok("성공", recordService.getSpeechScore());
+    public ApiResponse<?> scoreSpeech(@AuthenticationPrincipal UserDetails loginUser) {
+        if (loginUser == null) {
+            throw new CustomException(ResponseCode.USER_LOGIN_RERQUIRED);
+        }
+        return ApiResponse.ok("성공", recordService.getSpeechScore(loginUser.getUsername()));
     }
 }

@@ -82,7 +82,7 @@ public class UserEntity {
 
   public void addSpeech(SpeechEntity speech) {
     speechEntityList.add(speech);
-    speech.setUser(this);
+    // speech.setUser(this);
   }
 
 }

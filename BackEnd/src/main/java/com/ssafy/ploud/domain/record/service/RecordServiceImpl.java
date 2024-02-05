@@ -3,11 +3,13 @@ package com.ssafy.ploud.domain.record.service;
 import com.ssafy.ploud.common.exception.CustomException;
 import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.record.FeedbackEntity;
+import com.ssafy.ploud.domain.record.ScoreEntity;
 import com.ssafy.ploud.domain.record.VideoEntity;
 import com.ssafy.ploud.domain.record.dto.request.RecordListRequest;
 import com.ssafy.ploud.domain.record.dto.response.FeedbackDetail;
 import com.ssafy.ploud.domain.record.dto.response.RecordDetailResponse;
 import com.ssafy.ploud.domain.record.dto.response.RecordListResponse;
+import com.ssafy.ploud.domain.record.dto.response.ScoreDetail;
 import com.ssafy.ploud.domain.record.dto.response.SpeechDetail;
 import com.ssafy.ploud.domain.record.dto.response.TotalScoreResponse;
 import com.ssafy.ploud.domain.record.dto.response.VideoDetail;
@@ -19,12 +21,12 @@ import com.ssafy.ploud.domain.speech.repository.SpeechRepository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class RecordServiceImpl implements RecordService{
 
     private final SpeechRepository speechRepository;
@@ -37,31 +39,18 @@ public class RecordServiceImpl implements RecordService{
         // speech 조회
         SpeechEntity speechEntity = speechRepository.findById(speechId)
             .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
-        SpeechDetail speechDetail = speechEntity.toDto();
 
         // video 조회(없어도 ok)
         VideoEntity video = speechEntity.getSpeechVideo();
         VideoDetail videoDetail = (video == null) ? null : video.toDto();
 
-        // score 조회
-//        ScoreEntity score = speechEntity.getScore();
-//        score.toDto();
-
-        // feedback 조회(스터디인 경우만)
-//        List<FeedbackDetail> feedbackDetailList = new ArrayList<>();
-//        if (!speechEntity.isPersonal()) {
-//
-//            for (FeedbackEntity feedbackEntity : speechEntity.getFeedbackEntityList()) {
-//                feedbackDetailList.add(feedbackEntity.toDto());
-//            }
-//        }
         List<FeedbackDetail> feedbackDetailList = new ArrayList<>();
         for (FeedbackEntity feedback : feedbackRepository.findBySpeechId(speechId)) {
             feedbackDetailList.add(feedback.toDto());
         }
 
         return RecordDetailResponse.builder()
-            .speech(speechDetail)
+            .speech(speechEntity.toDto())
             .video(videoDetail)
             .score(speechEntity.getScore().toDto())
             .feedbacks(feedbackDetailList)
@@ -70,35 +59,55 @@ public class RecordServiceImpl implements RecordService{
 
 
     @Override
-    public RecordListResponse getSpeechList(RecordListRequest recordListRequest) {
+    public List<SpeechDetail> getSpeechList(String userId) {
 
         // DB에서 목록 조회
+        List<SpeechEntity> speechList = speechRepository.findTop5ByUser_userIdOrderByRecordTimeDesc(
+            userId);
 
-        // pgno, size에 맞게 조회
+        List<SpeechDetail> dtoList = new ArrayList<>();
+        for(SpeechEntity entity:speechList) {
+            dtoList.add(entity.toDto());
+        }
 
-        return null;
+        return dtoList;
     }
 
     @Override
+    @Transactional
     public String deleteVideo(int speechId) {
         // Video Table에서 speechId에 해당하는 video path 가져오기
+        SpeechEntity speech = speechRepository.findById(speechId)
+            .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
+
+        VideoEntity video = speech.getSpeechVideo();
+        if(video==null) throw new CustomException(ResponseCode.NOT_FOUND); // 영상 정보가 없을 경우 Exception
+        String videoPath = video.getVideoPath();
 
         // DB 삭제
-
-        // 영상 정보가 없을 경우 Exception
+        speech.setVideo(null);
+        videoRepository.delete(video);
 
         // video path 반환
-
-        return "video_path";
+        return videoPath;
     }
 
     @Override
-    public TotalScoreResponse getSpeechScore() {
+    public TotalScoreResponse getSpeechScore(String userId) {
 
-        // 음... score db에서 조회해서
+        // userId 사용자가 했던 모든 speechId 찾기 -> speech entity 찾기
+        List<SpeechEntity> speechList = speechRepository.findAllByUser_userIdOrderByRecordTimeAsc(userId);
+        // TODO: 연습, 스터디 시간 리턴
 
-        // 가공 후에 반환하기
+        TotalScoreResponse res = new TotalScoreResponse();
 
-        return null;
+        List<ScoreDetail> dtoList = new ArrayList<>();
+        for (SpeechEntity speech : speechList) {
+            ScoreEntity score = speech.getScore();
+            dtoList.add(score.toDtoWithSpeechDate(speech.getRecordTime()));
+        }
+
+        res.setScoreChange(dtoList);
+        return res;
     }
 }

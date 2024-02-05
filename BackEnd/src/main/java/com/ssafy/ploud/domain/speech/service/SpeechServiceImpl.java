@@ -5,10 +5,13 @@ import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.meeting.dto.MeetingInfo;
 import com.ssafy.ploud.domain.meeting.util.OpenViduUtil;
 import com.ssafy.ploud.domain.record.FeedbackEntity;
+import com.ssafy.ploud.domain.record.ScoreEntity;
 import com.ssafy.ploud.domain.record.repository.FeedbackRepository;
 import com.ssafy.ploud.domain.record.repository.ScoreRepository;
 import com.ssafy.ploud.domain.record.repository.VideoRepository;
+import com.ssafy.ploud.domain.script.ScriptCategory;
 import com.ssafy.ploud.domain.script.ScriptEntity;
+import com.ssafy.ploud.domain.script.repository.ScriptRepository;
 import com.ssafy.ploud.domain.speech.CategoryEntity;
 import com.ssafy.ploud.domain.speech.SpeechEntity;
 import com.ssafy.ploud.domain.speech.dto.ClearityDto;
@@ -25,6 +28,7 @@ import com.ssafy.ploud.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -46,31 +50,52 @@ public class SpeechServiceImpl implements SpeechService{
     private final VideoRepository videoRepository;
     private final ScoreRepository scoreRepository;
     private final FeedbackRepository feedbackRepository;
+    private final ScriptRepository scriptRepository;
 
     private int cnt = 0;
 
     @Override
     @Transactional
     public int start(SpeechStartRequest speechStartRequest) {
-        if(speechStartRequest.isPersonal()){
-            if(openViduUtil.findSpeechIdBySessionId(speechStartRequest.getSessionId()) != -1){
+        if (speechStartRequest.isPersonal()) {
+            if (openViduUtil.findSpeechIdBySessionId(speechStartRequest.getSessionId()) != -1) {
                 throw new CustomException(ResponseCode.RECORD_PROCEEDING);
             }
         }
+        // user 정보 가져오기
         UserEntity userEntity = userRepository.findByUserId(speechStartRequest.getUserId())
             .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
-        CategoryEntity category = null;
+
+        // 대본 가져오기
         ScriptEntity script = null;
+        if (speechStartRequest.getScriptId() != -1) {
+            script = scriptRepository.findById(speechStartRequest.getScriptId())
+                .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
+        }
 
-        SpeechEntity speechEntity = SpeechEntity.createNewSpeech(speechStartRequest,
-            userEntity, category, script);
+        ScoreEntity score = new ScoreEntity();
 
-        speechRepository.save(speechEntity);
+        SpeechEntity speech = SpeechEntity.builder()
+            .title(speechStartRequest.getTitle())
+            .personal(speechStartRequest.isPersonal())
+            .recordTime(LocalDateTime.now())
+            .script(script)
+            .score(score)
+            .categoryId(speechStartRequest.getCategoryId())
+            .build();
 
-        return speechEntity.getId();
+        speech.setUser(userEntity);
+
+        int id = speechRepository.save(speech).getId();
+        System.out.println("speech id; "+id);
+        openViduUtil.findBySessionId(speechStartRequest.getSessionId()).setSpeechId(id);
+
+
+        return speech.getId();
     }
 
     @Override
+    @Transactional
     public void endAndDecibel(SpeechEndRequest speechEndRequest) {
         String sessionId = speechEndRequest.getSessionId();
         if(!sessionId.isEmpty()){
@@ -80,35 +105,37 @@ public class SpeechServiceImpl implements SpeechService{
 
         // 데시벨 평가
         int volume = speechAssessUtil.decibels(speechEndRequest.getDecibels());
-
-//        scoreRepository.updateVolume(volume);
+        SpeechEntity speech = speechRepository.findById(speechEndRequest.getSpeechId())
+            .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
+        speech.updateSpeechEndTime();
+        speech.getScore().updateVolume(volume);
     }
 
     @Override
+    @Transactional
     public void feedback(FeedbackRequest feedbackRequest) {
+        log.info(feedbackRequest.getSessionId());
         int speechId = openViduUtil.findSpeechIdBySessionId(feedbackRequest.getSessionId());
-
+        log.info("SpeechServiceImpl feedback speechId; "+speechId);
         SpeechEntity speechEntity = speechRepository.findById(speechId)
-            .orElseThrow(() -> new CustomException(ResponseCode.BAD_REQUEST));
-        UserEntity userEntity = userRepository.findByUserId(feedbackRequest.getUserId())
-            .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
+            .orElseThrow(() -> new CustomException(ResponseCode.SPEECH_NOT_FOUND));
         // speechId, userId, content로 fb 등록
-
-        FeedbackEntity feedbackEntity = FeedbackEntity.createNewFeedback(feedbackRequest.getContent(), userEntity, speechEntity);
-        feedbackRepository.save(feedbackEntity);
+        feedbackRepository.save(FeedbackEntity.of(feedbackRequest, speechEntity));
     }
 
     @Override
+    @Transactional
     public void comment(CommentRequest commentRequest) {
         int speechId = commentRequest.getSpeechId();
 
         SpeechEntity speechEntity = speechRepository.findById(speechId)
-            .orElseThrow(()-> new CustomException(ResponseCode.BAD_REQUEST));
+            .orElseThrow(()-> new CustomException(ResponseCode.SPEECH_NOT_FOUND));
         speechEntity.updateComment(commentRequest.getComment());
     }
 
     @Override
     public float clearity(MultipartFile audioFile, Integer speechId, Boolean isLast) {
+
         // 파일 경로
         String inputWavFile = "D:\\path\\to\\your\\upload\\directory\\in_" + cnt + ".wav";
         String outputWavFile = "D:\\path\\to\\your\\upload\\directory\\out_" + cnt++ + ".wav";
@@ -134,8 +161,12 @@ public class SpeechServiceImpl implements SpeechService{
                 Map<String, Integer> scores = speechAssessUtil.assess(speechId);
 
                 // 평가 등록하기
-                // scoreRepository.updateClearity(scores.get("clearity"));
-                // scoreRepository.updateSpeed(scores.get("speed"));
+                SpeechEntity speechEntity = speechRepository.findById(speechId)
+                    .orElseThrow(() -> new CustomException(ResponseCode.SPEECH_NOT_FOUND));
+                ScoreEntity score = speechEntity.getScore();
+                score.updateClearity(scores.get("clearity"));
+                score.updateSpeed(scores.get("speed"));
+                scoreRepository.save(score);
             }
             if(clearityDto != null){
                 throw new CustomException(ResponseCode.ETRI_ERROR);
@@ -146,5 +177,7 @@ public class SpeechServiceImpl implements SpeechService{
         } finally {
             dest.delete();
         }
+
+
     }
 }

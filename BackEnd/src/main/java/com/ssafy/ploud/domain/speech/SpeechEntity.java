@@ -1,16 +1,13 @@
 package com.ssafy.ploud.domain.speech;
 
-import com.ssafy.ploud.domain.record.FeedbackEntity;
 import com.ssafy.ploud.domain.record.ScoreEntity;
 import com.ssafy.ploud.domain.record.VideoEntity;
 import com.ssafy.ploud.domain.record.dto.response.SpeechDetail;
 import com.ssafy.ploud.domain.script.ScriptEntity;
-import com.ssafy.ploud.domain.speech.dto.request.SpeechStartRequest;
 import com.ssafy.ploud.domain.user.UserEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,12 +18,16 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "speeches")
 public class SpeechEntity {
   
@@ -43,15 +44,17 @@ public class SpeechEntity {
   @JoinColumn(name = "script_id")
   private ScriptEntity script; // 대본
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "score_id")
   private ScoreEntity score; // 발표에 대한 평가
+
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "video_id")
   private VideoEntity speechVideo;
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "category_id")
-  private CategoryEntity category; // 발표 카테고리
+
+//  @ManyToOne(fetch = FetchType.LAZY)
+//  @JoinColumn(name = "category_id")
+  private int categoryId; // 발표 카테고리
 
   private String title;
 
@@ -59,17 +62,20 @@ public class SpeechEntity {
 
   private LocalDateTime recordTime; // 발표 시작 시간
 
+  private LocalDateTime speechEndTime; // 발표 종료 시간
+
   private String comment; // 개인 평가
 
-  public static SpeechEntity createNewSpeech(SpeechStartRequest request, UserEntity user, CategoryEntity category, ScriptEntity script){
-    SpeechEntity speechEntity = new SpeechEntity();
-    speechEntity.title = request.getTitle();
-    speechEntity.user = user;
-    speechEntity.category = category;
-    speechEntity.script = script;
-    speechEntity.recordTime = LocalDateTime.now();
-    return speechEntity;
-  }
+//  public static SpeechEntity createNewSpeech(SpeechStartRequest request, CategoryEntity category,
+//      ScriptEntity script) {
+//    SpeechEntity speechEntity;
+//    speechEntity.title = request.getTitle();
+////    speechEntity.user = user;
+//    speechEntity.category = category;
+//    speechEntity.script = script;
+//    speechEntity.recordTime = LocalDateTime.now();
+//    return speechEntity;
+//  }
 
   public void updateComment(String comment){
     this.comment = comment;
@@ -86,12 +92,21 @@ public class SpeechEntity {
         .speechId(id)
         .userId(user.getUserId())
         .speechMode(mode)
-        .startsAt(recordTime.format(DateTimeFormatter.ofPattern("yyyy.mm.dd hh:mm")))
+        .startsAt(recordTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")))
         .comment(comment)
         .build();
   }
 
-    public void setUser(UserEntity userEntity) {
-      this.user = userEntity;
-    }
+  public void setUser(UserEntity user) {
+    this.user = user;
+  }
+
+  public void setScore(ScoreEntity score) {
+    this.score = score;
+  }
+
+  public void updateSpeechEndTime() {
+    this.speechEndTime = LocalDateTime.now();
+  }
+
 }
