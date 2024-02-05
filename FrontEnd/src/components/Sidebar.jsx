@@ -1,46 +1,72 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
 import styled from "styled-components";
-import SidebarItem from "../pages/PracticePage/sidebar/SidebarItem";
 
 const Side = styled.div`
   display: flex;
-  border-right: 1px solid #e0e0e0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 20%;
+  width: 15%;
 `;
+
 const Menu = styled.div`
-  margin-top: 30px;
-  width: 200px;
   display: flex;
   flex-direction: column;
 `;
 
+const NewsPage = () => <div>뉴스 페이지</div>;
+const SpeechPage = () => <div>연설 페이지</div>;
+
 const Sidebar = () => {
-  const menus = [
-    { name: "뉴스", path: "/practice/news" },
-    { name: "연설", path: "/practice/speech" },
-  ];
+  const [selectedMenu, setSelectedMenu] = useState(null);
+
+  const handleMenuClick = (menu) => {
+    setSelectedMenu(menu);
+  };
+
+  const renderSelectedComponent = () => {
+    switch (selectedMenu) {
+      case "뉴스":
+        return <NewsPage />;
+      case "연설":
+        return <SpeechPage />;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <Side>
-      <Menu>
-        {menus.map((menu, index) => {
-          return (
-            <NavLink
-              exact
-              style={{ color: "gray", textDecoration: "none" }}
-              to={menu.path}
+    <div style={{ display: "flex" }}>
+      <Side>
+        <Menu className="grid-cols-3">
+          <p
+            className="text-sky-950 font-bold text-2xl"
+            style={{ paddingBottom: "20px" }}>
+            분류
+          </p>
+          {["뉴스", "연설"].map((menu, index) => (
+            <div
               key={index}
-              activeStyle={{ color: "black" }}
-            >
-              <SidebarItem menu={menu} />
-            </NavLink>
-          );
-        })}
-      </Menu>
-    </Side>
+              style={{
+                color: "gray",
+                textDecoration: "none",
+                marginBottom: "20px",
+                cursor: "pointer",
+                fontWeight: selectedMenu === menu ? "bold" : "normal",
+              }}
+              onClick={() => handleMenuClick(menu)}>
+              {menu}
+            </div>
+          ))}
+        </Menu>
+      </Side>
+      <p
+        className="text-sky-950 font-bold text-2xl"
+        style={{ paddingBottom: "20px" }}>
+        목록
+      </p>
+      {renderSelectedComponent()}
+    </div>
   );
 };
 
