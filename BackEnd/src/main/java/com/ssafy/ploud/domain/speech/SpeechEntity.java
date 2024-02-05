@@ -1,17 +1,13 @@
 package com.ssafy.ploud.domain.speech;
 
-import com.ssafy.ploud.domain.record.FeedbackEntity;
 import com.ssafy.ploud.domain.record.ScoreEntity;
 import com.ssafy.ploud.domain.record.VideoEntity;
 import com.ssafy.ploud.domain.record.dto.response.SpeechDetail;
 import com.ssafy.ploud.domain.script.ScriptEntity;
-import com.ssafy.ploud.domain.speech.dto.request.SpeechStartRequest;
 import com.ssafy.ploud.domain.user.UserEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -56,15 +52,17 @@ public class SpeechEntity {
   @JoinColumn(name = "video_id")
   private VideoEntity speechVideo;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "category_id")
-  private CategoryEntity category; // 발표 카테고리
+//  @ManyToOne(fetch = FetchType.LAZY)
+//  @JoinColumn(name = "category_id")
+  private int categoryId; // 발표 카테고리
 
   private String title;
 
   private boolean personal; // 혼자 연습/스터디 연습
 
   private LocalDateTime recordTime; // 발표 시작 시간
+
+  private LocalDateTime speechEndTime; // 발표 종료 시간
 
   private String comment; // 개인 평가
 
@@ -105,6 +103,10 @@ public class SpeechEntity {
 
   public void setScore(ScoreEntity score) {
     this.score = score;
+  }
+
+  public void updateSpeechEndTime() {
+    this.speechEndTime = LocalDateTime.now();
   }
 
 }

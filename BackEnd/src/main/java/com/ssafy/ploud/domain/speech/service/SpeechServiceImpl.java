@@ -9,6 +9,7 @@ import com.ssafy.ploud.domain.record.ScoreEntity;
 import com.ssafy.ploud.domain.record.repository.FeedbackRepository;
 import com.ssafy.ploud.domain.record.repository.ScoreRepository;
 import com.ssafy.ploud.domain.record.repository.VideoRepository;
+import com.ssafy.ploud.domain.script.ScriptCategory;
 import com.ssafy.ploud.domain.script.ScriptEntity;
 import com.ssafy.ploud.domain.script.repository.ScriptRepository;
 import com.ssafy.ploud.domain.speech.CategoryEntity;
@@ -80,7 +81,7 @@ public class SpeechServiceImpl implements SpeechService{
             .recordTime(LocalDateTime.now())
             .script(script)
             .score(score)
-            // category
+            .categoryId(speechStartRequest.getCategoryId())
             .build();
 
         speech.setUser(userEntity);
@@ -106,6 +107,7 @@ public class SpeechServiceImpl implements SpeechService{
         int volume = speechAssessUtil.decibels(speechEndRequest.getDecibels());
         SpeechEntity speech = speechRepository.findById(speechEndRequest.getSpeechId())
             .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
+        speech.updateSpeechEndTime();
         speech.getScore().updateVolume(volume);
     }
 
