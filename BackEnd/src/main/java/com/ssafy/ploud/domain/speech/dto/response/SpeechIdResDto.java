@@ -10,7 +10,5 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class SpeechIdResDto {
-
   private int speechId;
-
 }

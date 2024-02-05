@@ -10,7 +10,6 @@ import MyPage from "../pages/MyPage";
 import PatchInfoPage from "../pages/MyPage/PatchInfoPage";
 import ResetPwPage from "../pages/MyPage/ResetPwPage";
 import TestPage from "../pages/TestPage";
-import TestPage2 from "../pages/TestPage2";
 import StudyRoomPage from "../pages/StudyRoomPage"
 import CreateBoard from "../pages/BoardPage/CreateBoard";
 import BoardDetail from "../pages/BoardPage/BoardDetail";
@@ -33,7 +32,6 @@ const Router = () => {
         <Route path="/createpw" element={<ResetPwPage />} />
         <Route path="/createboard" element={<CreateBoard />} />
         <Route path="/test" element={<TestPage />} />
-        <Route path="/test2" element={<TestPage2 />} />
         <Route path="/board-detail" element={<BoardDetail />} />
       </Routes>
     </BrowserRouter>
