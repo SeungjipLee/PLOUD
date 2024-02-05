@@ -15,12 +15,21 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
+import java.util.Base64.Encoder;
 import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.mail.MessagingException;
 import lombok.AllArgsConstructor;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -104,7 +113,12 @@ public class UserServiceImpl implements UserService {
   public UserInfoResDto findUserByUserId(String userId) {
     UserEntity user = userRepository.findByUserId(userId)
         .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
-    return UserInfoResDto.toDto(user);
+    try {
+      String arr = readImage(user.getProfileImg(), null);
+      return UserInfoResDto.toDto(user, arr);
+    } catch(IOException e) {
+      throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
+    }
   }
 
   public String updateUserNickname(String userId, String newNickname) {
@@ -116,17 +130,21 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public byte[] saveProfilePicture(MultipartFile file, String userId) {
+  public String saveProfilePicture(MultipartFile file, String userId) {
 
     UserEntity user = userRepository.findById(userId)
         .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 
     try {
-      // TODO: imagePath 배포 환경에 맞게 변경
       String extension = StringUtils.getFilenameExtension(
           file.getOriginalFilename());
+
+      String directoryPath = "C://ploud_img";
+      createFolderIfNotExists(directoryPath);
+
       String imagePath =
-          "C://ploud_img/profile_image_" + userId + "." + extension;
+          //"C://ploud_img/profile_image_" + userId + "." + extension;
+          directoryPath + "/profile_image_" + userId + "." + extension;
 
       file.transferTo(new File(imagePath));
 
@@ -138,12 +156,34 @@ public class UserServiceImpl implements UserService {
     }
   }
 
-  public byte[] readImage(String imagePath, String extension) throws IOException {
-    BufferedImage bImage = ImageIO.read(new File(imagePath));
+  public void createFolderIfNotExists(String directoryPath) {
+    File Folder = new File(directoryPath);
+    if (!Folder.exists()) {
+      Folder.mkdir();
+      System.out.println("ploud_img 폴더 생성 완료");
+    }
+  }
+
+  public String readImage(String imagePath, String extension) throws IOException {
+    BufferedImage bImage = null;
+    if (imagePath == null) {
+      // default image
+      String imgURL = "https://postfiles.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg";
+      extension = "jpg";
+      URL urlInput = new URL(imgURL);
+      bImage = ImageIO.read(urlInput);
+    } else {
+      // user image
+      bImage = ImageIO.read(new File(imagePath));
+      extension = FilenameUtils.getExtension(imagePath);
+    }
+
     ByteArrayOutputStream bos = new ByteArrayOutputStream();
     ImageIO.write(bImage, extension, bos);
 
-    return bos.toByteArray();
+    Encoder encoder = Base64.getEncoder();
+
+    return encoder.encodeToString(bos.toByteArray());
   }
 
   public void updateUserPassword(String userId, String newPassword) {

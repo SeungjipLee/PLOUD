@@ -24,6 +24,7 @@ public enum ResponseCode {
   CODE_INVALID_VALUE(HttpStatus.SC_BAD_REQUEST, "인증코드를 확인해주세요"),
   MAIL_SEND_ERROR(HttpStatus.SC_INTERNAL_SERVER_ERROR, "메일을 전송하지 못했습니다"),
   USER_LOGIN_RERQUIRED(HttpStatus.SC_UNAUTHORIZED, "로그인이 필요합니다"),
+  USER_IMAGE_ERROR(HttpStatus.SC_INTERNAL_SERVER_ERROR, "프로필 사진 읽는 중 오류 발생"),
 
   // 스터디 룸
   ROOM_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "방이 존재하지 않습니다"),
@@ -58,7 +59,10 @@ public enum ResponseCode {
   FILE_CONVERT_ERROR(HttpStatus.SC_BAD_REQUEST, "파일 변환 중 에러"),
 
   // 발표
-  SPEECH_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "발표를 찾을 수 없습니다");
+  SPEECH_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "발표를 찾을 수 없습니다"),
+
+  // 디렉터리
+  ALREADY_EXISTS(HttpStatus.SC_CONFLICT, "폴더가 이미 존재합니다");
 
   private final int code;
   private final String message;

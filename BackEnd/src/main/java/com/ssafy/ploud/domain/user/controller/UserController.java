@@ -118,7 +118,7 @@ public class UserController {
     if (loginUser == null) {
       throw new CustomException(ResponseCode.USER_LOGIN_RERQUIRED);
     }
-    Map<String, byte[]> res = new HashMap<>();
+    Map<String, String> res = new HashMap<>();
     res.put("profileImg", userService.saveProfilePicture(multipartFile, loginUser.getUsername()));
     return ApiResponse.ok("프로필 사진 수정 완료", res);
 
