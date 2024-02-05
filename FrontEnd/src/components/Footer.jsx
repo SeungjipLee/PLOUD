@@ -1,14 +1,14 @@
 const Footer = () => {
     return (
-        <div className="footer p-10 px-36">
-            <div className="w-40">
+        <div className="footer p-7 px-36">
+            <div className="w-32">
                 <img src="images/ICON_reverse.png"/>
             </div>
             <br />
             <hr />
-            <div className="mt-5">About Us : SSAFY E207 926</div>
-            <div className="my-1">Contact Us : ploud_admin@gmail.com</div>
-            <div className="my-1">Have a nice day!</div>
+            <div className="mt-4">About Us : SSAFY E207 926</div>
+            <div className="my-0.5">Contact Us : ploud_admin@gmail.com</div>
+            <div className="my-0.5">Have a nice day!</div>
         </div>
     )
 }

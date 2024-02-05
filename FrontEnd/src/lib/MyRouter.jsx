@@ -14,6 +14,8 @@ import Speech from "../pages/PracticePage/sidebar/Speech";
 import TestPage from "../pages/TestPage";
 import TestPage2 from "../pages/TestPage2";
 import StudyRoomPage from "../pages/StudyRoomPage"
+import CreateBoard from "../pages/BoardPage/CreateBoard";
+import BoardDetail from "../pages/BoardPage/BoardDetail";
 
 const Router = () => {
   return (
@@ -32,8 +34,11 @@ const Router = () => {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/patchinfo" element={<PatchInfoPage />} />
         <Route path="/resetpw" element={<ResetPwPage />} />
+        <Route path="/createpw" element={<ResetPwPage />} />
+        <Route path="/createboard" element={<CreateBoard />} />
         <Route path="/test" element={<TestPage />} />
         <Route path="/test2" element={<TestPage2 />} />
+        <Route path="/board-detail" element={<BoardDetail />} />
       </Routes>
     </BrowserRouter>
   );

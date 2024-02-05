@@ -34,6 +34,7 @@ const MyPage = () => {
   // }, [profile])
 
   return (
+      <div className="bg-white w-full min-h-screen">
       <Page header={<Navbar />} footer={<Footer />}>
         <div className="mt-24 place-self-center flex justify-center">
           <h2 className="font-extrabold text-2xl">마이페이지</h2>
@@ -52,7 +53,10 @@ const MyPage = () => {
                 <p className="py-1">이메일:</p>
               </div>
             </div>
-                <button className="bg-sky-500 text-white rounded-md p-1 mx-7 my-3">회원정보 수정</button>
+                <button 
+                  className="bg-gray-400 text-white rounded-md p-1 mx-7 my-3">
+                    <Link to="/patchinfo">회원정보 수정</Link>
+                </button>
             </div>
           <div className="ms-5 me-10 bg-white box2 drop-shadow-md rounded-md">
             <h2 className="ms-5 text-xl my-3">학습현황</h2>
@@ -72,9 +76,11 @@ const MyPage = () => {
         </div>
         <div className="flex justify-center">
           <div className="mx-10 box3 flex justify-center">
-            <div className="box4 py-3 rounded-md">
+            <div className="box4 py-3 drop-shadow-md rounded-md">
               <span className="ms-5 text-xl">나의 발표 결과</span>
-              <span className="text-xs text-gray-500 mx-5">※ 최근 5개의 발표만 제공됩니다.</span>
+              <span className="text-xs text-gray-500 mx-5">
+                ※ 최근 5개의 발표만 제공됩니다.
+              </span>
               <div className="flex justify-center">
                 {/* 여기에 5개의 결과 카드 나오도록 */}
                 <ResultCard/>
@@ -87,6 +93,7 @@ const MyPage = () => {
           </div>
         </div>
       </Page>
+      </div>
   );
 };
 
