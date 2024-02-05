@@ -90,6 +90,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
+}
+
+.Button, .Button:hover, .Button:active, .Button:focus {
+  text-decoration: none;
 }
 
 .study-category-button {
@@ -102,7 +107,7 @@
 }
 
 .study-category-button-activate {
-  background-color: #2d24a8;
+  background: linear-gradient(to right, #223872, #2f2468);
   color: white;
 }
 
