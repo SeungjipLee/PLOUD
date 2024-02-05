@@ -1,6 +1,6 @@
 import Card from "../../components/Card";
 
-const RoomCard = ({ data }) => {
+const RoomCard = ({ data, children }) => {
   const {
     categoryId,
     currentPeople,
@@ -25,6 +25,7 @@ const RoomCard = ({ data }) => {
           <div>
             {categoryId === 1 ? "발표" : "면접"}
           </div>
+          {children}  
         </div>
       </Card>
     </>

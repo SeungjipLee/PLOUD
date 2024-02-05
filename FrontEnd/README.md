@@ -89,43 +89,75 @@ useDispatch : dispatch action 수행
 - axios 요청으로 회원가입, 로그인 확인
 
 1. axios 요청시 url 이 틀렸을 때 : localhost 사용자로그인 창이 뜸
-- backend url 확인 후 수정
+    - backend url 확인 후 수정
 
 2. setState : 이벤트호출 시 상태를 변경하려면 이벤트 핸들러 함수는 따로 만들어서 사용
 
-- 오류 사례
-컴포넌트가 렌더링될 때 즉시 호출되는 코드 
-React의 상태 업데이트 함수가 이벤트 핸들러 내에서 호출되게끔 해야 함
-```jsx
-<div onClick={setIsUserIdValid(!isUserIdValid)}>취소</div>
-```
-- 해결
-```jsx
-// 컴포넌트 영역
-const handlerClick = () => {
-  setIsUserIdValid(!isUserIdValid)
-}
-// 리턴 영역
-<div onClick={handlerClick}>취소</div>
-// 혹은
-<div onClick={() => setIsUserIdValid(!isUserIdValid)}>취소</div>
-```
+    - 오류 사례
+    컴포넌트가 렌더링될 때 즉시 호출되는 코드 
+    React의 상태 업데이트 함수가 이벤트 핸들러 내에서 호출되게끔 해야 함
+    ```jsx
+    <div onClick={setIsUserIdValid(!isUserIdValid)}>취소</div>
+    ```
+    - 해결
+    ```jsx
+    // 컴포넌트 영역
+    const handlerClick = () => {
+      setIsUserIdValid(!isUserIdValid)
+    }
+    // 리턴 영역
+    <div onClick={handlerClick}>취소</div>
+    // 혹은
+    <div onClick={() => setIsUserIdValid(!isUserIdValid)}>취소</div>
+    ```
 
 3. e.target.value 는 텍스트라서 "true" "false" 라 반환해도 boolean 값으로 사용할 수가 없더라
-그래서 
-```jsx
-setIsSecret(e.target.value == "true" ? true : false)
-```
-로 사용했음
+    그래서 
+    ```jsx
+    setIsSecret(e.target.value == "true" ? true : false)
+    ```
+    로 사용했음
 
 4. 미해결 - Redux non-serializable value 에 관한 이슈
-이게 뭘까....
-VM999:6 A non-serializable value was detected in an action, in the path: `register`. Value: ƒ register(key) {
-    _pStore.dispatch({
-      type: _constants__WEBPACK_IMPORTED_MODULE_0__.REGISTER,
-      key: key
+
+    VM999:6 A non-serializable value was detected in an action, in the path: `register`. Value: ƒ register(key) {
+        _pStore.dispatch({
+          type: _constants__WEBPACK_IMPORTED_MODULE_0__.REGISTER,
+          key: key
+        });
+      } 
+    Take a look at the logic that dispatched this action:  {type: 'persist/PERSIST', register: ƒ, rehydrate: ƒ} 
+    (See https://redux.js.org/faq/actions#why-should-type-be-a-string-or-at-least-serializable-why-should-my-action-types-be-constants) 
+    (To allow non-serializable values see: https://redux-toolkit.js.org/usage/usage-guide#working-with-non-serializable-data)
+
+    Redux 액션은 일반적으로 순수한 객체로, 모든 값이 JSON으로 직렬화 가능해야 합니다. 함수, Promise, 기타 비직렬화 가능한 객체는 포함되어서는 안 됩니다.
+
+    ```jsx
+    import { configureStore } from '@reduxjs/toolkit';
+
+    export const store = configureStore({
+      reducer: rootReducer,
+      middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+          serializableCheck: false,
+        }),
     });
-  } 
-Take a look at the logic that dispatched this action:  {type: 'persist/PERSIST', register: ƒ, rehydrate: ƒ} 
-(See https://redux.js.org/faq/actions#why-should-type-be-a-string-or-at-least-serializable-why-should-my-action-types-be-constants) 
-(To allow non-serializable values see: https://redux-toolkit.js.org/usage/usage-guide#working-with-non-serializable-data)
+    ```
+    임시로 비직렬화 객체에 대해 경고를 하지 않도록 비활성화
+
+5. 방을 입장하기 위해 JoinConfirmModal 에 비밀번호를 치고 엔터를 누르면 에러가 뜨고 한번 더 누르면 입장이 진행
+    useState 사용 x = 비동기적으로 상태를 업데이트 함
+    1. 상태를 변경하고 바로 사용할 경우 업데이트가 느리기 때문에 즉각적으로 변수를 전달해야 한다면 직접 값을 선언하고 사용
+    2. useState를 사용하고 싶다면 useEffect 로 상태 변경을 감지하면 실행되도록 해야 함
+
+
+## StudyRoomPage
+
+보여줄 비디오 종류 3
+MainStreamManager ???? 카메라 누르면 메인으로 전환되고 
+SubScribers 상대방 화면
+Publisher 내 화면
+
+초기 설정 main, publisher 나
+subsriber 상대방
+main 은 바꿀 수 있다

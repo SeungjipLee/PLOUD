@@ -7,11 +7,14 @@ import { input } from "@material-tailwind/react";
 
 
 const Step3 = () => {
-  const { userId, password, email, name, nickname, birthYear } = useSelector((state) => state.signUpReducer)
+  const { userId, password, email } = useSelector((state) => state.signUpReducer)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   // 입력 받는 변수
   const [formData, setFormData] = useState({
+    userId: userId,
+    password: password,
+    email: email,
     nickname: undefined,
     name: undefined,
     birthYear: undefined,
@@ -58,27 +61,19 @@ const Step3 = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (validateName() && isNicknameValid) {
+    if (validateName() && isNicknameValid && validateNickname()) {
       dispatch(getUserData({ nickname: formData.nickname, name: formData.name, birthYear: formData.birthYear }))
       // 여기서 완전 회원가입 요청 ㄱㄱ
-      const inputForm = {
-        userId: userId,
-        password: password,
-        email: email,
-        name: name,
-        nickname: nickname,
-        birthYear: birthYear
-      }
-      const response = await signup(inputForm,
+      const response = await signup(formData,
         res => res,
         err => err)
       console.log(response)
+      alert('회원가입이 성공적으로 완료되었습니다.')
       navigate("/login")
     } else {
       alert("이름을 다시 확인해주세요. 이름은 특수문자 제외 2~10자 이내입니다.")
     }
   }
-
 
   // 시간 관련 변수
   const years = Array.from(
@@ -130,9 +125,9 @@ const Step3 = () => {
           </select>
         </div>
         <button className="moveButton" onClick={handleCheckNickname}>중복확인</button>
-        <div className="w-80 mx-auto my-10"><img src="images/Step3.png" /></div>
+        <div className="w-80 mx-auto mt-5 mb-10"><img src="images/Step3.png" /></div>
         <div className="flex justify-center-10">
-          <button type="submit" onClick={handleSubmit} className="bg-sky-400 block mb-16 text-white w-2/3 mx-auto rounded-md p-2 text-center hover:bg-sky-500">가입 완료</button>
+          <button type="submit" onClick={handleSubmit} className="bg-sky-400 block mb-10 text-white w-2/3 mx-auto rounded-md p-2 text-center hover:bg-sky-500">가입 완료</button>
         </div>
 
       </div>

@@ -1,9 +1,16 @@
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { googleLogin } from "../../services/user";
+import { useDispatch } from "react-redux";
+import { getToken } from "../../features/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
 
-
+// 구글 로그인
+// 서버로부터 응답을 받아서 성공응답시 => 로그인
+// 실패 시 => 회원가입
 const SocialLogin = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   return (
     <>
         <GoogleOAuthProvider 
@@ -13,14 +20,20 @@ const SocialLogin = () => {
           >
 
           <GoogleLogin
-            onSuccess={credentialResponse => {
-              console.log(credentialResponse);
+            onSuccess={ async credentialResponse => {
               localStorage.setItem('credential', credentialResponse.credential);
               localStorage.setItem('clientId', credentialResponse.clientId);
-              googleLogin(
+              const response = await googleLogin(
                 {token: credentialResponse.credential},
-                (res) => res,
-                (err) => err
+                (res) => {
+                  localStorage.setItem("user", JSON.stringify(res.data));
+                  dispatch(getToken(res.data))
+                  navigate("/")
+                },
+                (err) => {
+                  alert("회원가입이 필요합니다.")
+                  navigate("/signup")
+                }
                 )
             }}
             onError={() => {

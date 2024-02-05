@@ -4,6 +4,7 @@ import Button from "./Button";
 import { useSelector, useDispatch } from "react-redux";
 import { expireToken } from "../features/user/userSlice";
 
+
 const Navbar = () => {
   const { isLogined, nickname } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
@@ -22,10 +23,14 @@ const Navbar = () => {
         </div>
       </Link>
       <nav className="ml-30">
-        <Link to="/board" style={{color: '#0C134F'}} className="link hover:bg-slate-100">게시판</Link>
-        <Link to="/study" style={{color: '#0C134F'}} className="link hover:bg-slate-100">스터디</Link>
-        <Link to="/practice" style={{color: '#0C134F'}} className="link hover:bg-slate-100">연습</Link>
-        <Link to="/test" style={{color: '#0C134F'}} className="link hover:bg-slate-100">테스트</Link>
+        {!isLogined &&<Link to="/login" style={{color: '#0C134F'}} className="link hover:bg-slate-100">스터디</Link>}
+        {isLogined &&<Link to="/study" style={{color: '#0C134F'}} className="link hover:bg-slate-100">스터디</Link>}
+        {!isLogined &&<Link to="/login" style={{color: '#0C134F'}} className="link hover:bg-slate-100">연습</Link>}
+        {isLogined &&<Link to="/practice" style={{color: '#0C134F'}} className="link hover:bg-slate-100">연습</Link>}
+        {!isLogined &&<Link to="/login" style={{color: '#0C134F'}} className="link hover:bg-slate-100">테스트</Link>}
+        {isLogined &&<Link to="/test" style={{color: '#0C134F'}} className="link hover:bg-slate-100">테스트</Link>}
+        {isLogined &&<Link to="/board" style={{color: '#0C134F'}} className="link hover:bg-slate-100">게시판</Link>}
+        {!isLogined &&<Link to="/login" style={{color: '#0C134F'}} className="link hover:bg-slate-100">게시판</Link>}
       </nav>
       <nav>
         {!isLogined && (
