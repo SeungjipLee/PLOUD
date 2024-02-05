@@ -58,18 +58,19 @@ public class SpeechServiceImpl implements SpeechService{
     @Override
     @Transactional
     public int start(SpeechStartRequest speechStartRequest) {
-        if (speechStartRequest.isPersonal()) {
+        if (!speechStartRequest.isPersonal()) {
             if (openViduUtil.findSpeechIdBySessionId(speechStartRequest.getSessionId()) != -1) {
                 throw new CustomException(ResponseCode.RECORD_PROCEEDING);
             }
         }
+
         // user 정보 가져오기
         UserEntity userEntity = userRepository.findByUserId(speechStartRequest.getUserId())
             .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 
         // 대본 가져오기
         ScriptEntity script = null;
-        if (speechStartRequest.getScriptId() != -1) {
+        if (speechStartRequest.getScriptId() != 0) {
             script = scriptRepository.findById(speechStartRequest.getScriptId())
                 .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
         }
@@ -151,9 +152,9 @@ public class SpeechServiceImpl implements SpeechService{
             // 파일 변환
             ffmpegUtil.convertAudio(inputWavFile, outputWavFile);
 
-            String audioContent = etriUtil.fileToBase64(outputWavFile);
+            Map<String, Object> audioInfo = etriUtil.fileToBase64(outputWavFile);
 
-            ClearityDto clearityDto = etriUtil.getScore(audioContent);
+            ClearityDto clearityDto = etriUtil.getScore(audioInfo);
 
             speechAssessUtil.addClearity(speechId, clearityDto);
 
@@ -168,7 +169,7 @@ public class SpeechServiceImpl implements SpeechService{
                 score.updateSpeed(scores.get("speed"));
                 scoreRepository.save(score);
             }
-            if(clearityDto != null){
+            if(clearityDto == null){
                 throw new CustomException(ResponseCode.ETRI_ERROR);
             }
 

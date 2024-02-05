@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @Builder
 public class RecordDetailResponse {
-
   SpeechDetail speech;
   VideoDetail video;
   ScoreDetail score;

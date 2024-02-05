@@ -44,14 +44,14 @@ public class EtriUtil {
     }
 
 
-    public static ClearityDto getScore(String audioContents){
+    public static ClearityDto getScore(Map<String, Object> audioInfo){
         Gson gson = new Gson();
 
         Map<String, Object> request = new HashMap<>();
         Map<String, String> argument = new HashMap<>();
 
         argument.put("language_code", languageCode);
-        argument.put("audio", audioContents);
+        argument.put("audio", (String) audioInfo.get("audioContents"));
         request.put("argument", argument);
 
         URL url;
@@ -90,15 +90,15 @@ public class EtriUtil {
 
                 int scriptCnt = countKoreanCharacters(recognized);
 
-                float floatScore;
+                double doubleScore;
 
                 try {
-                    floatScore = Float.parseFloat(score);
+                    doubleScore = Double.parseDouble(score);
                 } catch (Exception e) {
-                    floatScore = 0;
+                    doubleScore = 0;
                 }
 
-                return new ClearityDto(recognized, scriptCnt, floatScore);
+                return new ClearityDto(recognized, scriptCnt, doubleScore, (double) audioInfo.get("audioTime"));
             }else{
                 return null;
             }
@@ -121,11 +121,12 @@ public class EtriUtil {
 
         return count;
     }
-    public static String fileToBase64(String outputWavFile) throws UnsupportedAudioFileException, IOException {
+    public static Map<String, Object> fileToBase64(String outputWavFile) throws UnsupportedAudioFileException, IOException {
         AudioInputStream audioInputStream = null;
         File outputFile = null;
 
         String audioContents = null;
+        double audioTime = 0;
         try {
             outputFile = new File(outputWavFile);
             AudioInputStream stereoInputStream = AudioSystem.getAudioInputStream(outputFile);
@@ -145,13 +146,21 @@ public class EtriUtil {
             }
 
             byte[] audioBytes = byteArrayOutputStream.toByteArray();
+
+            double total_samples = (double) audioBytes.length / 2;
+            audioTime = total_samples / 16000;
+
             audioContents = Base64.getEncoder().encodeToString(audioBytes);
         } finally {
             audioInputStream.close();
             outputFile.delete();
         }
 
-        return audioContents;
+        Map<String, Object> map = new HashMap<>();
+        map.put("audioContents", audioContents);
+        map.put("audioTime", audioTime);
+
+        return map;
     }
 }
 

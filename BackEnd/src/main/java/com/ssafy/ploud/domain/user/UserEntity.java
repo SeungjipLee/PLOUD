@@ -59,7 +59,7 @@ public class UserEntity {
     newUser.password = encryptedPassword;
     newUser.email = reqDto.getEmail();
     newUser.birthYear = reqDto.getBirthYear();
-    newUser.profileImg = "default profileImg path";
+    newUser.profileImg = null;
     newUser.refreshToken = null;
     newUser.complainCount = 0;
     newUser.restrictDate = null;

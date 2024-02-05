@@ -66,6 +66,9 @@ dependencies {
     // https://mvnrepository.com/artifact/com.sun.mail/javax.mail
     implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
 
+    // FILE IO
+    implementation 'commons-io:commons-io:2.15.1'
+
     // JSON
     implementation 'org.json:json:20231013'
 }
