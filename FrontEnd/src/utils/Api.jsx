@@ -7,7 +7,7 @@ const DOMAIN = "https://i10e207.p.ssafy.io";
 
 const API = (token) => {
   const instance = axios.create({
-    baseURL: DOMAIN + "/api",
+    baseURL: DOMAIN,
     headers: {
       Authorization: token ? `Bearer ${token.accessToken}` : null,
       withCredentials: true,
