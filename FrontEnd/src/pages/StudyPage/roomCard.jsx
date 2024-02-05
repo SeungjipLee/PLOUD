@@ -13,6 +13,15 @@ const RoomCard = ({ data, children }) => {
     title,
   } = data;
 
+  const categoryName = () => {
+    switch(categoryId){
+    case 0: return "전체"
+    case 1: return "면접"
+    case 2: return "발표"
+    case 3: return "기타"
+  }
+  }
+
   return (
     <>
       <Card>
@@ -27,7 +36,7 @@ const RoomCard = ({ data, children }) => {
               {currentPeople} / {maxPeople}
             </p>
           </div>
-          <div>{categoryId === 1 ? "발표" : "면접"}</div>
+          <div>{categoryName()}</div>
           {children}
         </div>
       </Card>

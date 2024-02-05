@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
 import Footer from "../../components/Footer";
-import Card from "../../components/Card";
 import Button from "../../components/Button";
-import Modal from "../../components/Modal";
 import CreateForm from "./CreateForm";
 import { useDispatch, useSelector } from "react-redux";
 import { getStudyList, getStudy } from "../../features/study/studySlice";
@@ -47,11 +45,6 @@ const StudyPage = () => {
     }
   };
 
-  const handleClickCard = (e) => {
-    console.log(tag, "카드 클릭");
-    setIsClickRoom(true);
-  };
-
   // 스터디 리스트 요청
   const searchStudyList = () => {
     const data = { categoryId: categoryId, word: word };
@@ -70,25 +63,7 @@ const StudyPage = () => {
     );
   };
 
-  // useEffect(() => {
-  //   // 모달 외부 클릭 감지 함수
-  //   const handleClickOutside = (event) => {
-  //     if (modal && !event.target.closest(".Modal")) {
-  //       changeModalState(false);
-  //     }
-  //   };
-
-  //   // 모달이 활성화되어 있을 때만 이벤트 리스너 추가
-  //   if (modal) {
-  //     window.addEventListener("click", handleClickOutside);
-  //   }
-
-  //   // 컴포넌트가 언마운트되거나 모달이 닫힐 때 이벤트 리스너 제거
-  //   return () => {
-  //     window.removeEventListener("click", handleClickOutside);
-  //   };
-  // }, [modal]);
-
+  // 방 만들기 클릭 시 방 생성 폼 띄우기
   const changeModalState = () => {
     setModal(!modal);
     console.log(modal);
@@ -166,7 +141,7 @@ const StudyPage = () => {
                       : "study-category-button study-category-button-deactivate"
                   }
                 >
-                  발표
+                  면접
                 </Button>
                 <Button
                   onClick={() => {
@@ -178,7 +153,7 @@ const StudyPage = () => {
                       : "study-category-button study-category-button-deactivate"
                   }
                 >
-                  면접
+                  발표
                 </Button>
                 <Button
                   onClick={() => {
