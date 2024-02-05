@@ -36,7 +36,6 @@ public class UserEntity {
   private String email;
   @NotNull
   private Year birthYear;
-  @NotNull
   private String profileImg;
   @NotNull
   private String refreshToken;
@@ -84,5 +83,4 @@ public class UserEntity {
     speechEntityList.add(speech);
     // speech.setUser(this);
   }
-
 }

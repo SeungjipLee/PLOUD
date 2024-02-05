@@ -23,7 +23,7 @@ const MainPage = () => {
     <div className="Main">
       <Page header={<Navbar />} footer={<Footer />}>
         <div className="Main1 mb-24">
-          <img src="images/Main1.png" alt="Main1.png" className="w-full h-full object-cover"/>
+          <img src="images/1.png" className="w-full h-full object-cover"/>
         </div>
         <div className="Main2 mb-24">
           <div className="video mx-16 ms-36 me-12">

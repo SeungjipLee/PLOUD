@@ -13,6 +13,7 @@ import axios from "axios";
 
 const ResetPwPage = () => {
   // 로직
+  const { token } = useSelector((state) => state.userReducer)
 
   return (
       <div className="mypage bg-white w-full min-h-screen">
