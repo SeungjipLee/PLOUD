@@ -5,8 +5,10 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 public class BoardResponse {
@@ -17,6 +19,7 @@ public class BoardResponse {
   private String content;
   //private String videoPath;
   private LocalDateTime registerTime;
+  private int likeCount;
 
   public static BoardResponse fromEntity(BoardEntity boardEntity) {
     return BoardResponse.builder()
@@ -26,6 +29,9 @@ public class BoardResponse {
         .content(boardEntity.getContent())
         //    .videoPath(boardEntity.getVideoPath())
         .registerTime(boardEntity.getRegisterTime())
+        .likeCount(boardEntity.getLikeCount())
         .build();
   }
+
+
 }

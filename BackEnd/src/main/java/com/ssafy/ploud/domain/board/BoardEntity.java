@@ -32,6 +32,8 @@ public class BoardEntity {
 
   private LocalDateTime registerTime; // 게시글 작성 시각
 
+  private int likeCount;  // 좋아요 개수
+
   public static BoardEntity createBoard(BoardRequest boardRequest, String userId) {
     BoardEntity boardEntity = new BoardEntity();
 

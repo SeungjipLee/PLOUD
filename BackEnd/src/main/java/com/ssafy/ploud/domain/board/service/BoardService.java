@@ -16,4 +16,5 @@ public interface BoardService {
 
   void deleteBoard(int id);
 
+  void updateCount(BoardResponse board, boolean heart);
 }

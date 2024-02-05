@@ -1,9 +1,12 @@
 package com.ssafy.ploud.domain.board.service;
 
+import com.ssafy.ploud.common.exception.CustomException;
+import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.board.BoardEntity;
 import com.ssafy.ploud.domain.board.dto.request.BoardRequest;
 import com.ssafy.ploud.domain.board.dto.response.BoardResponse;
 import com.ssafy.ploud.domain.board.repository.BoardRepository;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 public class BoardServiceImpl implements BoardService {
 
   private BoardRepository boardRepository;
+  private EntityManager entityManager;
 
   @Override
   public List<BoardResponse> getAllBoards() {
@@ -37,7 +41,7 @@ public class BoardServiceImpl implements BoardService {
   @Override
   public BoardResponse getBoardById(int id) {
     BoardEntity boardEntity = boardRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+        .orElseThrow(() -> new CustomException(ResponseCode.BOARD_NOT_FOUND));
     return BoardResponse.fromEntity(boardEntity);
   }
 
@@ -48,10 +52,10 @@ public class BoardServiceImpl implements BoardService {
     String userId = authentication.getName();
 
     BoardEntity boardEntity = boardRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+        .orElseThrow(() -> new CustomException(ResponseCode.BOARD_NOT_FOUND));
 
     if (!boardEntity.getUserId().equals(userId)) {
-      throw new AccessDeniedException("수정 권한이 없습니다.");
+      throw new CustomException(ResponseCode.NO_PERMISSION);
     }
 
     BoardEntity.updateBoard(boardRequest, boardEntity);
@@ -60,17 +64,27 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   public void deleteBoard(int id) {
-
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String userId = authentication.getName();
 
     BoardEntity boardEntity = boardRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+        .orElseThrow(() -> new CustomException(ResponseCode.BOARD_NOT_FOUND));
 
     if (!boardEntity.getUserId().equals(userId)) {
-      throw new AccessDeniedException("삭제 권한이 없습니다.");
+      throw new CustomException(ResponseCode.NO_PERMISSION);
     }
 
     boardRepository.deleteById(id);
+  }
+
+  @Override
+  public void updateCount(BoardResponse board, boolean heart){
+    if(heart){
+      board.setLikeCount(board.getLikeCount()+1);
+    } else {
+      board.setLikeCount(board.getLikeCount()-1);
+    }
+
+    entityManager.merge(board);
   }
 }

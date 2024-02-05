@@ -4,6 +4,7 @@ import com.ssafy.ploud.common.response.ApiResponse;
 import com.ssafy.ploud.domain.board.dto.request.BoardRequest;
 import com.ssafy.ploud.domain.board.dto.response.BoardResponse;
 import com.ssafy.ploud.domain.board.service.BoardService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "게시판 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/board")
@@ -24,8 +26,7 @@ public class BoardController {
 
   @GetMapping("/")
   public ApiResponse<List<BoardResponse>> getAllBoards() {
-    List<BoardResponse> boardResponses = boardService.getAllBoards();
-    return ApiResponse.ok("게시글 목록 불러오기 성공", boardResponses);
+    return ApiResponse.ok("게시글 목록 불러오기 성공", boardService.getAllBoards());
   }
 
   @PostMapping("/create")
@@ -37,8 +38,7 @@ public class BoardController {
 
   @GetMapping("/{id}")
   public ApiResponse<?> getBoardById(@PathVariable int id) {
-    BoardResponse boardResponse = boardService.getBoardById(id);
-    return ApiResponse.ok("게시글 조회 성공", boardResponse);
+    return ApiResponse.ok("게시글 조회 성공",  boardService.getBoardById(id));
   }
 
   @PutMapping("/{id}")
