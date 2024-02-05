@@ -10,7 +10,7 @@ const CreateForm = () => {
   const [formData, setFormData] = useState({
     categoryId: "",
     title: "",
-    maxPeople: 0,
+    maxPeople: 2,
     isPrivate: false,
     password: "",
   });
