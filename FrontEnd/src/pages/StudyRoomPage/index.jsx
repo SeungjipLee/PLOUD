@@ -233,7 +233,7 @@ const StudyRoomPage = () => {
             onClick={(e) => setRecord(!record)}
             src="/images/recordbutton.png"
           />
-          <img onClick={leaveSession} src="/images/exitbutton.PNG" alt="" />
+          <img onClick={leaveSession} src="/images/exitbutton.png" alt="" />
         </div>
         <div className="flex items-center space-x-4">
           <img
