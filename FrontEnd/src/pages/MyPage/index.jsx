@@ -19,6 +19,7 @@ const MyPage = () => {
         const response = await getProfile(
           token,
           (res) => {
+            console.log(token.accessToken)
             console.log(res.data.data)
             setProfile(res.data.data)
           },

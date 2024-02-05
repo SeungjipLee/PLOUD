@@ -18,7 +18,6 @@ const PatchInfoPage = () => {
   const [selectedFile, setSelectedFile] = useState();
   const [ profile, setProfile ] = useState({})
   const [preview, setPreview] = useState();
-  const { nickname } = useSelector((state) => state.signUpReducer)
   const [isNicknameValid, setIsNicknameValid] = useState(false);
   const [ newNickname, setNewNickname ] = useState('')
   const validateNickname = () => /^[A-Za-z0-9가-힣]{2,8}$/.test(newNickname);
@@ -27,9 +26,9 @@ const PatchInfoPage = () => {
   const base64Image = `data:image/png;base64,${profile.profileImg}`
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = () => {
       try {
-        const response = await getProfile(
+        const response = getProfile(
           token,
           (res) => {
             console.log(res.data.data)
@@ -159,7 +158,7 @@ const PatchInfoPage = () => {
               <input 
                 type="text" 
                 className="w-56 block rounded-md border-0 py-1 pl-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mx-auto my-5"
-                placeholder={nickname}
+                placeholder={profile.nickname}
                 onChange={(e)=> {
                   setNewNickname(e.target.value);
                 }}
