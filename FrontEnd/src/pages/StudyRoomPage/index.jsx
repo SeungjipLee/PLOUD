@@ -114,15 +114,16 @@ const StudyRoomPage = () => {
 
     // 채팅 수신
     session.current.on("signal:chat", (event) => {
-      // 닉네임은 안받아도 되지 않나? event.stream. ~~
       console.log(event);
-      setChatList([...chatList, JSON.parse(event.data)]);
+      setChatList([...chatList, JSON.parse(event.data).chatvalue]);
     });
 
     session.current
       .connect(ovToken, { clientData: token.nickname })
       .then(async () => {
         // --- 5) Get your own camera stream ---
+
+        console.log(token.nickname);
 
         let tmpPublisher = await OV.current.initPublisherAsync(undefined, {
           audioSource: undefined, // The source of audio. If undefined default microphone
@@ -197,7 +198,7 @@ const StudyRoomPage = () => {
 
     const signalOptions = {
       data: JSON.stringify({ chatvalue }),
-      type: Signal.CHAT,
+      type: "chat",
       to: undefined,
     };
 
