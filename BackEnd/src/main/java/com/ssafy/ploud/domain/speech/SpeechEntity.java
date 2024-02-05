@@ -7,6 +7,7 @@ import com.ssafy.ploud.domain.record.dto.response.SpeechDetail;
 import com.ssafy.ploud.domain.script.ScriptEntity;
 import com.ssafy.ploud.domain.speech.dto.request.SpeechStartRequest;
 import com.ssafy.ploud.domain.user.UserEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -47,7 +48,7 @@ public class SpeechEntity {
   @JoinColumn(name = "script_id")
   private ScriptEntity script; // 대본
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "score_id")
   private ScoreEntity score; // 발표에 대한 평가
 
@@ -100,6 +101,10 @@ public class SpeechEntity {
 
   public void setUser(UserEntity user) {
     this.user = user;
+  }
+
+  public void setScore(ScoreEntity score) {
+    this.score = score;
   }
 
 }

@@ -55,7 +55,10 @@ public enum ResponseCode {
   REFRESH_TOKEN_EXPIRED(HttpStatus.SC_UNAUTHORIZED, "Refresh token expired"),
 
   // FFMPEG
-  FILE_CONVERT_ERROR(HttpStatus.SC_BAD_REQUEST, "파일 변환 중 에러");
+  FILE_CONVERT_ERROR(HttpStatus.SC_BAD_REQUEST, "파일 변환 중 에러"),
+
+  // 발표
+  SPEECH_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "발표를 찾을 수 없습니다");
 
   private final int code;
   private final String message;

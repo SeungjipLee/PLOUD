@@ -16,11 +16,17 @@ import jakarta.persistence.Table;
 import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Table(name = "feedbacks")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FeedbackEntity {
 
   @Id
@@ -28,9 +34,10 @@ public class FeedbackEntity {
   @Column(name = "feedback_id")
   private int id; // 피드백 번호
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id")
-  private UserEntity user; // 유저(피드백 받는 사람)
+//  @ManyToOne(fetch = FetchType.LAZY)
+//  @JoinColumn(name = "user_id")
+//  private UserEntity user; // 유저(피드백 받는 사람)
+  private String userId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "speech_id")
@@ -40,15 +47,13 @@ public class FeedbackEntity {
 
   private Duration timeLog; // 영상에서의 시간
 
-  public static FeedbackEntity createNewFeedback(String content, UserEntity user, SpeechEntity speech){
-    FeedbackEntity feedbackEntity = new FeedbackEntity();
-
-    feedbackEntity.user = user;
-    feedbackEntity.speech = speech;
-    feedbackEntity.content = content;
-    feedbackEntity.timeLog = Duration.between(speech.getRecordTime(), LocalDateTime.now());
-
-    return feedbackEntity;
+  public static FeedbackEntity of(FeedbackRequest feedbackRequest, SpeechEntity speech) {
+    return FeedbackEntity.builder()
+        .userId(feedbackRequest.getUserId())
+        .content(feedbackRequest.getContent())
+        .timeLog(Duration.between(speech.getRecordTime(), LocalDateTime.now()))
+        .speech(speech)
+        .build();
   }
 
   public void setSpeech(SpeechEntity speech) {

@@ -8,6 +8,7 @@ import com.ssafy.ploud.domain.speech.dto.request.SpeechStartRequest;
 import com.ssafy.ploud.domain.speech.dto.response.SpeechIdResDto;
 import com.ssafy.ploud.domain.speech.service.SpeechService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +18,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "스피치 평가 API", description = "스피치 평가 관련 API")
+@SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/speech")
@@ -46,7 +49,7 @@ public class SpeechController {
 
     @Operation(summary = "명료도, 발화속도 평가", description = "ETRI로 API 요청을 보내고 score 점수를 반환한다.")
     @PostMapping("/assess")
-    public ApiResponse<?> assessClearity(@RequestParam("audioFile") MultipartFile audioFile,
+    public ApiResponse<?> assessClarity(@RequestPart("audioFile") MultipartFile audioFile,
         @RequestParam("speechId") Integer speechId,
         @RequestParam("isLast") Boolean isLast) {
         return ApiResponse.ok("성공", speechService.clearity(audioFile, speechId, isLast));

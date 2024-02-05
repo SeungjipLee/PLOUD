@@ -9,11 +9,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Table(name="scores")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ScoreEntity {
 
     @Id
@@ -51,6 +57,18 @@ public class ScoreEntity {
         .grade((volume + speed + clarity) / 3)
         .date(speechDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")))
         .build();
+  }
+
+  public void updateVolume(int volume) {
+    this.volume = volume;
+  }
+
+  public void updateClearity(int clearityScore) {
+    this.clarity = clearityScore;
+  }
+
+  public void updateSpeed(int speedScore) {
+    this.speed = speedScore;
   }
 
 }
