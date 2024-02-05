@@ -175,17 +175,11 @@ const StudyRoomPage = () => {
       </div>
       <div className="RoomPage-mid">
         <div className="video-flex">
-          <div id="main-video" className="col-md-6">
-            <UserVideoComponent streamManager={mainStreamManager} />
-          </div>
-          <div id="main-video" className="col-md-6">
-            <UserVideoComponent streamManager={mainStreamManager} />
-          </div>
-          {mainStreamManager !== undefined ? (
+          {/* {mainStreamManager !== undefined ? (
             <div id="main-video" className="col-md-6">
               <UserVideoComponent streamManager={mainStreamManager} />
             </div>
-          ) : null}
+          ) : null} */}
           <div id="video-container" className="col-md-6">
             {publisher !== undefined ? (
               <div className="stream-container col-md-6 col-xs-6">
