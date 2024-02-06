@@ -2,28 +2,30 @@ import React from "react";
 import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
 import Footer from "../../components/Footer";
-import { Link } from "react-router-dom";
-import PracticePage from "../PracticePage";
-import StudyPage from "../StudyPage";
-import API from "../../utils/Api";
-import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import StudyResult from "../StudyRoomPage/component/StudyResult";
 
-// 메인페이지
-
-// 로그인 전과 후로 나뉘며
-// 로그인 토큰을 가지고 있을 시
-// Navbar에
-// 닉네임 마이페이지 로그아웃이 활성화되고
-// 로그인 회원가입 버튼이 비활성화된다
-// 로그인 되어 있지 않으면 게시판, 연습, 스터디로 가는 버튼이
-// 로그인페이지로 향하게 된다
 
 const MainPage = () => {
+  const { isLogined } = useSelector((state) => state.userReducer);
+  const navigate = useNavigate()
+
+  const handleLink = (path) => {
+    if (isLogined) {
+      navigate(path)
+    } else {
+      alert('로그인이 필요합니다.')
+      navigate('/login')
+    }
+  }
+
   return (
     <div className="Main">
+      {/* <StudyResult/> */}
       <Page header={<Navbar />} footer={<Footer />}>
         <div className="Main1 mb-24">
-          <img src="images/Main1.png" alt="Main1.png" className="w-full h-full object-cover"/>
+          <img src="images/1.png" className="w-full h-full object-cover"/>
         </div>
         <div className="Main2 mb-24">
           <div className="video mx-16 ms-36 me-12">
@@ -37,17 +39,13 @@ const MainPage = () => {
         <div className="Main3">
           <h2 className='text-5xl text-center pt-24 font-bold'>스피치 실력을 키워볼까요?</h2>
           <div className='Main3_1 mt-32'>
-            <div className="subtitleImg me-12 mb-24">
-              <Link to="/practice">
+            <div className="subtitleImg me-12 mb-24" onClick={() => handleLink('/practice')}>
               <img src="images/solo.png"/>
-              <div className="text">연습모드 바로가기</div>
-              </Link>
+              <div className="text cursor-pointer">연습모드 바로가기</div>
             </div>
-            <div className="subtitleImg mb-24">
-              <Link to="/study">
+            <div className="subtitleImg mb-24" onClick={() => handleLink('/study')}>
               <img src="images/study.png"/>
-              <div className="text">스터디룸 바로가기</div>
-              </Link>
+              <div className="text cursor-pointer">스터디룸 바로가기</div>
             </div>
           </div>
         </div>

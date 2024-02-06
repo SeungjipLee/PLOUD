@@ -1,9 +1,8 @@
-function Modal({ title, children, onClose, className }) {
+function Modal({ title, children, className }) {
   return (
       <div className={className}>
-        <div className="modal-top">
-          <h1>{title}</h1>
-          <button onClick={onClose} className="close"></button>
+        <div className="modal-top m-10 font-extrabold">
+          <h1 className="text-3xl">{title}</h1>
         </div>
         {children}
       </div>

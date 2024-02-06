@@ -4,10 +4,8 @@ import { leaveMeeting } from "../../services/meeting";
 import { useNavigate } from "react-router";
 import { OpenVidu } from "openvidu-browser";
 import UserVideoComponent from "./component/UserVideoComponent";
-import Chat from "./component/Chat";
 import Report from "./component/Report";
 import ResultList from "./component/ResultList";
-import { SignalOptions, Signal } from "openvidu-browser";
 import {
   startSpeech,
   endSpeech,
@@ -15,10 +13,8 @@ import {
   postFeedback,
   postComment,
 } from "../../services/speech";
-import RecordForm from "./component/RecordForm";
 import Modal from "../../components/Modal";
 import Button from "../../components/Button";
-import { getSpeechId } from "../../features/study/studySlice";
 
 const StudyRoomPage = () => {
   const navigate = useNavigate();
@@ -29,8 +25,9 @@ const StudyRoomPage = () => {
   const session = useRef(null); // session을 useRef로 선언
 
   // 기본 정보
-  const token = useSelector((state) => state.userReducer.token);
+  const { userId, token, nickname } = useSelector((state) => state.userReducer);
   const room = useSelector((state) => state.studyReducer.studyInfo.meetingInfo);
+  const studyInfo = useSelector((state) => state.studyReducer.studyInfo);
   const ovToken = useSelector((state) => state.studyReducer.studyInfo.token);
   const speechId = useSelector((state) => state.studyReducer.speechId);
 
@@ -38,6 +35,7 @@ const StudyRoomPage = () => {
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscriberse] = useState([]);
+  const [videoDivClass, setVideoDivClass] = useState("");
 
   // 비디오 구성 버튼 활성/비활성화 상태
   const [mic, setMic] = useState(true);
@@ -49,6 +47,62 @@ const StudyRoomPage = () => {
   const [report, setReport] = useState(false);
   const [chat, setChat] = useState(false);
   const [user, setUser] = useState(false);
+
+  // 화면공유 여부 파악
+  const [screenShare, setScreenShare] = useState(false);
+
+  // 녹화 Form
+  const [title, setTitle] = useState("");
+
+  const categoryName = () => {
+    switch (room.categoryId) {
+      case 0:
+        return "전체";
+      case 1:
+        return "면접";
+      case 2:
+        return "발표";
+      case 3:
+        return "기타";
+    }
+  };
+
+  const handleScreenShare = async () => {
+    let tmpPublisher = await OV.current.initPublisherAsync(undefined, {
+      audioSource: undefined, // The source of audio. If undefined default microphone
+      videoSource:
+        navigator.userAgent.indexOf("Firefox") !== -1 ? "window" : "screen", // The source of video. If undefined default webcam
+      publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+      publishVideo: true, // Whether you want to start publishing with your video enabled or not
+      resolution: "640x480", // The resolution of your video
+      frameRate: 30, // The frame rate of your video
+      insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+      mirror: false, // Whether to mirror your local video or not
+    });
+
+    session.current.publish(tmpPublisher);
+    setMainStreamManager(tmpPublisher);
+    setPublisher(tmpPublisher);
+    setScreenShare(true);
+  };
+
+  const handleScreenShare2 = async () => {
+    let tmpPublisher = await OV.current.initPublisherAsync(undefined, {
+      audioSource: undefined, // The source of audio. If undefined default microphone
+      videoSource: undefined,
+      publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
+      publishVideo: true, // Whether you want to start publishing with your video enabled or not
+      resolution: "640x480", // The resolution of your video
+      frameRate: 30, // The frame rate of your video
+      insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
+      mirror: false, // Whether to mirror your local video or not
+    });
+
+    session.current.publish(tmpPublisher);
+    setMainStreamManager(tmpPublisher);
+    setPublisher(tmpPublisher);
+    setScreenShare(false);
+  };
 
   // 참가자 목록
   const [captain, setCaptain] = useState(true);
@@ -99,24 +153,68 @@ const StudyRoomPage = () => {
     joinSession();
   }, []);
 
-  // useEffect(() => {
-  //   console.log(speechId);
-  //   if (speechId === undefined) return;
-  //   startRecording();
-  //   setRecord(true);
-  //   setRecordForm(false);
-  // }, [speechId]);
+  // 사람 수 마다 화면이 다르게 배치되도록 분기처리
+  // 1. 화면 나오는 최상위 className 변경 => div 크기 변경
+  // 2. 각 화면에 들어갈 className 변경 => video 크기 변경
+  // useEffect 로 subscribers 수에 따라 결정
+  useEffect(() => {
+    console.log(subscribers.length);
+    let videoClassName = "";
+    switch (subscribers.length) {
+      // case 0:
+      //   videoClassName = "video-div-size-6";
+      //   break;
+      case 0:
+        videoClassName = "video-div-size-1";
+        break;
+      case 1:
+        videoClassName = "video-div-size-2 col-md-6";
+        break;
+      case 2:
+        videoClassName = "video-div-size-4 col-md-6";
+        break;
+      case 3:
+        videoClassName = "video-div-size-4 col-md-6";
+        break;
+      case 4:
+        videoClassName = "video-div-size-6 col-md-6";
+        break;
+      case 5:
+        videoClassName = "video-div-size-6 col-md-6";
+        break;
+    }
+    setVideoDivClass(videoClassName);
+  }, [subscribers]);
 
   // 녹화 시작
-  const clickHandler = (e) => {
-    startRecording();
-    setRecord(true)
-    setRecordForm(false)
-  }
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    const params = {
+      userId: userId,
+      sessionId: room.sessionId,
+      title: title,
+      personal: false,
+      categoryId: room.categoryId,
+      scriptId: -1,
+    };
+    startSpeech(
+      token,
+      params,
+      (res) => {
+        dispatch(getSpeechId(res));
+        startRecording();
+        sendSignal("rstart", "님이 발표를 시작하였습니다.");
+      },
+      (err) => console.log(err)
+    );
+
+    setRecord(true);
+    setRecordForm(false);
+  };
 
   // 녹화 종료
   const handleClick = (e) => {
-    setRecordForm(false);
     stopRecording(
       token,
       {
@@ -128,6 +226,7 @@ const StudyRoomPage = () => {
       (err) => err
     );
     setRecord(false);
+    setRecordForm(false);
   };
 
   // 접속 시 실행
@@ -142,21 +241,19 @@ const StudyRoomPage = () => {
     session.current.on("streamCreated", (event) => {
       console.log(tag, "누가 접속했어요");
 
-      // 찍어 보고 채팅창에 추가하기
-      console.log(event.stream.connection.data);
-      setChatList([...chatList, "접속"]);
+      // var tmp = event.stream.connection.data.split('%/%');
+      // setChatList(chatList => [...chatList, {username: JSON.parse(tmp[0]).clientData, content : "님이 입장하였습니다."}]);
 
       var subscriber = session.current.subscribe(event.stream, undefined);
-      setSubscriberse([...subscribers, subscriber]);
+      setSubscriberse((subscribers) => [...subscribers, subscriber]);
     });
 
     // On every Stream destroyed...
     session.current.on("streamDestroyed", (event) => {
       console.log(tag, "누가 떠났어요");
 
-      // 찍어 보고 채팅창에 추가하기
-      console.log(event.stream.connection.data);
-      setChatList([...chatList, "떠남"]);
+      // var tmp = event.stream.connection.data.split('%/%');
+      // setChatList(chatList => [...chatList, {username: JSON.parse(tmp[0]).clientData, content : "님이 퇴장하였습니다."}]);
 
       deleteSubscriber(event.stream.streamManager);
     });
@@ -168,16 +265,48 @@ const StudyRoomPage = () => {
 
     // 채팅 수신
     session.current.on("signal:chat", (event) => {
-      console.log(event);
-      setChatList([...chatList, JSON.parse(event.data).chatvalue]);
+      var username = JSON.parse(event.data).nickname;
+      var content = JSON.parse(event.data).chatvalue;
+
+      if (!(username == nickname && content == "님이 접속하였습니다!")) {
+        setChatList((chatList) => [
+          ...chatList,
+          { username: username, content: content },
+        ]);
+      }
+    });
+
+    // 방장이 떠남
+    session.current.on("signal:exit", (event) => {
+      setChatList((chatList) => [
+        ...chatList,
+        { username: "관리자", content: "3초 후 스터디룸이 종료됩니다." },
+      ]);
+
+      setTimeout(() => {
+        leaveSession();
+      }, 3000);
+    });
+
+    // 녹화 시작 신호
+    session.current.on("signal:rstart", (event) => {
+      // 녹화 시작 신호를 받을 경우 처리할 것
+      // 레이아웃 전환
+      // 버튼 비활성화
+    });
+
+    // 녹화 종료 신호
+    session.current.on("signal:rend", (event) => {
+      // 녹화 종료 신호를 받을 경우 처리할 것
+      // 레이아웃 전환
+      // 버튼 활성화
     });
 
     session.current
-      .connect(ovToken, { clientData: token.nickname })
+      .connect(ovToken, { clientData: nickname })
       .then(async () => {
         // --- 5) Get your own camera stream ---
-
-        console.log(token.nickname);
+        console.log("Session 연결중");
 
         let tmpPublisher = await OV.current.initPublisherAsync(undefined, {
           audioSource: undefined, // The source of audio. If undefined default microphone
@@ -210,9 +339,12 @@ const StudyRoomPage = () => {
         setMainStreamManager(tmpPublisher);
         setPublisher(tmpPublisher);
 
+        sendSignal("chat", "님이 접속하였습니다!");
+
         // currentVideoDevice: currentVideoDevice,
       })
       .catch((error) => {
+        console.log("끄아아아앜");
         console.log(tag, error);
         leaveSession();
       });
@@ -220,22 +352,27 @@ const StudyRoomPage = () => {
 
   const leaveSession = () => {
     console.log(tag, "leaveSession");
+    sendSignal("chat", "님이 퇴장하였습니다!");
+
+    // managerId랑 내 Id랑 똑같으면
+    if (room.managerId == userId) {
+      sendSignal("exit", "종료");
+    }
 
     leaveMeeting(
       token,
       { sessionId: room.sessionId, token: ovToken },
       (response) => {
         console.log(tag, response);
-        session.current.disconnect();
-
-        session.current = null;
-        OV.current = null;
       },
       (error) => {
         console.log(tag, error);
       }
     );
 
+    session.current.disconnect();
+    session.current = null;
+    OV.current = null;
     navigate("/study");
   };
 
@@ -247,12 +384,16 @@ const StudyRoomPage = () => {
   };
 
   // 채팅 전송
-  const handleSubmit = async (e) => {
+  const handleMessageSubmit = async (e) => {
     if (e.key !== "Enter") return;
 
+    sendSignal("chat", chatvalue);
+  };
+
+  const sendSignal = (type, chatvalue) => {
     const signalOptions = {
-      data: JSON.stringify({ chatvalue }),
-      type: "chat",
+      data: JSON.stringify({ chatvalue, nickname }),
+      type: type,
       to: undefined,
     };
 
@@ -276,12 +417,12 @@ const StudyRoomPage = () => {
     isLast.current = true;
     // 녹화 중지 함수 실행
     stopRecording();
+    sendSignal("rend", "님이 발표를 종료하였습니다.");
 
     endSpeech(
       token,
       {
-        sessionId: "session0",
-        // sessionId: meetingInfo.sessionId,
+        sessionId: meetingInfo.sessionId,
         speechId: speechId.current,
         decibels: decibels.current,
       },
@@ -318,8 +459,7 @@ const StudyRoomPage = () => {
     postFeedback(
       token,
       {
-        sessionId: "session0",
-        // sessionId: meetingInfo.sessionId,
+        sessionId: meetingInfo.sessionId,
         content: feedback,
       },
       (response) => {
@@ -460,31 +600,68 @@ const StudyRoomPage = () => {
     );
   };
 
+  // 비디오 핸들러
+  const toggleVideo = () => {
+    console.log("비디오 상태 수정");
+
+    const newVideo = !video;
+
+    setVideo(newVideo); // 상태 업데이트
+    if (publisher) {
+      publisher.publishVideo(newVideo); // 비디오 상태 토글
+    }
+  };
+
+  // 마이크 핸들러
+  const toggleMic = () => {
+    console.log("오디오 상태 수정");
+
+    const newMic = !mic;
+
+    setMic(newMic); // 상태 업데이트
+    if (publisher) {
+      publisher.publishAudio(newMic); // 마이크 상태 토글
+    }
+  };
+
+  const recordHandler = () => {
+    console.log("녹화 종료");
+    setRecordForm(!recordForm);
+
+    // endSpeech();
+  };
+
   return (
     <div className="RoomPage">
       <div className="flex">
         <div className="ploud-icon">PLOUD</div>
       </div>
       <div className="RoomPage-mid">
-        <div className="video-flex">
+        <div
+          className={subscribers.length > 3 ? "video-flex-big" : "video-flex"}
+        >
           {/* {mainStreamManager !== undefined ? (
-            <div id="main-video" className="col-md-6">
+            <div id="main-video" className={videoDivClass}>
               <UserVideoComponent streamManager={mainStreamManager} />
             </div>
           ) : null} */}
-          <div id="video-container" className="col-md-6">
+          {/* <div id="video-container" className="col-md-6"> */}
+          <div id="video-container" className={videoDivClass}>
             {publisher !== undefined ? (
               <div className="stream-container col-md-6 col-xs-6">
                 <UserVideoComponent streamManager={publisher} />
               </div>
             ) : null}
-            {subscribers.map((sub, i) => (
-              <div key={sub.id} className="stream-container col-md-6 col-xs-6">
-                <span>{sub.id}</span>
-                <UserVideoComponent streamManager={sub} />
-              </div>
-            ))}
           </div>
+          {subscribers.map((sub, i) => (
+            <div
+              key={sub.id}
+              className={`${videoDivClass} stream-container col-md-6 col-xs-6`}
+            >
+              <span>{sub.id}</span>
+              <UserVideoComponent streamManager={sub} />
+            </div>
+          ))}
         </div>
       </div>
       <div className="flex justify-between video-room-button">
@@ -493,35 +670,31 @@ const StudyRoomPage = () => {
         </div>
         <div className="flex items-center space-x-6">
           {mic ? (
-            <img onClick={(e) => setMic(!mic)} src="/images/micbutton.png" />
+            <img onClick={toggleMic} src="/images/micbutton.png" />
           ) : (
-            <img
-              onClick={(e) => setMic(!mic)}
-              src="/images/micbutton_disabled.png"
-            />
+            <img onClick={toggleMic} src="/images/micbutton_disabled.png" />
           )}
           {video ? (
+            <img onClick={toggleVideo} src="/images/videobutton.png" />
+          ) : (
+            <img onClick={toggleVideo} src="/images/videobutton_disabled.png" />
+          )}
+
+          {screenShare === false ? (
+            <img onClick={handleScreenShare} src="/images/sharebutton.png" />
+          ) : (
+            <img onClick={handleScreenShare2} src="/images/sharebutton.png" />
+          )}
+          {!recordForm ? (
             <img
-              onClick={(e) => setVideo(!video)}
-              src="/images/videobutton.png"
+              onClick={(e) => {
+                setRecordForm(!recordForm);
+              }}
+              src="/images/recordbutton.png"
             />
           ) : (
             <img
-              onClick={(e) => setVideo(!video)}
-              src="/images/videobutton_disabled.png"
-            />
-          )}
-          <img
-            onClick={(e) => setScreen(!screen)}
-            src="/images/sharebutton.png"
-          />
-          <img
-            onClick={(e) => setRecordForm(true)}
-            src="/images/recordbutton.png"
-          />
-          {record && (
-            <img
-              onClick={handleClick}
+              onClick={recordHandler}
               src="/images/recordbutton_activated.png"
             />
           )}
@@ -590,7 +763,6 @@ const StudyRoomPage = () => {
           </div>
         </div>
       )}
-      {/* {chat && <Chat />} */}
       {chat && (
         <Modal className="chat" title="채팅">
           <div className="chat-area">
@@ -609,7 +781,7 @@ const StudyRoomPage = () => {
               type="text"
               value={chatvalue}
               onChange={(e) => setChatvalue(e.target.value)}
-              onKeyDown={handleSubmit}
+              onKeyDown={handleMessageSubmit}
               placeholder="댓글을 입력하세요."
             />
           </div>
@@ -618,9 +790,28 @@ const StudyRoomPage = () => {
       {result && <ResultList />}
       {report && <Report />}
       {recordForm && (
-        <RecordForm onClose={(e) => setRecordForm(false)}>
-          <Button onClick={clickHandler}>녹화 시작</Button>
-        </RecordForm>
+        <Modal
+          title="녹화 정보 입력"
+          onClose={(e) => setRecordForm(false)}
+          className={"record-form"}
+        >
+          <form onSubmit={submitHandler}>
+            <div>
+              <p>
+                제목 :
+                <input
+                  placeholder="제목 입력..."
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                ></input>
+              </p>
+              <p>카테고리 : {categoryName()}</p>
+              <p>분류 : 스터디</p>
+            </div>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}></div>
+            <Button>녹화 시작</Button>
+          </form>
+        </Modal>
       )}
     </div>
   );

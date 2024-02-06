@@ -11,21 +11,24 @@ import ResultCard from "../../components/ResultCard";
 const MyPage = () => {
   const { token } = useSelector((state) => state.userReducer)
   const [ profile, setProfile ] = useState({})
+  const base64Image = `data:image/png;base64,${profile.profileImg}`
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getProfile(
           token,
-          (res) => res,
-          (err) => err
+          (res) => {
+            console.log(token.accessToken)
+            console.log(res.data.data)
+            setProfile(res.data.data)
+          },
+          (err) => console.log(err)
         );
-        setProfile(response.data.data)
       } catch (error) {
         console.error("Profile fetch failed:", error);
       }
     };
-    
     fetchData();
   }, []);
 
@@ -44,17 +47,19 @@ const MyPage = () => {
             <h2 className="ms-5 text-xl my-3">프로필</h2>
             <div className="flex">
               <div className="w-32 h-32 mx-5">
-                <img src="images/Profile.PNG"/>
+                {!profile.profileImg&&
+                <img src="images/Profile.PNG"/>}
+                {profile.profileImg&&<img src={`${base64Image}`}/>}
               </div>
               <div className="text-sm py-2">
-                <p className="py-1">닉네임:</p>
-                <p className="py-1">이름:</p>
-                <p className="py-1">아이디:</p>
-                <p className="py-1">이메일:</p>
+                <p className="py-0.5">닉네임 : {profile.nickname}</p>
+                <p className="py-0.5">이름 : {profile.name}</p>
+                <p className="py-0.5">아이디 : {profile.userId}</p>
+                <p className="py-0.5">이메일 : {profile.email}</p>
               </div>
             </div>
                 <button 
-                  className="bg-gray-400 text-white rounded-md p-1 mx-7 my-3">
+                  className="bg-gray-400 text-white rounded-md p-1 mx-7 mb-3">
                     <Link to="/patchinfo">회원정보 수정</Link>
                 </button>
             </div>

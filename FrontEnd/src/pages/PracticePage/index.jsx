@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "./sidebar/Sidebar";
 import { Button, Input, Textarea } from "@material-tailwind/react";
 import { useState, useRef } from "react";
+import Page from "../../components/Page";
+import Footer from "../../components/Footer";
 import {
   getCategoryList,
   getScriptList,
   getScriptDetail,
 } from "../../services/script";
-import Page from "../../components/Page";
-import Footer from "../../components/Footer";
 
 const PracticePage = () => {
   const [currentPage, setCurrentPage] = useState("write");
@@ -21,59 +21,61 @@ const PracticePage = () => {
   }, []);
 
   return (
-    <Page header={<Navbar />} footer={<Footer />}>
-      <div style={{ paddingTop: "130px" }}></div>
-      <div
-        style={{ paddingLeft: "120px" }}
-        className="text-3xl text-sky-950 font-bold "
-      >
-        혼자 연습
-      </div>
-      <div style={{ paddingLeft: "120px", paddingRight: "120px" }}>
-        <div style={{ paddingTop: "30px" }}></div>
+    <>
+      <Page header={<Navbar />} footer={<Footer />}>
+        <div style={{ paddingTop: "130px" }}></div>
+        <div
+          style={{ paddingLeft: "120px" }}
+          className="text-3xl text-sky-950 font-bold "
+        >
+          혼자 연습
+        </div>
+        <div style={{ paddingLeft: "120px", paddingRight: "120px" }}>
+          <div style={{ paddingTop: "30px" }}></div>
 
-        {currentPage === "write" ? (
-          <>
-            <Button
-              ref={buttonRef}
-              variant="outlined"
-              className="border border-blue-950  p-1 bg-white focus:text-blue-900"
-              onClick={() => setCurrentPage("write")}
-            >
-              대본입력
-            </Button>
-            <Button
-              variant="outlined"
-              className="border border-blue-950 p-1  bg-gray-400 text-white"
-              onClick={() => setCurrentPage("select")}
-            >
-              대본선택
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button
-              ref={buttonRef}
-              variant="outlined"
-              className="border border-blue-950  p-1 bg-gray-400 text-white"
-              onClick={() => setCurrentPage("write")}
-            >
-              대본입력
-            </Button>
-            <Button
-              variant="outlined"
-              className="border border-blue-950 p-1  bg-white focus:text-blue-900"
-              onClick={() => setCurrentPage("select")}
-            >
-              대본선택
-            </Button>
-          </>
-        )}
+          {currentPage === "write" ? (
+            <>
+              <Button
+                ref={buttonRef}
+                variant="outlined"
+                className="border border-blue-950  p-1 bg-white focus:text-blue-900"
+                onClick={() => setCurrentPage("write")}
+              >
+                대본입력
+              </Button>
+              <Button
+                variant="outlined"
+                className="border border-blue-950 p-1  bg-gray-400 text-white"
+                onClick={() => setCurrentPage("select")}
+              >
+                대본선택
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                ref={buttonRef}
+                variant="outlined"
+                className="border border-blue-950  p-1 bg-gray-400 text-white"
+                onClick={() => setCurrentPage("write")}
+              >
+                대본입력
+              </Button>
+              <Button
+                variant="outlined"
+                className="border border-blue-950 p-1  bg-white focus:text-blue-900"
+                onClick={() => setCurrentPage("select")}
+              >
+                대본선택
+              </Button>
+            </>
+          )}
 
-        {currentPage === "write" && <ScriptWrite />}
-        {currentPage === "select" && <ScriptSelect />}
-      </div>
-    </Page>
+          {currentPage === "write" && <ScriptWrite />}
+          {currentPage === "select" && <ScriptSelect />}
+        </div>
+      </Page>
+    </>
   );
 };
 
@@ -99,9 +101,9 @@ const ScriptWrite = () => {
           color="blue"
           placeholder="내용: 내용을 입력해 주세요. (최대 3000자)"
         />
-        <Button className="bg-blue-950 text-white px-4 py-2 rounded z-10">
+        <button className="bg-blue-950 text-white px-4 py-2 rounded ">
           녹화 화면 가기 (나중에 라우터로 이동시키기)
-        </Button>
+        </button>
       </div>
     </>
   );

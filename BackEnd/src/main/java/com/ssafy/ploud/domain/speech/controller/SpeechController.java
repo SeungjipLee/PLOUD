@@ -8,6 +8,7 @@ import com.ssafy.ploud.domain.speech.dto.request.SpeechStartRequest;
 import com.ssafy.ploud.domain.speech.dto.response.ClearityResponse;
 import com.ssafy.ploud.domain.speech.service.SpeechService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "스피치 평가 API", description = "스피치 평가 관련 API")
 @RestController
+@SecurityRequirement(name = "Bearer Authentication")
 @RequiredArgsConstructor
 @RequestMapping("/api/speech")
 @Slf4j
