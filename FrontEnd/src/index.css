@@ -555,13 +555,11 @@ p {
 .study-result {
   position: absolute;
   border-radius: 10px;
-  padding: 60px 50px;
-  top: 50px;
-  left: 10%;
+  top: 100px;
+  left: 100px;
   width: 1000px;
-  height: 700px;
-  background-color: #272541;
-  color: white;
+  height: 600px;
+  background-color: #ffffff;
 }
 
 .result-section {
@@ -569,16 +567,12 @@ p {
   justify-content: center;
 }
 .result-section-1 {
-  width: 400px;
+  width: 300px;
   height: 400px;
-  margin: 20px;
-  background-color: #2d24a8;
 }
 .result-section-2 {
-  width: 400px;
+  width: 500px;
   height: 400px;
-  margin: 20px;
-  background-color: #2d24a8;
 }
 
 .join-confirm-modal {
@@ -742,4 +736,9 @@ p {
 
 .record-form button {
   margin: 20px;
+}
+
+.score {
+  border: 2px solid black;
+  background: #ffffff;
 }
