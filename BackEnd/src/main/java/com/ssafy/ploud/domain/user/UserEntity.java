@@ -45,6 +45,9 @@ public class UserEntity {
   @NotNull
   private LocalDateTime joinDate;
 
+  private long soloDurationInMinute;
+  private long studyDurationInMinute;
+
   @Enumerated(EnumType.STRING)
   private Role role;
 
@@ -65,6 +68,8 @@ public class UserEntity {
     newUser.restrictDate = null;
     newUser.joinDate = LocalDateTime.now();
     newUser.role = Role.USER;
+    newUser.soloDurationInMinute = 0;
+    newUser.studyDurationInMinute = 0;
     return newUser;
   }
 
@@ -80,9 +85,12 @@ public class UserEntity {
     this.password = password;
   }
 
-  public void addSpeech(SpeechEntity speech) {
-    speechEntityList.add(speech);
-    // speech.setUser(this);
+  public void updateSoloDuration(long practiceTimeInMinute) {
+    this.soloDurationInMinute += practiceTimeInMinute;
+  }
+
+  public void updateStudyDuration(long practiceTimeinMinute) {
+    this.studyDurationInMinute += practiceTimeinMinute;
   }
 
 }
