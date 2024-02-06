@@ -93,4 +93,16 @@ public class UserEntity {
     this.studyDurationInMinute += practiceTimeinMinute;
   }
 
+  public void updateComplainCount() {
+    complainCount++;
+    if(complainCount>=5) {
+      // 계정 잠금
+      restrictDate = LocalDateTime.now().plusDays(1);
+    }
+  }
+
+  public void resetRestrictDate() {
+    complainCount = 0;
+    restrictDate = null;
+  }
 }

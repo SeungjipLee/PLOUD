@@ -26,6 +26,7 @@ public enum ResponseCode {
   USER_LOGIN_RERQUIRED(HttpStatus.SC_UNAUTHORIZED, "로그인이 필요합니다"),
   USER_IMAGE_ERROR(HttpStatus.SC_INTERNAL_SERVER_ERROR, "프로필 사진 읽는 중 오류 발생"),
   INVALID_USER_PW(HttpStatus.SC_BAD_REQUEST, "입력한 비밀번호와 현재 비밀번호가 일치하지 않습니다"),
+  USER_ACCOUNT_LOCKED(HttpStatus.SC_BAD_REQUEST, "신고 횟수 누적으로 계정이 정지되었습니다"),
 
   // 스터디 룸
   ROOM_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "방이 존재하지 않습니다"),

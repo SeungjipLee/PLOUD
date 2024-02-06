@@ -8,6 +8,7 @@ import com.ssafy.ploud.domain.complain.dto.ComplainUserRequestDto;
 import com.ssafy.ploud.domain.complain.repository.ComplainRepository;
 import com.ssafy.ploud.domain.user.UserEntity;
 import com.ssafy.ploud.domain.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +22,14 @@ public class ComplainServiceImpl implements ComplainService {
   private final ComplainRepository complainRepository;
 
   @Override
+  @Transactional
   public void complainUser(ComplainUserRequestDto requestDto) {
 
     UserEntity user = userRepository.findByNickname(requestDto.getUserNickname())
         .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 
+    // 사용자 누적 신고 횟수 업데이트
+    user.updateComplainCount();
     complainRepository.save(ComplainEntity.of(requestDto, user));
   }
 
