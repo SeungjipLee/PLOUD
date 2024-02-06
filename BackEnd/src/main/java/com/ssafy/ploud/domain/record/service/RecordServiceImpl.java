@@ -16,22 +16,25 @@ import com.ssafy.ploud.domain.record.dto.response.VideoDetail;
 import com.ssafy.ploud.domain.record.repository.FeedbackRepository;
 import com.ssafy.ploud.domain.record.repository.ScoreRepository;
 import com.ssafy.ploud.domain.record.repository.VideoRepository;
+import com.ssafy.ploud.domain.script.ScriptCategory;
+import com.ssafy.ploud.domain.speech.SpeechCategory;
 import com.ssafy.ploud.domain.speech.SpeechEntity;
 import com.ssafy.ploud.domain.speech.repository.SpeechRepository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class RecordServiceImpl implements RecordService{
 
     private final SpeechRepository speechRepository;
     private final FeedbackRepository feedbackRepository;
-    private final ScoreRepository scoreRepository;
     private final VideoRepository videoRepository;
 
     @Override
@@ -44,17 +47,13 @@ public class RecordServiceImpl implements RecordService{
         VideoEntity video = speechEntity.getSpeechVideo();
         VideoDetail videoDetail = (video == null) ? null : video.toDto();
 
+        // feedback list 조회
         List<FeedbackDetail> feedbackDetailList = new ArrayList<>();
         for (FeedbackEntity feedback : feedbackRepository.findBySpeechId(speechId)) {
             feedbackDetailList.add(feedback.toDto());
         }
 
-        return RecordDetailResponse.builder()
-            .speech(speechEntity.toDto())
-            .video(videoDetail)
-            .score(speechEntity.getScore().toDto())
-            .feedbacks(feedbackDetailList)
-            .build();
+        return RecordDetailResponse.of(speechEntity, videoDetail, feedbackDetailList);
     }
 
 
@@ -67,7 +66,7 @@ public class RecordServiceImpl implements RecordService{
 
         List<SpeechDetail> dtoList = new ArrayList<>();
         for(SpeechEntity entity:speechList) {
-            dtoList.add(entity.toDto());
+            dtoList.add(SpeechDetail.of(entity));
         }
 
         return dtoList;
