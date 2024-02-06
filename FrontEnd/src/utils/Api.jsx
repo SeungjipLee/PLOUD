@@ -1,12 +1,12 @@
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { getToken } from "../features/user/userSlice";
+// import { useDispatch } from "react-redux";
+// import { getToken } from "../features/user/userSlice";
 
 const DOMAIN = "https://i10e207.p.ssafy.io";
 // const DOMAIN = "http://localhost:8000";
 
 const API = (token) => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const instance = axios.create({
     baseURL: DOMAIN + "/api",
