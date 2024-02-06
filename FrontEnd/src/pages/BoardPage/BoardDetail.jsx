@@ -1,12 +1,8 @@
-import { useSelector,useDispatch } from "react-redux";
 import React, { useState } from "react";
-import Button from "../../components/Button";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-// import { refreshAccessToken, updateNickname } from "../../features/user/userSlice";
+import { Link } from "react-router-dom";
 
 
 
