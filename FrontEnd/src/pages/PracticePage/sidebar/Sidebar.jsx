@@ -28,7 +28,7 @@ const NewsPage = () => {
       1,
       (res) => {
         setList(res.data.data.scripts);
-        //console.log(res);
+        // console.log(res);
       },
       (err) => {
         console.log(err);
