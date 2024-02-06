@@ -304,9 +304,12 @@
   height: 1080px;
 }
 .RoomPage-mid {
-  height: 720px;
+  height: 760px;
   display: flex;
   justify-content: center;
+}
+.roompage-icon {
+  width: 200px;
 }
 
 /* pLoud */
@@ -811,3 +814,19 @@ p {
     float: left;
     cursor: pointer;
 } */
+
+.feedback-form {
+  border: rgb(85, 85, 85) solid 1px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  border-radius: 5px;
+  top: 80px;
+  right: 30px;
+  width: 350px;
+  height: 730px;
+  background-color: #060515;
+  color: white;
+}
