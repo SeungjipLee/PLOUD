@@ -36,14 +36,11 @@ public class ScoreEntity {
 
     private int clarity; // 명료도
 
-    private int eye; // 시선
-
   public ScoreDetail toDto() {
     return ScoreDetail.builder()
         .volume(volume)
         .speed(speed)
         .clarity(clarity)
-        .eye(eye)
         .grade((volume + speed + clarity) / 3)
         .build();
   }
@@ -53,7 +50,6 @@ public class ScoreEntity {
         .volume(volume)
         .speed(speed)
         .clarity(clarity)
-        .eye(eye)
         .grade((volume + speed + clarity) / 3)
         .date(speechDate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")))
         .build();

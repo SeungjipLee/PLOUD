@@ -86,17 +86,18 @@ public class SpeechEntity {
     this.speechVideo = video;
   }
 
-  public SpeechDetail toDto() {
-    String mode = (isPersonal()) ? "연습 모드" : "스터디";
-    return SpeechDetail.builder()
-        .title(title)
-        .speechId(id)
-        .userId(user.getUserId())
-        .speechMode(mode)
-        .startsAt(recordTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")))
-        .comment(comment)
-        .build();
-  }
+//  public SpeechDetail toDto(String categoryName) {
+//    String mode = (isPersonal()) ? "연습 모드" : "스터디";
+//    return SpeechDetail.builder()
+//        .title(title)
+//        .category(categoryName)
+//        .speechId(id)
+//        .userId(user.getUserId())
+//        .speechMode(mode)
+//        .startsAt(recordTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")))
+//        .comment(comment)
+//        .build();
+//  }
 
   public void setUser(UserEntity user) {
     this.user = user;

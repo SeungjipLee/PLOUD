@@ -29,6 +29,7 @@ import com.ssafy.ploud.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
@@ -110,6 +111,20 @@ public class SpeechServiceImpl implements SpeechService{
             .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
         speech.updateSpeechEndTime();
         speech.getScore().updateVolume(volume);
+
+        // 사용자 연습 시간 업데이트
+        updateUserPracticeTime(speech);
+    }
+
+    private void updateUserPracticeTime(SpeechEntity speech) {
+        UserEntity user = speech.getUser();
+        Duration duration = Duration.between(speech.getRecordTime(), speech.getSpeechEndTime());
+        long practiceTimeInMinute = duration.toMinutes();
+        if(speech.isPersonal()) {
+            user.updateSoloDuration(practiceTimeInMinute);
+        } else {
+            user.updateStudyDuration(practiceTimeInMinute);
+        }
     }
 
     @Override

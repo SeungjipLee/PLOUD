@@ -14,7 +14,6 @@ public class ScoreDetail {
   int volume;
   int speed;
   int clarity;
-  int eye;
   int grade;
   String date;
 
