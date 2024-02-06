@@ -37,6 +37,10 @@ const StudyRoomPage = () => {
   const [subscribers, setSubscriberse] = useState([]);
   const [videoDivClass, setVideoDivClass] = useState("");
 
+  // 화면 모드
+  // 0 대기 1 면접 2 발표 3 대본
+  const [mode, setMode] = useState(1);
+
   // 비디오 구성 버튼 활성/비활성화 상태
   const [mic, setMic] = useState(true);
   const [video, setVideo] = useState(true);
@@ -69,6 +73,7 @@ const StudyRoomPage = () => {
     }
   };
 
+  // 화면 공유
   const handleScreenShare = async () => {
     let tmpPublisher = await OV.current.initPublisherAsync(undefined, {
       audioSource: undefined, // The source of audio. If undefined default microphone
@@ -120,6 +125,7 @@ const StudyRoomPage = () => {
   const [chatList, setChatList] = useState([]);
 
   // ---------- Variables During Speech ----------
+  const [feedbackModal, setFeedbackModal] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [comment, setComment] = useState("");
 
@@ -213,6 +219,7 @@ const StudyRoomPage = () => {
 
     setRecord(true);
     setRecordForm(false);
+    setFeedbackModal(true);
   };
 
   // 접속 시 실행
@@ -493,7 +500,9 @@ const StudyRoomPage = () => {
   };
 
   // 피드백 등록 요청
-  const feebackPost = () => {
+  const feedbackPost = () => {
+    if (e.key !== "Enter") return;
+
     postFeedback(
       token,
       {
@@ -501,7 +510,7 @@ const StudyRoomPage = () => {
         content: feedback,
       },
       (response) => {
-        // console.log(response);
+        console.log(response);
       },
       (error) => {
         console.log(error);
@@ -667,35 +676,86 @@ const StudyRoomPage = () => {
   return (
     <div className="RoomPage">
       <div className="flex">
-        <div className="ploud-icon">PLOUD</div>
+        <div className="roompage-icon">
+          <img src="/images/ploud_icon_bg.png" />
+        </div>
+        <div>
+          <select name="mode" id="mode" onChange={(e) => setMode(e.target.value)}>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
       </div>
       <div className="RoomPage-mid">
-        <div
-          className={subscribers.length > 3 ? "video-flex-big" : "video-flex"}
-        >
-          {/* {mainStreamManager !== undefined ? (
+        {/* 대기화면 구성 */}
+        {mode === 0 && (
+          <div
+            className={subscribers.length > 3 ? "video-flex-big" : "video-flex"}
+          >
+            {/* {mainStreamManager !== undefined ? (
             <div id="main-video" className={videoDivClass}>
               <UserVideoComponent streamManager={mainStreamManager} />
             </div>
           ) : null} */}
-          {/* <div id="video-container" className="col-md-6"> */}
-          <div id="video-container" className={videoDivClass}>
-            {publisher !== undefined ? (
-              <div className="stream-container col-md-6 col-xs-6">
-                <UserVideoComponent streamManager={publisher} />
-              </div>
-            ) : null}
-          </div>
-          {subscribers.map((sub, i) => (
-            <div
-              key={sub.id}
-              className={`${videoDivClass} stream-container col-md-6 col-xs-6`}
-            >
-              <span>{sub.id}</span>
-              <UserVideoComponent streamManager={sub} />
+            {/* <div id="video-container" className="col-md-6"> */}
+            <div id="video-container" className={videoDivClass}>
+              {publisher !== undefined ? (
+                <div className="stream-container col-md-6 col-xs-6">
+                  <UserVideoComponent streamManager={publisher} />
+                </div>
+              ) : null}
             </div>
-          ))}
-        </div>
+            {subscribers.map((sub, i) => (
+              <div
+                key={sub.id}
+                className={`${videoDivClass} stream-container col-md-6 col-xs-6`}
+              >
+                <span>{sub.id}</span>
+                <UserVideoComponent streamManager={sub} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* 면접화면 구성 */}
+        {mode === 1 && (
+          <div
+            className="video-flex-big">
+            <div id="main-video" className={videoDivClass}>
+              <UserVideoComponent streamManager={mainStreamManager} />
+            </div>
+            <div id="main-video" className={videoDivClass}>
+              <UserVideoComponent streamManager={mainStreamManager} />
+            </div>
+            <div id="main-video" className={videoDivClass}>
+              <UserVideoComponent streamManager={mainStreamManager} />
+            </div>
+            {/* {mainStreamManager !== undefined ? (
+          <div id="main-video" className={videoDivClass}>
+            <UserVideoComponent streamManager={mainStreamManager} />
+          </div>
+        ) : null} */}
+            {/* <div id="video-container" className="col-md-6"> */}
+            <div id="video-container" className={videoDivClass}>
+              {publisher !== undefined ? (
+                <div className="stream-container col-md-6 col-xs-6">
+                  <UserVideoComponent streamManager={publisher} />
+                </div>
+              ) : null}
+            </div>
+            {subscribers.map((sub, i) => (
+              <div
+                key={sub.id}
+                className={`${videoDivClass} stream-container col-md-6 col-xs-6`}
+              >
+                <span>{sub.id}</span>
+                <UserVideoComponent streamManager={sub} />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
       <div className="flex justify-between video-room-button">
         <div className="button-empty items-center space-x-4">
@@ -849,6 +909,23 @@ const StudyRoomPage = () => {
             <div style={{ display: "flex", justifyContent: "flex-end" }}></div>
             <Button>녹화 시작</Button>
           </form>
+        </Modal>
+      )}
+      {feedbackModal && (
+        <Modal
+          title="피드백 입력"
+          onClose={() => setFeedbackModal(false)}
+          className="feedback-form"
+        >
+          <p>
+            내용 :{" "}
+            <input
+              type="text"
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+              onKeyDown={feedbackPost}
+            />
+          </p>
         </Modal>
       )}
     </div>
