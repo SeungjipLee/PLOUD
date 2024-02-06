@@ -6,6 +6,8 @@ import { OpenVidu } from "openvidu-browser";
 import UserVideoComponent from "./component/UserVideoComponent";
 import Report from "./component/Report";
 import ResultList from "./component/ResultList";
+import { addRecordList } from "../../features/record/recordSlice";
+import { getRecordResult } from "../../services/record";
 import {
   startSpeech,
   endSpeech,
@@ -27,9 +29,7 @@ const StudyRoomPage = () => {
   // 기본 정보
   const { userId, token, nickname } = useSelector((state) => state.userReducer);
   const room = useSelector((state) => state.studyReducer.studyInfo.meetingInfo);
-  const studyInfo = useSelector((state) => state.studyReducer.studyInfo);
   const ovToken = useSelector((state) => state.studyReducer.studyInfo.token);
-  const speechId = useSelector((state) => state.studyReducer.speechId);
 
   // 비디오 정보
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
@@ -53,6 +53,8 @@ const StudyRoomPage = () => {
 
   // 녹화 Form
   const [title, setTitle] = useState("");
+  const speechId = useRef(0);
+  const [whoSpeeching, setWhoSpeeching] = useState(false);
 
   const categoryName = () => {
     switch (room.categoryId) {
@@ -121,9 +123,8 @@ const StudyRoomPage = () => {
   const [feedback, setFeedback] = useState("");
   const [comment, setComment] = useState("");
 
-  // const speechId = useRef(0);
   const isRecording = useRef(false); // 녹화 중
-  const isLast = useRef(false);
+  const isLast = useRef(true);
 
   const [mediaRecorder, setMediaRecorder] = useState(null); // 녹음
 
@@ -190,19 +191,20 @@ const StudyRoomPage = () => {
   const submitHandler = (e) => {
     e.preventDefault();
 
+    console.log("녹음 시작");
+
     const params = {
-      userId: userId,
-      sessionId: room.sessionId,
       title: title,
       personal: false,
       categoryId: room.categoryId,
-      scriptId: -1,
+      sessionId: room.sessionId,
     };
+
     startSpeech(
       token,
       params,
       (res) => {
-        dispatch(getSpeechId(res));
+        speechId.current = res.data.data;
         startRecording();
         sendSignal("rstart", "님이 발표를 시작하였습니다.");
       },
@@ -210,22 +212,6 @@ const StudyRoomPage = () => {
     );
 
     setRecord(true);
-    setRecordForm(false);
-  };
-
-  // 녹화 종료
-  const handleClick = (e) => {
-    stopRecording(
-      token,
-      {
-        sessionId: room.sessionId,
-        speechId: speechId,
-        decibels: decibels.current,
-      },
-      (res) => res,
-      (err) => err
-    );
-    setRecord(false);
     setRecordForm(false);
   };
 
@@ -290,14 +276,42 @@ const StudyRoomPage = () => {
 
     // 녹화 시작 신호
     session.current.on("signal:rstart", (event) => {
+      var username = JSON.parse(event.data).nickname;
+      var content = JSON.parse(event.data).chatvalue;
+
+      setChatList((chatList) => [
+        ...chatList,
+        { username: username, content: content },
+      ]);
+
       // 녹화 시작 신호를 받을 경우 처리할 것
-      // 레이아웃 전환
+      if (username != nickname) {
+        setWhoSpeeching(true);
+        // 내가 아닌 경우의 레이아웃 전환
+      }
+
       // 버튼 비활성화
+      // whoSpeeching 변수로 ?
+      // 방법은 생각을 ...
     });
 
     // 녹화 종료 신호
     session.current.on("signal:rend", (event) => {
+      var username = JSON.parse(event.data).nickname;
+      var content = JSON.parse(event.data).chatvalue;
+
+      setChatList((chatList) => [
+        ...chatList,
+        { username: username, content: content },
+      ]);
+
       // 녹화 종료 신호를 받을 경우 처리할 것
+      if (username != nickname) {
+        setWhoSpeeching(false);
+      }
+
+      // 녹화 종료의 경우 여기서 한 번에 처리해도 가능할 듯?
+
       // 레이아웃 전환
       // 버튼 활성화
     });
@@ -414,23 +428,47 @@ const StudyRoomPage = () => {
 
   // 녹화 종료 요청
   const speechEnd = () => {
+    console.log("녹화 종료");
     isLast.current = true;
     // 녹화 중지 함수 실행
     stopRecording();
     sendSignal("rend", "님이 발표를 종료하였습니다.");
 
+    var sId = speechId.current;
+    speechId.current = -1;
+
     endSpeech(
       token,
       {
-        sessionId: meetingInfo.sessionId,
-        speechId: speechId.current,
+        sessionId: room.sessionId,
+        speechId: sId,
         decibels: decibels.current,
       },
       (response) => {
-        // console.log(response);
+        console.log(response);
       },
       (error) => {
         console.log(error);
+      }
+    );
+
+    // 비동기 처리 헷갈리니까 5초 뒤에 하자
+    setTimeout(() => {
+      recordResult(sId);
+    }, 5000);
+  };
+
+  const recordResult = (speechId) => {
+    getRecordResult(
+      token,
+      speechId,
+      (response) => {
+        console.log("결과 받음");
+        console.log(response);
+        dispatch(addRecordList(response.data));
+      },
+      (error) => {
+        console.log("결과 못 받음");
       }
     );
   };
@@ -459,7 +497,7 @@ const StudyRoomPage = () => {
     postFeedback(
       token,
       {
-        sessionId: meetingInfo.sessionId,
+        sessionId: room.sessionId,
         content: feedback,
       },
       (response) => {
@@ -479,7 +517,6 @@ const StudyRoomPage = () => {
 
   // 녹화 시작
   const startRecording = () => {
-    console.log("녹음 시작");
     isLast.current = false;
     isRecording.current = true;
     audioChunksRef.current = []; // 오디오 청크를 새 배열로 초기화
@@ -588,6 +625,8 @@ const StudyRoomPage = () => {
     formData.append("speechId", speechId.current);
     formData.append("isLast", isLast.current);
 
+    console.log("평가 요청 : " + speechId.current);
+
     assessSpeech(
       token,
       formData,
@@ -595,7 +634,8 @@ const StudyRoomPage = () => {
         // console.log(response.data);
       },
       (error) => {
-        console.log(error);
+        console.log("평가 실패");
+        // console.log(error);
       }
     );
   };
@@ -622,13 +662,6 @@ const StudyRoomPage = () => {
     if (publisher) {
       publisher.publishAudio(newMic); // 마이크 상태 토글
     }
-  };
-
-  const recordHandler = () => {
-    console.log("녹화 종료");
-    setRecordForm(!recordForm);
-
-    // endSpeech();
   };
 
   return (
@@ -685,7 +718,10 @@ const StudyRoomPage = () => {
           ) : (
             <img onClick={handleScreenShare2} src="/images/sharebutton.png" />
           )}
-          {!recordForm ? (
+
+          {!isLast.current ? (
+            <img onClick={speechEnd} src="/images/recordbutton_activated.png" />
+          ) : !recordForm ? (
             <img
               onClick={(e) => {
                 setRecordForm(!recordForm);
@@ -694,8 +730,10 @@ const StudyRoomPage = () => {
             />
           ) : (
             <img
-              onClick={recordHandler}
-              src="/images/recordbutton_activated.png"
+              onClick={(e) => {
+                setRecordForm(!recordForm);
+              }}
+              src="/images/recordbutton_disabled.png"
             />
           )}
           <img onClick={leaveSession} src="/images/exitbutton.png" alt="" />

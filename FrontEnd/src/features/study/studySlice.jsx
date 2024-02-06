@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   studyList: [],
   studyInfo: undefined,
-  speechId: undefined,
 };
 
 export const studySlice = createSlice({
@@ -14,17 +13,13 @@ export const studySlice = createSlice({
       state.studyList = [...action.payload];
     },
     getStudy: (state, action) => {
-      console.log(action.payload.data);
+      // console.log(action.payload.data);
       state.studyInfo = action.payload.data;
     },
-    getSpeechId:  (state, action) => {
-      console.log(action.payload.data);
-      state.speechId = action.payload.data;
-    }
   },
 });
 
-export const { getStudyList, getStudy, getSpeechId } = studySlice.actions;
+export const { getStudyList, getStudy } = studySlice.actions;
 export default studySlice.reducer;
 
 /* 방 임시 데이터

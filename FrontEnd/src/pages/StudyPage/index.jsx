@@ -66,7 +66,6 @@ const StudyPage = () => {
   // 방 만들기 클릭 시 방 생성 폼 띄우기
   const changeModalState = () => {
     setModal(!modal);
-    console.log(modal);
   };
 
   // 방 클릭시 인원, 잠금여부 판단

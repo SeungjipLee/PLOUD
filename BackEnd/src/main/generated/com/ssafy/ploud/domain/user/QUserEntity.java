@@ -42,7 +42,11 @@ public class QUserEntity extends EntityPathBase<UserEntity> {
 
     public final EnumPath<Role> role = createEnum("role", Role.class);
 
+    public final NumberPath<Long> soloDurationInMinute = createNumber("soloDurationInMinute", Long.class);
+
     public final ListPath<com.ssafy.ploud.domain.speech.SpeechEntity, com.ssafy.ploud.domain.speech.QSpeechEntity> speechEntityList = this.<com.ssafy.ploud.domain.speech.SpeechEntity, com.ssafy.ploud.domain.speech.QSpeechEntity>createList("speechEntityList", com.ssafy.ploud.domain.speech.SpeechEntity.class, com.ssafy.ploud.domain.speech.QSpeechEntity.class, PathInits.DIRECT2);
+
+    public final NumberPath<Long> studyDurationInMinute = createNumber("studyDurationInMinute", Long.class);
 
     public final StringPath userId = createString("userId");
 

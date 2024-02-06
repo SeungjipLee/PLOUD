@@ -5,19 +5,21 @@ import { persistReducer } from 'redux-persist';
 import userReducer from '../features/user/userSlice'
 import signUpReducer from '../features/user/signUpSlice'
 import studyReducer from '../features/study/studySlice'
+import recordReducer from '../features/record/recordSlice'
 
 const reducers = combineReducers({
   // 여기에 리듀서 추가
   userReducer,
   signUpReducer,
   studyReducer,
+  recordReducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
   // 여기에 저장하고 싶은 리듀서 이름 추가
-  whitelist: ['userReducer', 'signUpReducer', 'studyReducer'],
+  whitelist: ['userReducer', 'signUpReducer', 'studyReducer', 'recordReducer'],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);

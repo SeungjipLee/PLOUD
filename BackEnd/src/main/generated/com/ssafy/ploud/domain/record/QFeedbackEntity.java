@@ -28,9 +28,9 @@ public class QFeedbackEntity extends EntityPathBase<FeedbackEntity> {
 
     public final com.ssafy.ploud.domain.speech.QSpeechEntity speech;
 
-    public final TimePath<java.sql.Time> timeLog = createTime("timeLog", java.sql.Time.class);
+    public final ComparablePath<java.time.Duration> timeLog = createComparable("timeLog", java.time.Duration.class);
 
-    public final com.ssafy.ploud.domain.user.QUserEntity user;
+    public final StringPath userId = createString("userId");
 
     public QFeedbackEntity(String variable) {
         this(FeedbackEntity.class, forVariable(variable), INITS);
@@ -51,7 +51,6 @@ public class QFeedbackEntity extends EntityPathBase<FeedbackEntity> {
     public QFeedbackEntity(Class<? extends FeedbackEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.speech = inits.isInitialized("speech") ? new com.ssafy.ploud.domain.speech.QSpeechEntity(forProperty("speech"), inits.get("speech")) : null;
-        this.user = inits.isInitialized("user") ? new com.ssafy.ploud.domain.user.QUserEntity(forProperty("user")) : null;
     }
 
 }

@@ -56,6 +56,14 @@ public class SpeechServiceImpl implements SpeechService{
 
     private int cnt = 0;
 
+    static {
+        File audioDir = new File("audio");
+
+        if (!audioDir.exists()) {
+            boolean created = audioDir.mkdirs();
+        }
+    }
+
     @Override
     @Transactional
     public int start(SpeechStartRequest speechStartRequest) {
@@ -153,8 +161,8 @@ public class SpeechServiceImpl implements SpeechService{
     public ClearityResponse clearity(MultipartFile audioFile, Integer speechId, Boolean isLast) {
 
         // 파일 경로
-        String inputWavFile = "D:\\path\\to\\your\\upload\\directory\\in_" + cnt + ".wav";
-        String outputWavFile = "D:\\path\\to\\your\\upload\\directory\\out_" + cnt++ + ".wav";
+        String inputWavFile = "audio\\in_" + cnt + ".wav";
+        String outputWavFile = "audio\\out_" + cnt++ + ".wav";
 
         File dest = null;
         try {

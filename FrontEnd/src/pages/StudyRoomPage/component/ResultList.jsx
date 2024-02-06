@@ -8,7 +8,9 @@ const ResultList = (data) => {
   // 녹화 결과 리스트에서 결과 하나를 클릭하면 해당 index 의 결과 모달창을 띄우기
   const [resultNum, setResultNum] = useState(0);
   const [modal, setModal] = useState(false);
-
+  
+  const recordList = useSelector((state) => state.recordReducer.recordList);
+  
   // 녹화한 것들 결과 리스트 가져와서 목록 보여주기
   // 중앙저장소에 결과 데이터들 저장해둘 것
   // const resultList = useSelector((state) => state.ResultReducer)
