@@ -4,6 +4,7 @@ import Page from "../../components/Page";
 import Footer from "../../components/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import StudyResult from "../StudyRoomPage/component/StudyResult";
 
 
 const MainPage = () => {
@@ -21,6 +22,7 @@ const MainPage = () => {
 
   return (
     <div className="Main">
+      {/* <StudyResult/> */}
       <Page header={<Navbar />} footer={<Footer />}>
         <div className="Main1 mb-24">
           <img src="images/1.png" className="w-full h-full object-cover"/>
