@@ -535,17 +535,25 @@ const StudyRoomPage = () => {
 
 // 비디오 핸들러
 const toggleVideo = () => {
-  setVideo(!video); // 상태 업데이트
+  console.log("비디오 상태 수정");
+
+  const newVideo = !video;
+
+  setVideo(newVideo); // 상태 업데이트
   if (publisher) {
-    publisher.publishVideo(!video); // 비디오 상태 토글
+    publisher.publishVideo(newVideo); // 비디오 상태 토글
   }
 };
 
 // 마이크 핸들러
 const toggleMic = () => {
-  setMic(!mic); // 상태 업데이트
+  console.log("오디오 상태 수정");
+
+  const newMic = !mic;
+  
+  setMic(newMic); // 상태 업데이트
   if (publisher) {
-    publisher.publishAudio(!mic); // 마이크 상태 토글
+    publisher.publishAudio(newMic); // 마이크 상태 토글
   }
 };
 

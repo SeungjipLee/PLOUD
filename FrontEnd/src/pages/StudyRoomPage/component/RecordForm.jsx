@@ -36,7 +36,6 @@ const RecordForm = ({ children, onClose }) => {
         )
   }
 
-
   return (
     <Modal title="녹화 정보 입력" onClose={onClose} className={"record-form"}>
       <form onSubmit={handleSubmit}>
