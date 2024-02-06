@@ -23,7 +23,7 @@ public class ComplainController {
   private final ComplainService complainService;
 
   @PostMapping()
-  @Operation(summary = "사용자 신고", description = "nickname을 가진 사용자를 신고한다")
+  @Operation(summary = "사용자 신고", description = "nickname을 가진 사용자를 신고한다. 신고 횟수가 5 이상이면 해당 계정으로 1일 동안 로그인 할 수 없다.")
   public ApiResponse<?> complainUser(@RequestBody ComplainUserRequestDto requestDto) {
     complainService.complainUser(requestDto);
     return ApiResponse.ok("신고 완료");
