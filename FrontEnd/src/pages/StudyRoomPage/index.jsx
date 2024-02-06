@@ -539,11 +539,11 @@ const StudyRoomPage = () => {
         <div
           className={subscribers.length === 0 ? "video-flex-big" : "video-flex"}
         >
-          {mainStreamManager !== undefined ? (
+          {/* {mainStreamManager !== undefined ? (
             <div id="main-video" className={videoDivClass}>
               <UserVideoComponent streamManager={mainStreamManager} />
             </div>
-          ) : null}
+          ) : null} */}
           {/* <div id="video-container" className="col-md-6"> */}
           <div id="video-container" className={videoDivClass}>
             {publisher !== undefined ? (
