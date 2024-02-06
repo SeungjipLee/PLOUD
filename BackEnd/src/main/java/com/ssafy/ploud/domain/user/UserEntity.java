@@ -45,8 +45,8 @@ public class UserEntity {
   @NotNull
   private LocalDateTime joinDate;
 
-  private int soloDurationInMinute;
-  private int studyDurationInMinute;
+  private long soloDurationInMinute;
+  private long studyDurationInMinute;
 
   @Enumerated(EnumType.STRING)
   private Role role;
@@ -85,11 +85,11 @@ public class UserEntity {
     this.password = password;
   }
 
-  public void updateSoloDuration(int practiceTimeInMinute) {
+  public void updateSoloDuration(long practiceTimeInMinute) {
     this.soloDurationInMinute += practiceTimeInMinute;
   }
 
-  public void updateStudyDuration(int practiceTimeinMinute) {
+  public void updateStudyDuration(long practiceTimeinMinute) {
     this.studyDurationInMinute += practiceTimeinMinute;
   }
 
