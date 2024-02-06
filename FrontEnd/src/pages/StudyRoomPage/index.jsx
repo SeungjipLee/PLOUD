@@ -537,7 +537,7 @@ const StudyRoomPage = () => {
       </div>
       <div className="RoomPage-mid">
         <div
-          className={subscribers.length === 0 ? "video-flex-big" : "video-flex"}
+          className={subscribers.length > 4 ? "video-flex-big" : "video-flex"}
         >
           {/* {mainStreamManager !== undefined ? (
             <div id="main-video" className={videoDivClass}>
