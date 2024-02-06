@@ -4,10 +4,8 @@ import { leaveMeeting } from "../../services/meeting";
 import { useNavigate } from "react-router";
 import { OpenVidu } from "openvidu-browser";
 import UserVideoComponent from "./component/UserVideoComponent";
-import Chat from "./component/Chat";
 import Report from "./component/Report";
 import ResultList from "./component/ResultList";
-import { SignalOptions, Signal } from "openvidu-browser";
 import {
   startSpeech,
   endSpeech,
@@ -18,7 +16,6 @@ import {
 import RecordForm from "./component/RecordForm";
 import Modal from "../../components/Modal";
 import Button from "../../components/Button";
-import { getSpeechId } from "../../features/study/studySlice";
 
 const StudyRoomPage = () => {
   const navigate = useNavigate();
@@ -309,7 +306,7 @@ const StudyRoomPage = () => {
         setMainStreamManager(tmpPublisher);
         setPublisher(tmpPublisher);
         
-        sendMessage("님이 접속하였습니다!");
+        sendSignal("chat", "님이 접속하였습니다!");
 
         // currentVideoDevice: currentVideoDevice,
       })
@@ -322,7 +319,7 @@ const StudyRoomPage = () => {
 
   const leaveSession = () => {
     console.log(tag, "leaveSession");
-    sendMessage("님이 퇴장하였습니다!");
+    sendSignal("chat", "님이 퇴장하였습니다!");
 
     leaveMeeting(
       token,
@@ -349,16 +346,16 @@ const StudyRoomPage = () => {
   };
 
   // 채팅 전송
-  const handleSubmit = async (e) => {
+  const handleMessageSubmit = async (e) => {
     if (e.key !== "Enter") return;
 
-    sendMessage(chatvalue);
+    sendSignal("chat", chatvalue);
   };
 
-  const sendMessage = (chatvalue) => {
+  const sendSignal = (type, chatvalue) => {
     const signalOptions = {
       data: JSON.stringify({chatvalue, nickname}),
-      type: "chat",
+      type: type,
       to: undefined,
     };
 
@@ -566,6 +563,22 @@ const StudyRoomPage = () => {
     );
   };
 
+// 비디오 핸들러
+const toggleVideo = () => {
+  setVideo(!video); // 상태 업데이트
+  if (publisher) {
+    publisher.publishVideo(!video); // 비디오 상태 토글
+  }
+};
+
+// 마이크 핸들러
+const toggleMic = () => {
+  setMic(!mic); // 상태 업데이트
+  if (publisher) {
+    publisher.publishAudio(!mic); // 마이크 상태 토글
+  }
+};
+
   return (
     <div className="RoomPage">
       <div className="flex">
@@ -602,24 +615,24 @@ const StudyRoomPage = () => {
         </div>
         <div className="flex items-center space-x-6">
           {mic ? (
-            <img onClick={(e) => setMic(!mic)} src="/images/micbutton.png" />
+            <img onClick={(e) => toggleMic} src="/images/micbutton.png" />
           ) : (
             <img
-              onClick={(e) => setMic(!mic)}
+              onClick={(e) => toggleMic}
               src="/images/micbutton_disabled.png"
             />
           )}
           {video ? (
             <img
               onClick={(e) => {
-                setVideo(!video);
+                toggleVideo
               }}
               src="../images/videobutton.png"
             />
           ) : (
             <img
               onClick={(e) => {
-                setVideo(!video);
+                toggleVideo
               }}
               src="../images/videobutton_disabled.png"
             />
@@ -724,7 +737,7 @@ const StudyRoomPage = () => {
               type="text"
               value={chatvalue}
               onChange={(e) => setChatvalue(e.target.value)}
-              onKeyDown={handleSubmit}
+              onKeyDown={handleMessageSubmit}
               placeholder="댓글을 입력하세요."
             />
           </div>
