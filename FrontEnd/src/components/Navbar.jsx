@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "./Button";
 import { useSelector, useDispatch } from "react-redux";
 import { expireToken } from "../features/user/userSlice";
@@ -8,7 +8,16 @@ import { expireToken } from "../features/user/userSlice";
 const Navbar = () => {
   const { isLogined, nickname } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
-  // console.log(isLogined, nickname);
+  const navigate = useNavigate()
+
+  const handleLink = (path) => {
+    if (isLogined) {
+      navigate(path);
+    } else {
+      alert('로그인이 필요합니다');
+      navigate('/login');
+    }
+  }
 
   const onClickHandler = () => {
     dispatch(expireToken());
@@ -18,19 +27,14 @@ const Navbar = () => {
   return (
     <div className="Navbar w-screen h-20 fixed top-0 z-20 py-5">
       <Link to="/" >
-        <div className="w-40 h-5">
+        <div className="w-40 h-5 ml-20 mr-10">
           <img src="images/ICON.png" alt="아이콘" className="w-full object-cover"/>
         </div>
       </Link>
-      <nav className="ml-30">
-        {!isLogined &&<Link to="/login" style={{color: '#0C134F'}} className="link hover:bg-slate-100">스터디</Link>}
-        {isLogined &&<Link to="/study" style={{color: '#0C134F'}} className="link hover:bg-slate-100">스터디</Link>}
-        {!isLogined &&<Link to="/login" style={{color: '#0C134F'}} className="link hover:bg-slate-100">연습</Link>}
-        {isLogined &&<Link to="/practice" style={{color: '#0C134F'}} className="link hover:bg-slate-100">연습</Link>}
-        {!isLogined &&<Link to="/login" style={{color: '#0C134F'}} className="link hover:bg-slate-100">테스트</Link>}
-        {isLogined &&<Link to="/test" style={{color: '#0C134F'}} className="link hover:bg-slate-100">테스트</Link>}
-        {isLogined &&<Link to="/board" style={{color: '#0C134F'}} className="link hover:bg-slate-100">게시판</Link>}
-        {!isLogined &&<Link to="/login" style={{color: '#0C134F'}} className="link hover:bg-slate-100">게시판</Link>}
+      <nav className="relative">
+      <span onClick={() => handleLink('/study')} style={{color: '#0C134F'}} className="mx-5 font-extrabold link hover:bg-slate-100 cursor-pointer">스터디</span>
+        <span onClick={() => handleLink('/practice')} style={{color: '#0C134F'}} className="mx-5 font-extrabold link hover:bg-slate-100 cursor-pointer">연습</span>
+        <span onClick={() => handleLink('/board')} style={{color: '#0C134F'}} className="mx-5 font-extrabold link hover:bg-slate-100 cursor-pointer">게시판</span>
       </nav>
       <nav>
         {!isLogined && (
@@ -40,10 +44,10 @@ const Navbar = () => {
               justifyContent: "center",
               whiteSpace: "nowrap",
             }}>
-            <Link to="/login" style={{ padding:0, paddingRight: 5, color: "#0C134F"}}>
+            <Link to="/login" style={{ padding:0, paddingRight: 5, color: "#0C134F", position:"absolute", right:"180px", top:"30px"}}>
               로그인
             </Link>
-            <Link to="/signup" style={{ padding: 0, color: "#0C134F", marginLeft: "10px" }}>
+            <Link to="/signup" style={{ padding: 0, color: "#0C134F", position:"absolute", right:"100px", top:"30px" }}>
               회원가입
             </Link>
           </div>)}
@@ -55,8 +59,8 @@ const Navbar = () => {
               justifyContent: "center",
               whiteSpace: "nowrap",
             }}>
-            <Link to="/mypage" style={{ padding:0, paddingRight: 5, color: "#0C134F"}}>{nickname}님</Link>
-            <span onClick={onClickHandler} style={{ padding: 0, color: "#0C134F", marginLeft: "10px", cursor: "pointer" }}>로그아웃</span>
+            <Link to="/mypage" style={{ padding:0, paddingRight: 5, color: "#0C134F", position:"absolute", right:"180px", top:"30px"}}>{nickname}님</Link>
+            <span onClick={onClickHandler} style={{ padding: 0, color: "#0C134F", marginLeft: "10px", cursor: "pointer", position:"absolute", right:"100px", top:"30px"}}>로그아웃</span>
           </div>)}
       </nav>
     </div>

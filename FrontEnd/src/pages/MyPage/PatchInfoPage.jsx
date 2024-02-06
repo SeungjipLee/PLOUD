@@ -1,26 +1,89 @@
 import { useSelector,useDispatch } from "react-redux";
-import React, { useState } from "react";
-import Button from "../../components/Button";
+import React, { useEffect, useState } from "react";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
+import { getProfile } from "../../services/user";
 import { Link, useNavigate } from "react-router-dom";
+import { checkNickname, patchNickname } from "../../services/user";
+import { updateNickname } from "../../features/user/userSlice";
 import axios from "axios";
-// import { refreshAccessToken, updateNickname } from "../../features/user/userSlice";
 
 
 
 
 const PatchInfoPage = () => {
   // 로직
+  const token = useSelector((state) => state.userReducer.token)
   const [selectedFile, setSelectedFile] = useState();
+  const [ profile, setProfile ] = useState({})
   const [preview, setPreview] = useState();
+  const [isNicknameValid, setIsNicknameValid] = useState(false);
+  const [ newNickname, setNewNickname ] = useState('')
+  const validateNickname = () => /^[A-Za-z0-9가-힣]{2,8}$/.test(newNickname);
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const base64Image = `data:image/png;base64,${profile.profileImg}`
+
+  useEffect(() => {
+    const fetchData = () => {
+      try {
+        const response = getProfile(
+          token,
+          (res) => {
+            console.log(res.data.data)
+            setProfile(res.data.data)
+          },
+          (err) => console.log(err)
+        );
+      } catch (error) {
+        console.error("Profile fetch failed:", error);
+      }
+    };
+    fetchData();
+  }, []);
+  
+
+
+  const CheckNickname = (e) => {    
+    e.preventDefault();
+    if (validateNickname()) {
+    checkNickname(
+      {nickname: newNickname},
+      (res) => {
+        alert('사용가능한 닉네임입니다.')
+        setIsNicknameValid(true)
+      },
+      (err) => alert('사용 중인 닉네임입니다.')
+      )
+    } else {
+      alert('닉네임이 유효하지 않습니다.')
+    }
+  } 
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (isNicknameValid&&validateNickname()) {
+      patchNickname(
+        token,
+        {newValue: newNickname},
+        (res)=> {
+          alert('닉네임이 변경되었습니다!')
+          dispatch(updateNickname(newNickname))
+          navigate('/mypage')
+        },
+        (err) => alert('닉네임이 변경되지 않았습니다.')
+      )
+    } else {
+      alert('닉네임 중복확인 해주시길 바랍니다.')
+    }
+    
+  }
 
   const handleFileInput = (e) => {
     const file = e.target.files[0];
     setSelectedFile(file);
 
-    // 파일을 읽어서 미리보기 이미지를 생성합니다.
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreview(reader.result);
@@ -28,7 +91,38 @@ const PatchInfoPage = () => {
     if (file) {
       reader.readAsDataURL(file);
     }
-  };
+  }
+
+  const handleSubmitImg = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+
+    if (selectedFile) {
+      formData.append('file', selectedFile);
+    }
+    try {
+      // axios로 POST 요청 보내기
+      const response = axios.post(
+        'http://localhost:8000/api/user/img', // 서버 업로드 URL
+        formData, // 요청 본문
+        {
+          headers: {
+            // 'Content-Type': 'multipart/form-data'는 axios에서 자동으로 설정해줍니다.
+            'Authorization': `Bearer ${token.accessToken}`
+          }
+        }
+      );
+  
+      // 요청 성공 처리
+      console.log(response.data);
+      alert('이미지가 성공적으로 업로드되었습니다.');
+      navigate('/mypage')
+    } catch (error) {
+      // 요청 실패 처리
+      console.error('이미지 업로드 실패:', error);
+      alert('이미지를 업로드하는데 실패하였습니다.');
+    }
+  }
 
   return (
       <div className="mypage bg-white w-full min-h-screen">
@@ -48,13 +142,14 @@ const PatchInfoPage = () => {
                   <img src={preview} alt="Preview" className="w-44 h-44"/>
                 </div>
               )}
-              {!preview && <img src="images/Profile.PNG" />}
+              {!preview && <img src={`${base64Image}`} />}
               <br />
               <input type="file" accept="image/*" onChange={handleFileInput} className="mb-3" />
             </div>
               <button 
+                onClick={handleSubmitImg}
                 className="bg-gray-400 text-white rounded-md p-1 mx-7 mt-16">
-                  프로필 사진 변경
+                프로필 사진 변경
               </button>
           </div>
           {/* 닉네임이랑 수정하기 버튼 */}
@@ -63,8 +158,12 @@ const PatchInfoPage = () => {
               <input 
                 type="text" 
                 className="w-56 block rounded-md border-0 py-1 pl-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 mx-auto my-5"
-                placeholder="닉네임"/>
-                <button className="bg-gray-400 text-white rounded-md p-1 mx-3 my-5">수정하기</button>
+                placeholder={profile.nickname}
+                onChange={(e)=> {
+                  setNewNickname(e.target.value);
+                }}
+                />
+                <button onClick={handleSubmit} className="bg-gray-400 text-white rounded-md p-1 mx-3 my-5">수정하기</button>
             </form>
             </div>
           {/* 비밀번호, 마이페이지 버튼 */}
@@ -73,7 +172,8 @@ const PatchInfoPage = () => {
               <Link to="/mypage" className="bg-gray-400 text-white rounded-md px-3 py-1 mx-3 my-3">마이페이지</Link>
           </div>
           <span 
-            className="checkPatch text-gray-400">
+            className="checkPatch text-gray-400"
+            onClick={CheckNickname}>
               중복확인
           </span>
         </div>

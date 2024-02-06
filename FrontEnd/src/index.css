@@ -453,13 +453,19 @@
 .box3:hover {
   transform: scale(1.05); /* 원본 크기의 10% 증가 */
 }
+
 .Recard {
-  transition: transform 0.3s, background-color 0.3s;
+  transition: transform 0.3s ease;
+  background-image: url('../public/images/ResultCard.png');
+  background-size:cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: transparent;
 }
 
 .Recard:hover {
   transform: scale(1.05);
-  background-color: #fffed1;
+  color:black;
 }
 
 .chat {

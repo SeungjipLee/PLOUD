@@ -77,7 +77,7 @@ export const patchNickname = async (token, data, success, fail) => {
 }
 
 
-// data = { newValue : String }
+// data = { oldValue: String, newValue : String }
 export const patchPassword = async (token, data, success, fail) => {
   return await API(token)
     .patch("user/pw", data)
