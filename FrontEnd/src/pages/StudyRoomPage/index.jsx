@@ -26,7 +26,7 @@ const StudyRoomPage = () => {
   const session = useRef(null); // session을 useRef로 선언
 
   // 기본 정보
-  const token = useSelector((state) => state.userReducer.token);
+  const { userId, token } = useSelector((state) => state.userReducer);
   const { nickname } = useSelector((state) => state.userReducer);
   const room = useSelector((state) => state.studyReducer.studyInfo.meetingInfo);
   const studyInfo = useSelector((state) => state.studyReducer.studyInfo);
@@ -52,6 +52,18 @@ const StudyRoomPage = () => {
 
   // 화면공유 여부 파악
   const [screenShare, setScreenShare] = useState(false);
+
+  // 녹화 Form  
+  const [title, setTitle] = useState("");
+    
+  const categoryName = () => {
+    switch(room.categoryId){
+    case 0: return "전체"
+    case 1: return "면접"
+    case 2: return "발표"
+    case 3: return "기타"
+  }
+  }
 
   const handleScreenShare = async () => {
     let tmpPublisher = await OV.current.initPublisherAsync(undefined, {
@@ -173,8 +185,26 @@ const StudyRoomPage = () => {
   }, [subscribers]);
 
   // 녹화 시작
-  const clickHandler = (e) => {
-    startRecording();
+  const submitHandler = (e) => {
+    e.preventDefault()
+
+    const params = {
+      userId: userId,
+      sessionId: room.sessionId,
+      title: title,
+      personal: false,
+      categoryId: room.categoryId,
+      scriptId: -1,
+  }
+    startSpeech(token, params,
+      (res) => {
+        dispatch(getSpeechId(res))
+        startRecording();
+      },
+      (err) => console.log(err)
+      )
+
+    
     setRecord(true);
     setRecordForm(false);
   };
@@ -724,9 +754,24 @@ const toggleMic = () => {
       {result && <ResultList />}
       {report && <Report />}
       {recordForm && (
-        <RecordForm onClose={(e) => setRecordForm(false)}>
-          <Button onClick={clickHandler}>녹화 시작</Button>
-        </RecordForm>
+        <Modal title="녹화 정보 입력" onClose={setRecordForm(false)} className={"record-form"}>
+        <form onSubmit={submitHandler}>
+          <div>
+            <p>제목 : 
+            <input
+              placeholder="제목 입력..."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            ></input></p>
+            <p>카테고리 : {categoryName()}</p>
+            <p>분류 : 스터디</p>
+          </div>
+          <div style={{display: "flex", justifyContent: "flex-end"}}>
+            {children}
+            </div>
+          <Button>녹화 시작</Button>
+        </form>
+      </Modal>
       )}
     </div>
   );
