@@ -23,11 +23,11 @@ const API = (token) => {
     }
   );
 
-  instance.interceptors.response.use(
-    (response) => {
+  // instance.interceptors.response.use(
+  //   (response) => {
   //     // console.log("[intercept 성공]", response) 
-    return response},
-    async (error) => {
+    // return response},
+    // async (error) => {
   //     // console.log("[intercept 실패]", error)
   //     // console.log(token)
   //     const originalRequest = error.config;
@@ -46,9 +46,9 @@ const API = (token) => {
   //       return instance(originalRequest); // 실패한 요청 재시도
   //     }
     // return Promise.reject(error);
-    return error;
-    }
-  );
+    // return error;
+    // }
+  // );
 
   return instance;
 };
