@@ -68,7 +68,10 @@ public enum ResponseCode {
   SPEECH_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "발표를 찾을 수 없습니다"),
 
   // 디렉터리
-  ALREADY_EXISTS(HttpStatus.SC_CONFLICT, "폴더가 이미 존재합니다");
+  ALREADY_EXISTS(HttpStatus.SC_CONFLICT, "폴더가 이미 존재합니다"),
+
+  // 명언
+  SENTENCE_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "명언이 존재하지 않습니다");
 
   private final int code;
   private final String message;
