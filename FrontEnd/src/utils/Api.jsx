@@ -17,7 +17,9 @@ const API = (token) => {
   //   const dispatch = useDispatch();
 
   instance.interceptors.response.use(
-    (response) => {return response},
+    (response) => {
+      return response;
+    },
     (error) => {
       console.log(error);
     }
@@ -25,9 +27,9 @@ const API = (token) => {
 
   // instance.interceptors.response.use(
   //   (response) => {
-  //     // console.log("[intercept 성공]", response) 
-    // return response},
-    // async (error) => {
+  //     // console.log("[intercept 성공]", response)
+  // return response},
+  // async (error) => {
   //     // console.log("[intercept 실패]", error)
   //     // console.log(token)
   //     const originalRequest = error.config;
@@ -45,9 +47,9 @@ const API = (token) => {
   //       originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
   //       return instance(originalRequest); // 실패한 요청 재시도
   //     }
-    // return Promise.reject(error);
-    // return error;
-    // }
+  // return Promise.reject(error);
+  // return error;
+  // }
   // );
 
   return instance;

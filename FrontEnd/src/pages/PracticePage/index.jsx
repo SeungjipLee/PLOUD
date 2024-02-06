@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "./sidebar/Sidebar";
 import { Button, Input, Textarea } from "@material-tailwind/react";
 import { useState, useRef } from "react";
 import Page from "../../components/Page";
