@@ -125,6 +125,7 @@ public class UserController {
 
   }
 
+
   @Operation(summary = "비밀번호 변경")
   @PatchMapping("/pw")
   public ApiResponse<?> updateUserPassword(@AuthenticationPrincipal UserDetails loginUser,
