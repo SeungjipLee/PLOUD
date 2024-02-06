@@ -46,6 +46,11 @@ public enum ResponseCode {
   ETRI_ERROR(HttpStatus.SC_BAD_REQUEST, "평가 결과를 알 수 없습니다."),
 
   // 게시글
+  ALREADY_PRESS(HttpStatus.SC_CONFLICT, "이미 좋아요를 눌렀습니다."),
+  HEART_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "좋아요를 찾을 수 없습니다."),
+  BOARD_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "게시글을 찾을 수 없습니다."),
+  COMMENT_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "댓글을 찾을 수 없습니다."),
+  NO_PERMISSION(HttpStatus.SC_UNAUTHORIZED, "권한이 없습니다."),
 
   // JWT
   INVALID_JWT_TOKEN(HttpStatus.SC_UNAUTHORIZED, "invalid JWT token"),
