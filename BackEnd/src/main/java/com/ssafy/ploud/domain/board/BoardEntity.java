@@ -24,6 +24,8 @@ public class BoardEntity {
 
   private String userId; // 작성자
 
+  private String nickname;
+
   private String title;   // 게시글 제목
 
   private String content; // 게시글 내용
@@ -34,10 +36,11 @@ public class BoardEntity {
 
   private int likeCount;  // 좋아요 개수
 
-  public static BoardEntity createBoard(BoardRequest boardRequest, String userId) {
+  public static BoardEntity createBoard(BoardRequest boardRequest, String userId, String nickname) {
     BoardEntity boardEntity = new BoardEntity();
 
     boardEntity.userId = userId;
+    boardEntity.nickname = nickname;
     boardEntity.title = boardRequest.getTitle();
     boardEntity.content = boardRequest.getContent();
 //  boardEntity.videoPath = boardRequest.getVideoPath().getOriginalFilename();

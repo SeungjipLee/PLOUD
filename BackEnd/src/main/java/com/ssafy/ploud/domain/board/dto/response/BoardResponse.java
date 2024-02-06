@@ -15,6 +15,7 @@ public class BoardResponse {
 
   private int id;
   private String userId;
+  private String nickname;
   private String title;
   private String content;
   //private String videoPath;
@@ -25,6 +26,7 @@ public class BoardResponse {
     return BoardResponse.builder()
         .id(boardEntity.getId())
         .userId(boardEntity.getUserId())
+        .nickname(boardEntity.getNickname())
         .title(boardEntity.getTitle())
         .content(boardEntity.getContent())
         //    .videoPath(boardEntity.getVideoPath())

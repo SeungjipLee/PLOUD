@@ -8,10 +8,10 @@ import com.ssafy.ploud.domain.board.dto.response.BoardResponse;
 import com.ssafy.ploud.domain.board.repository.BoardRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class BoardServiceImpl implements BoardService {
   private EntityManager entityManager;
 
   @Override
-  public List<BoardResponse> getAllBoards() {
+  public List<BoardResponse> getAllBoards(Pageable pageable) {
     List<BoardEntity> boardEntities = boardRepository.findAll();
     return boardEntities.stream()
         .map(BoardResponse::fromEntity)
@@ -33,8 +33,8 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
-  public void createBoard(BoardRequest boardRequest, String userId) {
-    BoardEntity boardEntity = BoardEntity.createBoard(boardRequest, userId);
+  public void createBoard(BoardRequest boardRequest, String userId, String nickname) {
+    BoardEntity boardEntity = BoardEntity.createBoard(boardRequest, userId, nickname);
     boardRepository.save(boardEntity);
   }
 
@@ -78,13 +78,15 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
-  public void updateCount(BoardResponse board, boolean heart){
-    if(heart){
-      board.setLikeCount(board.getLikeCount()+1);
+  public void updateCount(BoardResponse board, boolean heart) {
+    if (heart) {
+      board.setLikeCount(board.getLikeCount() + 1);
     } else {
-      board.setLikeCount(board.getLikeCount()-1);
+      board.setLikeCount(board.getLikeCount() - 1);
     }
 
     entityManager.merge(board);
   }
+
+
 }
