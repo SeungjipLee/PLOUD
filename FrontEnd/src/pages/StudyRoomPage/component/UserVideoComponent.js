@@ -8,9 +8,6 @@ const UserVideoComponent = ({ streamManager }) => {
       {streamManager !== undefined ? (
         <div className="streamcomponent">
           <OpenViduVideoComponent streamManager={streamManager} />
-          <div>
-            <p>넌 누구?</p>
-          </div>
         </div>
       ) : null}
     </div>

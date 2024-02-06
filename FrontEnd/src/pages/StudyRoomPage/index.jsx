@@ -40,6 +40,7 @@ const StudyRoomPage = () => {
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscriberse] = useState([]);
+  const [videoDivClass, setVideoDivClass] = useState("");
 
   // 비디오 구성 버튼 활성/비활성화 상태
   const [mic, setMic] = useState(true);
@@ -141,13 +142,38 @@ const StudyRoomPage = () => {
     joinSession();
   }, []);
 
-  // useEffect(() => {
-  //   console.log(speechId);
-  //   if (speechId === undefined) return;
-  //   startRecording();
-  //   setRecord(true);
-  //   setRecordForm(false);
-  // }, [speechId]);
+  // 사람 수 마다 화면이 다르게 배치되도록 분기처리
+  // 1. 화면 나오는 최상위 className 변경 => div 크기 변경
+  // 2. 각 화면에 들어갈 className 변경 => video 크기 변경
+  // useEffect 로 subscribers 수에 따라 결정
+  useEffect(() => {
+    console.log(subscribers.length);
+    let videoClassName = "";
+    switch (subscribers.length) {
+      // case 0:
+      //   videoClassName = "video-div-size-6";
+      //   break;
+      case 0:
+        videoClassName = "video-div-size-1";
+        break;
+      case 1:
+        videoClassName = "video-div-size-2 col-md-6";
+        break;
+      case 2:
+        videoClassName = "video-div-size-4 col-md-6";
+        break;
+      case 3:
+        videoClassName = "video-div-size-4 col-md-6";
+        break;
+      case 4:
+        videoClassName = "video-div-size-6 col-md-6";
+        break;
+      case 5:
+        videoClassName = "video-div-size-6 col-md-6";
+        break;
+    }
+    setVideoDivClass(videoClassName);
+  }, [subscribers]);
 
   // 녹화 시작
   const clickHandler = (e) => {
@@ -510,13 +536,16 @@ const StudyRoomPage = () => {
         <div className="ploud-icon">PLOUD</div>
       </div>
       <div className="RoomPage-mid">
-        <div className="video-flex">
-          {/* {mainStreamManager !== undefined ? (
-            <div id="main-video" className="col-md-6">
+        <div
+          className={subscribers.length === 0 ? "video-flex-big" : "video-flex"}
+        >
+          {mainStreamManager !== undefined ? (
+            <div id="main-video" className={videoDivClass}>
               <UserVideoComponent streamManager={mainStreamManager} />
             </div>
-          ) : null} */}
-          <div id="video-container" className="col-md-6">
+          ) : null}
+          {/* <div id="video-container" className="col-md-6"> */}
+          <div id="video-container" className={videoDivClass}>
             {publisher !== undefined ? (
               <div className="stream-container col-md-6 col-xs-6">
                 <UserVideoComponent streamManager={publisher} />

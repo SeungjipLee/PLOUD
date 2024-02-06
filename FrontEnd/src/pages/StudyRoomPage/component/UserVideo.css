@@ -1,10 +1,10 @@
-video {
+/* video {
     padding: 10px;
     width: 400px;
     height: auto;
     float: left;
     cursor: pointer;
-}
+} */
 .streamcomponent div {
     position: absolute;
     background: #f8f8f8;
