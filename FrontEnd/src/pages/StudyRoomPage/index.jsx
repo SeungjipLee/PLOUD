@@ -13,7 +13,6 @@ import {
   postFeedback,
   postComment,
 } from "../../services/speech";
-import RecordForm from "./component/RecordForm";
 import Modal from "../../components/Modal";
 import Button from "../../components/Button";
 
@@ -26,8 +25,7 @@ const StudyRoomPage = () => {
   const session = useRef(null); // session을 useRef로 선언
 
   // 기본 정보
-  const { userId, token } = useSelector((state) => state.userReducer);
-  const { nickname } = useSelector((state) => state.userReducer);
+  const { userId, token, nickname } = useSelector((state) => state.userReducer);
   const room = useSelector((state) => state.studyReducer.studyInfo.meetingInfo);
   const studyInfo = useSelector((state) => state.studyReducer.studyInfo);
   const ovToken = useSelector((state) => state.studyReducer.studyInfo.token);
@@ -53,17 +51,21 @@ const StudyRoomPage = () => {
   // 화면공유 여부 파악
   const [screenShare, setScreenShare] = useState(false);
 
-  // 녹화 Form  
+  // 녹화 Form
   const [title, setTitle] = useState("");
-    
+
   const categoryName = () => {
-    switch(room.categoryId){
-    case 0: return "전체"
-    case 1: return "면접"
-    case 2: return "발표"
-    case 3: return "기타"
-  }
-  }
+    switch (room.categoryId) {
+      case 0:
+        return "전체";
+      case 1:
+        return "면접";
+      case 2:
+        return "발표";
+      case 3:
+        return "기타";
+    }
+  };
 
   const handleScreenShare = async () => {
     let tmpPublisher = await OV.current.initPublisherAsync(undefined, {
@@ -186,7 +188,7 @@ const StudyRoomPage = () => {
 
   // 녹화 시작
   const submitHandler = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     const params = {
       userId: userId,
@@ -195,23 +197,24 @@ const StudyRoomPage = () => {
       personal: false,
       categoryId: room.categoryId,
       scriptId: -1,
-  }
-    startSpeech(token, params,
+    };
+    startSpeech(
+      token,
+      params,
       (res) => {
-        dispatch(getSpeechId(res))
+        dispatch(getSpeechId(res));
         startRecording();
+        sendSignal("rstart", "님이 발표를 시작하였습니다.");
       },
       (err) => console.log(err)
-      )
+    );
 
-    
     setRecord(true);
     setRecordForm(false);
   };
 
   // 녹화 종료
   const handleClick = (e) => {
-    setRecordForm(false);
     stopRecording(
       token,
       {
@@ -223,6 +226,7 @@ const StudyRoomPage = () => {
       (err) => err
     );
     setRecord(false);
+    setRecordForm(false);
   };
 
   // 접속 시 실행
@@ -264,9 +268,38 @@ const StudyRoomPage = () => {
       var username = JSON.parse(event.data).nickname;
       var content = JSON.parse(event.data).chatvalue;
 
-      if(!(username == nickname && content == "님이 접속하였습니다!")){
-        setChatList(chatList => [...chatList, {username: username, content : content}]);
+      if (!(username == nickname && content == "님이 접속하였습니다!")) {
+        setChatList((chatList) => [
+          ...chatList,
+          { username: username, content: content },
+        ]);
       }
+    });
+
+    // 방장이 떠남
+    session.current.on("signal:exit", (event) => {
+      setChatList((chatList) => [
+        ...chatList,
+        { username: "관리자", content: "3초 후 스터디룸이 종료됩니다." },
+      ]);
+
+      setTimeout(() => {
+        leaveSession();
+      }, 3000);
+    });
+
+    // 녹화 시작 신호
+    session.current.on("signal:rstart", (event) => {
+      // 녹화 시작 신호를 받을 경우 처리할 것
+      // 레이아웃 전환
+      // 버튼 비활성화
+    });
+
+    // 녹화 종료 신호
+    session.current.on("signal:rend", (event) => {
+      // 녹화 종료 신호를 받을 경우 처리할 것
+      // 레이아웃 전환
+      // 버튼 활성화
     });
 
     session.current
@@ -305,7 +338,7 @@ const StudyRoomPage = () => {
 
         setMainStreamManager(tmpPublisher);
         setPublisher(tmpPublisher);
-        
+
         sendSignal("chat", "님이 접속하였습니다!");
 
         // currentVideoDevice: currentVideoDevice,
@@ -320,6 +353,11 @@ const StudyRoomPage = () => {
   const leaveSession = () => {
     console.log(tag, "leaveSession");
     sendSignal("chat", "님이 퇴장하였습니다!");
+
+    // managerId랑 내 Id랑 똑같으면
+    if (room.managerId == userId) {
+      sendSignal("exit", "종료");
+    }
 
     leaveMeeting(
       token,
@@ -354,7 +392,7 @@ const StudyRoomPage = () => {
 
   const sendSignal = (type, chatvalue) => {
     const signalOptions = {
-      data: JSON.stringify({chatvalue, nickname}),
+      data: JSON.stringify({ chatvalue, nickname }),
       type: type,
       to: undefined,
     };
@@ -372,19 +410,19 @@ const StudyRoomPage = () => {
     }
 
     setChatvalue("");
-  }
+  };
 
   // 녹화 종료 요청
   const speechEnd = () => {
     isLast.current = true;
     // 녹화 중지 함수 실행
     stopRecording();
+    sendSignal("rend", "님이 발표를 종료하였습니다.");
 
     endSpeech(
       token,
       {
-        sessionId: "session0",
-        // sessionId: meetingInfo.sessionId,
+        sessionId: meetingInfo.sessionId,
         speechId: speechId.current,
         decibels: decibels.current,
       },
@@ -421,8 +459,7 @@ const StudyRoomPage = () => {
     postFeedback(
       token,
       {
-        sessionId: "session0",
-        // sessionId: meetingInfo.sessionId,
+        sessionId: meetingInfo.sessionId,
         content: feedback,
       },
       (response) => {
@@ -563,29 +600,36 @@ const StudyRoomPage = () => {
     );
   };
 
-// 비디오 핸들러
-const toggleVideo = () => {
-  console.log("비디오 상태 수정");
+  // 비디오 핸들러
+  const toggleVideo = () => {
+    console.log("비디오 상태 수정");
 
-  const newVideo = !video;
+    const newVideo = !video;
 
-  setVideo(newVideo); // 상태 업데이트
-  if (publisher) {
-    publisher.publishVideo(newVideo); // 비디오 상태 토글
-  }
-};
+    setVideo(newVideo); // 상태 업데이트
+    if (publisher) {
+      publisher.publishVideo(newVideo); // 비디오 상태 토글
+    }
+  };
 
-// 마이크 핸들러
-const toggleMic = () => {
-  console.log("오디오 상태 수정");
+  // 마이크 핸들러
+  const toggleMic = () => {
+    console.log("오디오 상태 수정");
 
-  const newMic = !mic;
-  
-  setMic(newMic); // 상태 업데이트
-  if (publisher) {
-    publisher.publishAudio(newMic); // 마이크 상태 토글
-  }
-};
+    const newMic = !mic;
+
+    setMic(newMic); // 상태 업데이트
+    if (publisher) {
+      publisher.publishAudio(newMic); // 마이크 상태 토글
+    }
+  };
+
+  const recordHandler = () => {
+    console.log("녹화 종료");
+    setRecordForm(!recordForm);
+
+    // endSpeech();
+  };
 
   return (
     <div className="RoomPage">
@@ -610,7 +654,10 @@ const toggleMic = () => {
             ) : null}
           </div>
           {subscribers.map((sub, i) => (
-            <div key={sub.id} className={`${videoDivClass} stream-container col-md-6 col-xs-6`}>
+            <div
+              key={sub.id}
+              className={`${videoDivClass} stream-container col-md-6 col-xs-6`}
+            >
               <span>{sub.id}</span>
               <UserVideoComponent streamManager={sub} />
             </div>
@@ -623,42 +670,31 @@ const toggleMic = () => {
         </div>
         <div className="flex items-center space-x-6">
           {mic ? (
-            <img onClick={(e) => toggleMic} src="/images/micbutton.png" />
+            <img onClick={toggleMic} src="/images/micbutton.png" />
           ) : (
-            <img
-              onClick={(e) => toggleMic}
-              src="/images/micbutton_disabled.png"
-            />
+            <img onClick={toggleMic} src="/images/micbutton_disabled.png" />
           )}
           {video ? (
-            <img
-              onClick={(e) => {
-                toggleVideo
-              }}
-              src="../images/videobutton.png"
-            />
+            <img onClick={toggleVideo} src="/images/videobutton.png" />
           ) : (
-            <img
-              onClick={(e) => {
-                toggleVideo
-              }}
-              src="../images/videobutton_disabled.png"
-            />
+            <img onClick={toggleVideo} src="/images/videobutton_disabled.png" />
           )}
 
           {screenShare === false ? (
-            <img onClick={handleScreenShare} src="../images/sharebutton.png" />
+            <img onClick={handleScreenShare} src="/images/sharebutton.png" />
           ) : (
-            <img onClick={handleScreenShare2} src="../images/sharebutton.png" />
+            <img onClick={handleScreenShare2} src="/images/sharebutton.png" />
           )}
-
-          <img
-            onClick={(e) => setRecordForm(true)}
-            src="/images/recordbutton.png"
-          />
-          {record && (
+          {!recordForm ? (
             <img
-              onClick={handleClick}
+              onClick={(e) => {
+                setRecordForm(!recordForm);
+              }}
+              src="/images/recordbutton.png"
+            />
+          ) : (
+            <img
+              onClick={recordHandler}
               src="/images/recordbutton_activated.png"
             />
           )}
@@ -754,24 +790,28 @@ const toggleMic = () => {
       {result && <ResultList />}
       {report && <Report />}
       {recordForm && (
-        <Modal title="녹화 정보 입력" onClose={setRecordForm(false)} className={"record-form"}>
-        <form onSubmit={submitHandler}>
-          <div>
-            <p>제목 : 
-            <input
-              placeholder="제목 입력..."
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            ></input></p>
-            <p>카테고리 : {categoryName()}</p>
-            <p>분류 : 스터디</p>
-          </div>
-          <div style={{display: "flex", justifyContent: "flex-end"}}>
-            {children}
+        <Modal
+          title="녹화 정보 입력"
+          onClose={(e) => setRecordForm(false)}
+          className={"record-form"}
+        >
+          <form onSubmit={submitHandler}>
+            <div>
+              <p>
+                제목 :
+                <input
+                  placeholder="제목 입력..."
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                ></input>
+              </p>
+              <p>카테고리 : {categoryName()}</p>
+              <p>분류 : 스터디</p>
             </div>
-          <Button>녹화 시작</Button>
-        </form>
-      </Modal>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}></div>
+            <Button>녹화 시작</Button>
+          </form>
+        </Modal>
       )}
     </div>
   );
