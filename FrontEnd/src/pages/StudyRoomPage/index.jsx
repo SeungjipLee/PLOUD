@@ -553,7 +553,7 @@ const StudyRoomPage = () => {
             ) : null}
           </div>
           {subscribers.map((sub, i) => (
-            <div key={sub.id} className="stream-container col-md-6 col-xs-6">
+            <div key={sub.id} className={`${videoDivClass} stream-container col-md-6 col-xs-6`}>
               <span>{sub.id}</span>
               <UserVideoComponent streamManager={sub} />
             </div>
