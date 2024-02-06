@@ -578,21 +578,21 @@ const StudyRoomPage = () => {
               onClick={(e) => {
                 setVideo(!video);
               }}
-              src="../images/videobutton.PNG"
+              src="../images/videobutton.png"
             />
           ) : (
             <img
               onClick={(e) => {
                 setVideo(!video);
               }}
-              src="../images/videobutton_disabled.PNG"
+              src="../images/videobutton_disabled.png"
             />
           )}
 
           {screenShare === false ? (
-            <img onClick={handleScreenShare} src="../images/sharebutton.PNG" />
+            <img onClick={handleScreenShare} src="../images/sharebutton.png" />
           ) : (
-            <img onClick={handleScreenShare2} src="../images/sharebutton.PNG" />
+            <img onClick={handleScreenShare2} src="../images/sharebutton.png" />
           )}
 
           <img

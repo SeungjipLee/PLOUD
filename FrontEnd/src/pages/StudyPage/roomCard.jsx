@@ -28,7 +28,7 @@ const RoomCard = ({ data, children }) => {
         <div className="card-study-room-info">
           <div className="card-study-title">
             <div className="overflow-ellipsis">{title}</div>
-            {isPrivate && <img src="/images/private_icon.PNG" alt="" />}
+            {isPrivate && <img src="/images/private_icon.png" alt="" />}
           </div>
           <div>
             <p>{managerId}</p>
