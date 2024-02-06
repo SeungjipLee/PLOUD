@@ -7,11 +7,14 @@ import { Link } from "react-router-dom";
 import { getProfile } from "../../services/user";
 import { useSelector } from "react-redux";
 import ResultCard from "../../components/ResultCard";
+import { getSpeechList } from "../../services/statistic";
 
 const MyPage = () => {
   const { token } = useSelector((state) => state.userReducer)
   const [ profile, setProfile ] = useState({})
   const base64Image = `data:image/png;base64,${profile.profileImg}`
+  const [ resultArr, setResultArr ] = useState(null)
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,10 +26,20 @@ const MyPage = () => {
             console.log(res.data.data)
             setProfile(res.data.data)
           },
-          (err) => console.log(err)
+          (err) => console.log('여기')
         );
+        
+        const response2 = await getSpeechList(
+          token,
+          (res) => {
+            console.log(res.data.data)
+            setResultArr(res.data.data)
+          },
+          (err) => console.log('저기')
+        )
+
       } catch (error) {
-        console.error("Profile fetch failed:", error);
+        console.error("쩌어기");
       }
     };
     fetchData();
@@ -88,11 +101,7 @@ const MyPage = () => {
               </span>
               <div className="flex justify-center">
                 {/* 여기에 5개의 결과 카드 나오도록 */}
-                <ResultCard/>
-                <ResultCard/>
-                <ResultCard/>
-                <ResultCard/>
-                <ResultCard/>
+                {/* {resultArr.map((data) => <ResultCard data={data}/>)} */}
               </div>
             </div>
           </div>
