@@ -140,6 +140,8 @@ public class OpenViduUtil {
                         }
                     }
                 }
+                MeetingInfo meetingInfo = findBySessionId(sessionId);
+                meetingInfo.setCurrentPeople(meetingInfo.getCurrentPeople() - 1);
             } else{
                 throw new CustomException(ResponseCode.OPENBVIDU_TOKEN_ERROR);
             }

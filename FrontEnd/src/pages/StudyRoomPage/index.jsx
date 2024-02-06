@@ -184,9 +184,8 @@ const StudyRoomPage = () => {
     session.current.on("streamCreated", (event) => {
       console.log(tag, "누가 접속했어요");
 
-      // 찍어 보고 채팅창에 추가하기
-      console.log(event.stream.connection.data);
-      setChatList([...chatList, "접속"]);
+      // var tmp = event.stream.connection.data.split('%/%');
+      // setChatList(chatList => [...chatList, {username: JSON.parse(tmp[0]).clientData, content : "님이 입장하였습니다."}]);
 
       var subscriber = session.current.subscribe(event.stream, undefined);
       setSubscriberse((subscribers) => [...subscribers, subscriber]);
@@ -196,9 +195,8 @@ const StudyRoomPage = () => {
     session.current.on("streamDestroyed", (event) => {
       console.log(tag, "누가 떠났어요");
 
-      // 찍어 보고 채팅창에 추가하기
-      console.log(event.stream.connection.data);
-      setChatList([...chatList, "떠남"]);
+      // var tmp = event.stream.connection.data.split('%/%');
+      // setChatList(chatList => [...chatList, {username: JSON.parse(tmp[0]).clientData, content : "님이 퇴장하였습니다."}]);
 
       deleteSubscriber(event.stream.streamManager);
     });
@@ -210,8 +208,12 @@ const StudyRoomPage = () => {
 
     // 채팅 수신
     session.current.on("signal:chat", (event) => {
-      console.log(event);
-      setChatList([...chatList, JSON.parse(event.data).chatvalue]);
+      var username = JSON.parse(event.data).nickname;
+      var content = JSON.parse(event.data).chatvalue;
+
+      if(!(username == nickname && content == "님이 접속하였습니다!")){
+        setChatList(chatList => [...chatList, {username: username, content : content}]);
+      }
     });
 
     session.current
@@ -219,8 +221,6 @@ const StudyRoomPage = () => {
       .then(async () => {
         // --- 5) Get your own camera stream ---
         console.log("Session 연결중");
-
-        console.log(token.nickname);
 
         let tmpPublisher = await OV.current.initPublisherAsync(undefined, {
           audioSource: undefined, // The source of audio. If undefined default microphone
@@ -252,6 +252,8 @@ const StudyRoomPage = () => {
 
         setMainStreamManager(tmpPublisher);
         setPublisher(tmpPublisher);
+        
+        sendMessage("님이 접속하였습니다!");
 
         // currentVideoDevice: currentVideoDevice,
       })
@@ -264,22 +266,22 @@ const StudyRoomPage = () => {
 
   const leaveSession = () => {
     console.log(tag, "leaveSession");
+    sendMessage("님이 퇴장하였습니다!");
 
     leaveMeeting(
       token,
       { sessionId: room.sessionId, token: ovToken },
       (response) => {
         console.log(tag, response);
-        session.current.disconnect();
-
-        session.current = null;
-        OV.current = null;
       },
       (error) => {
         console.log(tag, error);
       }
     );
 
+    session.current.disconnect();
+    session.current = null;
+    OV.current = null;
     navigate("/study");
   };
 
@@ -294,8 +296,12 @@ const StudyRoomPage = () => {
   const handleSubmit = async (e) => {
     if (e.key !== "Enter") return;
 
+    sendMessage(chatvalue);
+  };
+
+  const sendMessage = (chatvalue) => {
     const signalOptions = {
-      data: JSON.stringify({ chatvalue }),
+      data: JSON.stringify({chatvalue, nickname}),
       type: "chat",
       to: undefined,
     };
@@ -313,7 +319,7 @@ const StudyRoomPage = () => {
     }
 
     setChatvalue("");
-  };
+  }
 
   // 녹화 종료 요청
   const speechEnd = () => {
@@ -641,7 +647,6 @@ const StudyRoomPage = () => {
           </div>
         </div>
       )}
-      {/* {chat && <Chat />} */}
       {chat && (
         <Modal className="chat" title="채팅">
           <div className="chat-area">
