@@ -16,11 +16,11 @@ public class UserInfoResDto {
   private String nickname;
   private Year year;
 
-  public static UserInfoResDto toDto(UserEntity entity) {
+  public static UserInfoResDto toDto(UserEntity entity, String profileImgString) {
     return UserInfoResDto.builder()
         .userId(entity.getUserId())
         .email(entity.getEmail())
-        .profileImg(entity.getProfileImg())
+        .profileImg(profileImgString)
         .name(entity.getName())
         .nickname(entity.getNickname())
         .year(entity.getBirthYear())

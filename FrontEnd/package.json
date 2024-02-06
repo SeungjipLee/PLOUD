@@ -5,8 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "set port=3000 && webpack serve --env development",
-    "build": "webpack --config ./webpack.config.js"
+    "dev": "webpack serve --env development",
+    "start": "webpack --config ./webpack.config.js",
+    "build": "react-scripts build"
   },
   "author": "Junhyung Bae <wnsgud0895@gmail.com>",
   "license": "ISC",
@@ -33,6 +34,7 @@
     "@babel/preset-env": "^7.23.8",
     "@babel/preset-react": "^7.23.3",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
+    "@types/react": "^18.2.52",
     "autoprefixer": "^10.4.17",
     "babel-loader": "^9.1.3",
     "css-loader": "^6.10.0",

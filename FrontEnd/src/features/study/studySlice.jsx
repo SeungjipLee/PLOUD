@@ -3,7 +3,31 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   studyList: [],
   studyInfo: undefined,
+  speechId: undefined,
 };
+
+export const studySlice = createSlice({
+  name: "study",
+  initialState,
+  reducers: {
+    getStudyList: (state, action) => {
+      state.studyList = [...action.payload];
+    },
+    getStudy: (state, action) => {
+      console.log(action.payload.data);
+      state.studyInfo = action.payload.data;
+    },
+    getSpeechId:  (state, action) => {
+      console.log(action.payload.data);
+      state.speechId = action.payload.data;
+    }
+  },
+});
+
+export const { getStudyList, getStudy, getSpeechId } = studySlice.actions;
+export default studySlice.reducer;
+
+/* 방 임시 데이터
 const studyrooms = [
     {
       categoryId: 1,
@@ -50,19 +74,4 @@ const studyrooms = [
       title: "asdfasdf",
     },
   ];
-export const studySlice = createSlice({
-  name: "study",
-  initialState,
-  reducers: {
-    getStudyList: (state, action) => {
-      state.studyList = [...studyrooms, ...action.payload];
-    },
-    getStudy: (state, action) => {
-      console.log(action.payload);
-      state.studyInfo = action.payload;
-    }
-  },
-});
-
-export const { getStudyList, getStudy } = studySlice.actions;
-export default studySlice.reducer;
+  */

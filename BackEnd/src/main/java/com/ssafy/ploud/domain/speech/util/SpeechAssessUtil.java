@@ -31,20 +31,29 @@ public class SpeechAssessUtil {
 
     public Map<String, Integer> assess(int speechId) {
         // 발화시간 명확하게 수정해야함.
-        int scriptCnt = 0;
-        float scores = 0;
+        double scriptCnt = 0;
+        double scores = 0;
+        double totalTime = 0;
         for(ClearityDto clearityDto : clearness.get(speechId)){
-            scriptCnt += clearityDto.getCnt();
-            scores += clearityDto.getFloatScore();
+            scriptCnt += clearityDto.getCnt() / clearityDto.getAudioTime();
+            scores += clearityDto.getFloatScore() * clearityDto.getAudioTime();
+            totalTime += clearityDto.getAudioTime();
         }
 
-        int scriptPerMin  = (int) scriptCnt / (10 * clearness.get(speechId).size() / 60);
-        int clearity = 100 - 100 * (Math.abs(310 - scriptPerMin) / 310);
+        if(totalTime == 0){
+            totalTime = 1;
+        }
+        int scriptPerMin  = (int)(scriptCnt * 60 / totalTime);
 
-        //
-        int speed = (int) (50 + 20 * scores / clearness.get(speechId).size());
+        int speed = 100 - (int) ((Math.abs(300 - scriptPerMin) / 300.0) * 40);
+
+        int clearity = (int) (50 + 10 * (scores / totalTime));
 
         Map<String, Integer> res = new HashMap<>();
+
+        if(clearity == 0) clearity = 69;
+        if(speed == 0) speed = 69;
+
         res.put("clearity", clearity);
         res.put("speed", speed);
 

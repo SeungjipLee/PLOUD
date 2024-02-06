@@ -16,5 +16,6 @@ public class ScoreDetail {
   int clarity;
   int eye;
   int grade;
+  String date;
 
 }

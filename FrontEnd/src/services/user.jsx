@@ -52,8 +52,6 @@ export const checkNickname = async (data, success, fail) => {
 
 
 export const getProfile = async (token, success, fail) => {
-  // console.log(`Bearer ${token.accessToken}`)
-  // return API(`Bearer ${token.accessToken}`)
   return await API(token)
     .get("user/profile")
     .then(success)
@@ -64,7 +62,7 @@ export const getProfile = async (token, success, fail) => {
 // data = { token: credentialResponse.credential }
 export const googleLogin = async (data, success, fail) => {
   return await API(null)
-    .post("auth/google")
+    .post("auth/google", data)
     .then(success)
     .catch(fail)
 }

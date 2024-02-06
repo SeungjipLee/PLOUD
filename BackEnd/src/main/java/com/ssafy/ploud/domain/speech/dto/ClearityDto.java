@@ -10,5 +10,6 @@ import lombok.Setter;
 public class ClearityDto {
     private String recognized;
     private int cnt;
-    private float floatScore;
+    private double floatScore;
+    private double audioTime;
 }

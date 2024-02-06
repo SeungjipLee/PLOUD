@@ -4,6 +4,7 @@ import com.ssafy.ploud.domain.speech.dto.request.CommentRequest;
 import com.ssafy.ploud.domain.speech.dto.request.FeedbackRequest;
 import com.ssafy.ploud.domain.speech.dto.request.SpeechEndRequest;
 import com.ssafy.ploud.domain.speech.dto.request.SpeechStartRequest;
+import com.ssafy.ploud.domain.speech.dto.response.ClearityResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface SpeechService {
@@ -11,5 +12,5 @@ public interface SpeechService {
     void endAndDecibel(SpeechEndRequest speechEndRequest);
     void feedback(FeedbackRequest feedbackRequest);
     void comment(CommentRequest commentRequest);
-    float clearity(MultipartFile audioFile, Integer speechId, Boolean isLast);
+    ClearityResponse clearity(MultipartFile audioFile, Integer speechId, Boolean isLast);
 }

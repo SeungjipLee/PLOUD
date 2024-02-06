@@ -23,5 +23,11 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, reducers);
 
 export default configureStore({
-  reducer: persistedReducer
+  reducer: persistedReducer,
+  // 직렬화 가능하지 않은 객체가 들어와도 오류가 나지 않게 변경
+  // 직렬화 가능하지 않은 객체 : Promise, 함수, 기타 등등
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });

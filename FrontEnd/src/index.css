@@ -2,13 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-a {
-  min-width: auto;
-}
 .Main2 {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: baseline;
 }
 
 .Main2Container {
@@ -19,10 +16,14 @@ a {
 }
 
 .Main3 {
-  background-color: #ebeafa;
+  background-color: #d6d6d6;
   font-style: white;
 }
-.Main4 {
+
+.Main3_1 {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 }
 
 .video {
@@ -50,20 +51,22 @@ a {
 
 .pcard {
   aspect-ratio: 3 / 2;
-  background-color: #2d24a8;
-  color: #ebeafa;
   display: flex;
   flex-direction: column;
   justify-items: center;
   align-items: center;
   padding-top: 3%;
   font-size: xx-large;
+  border-radius: 10px;
+  position: relative;
 }
 
 .human1 {
   display: flex;
   flex-direction: row;
-  width: 20%;
+  width: 70px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .human2 {
@@ -87,6 +90,11 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
+}
+
+.Button, .Button:hover, .Button:active, .Button:focus {
+  text-decoration: none;
 }
 
 .study-category-button {
@@ -99,7 +107,7 @@ a {
 }
 
 .study-category-button-activate {
-  background-color: #2d24a8;
+  background: linear-gradient(to right, #223872, #2f2468);
   color: white;
 }
 
@@ -108,18 +116,37 @@ a {
   color: black;
 }
 
-.container {
-  display: flex;         /* Flexbox 사용 */
+.study-main-search {
+  display: flex; /* Flexbox 사용 */
   justify-content: flex-end;
-  align-items: center;   /* 수직 방향 중앙 정렬 */
-  height:45px;         /* 컨테이너의 높이 설정, 필요에 따라 조정 */
+  align-items: center; /* 수직 방향 중앙 정렬 */
+  height: 45px; /* 컨테이너의 높이 설정, 필요에 따라 조정 */
 }
 
+.study-main-search > img {
+  display: inline-block;
+  position: relative;
+  width: 15px;
+  left: 30px;
+}
+
+.study-room-manage {
+  border: rgb(85, 85, 85) solid 1px;
+  border-radius: 10px;
+  position: absolute;
+  top: 200px;
+  width: 250px;
+  height: 300px;
+  /* background-color: #EBEAFA; */
+  color: white;
+  background-color: #060515;
+  padding: 20px;
+}
 .search-room-input {
   border-radius: 15px;
-  background-color: #EBEAFA;
+  background-color: #ebeafa;
   padding: 5px;
-  padding-left: 20px;
+  padding-left: 40px;
   padding-right: 20px;
 }
 
@@ -132,69 +159,96 @@ a {
 
 .study-main {
   display: inline-block;
+  width: 980px;
   margin: 100px 25%;
-    height: 100%;
-  
+  height: 100%;
 }
 
-.study-button-container {
+.pagination {
+  padding-top: 20px;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: center;
+  font-size: 15px;
 }
 
-.study-button-container > button{
-  width: 100px;
-  margin: 0px 20px;
-  background-color: #2d24a8;
+.pagination > span {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.pagination > button {
+  padding: 0px 30px;
+}
+
+.create-room-button {
+  position: relative;
+}
+
+.create-room-button > button {
+  position: absolute;
+  background: linear-gradient(to right, #223872, #2f2468);
   color: white;
   font-weight: bold;
+  border-radius: 10px;
+  width: 100px;
+  height: 40px;
+  right: 30px;
+  bottom: -10px;
 }
 
 .LoginBox {
-    background-color: #0C134F;
-    margin-top: 3%;
-    width: 450px;
+  background-color: #0c134f;
+  margin-top: 3%;
+  width: 450px;
 }
 
 .LoginAnother {
-    display: flex;
+  display: flex;
 }
 
 .LoginSocial {
-    display: flex;
+  display: flex;
 }
 
 .textsmall {
-    font-size: 13px;
+  font-size: 13px;
 }
 
 .moveButton {
-    position: absolute;
-    top:118px;
-    right: 95px;
-    font-size: small;
+  position: absolute;
+  top: 118px;
+  right: 95px;
+  font-size: small;
 }
 
 .moveButton1 {
-    position: absolute;
-    top:178px;
-    right: 95px;
-    font-size: small;
+  position: absolute;
+  top: 178px;
+  right: 95px;
+  font-size: small;
 }
 
 .card-study-room-info {
+  position: relative;
   width: 280px;
   height: 160px;
   border-radius: 15px;
   padding: 20px;
-  background-color: #1D267D;
+  /* background-color: #1d267d; */
+  background: linear-gradient(to right, #223872, #2f2468);
   color: white;
-  margin: 10px 20px
+  margin: 10px 20px;
 }
 
-.card-study-room-info > h1{
+.card-study-room-info img {
+  position: absolute;
+  right: 12px;
+  width: 40px;
+}
+
+.card-study-room-info h1 {
   font-size: 25px;
+  display: inline-block;
 }
 
 .card-study-room-div1 {
@@ -202,6 +256,484 @@ a {
   justify-content: space-between;
 }
 
+.card-study-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.card-study-title > img {
+  height: 40px;
+}
+
+.study-room-user-list {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 10px;
+}
+.study-room-user {
+  display: flex;
+}
+.presenter {
+  background-color: #272541;
+}
+.participant {
+  background-color: #B0B0B0;
+  color: white;
+}
+.presneter-button {
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+  width: 70px;
+  height: 30px;
+}
+
 .private-icon {
   width: 20px;
+}
+
+.RoomPage {
+  position: relative;
+  padding: 30px;
+  background-color: #0c134f;
+  width: 100%;
+  height: 1080px;
+}
+.RoomPage-mid {
+  height: 720px;
+  display: flex;
+  justify-content: center;
+}
+
+/* pLoud */
+.ploud-icon {
+  width: 327px;
+  height: 87px;
+  left: 65px;
+
+  font-family: "Notable";
+  font-style: normal;
+  font-weight: bold;
+  font-size: 60px;
+  text-align: center;
+
+  color: #818f8a;
+}
+
+.video-flex {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 920px;
+  height: 680px;
+  padding: 2px;
+}
+
+.video-room-button img {
+  width: 50px;
+}
+
+.video-room-button {
+  margin: 0px 30px;
+}
+
+.button-empty {
+  width: 210px;
+}
+
+.enter-room {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+}
+
+.room-list {
+  height: 560px;
+}
+
+.subtitle {
+  font-size: 75%;
+  margin-bottom: 30px;
+}
+
+.subtitleImg {
+  position: relative;
+  width: 500px; /* 이미지의 너비를 설정합니다. */
+  height: 320px; /* 이미지의 높이를 설정합니다. */
+}
+
+.subtitleImg img {
+  display: block; /* img를 블록 요소로 만듭니다. */
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 이미지의 비율을 유지하면서, 지정한 너비와 높이에 맞게 조절합니다. */
+  border-radius: 10px;
+}
+
+.subtitleImg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0
+  ); /* 처음에는 배경색을 투명하게 설정합니다. */
+  transition: background-color 0.3s ease; /* 배경색의 변화를 부드럽게 만듭니다. */
+  z-index: 1; /* 텍스트 위에 위치하도록 합니다. */
+}
+
+.subtitleImg:hover::before {
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ); /* 호버 시 배경색을 회색으로 변경합니다. */
+}
+
+.subtitleImg .text {
+  position: absolute;
+  bottom: 40%;
+  left: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  color: white; /* 텍스트 색상을 설정합니다. */
+  font-size: 20px; /* 글자 크기를 설정합니다. */
+  text-align: center;
+  opacity: 0; /* 처음에는 텍스트를 보이지 않게 합니다. */
+  transition: opacity 0.3s ease; /* 텍스트의 투명도 변화를 부드럽게 만듭니다. */
+}
+
+.subtitleImg:hover .text {
+  opacity: 1; /* 호버 시 텍스트를 보이게 합니다. */
+}
+
+.container1 {
+    width: 950px;
+    height: 300px;
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 30px;
+}
+.box1 {
+  width: 400px;
+  height: 240px;
+}
+.box2 {
+  width: 550px;
+  height: 240px;
+}
+.box3 {
+  width: 950px;
+  height: 300px;
+  margin-bottom: 50px;
+}
+.box4 {
+  width: 860px;
+  height: 260px;
+  background-color: white;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.box1,
+.box2,
+.box3 {
+  transition: transform 0.3s; /* 변환 효과에 대한 지연 시간 설정 */
+}
+
+.box1:hover,
+.box2:hover,
+.box3:hover {
+  transform: scale(1.05); /* 원본 크기의 10% 증가 */
+}
+.Recard {
+  transition: transform 0.3s, background-color 0.3s;
+}
+
+.Recard:hover {
+  transform: scale(1.05);
+  background-color: #fffed1;
+}
+
+.chat {
+  border: rgb(85, 85, 85) solid 1px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  border-radius: 5px;
+  top: 80px;
+  right: 30px;
+  width: 350px;
+  height: 730px;
+  background-color: #060515;
+  color: white;
+}
+.chat-area {
+  height: 600px;
+  overflow: auto;
+}
+.chat > div > textarea {
+  background-color: #272541;
+  border-radius: 5px;
+  height: 70px;
+  width: 310px;
+  resize: none;
+  padding: 10px;
+}
+
+p {
+  word-wrap: break-word;
+  /* overflow-wrap: break-word;
+  white-space: normal; */
+}
+.report {
+  border: rgb(85, 85, 85) solid 1px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  border-radius: 5px;
+  top: 380px;
+  right: 30px;
+  width: 350px;
+  height: 430px;
+  background-color: #060515;
+  color: white;
+}
+.report > div > select {
+  background: #060515;
+}
+
+.report > div > select option {
+  color: white;
+  background-color: #060515;
+}
+
+.report > div > textarea {
+  background-color: #272541;
+  border-radius: 5px;
+  height:200px;
+  width: 310px;
+  resize: none;
+  padding: 10px;
+}
+
+.result-list {
+  border: rgb(85, 85, 85) solid 1px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 5px;
+  top: 80px;
+  right: 30px;
+  width: 350px;
+  height: 730px;
+  background-color: #060515;
+  color: white;
+}
+.result-list > h1 {
+  padding-bottom: 20px;
+}
+
+.study-result {
+  position: absolute;
+  border-radius: 10px;
+  padding: 60px 50px;
+  top: 50px;
+  left: 10%;
+  width: 1000px;
+  height: 700px;
+  background-color: #272541;
+  color: white;
+}
+
+.result-section {
+  display: flex;
+  justify-content: center;
+}
+.result-section-1 {
+  width: 400px;
+  height: 400px;
+  margin: 20px;
+  background-color: #2d24a8;
+}
+.result-section-2 {
+  width: 400px;
+  height: 400px;
+  margin: 20px;
+  background-color: #2d24a8;
+}
+
+.join-confirm-modal {
+  position: fixed;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #001356;
+  border-radius: 19px;
+  color: white;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.join-confirm-modal-div1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+  padding-bottom: 10px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.join-confirm-modal > div > h1 {
+  padding-bottom: 10px;
+  padding-right: 20px;
+}
+
+.modal-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  font-size: 20px;
+}
+
+.close {display:inline-block;line-height: 15px;}
+.close:after {display: inline-block;content: "\00d7"; font-size:20pt;}
+.outline1 {
+  width: 700px;
+}
+
+.outline2 {
+  width: 1000px;
+}
+
+.fetImg {
+  flex-direction: column;
+  align-items: center;
+}
+
+.checkPatch {
+   position: absolute;
+   top : 348px;
+   left : 365px;
+   font-size : x-small;
+}
+
+.underLine {
+  border-bottom: 3px black solid;
+}
+
+.OutBox {
+  width: 1000px;
+  height: 500px;
+}
+
+.searchForm {
+  position: absolute;
+  right:18%;
+}
+
+.searchBtn {
+  right: 15%;
+  bottom: -52px;
+}
+
+.writeBtn {
+  background-color: #1D267D;
+  color: white;
+}
+
+.writeBtn1 {
+  background-color: #ff0022;
+  color: white;
+}
+
+.write {
+  right:15%;
+}
+
+.creBoaOut {
+  width: 800px;
+  height: 800px;
+  background-color: rgb(255, 255, 255);
+}
+
+.createBtn {
+  display: flex;
+}
+
+.Detail {
+  height:1000px;
+}
+
+.Comment {
+  border: 2px solid black;
+}
+
+
+.overflow-ellipsis {
+  white-space: nowrap; /* 텍스트 줄 바꿈 비활성화 */
+  overflow: hidden; /* 넘치는 내용 숨김 */
+  text-overflow: ellipsis; /* 넘치는 텍스트에 줄임표 표시 */
+  max-width: 100%; /* div의 최대 너비 설정 */
+  width: 200px;
+  z-index: 100;
+  font-size: 25px;
+  font-weight: normal;
+}
+
+.overflow-ellipsis:hover {
+  position: absolute;
+  white-space: normal; /* 호버링 시 텍스트 줄 바꿈 활성화 */
+  overflow: visible; /* 호버링 시 텍스트 내용 표시 */
+  text-overflow: unset; /* 줄임표 제거 */
+  /* background-color: #B0B0B0; */
+  width: 241px;
+  height: 100px;
+  background: linear-gradient(to right, #223872, #2f2468);
+  border-radius: 5px;
+}
+
+.record-form {
+  border: rgb(85, 85, 85) solid 1px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 5px;
+  width: 400px;
+  height: 330px;
+  background-color: #060515;
+  color: white;
+  top: 40%; /* 상단 위치를 부모 요소의 중간으로 조정 */
+  left: 50%; /* 왼쪽 위치를 부모 요소의 중간으로 조정 */
+  transform: translate(-50%, -50%); /* 요소를 정확한 중앙으로 이동 */
+}
+
+.record-form input {
+  background-color: #272541;
+}
+
+.record-form p {
+  padding: 10px 0px;
+}
+
+.record-form button {
+  margin: 20px;
 }
