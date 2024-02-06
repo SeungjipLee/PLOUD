@@ -2,8 +2,8 @@ import axios from "axios";
 // import { useDispatch } from "react-redux";
 // import { getNewToken } from "../features/user/userSlice";
 
-const DOMAIN = "https://i10e207.p.ssafy.io";
-// const DOMAIN = "http://localhost:8000";
+// const DOMAIN = "https://i10e207.p.ssafy.io";
+const DOMAIN = "http://localhost:8000";
 // const { refreshToken } = useSelector((state) => state.userReducer.token);
 
 const API = (token) => {
@@ -17,41 +17,17 @@ const API = (token) => {
   //   const dispatch = useDispatch();
 
   instance.interceptors.response.use(
-<<<<<<< HEAD
-    (response) => {return response},
-    (error) => {
-      console.log(error);
-=======
     (response) => {
-      console.log("[intercept 성공]", response);
       return response;
     },
-    async (error) => {
-      console.log("[intercept 실패]", error);
-      console.log(token);
-      const originalRequest = error.config;
-      if (!originalRequest._retry) {
-        originalRequest._retry = true;
-        const refreshToken = token.refreshToken; // 리프레시 토큰을 어디서 가져올지에 대한 로직 필요
-        // 리프레시 토큰으로 새 액세스 토큰 요청
-        const response = await axios.get(`${DOMAIN}/api/auth/reissue`, {
-          headers: { Authorization: `Bearer ${refreshToken}` },
-        });
-        // dispatch(getNewToken(response.data));
-        const newAccessToken = response.data.accessToken;
-        // 새로운 액세스 토큰으로 요청 헤더 업데이트
-        instance.defaults.headers["Authorization"] = `Bearer ${newAccessToken}`;
-        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-        return instance(originalRequest); // 실패한 요청 재시도
-      }
-      return Promise.reject(error);
->>>>>>> fe/feature/chatting
+    (error) => {
+      console.log(error);
     }
   );
 
   // instance.interceptors.response.use(
   //   (response) => {
-  //     // console.log("[intercept 성공]", response) 
+  //     // console.log("[intercept 성공]", response)
   //   return response},
   //   async (error) => {
   //     // console.log("[intercept 실패]", error)
