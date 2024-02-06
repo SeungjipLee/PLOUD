@@ -33,8 +33,8 @@ public class BoardServiceImpl implements BoardService {
   }
 
   @Override
-  public void createBoard(BoardRequest boardRequest, String userId, String nickname) {
-    BoardEntity boardEntity = BoardEntity.createBoard(boardRequest, userId, nickname);
+  public void createBoard(BoardRequest boardRequest) {
+    BoardEntity boardEntity = BoardEntity.createBoard(boardRequest);
     boardRepository.save(boardEntity);
   }
 

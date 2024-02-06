@@ -1,63 +1,68 @@
 import API from "../utils/Api";
 
 
-export const getArticleList = async (token, data, success, fail) => {
+export const getboardList = async (token, data, success, fail) => {
   return await API(token)
-    .post("article", data)
+    .post("board", data)
     .then(success)
     .catch(fail)
 }
 
 
-export const createArticle = async (token, data, success, fail) => {
+export const createboard = async (token, data, success, fail) => {
   return await API(token)
-    .post("article/create", data)
+    .post("board/create", data)
     .then(success)
     .catch(fail)
 }
 
 
-export const getArticleDetail = async (token, articleId, success, fail) => {
+export const getboardDetail = async (token, id, success, fail) => {
   return await API(token)
-    .get(`article/${articleId}`)
+    .get(`board/${id}`)
     .then(success)
     .catch(fail)
 }
 
 
-export const putArticle = async (token, articleId, data, success, fail) => {
+export const putboard = async (token, id, data, success, fail) => {
   return await API(token)
-    .put(`article/${articleId}`, data)
+    .put(`board/${id}`, data)
     .then(success)
     .catch(fail)
 }
 
 
-export const deleteArticle = async (token, articleId, success, fail) => {
+export const deleteboard = async (token, id, success, fail) => {
   return await API(token)
-    .delete(`article/${articleId}`)
+    .delete(`board/${id}`)
+    .then(success)
+    .catch(fail)
+}
+
+// 좋아요 기능 /api/board/heart
+export const likeboard = async (token, id, success, fail) => {
+  return await API(token)
+    .get(`board/heart/${id}`)
     .then(success)
     .catch(fail)
 }
 
 
-export const likeArticle = async (token, articleId, success, fail) => {
+// 댓글 기능 /api/comment
+// 조회 /{boardId}
+// 작성 /
+// 삭제 /{id}
+
+export const getComment = async (token, boardId, success, fail) => {
   return await API(token)
-    .get(`article/like/${articleId}`)
+    .get(`comment/${boardId}`)
     .then(success)
     .catch(fail)
 }
 
 
-export const getComment = async (token, articleId, success, fail) => {
-  return await API(token)
-    .get(`comment/${articleId}`)
-    .then(success)
-    .catch(fail)
-}
-
-
-export const postComment = async (token, data, articleId, success, fail) => {
+export const postComment = async (token, data, boardId, success, fail) => {
   return await API(token)
     .get("comment", data)
     .then(success)

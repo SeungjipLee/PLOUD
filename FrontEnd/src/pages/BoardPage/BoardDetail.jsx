@@ -1,18 +1,48 @@
 import { useSelector,useDispatch } from "react-redux";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../components/Button";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 // import { refreshAccessToken, updateNickname } from "../../features/user/userSlice";
 
 
-
-
 const BoardDetail = () => {
-  // 로직
+  
+  const { token, nickname }  = useSelector((state) => state.userReducer);
+  const { boardId } = useParams();
+  const [board, setBoard] = useState({
+    nickname: "",
+    title: "", 
+    content: "",
+  });
+
+  useEffect(()=> {
+    const fetchBoard = async() => {
+      try {
+        const response = await axios.get(`/api/board/${boardId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        
+        const { nickname, title, content } = response.data;
+        setBoard({  // 이 부분을 setboard가 아닌 setBoard로 수정
+          nickname,
+          title,
+          content,
+        });
+      } catch(error){
+        console.log(error);
+      }
+    }
+    fetchBoard();
+  }, [boardId, token]);
+  
+  
+
   const [selectedFile, setSelectedFile] = useState();
   const [preview, setPreview] = useState();
   
@@ -52,10 +82,10 @@ const BoardDetail = () => {
             </div>
 
           <div className="border-2 border-black mx-20 px-10 mt-5 my-2 rounded-xl">
-            <div className="mt-5 mb-2 text-2xl font-bold">피드백 부탁드립니다.</div>
+            <div className="mt-5 mb-2 text-2xl font-bold">{board.title}</div>
             <div className="flex text-sm mb-3">
               <div className="me-4">2024.01.24 Wed</div>
-              <div className="me-1"><img src="images/Profile.PNG" className="w-5 h-5"/></div>
+              <div className="me-1"><img src="images/Profile.png" className="w-5 h-5"/></div>
               <div className="me-4">Tony</div>
               <div className="me-4 my-0.5">조회수 : 35</div>
               <div className="my-0.5">좋아요 : 11</div>
@@ -71,7 +101,7 @@ const BoardDetail = () => {
                 Your browser does not support the video tag.
               </video>
             )}
-            {!preview && <img src="images/Profile.PNG" className="w-full h-36 my-2"/>}
+            {!preview && <img src="images/Profile.png" className="w-full h-36 my-2"/>}
                 <input
                   type="file"
                   accept="image/*, video/*"

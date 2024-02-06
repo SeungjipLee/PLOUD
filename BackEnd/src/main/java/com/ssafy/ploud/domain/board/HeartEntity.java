@@ -19,8 +19,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "hearts")
 @Builder
+@Table(name = "hearts")
 public class HeartEntity {
 
   @Id
@@ -37,7 +37,9 @@ public class HeartEntity {
   private BoardEntity board;
 
 
-  public HeartEntity() {
-
+  public HeartEntity(int id, UserEntity user, BoardEntity board) {
+    this.id = id;
+    this.user = user;
+    this.board = board;
   }
 }

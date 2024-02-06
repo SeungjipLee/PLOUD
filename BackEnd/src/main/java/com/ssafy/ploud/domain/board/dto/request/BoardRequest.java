@@ -7,9 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class BoardRequest {
 
-  private int id;
-  private String userId;
-  private String nickname;
   private String title;
   private String content;
 

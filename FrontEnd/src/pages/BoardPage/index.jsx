@@ -54,7 +54,7 @@ const BoardPage = () => {
 
       {/* 완전 밖 */}
       <div className="OutBox flex justify-center relative bg-gray-100 rounded-md outline2 mx-auto mt-10">
-      <table class="table-auto text-center bg-white">
+      <table className="table-auto text-center bg-white">
         <thead className="underLine">
           <tr>
             <th className="w-4">No</th>
@@ -151,7 +151,7 @@ const BoardPage = () => {
         </div>
         <button className="absolute border searchBtn p-1 rounded-md bg-sky-300 writeBtn">찾기</button>
         <Link to={"/createboard"}>
-        <button class="absolute write top-16 border writeBtn rounded-md py-1 px-4">글쓰기</button>
+        <button className="absolute write top-16 border writeBtn rounded-md py-1 px-4">글쓰기</button>
         </Link>
       </div>
       <div className="w-full h-32 bg-white"></div>

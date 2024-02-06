@@ -36,11 +36,9 @@ public class BoardEntity {
 
   private int likeCount;  // 좋아요 개수
 
-  public static BoardEntity createBoard(BoardRequest boardRequest, String userId, String nickname) {
+  public static BoardEntity createBoard(BoardRequest boardRequest) {
     BoardEntity boardEntity = new BoardEntity();
 
-    boardEntity.userId = userId;
-    boardEntity.nickname = nickname;
     boardEntity.title = boardRequest.getTitle();
     boardEntity.content = boardRequest.getContent();
 //  boardEntity.videoPath = boardRequest.getVideoPath().getOriginalFilename();

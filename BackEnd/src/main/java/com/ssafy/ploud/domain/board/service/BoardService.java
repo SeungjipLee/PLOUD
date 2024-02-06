@@ -9,7 +9,7 @@ public interface BoardService {
 
   List<BoardResponse> getAllBoards(Pageable pageable);
 
-  void createBoard(BoardRequest boardRequest, String userId, String nickname);
+  void createBoard(BoardRequest boardRequest);
 
   BoardResponse getBoardById(int id);
 

@@ -14,7 +14,6 @@ import lombok.Setter;
 public class BoardResponse {
 
   private int id;
-  private String userId;
   private String nickname;
   private String title;
   private String content;
@@ -25,7 +24,6 @@ public class BoardResponse {
   public static BoardResponse fromEntity(BoardEntity boardEntity) {
     return BoardResponse.builder()
         .id(boardEntity.getId())
-        .userId(boardEntity.getUserId())
         .nickname(boardEntity.getNickname())
         .title(boardEntity.getTitle())
         .content(boardEntity.getContent())
