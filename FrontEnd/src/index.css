@@ -93,7 +93,10 @@
   text-decoration: none;
 }
 
-.Button, .Button:hover, .Button:active, .Button:focus {
+.Button,
+.Button:hover,
+.Button:active,
+.Button:focus {
   text-decoration: none;
 }
 
@@ -278,7 +281,7 @@
   background-color: #272541;
 }
 .participant {
-  background-color: #B0B0B0;
+  background-color: #b0b0b0;
   color: white;
 }
 .presneter-button {
@@ -326,6 +329,15 @@
   flex-wrap: wrap;
   justify-content: center;
   width: 920px;
+  height: 680px;
+  padding: 2px;
+}
+
+.video-flex-big {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 1380px;
   height: 680px;
   padding: 2px;
 }
@@ -415,12 +427,12 @@
 }
 
 .container1 {
-    width: 950px;
-    height: 300px;
-    background-color: white;
-    margin-left: auto;
-    margin-right: auto;
-    padding-top: 30px;
+  width: 950px;
+  height: 300px;
+  background-color: white;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 30px;
 }
 .box1 {
   width: 400px;
@@ -522,7 +534,7 @@ p {
 .report > div > textarea {
   background-color: #272541;
   border-radius: 5px;
-  height:200px;
+  height: 200px;
   width: 310px;
   resize: none;
   padding: 10px;
@@ -613,8 +625,15 @@ p {
   font-size: 20px;
 }
 
-.close {display:inline-block;line-height: 15px;}
-.close:after {display: inline-block;content: "\00d7"; font-size:20pt;}
+.close {
+  display: inline-block;
+  line-height: 15px;
+}
+.close:after {
+  display: inline-block;
+  content: "\00d7";
+  font-size: 20pt;
+}
 .outline1 {
   width: 700px;
 }
@@ -629,10 +648,10 @@ p {
 }
 
 .checkPatch {
-   position: absolute;
-   top : 348px;
-   left : 365px;
-   font-size : x-small;
+  position: absolute;
+  top: 348px;
+  left: 365px;
+  font-size: x-small;
 }
 
 .underLine {
@@ -646,7 +665,7 @@ p {
 
 .searchForm {
   position: absolute;
-  right:18%;
+  right: 18%;
 }
 
 .searchBtn {
@@ -655,7 +674,7 @@ p {
 }
 
 .writeBtn {
-  background-color: #1D267D;
+  background-color: #1d267d;
   color: white;
 }
 
@@ -665,7 +684,7 @@ p {
 }
 
 .write {
-  right:15%;
+  right: 15%;
 }
 
 .creBoaOut {
@@ -679,13 +698,12 @@ p {
 }
 
 .Detail {
-  height:1000px;
+  height: 1000px;
 }
 
 .Comment {
   border: 2px solid black;
 }
-
 
 .overflow-ellipsis {
   white-space: nowrap; /* 텍스트 줄 바꿈 비활성화 */
@@ -737,3 +755,53 @@ p {
 .record-form button {
   margin: 20px;
 }
+
+.video-div-size-1 {
+}
+
+.video-div-size-1 video {
+  padding: 60px 20px;
+  width: 600px;
+  height: auto;
+  cursor: pointer;
+}
+
+.video-div-size-2 {
+}
+
+.video-div-size-2 video {
+  padding-top: 150px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 440px;
+  height: auto;
+  cursor: pointer;
+}
+
+.video-div-size-4 {
+}
+
+.video-div-size-4 video {
+  padding: 10px;
+  width: 400px;
+  height: auto;
+  cursor: pointer;
+}
+
+.video-div-size-6 {
+}
+
+.video-div-size-6 video {
+  padding: 10px;
+  width: 400px;
+  height: auto;
+  cursor: pointer;
+}
+
+/* video {
+    padding: 10px;
+    width: 400px;
+    height: auto;
+    float: left;
+    cursor: pointer;
+} */
