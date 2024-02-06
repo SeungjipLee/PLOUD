@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-import { getScriptList, getScriptDetail } from "../services/script";
+import { getScriptList, getScriptDetail } from "../../../services/script";
 
 const Side = styled.div`
-  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -23,26 +22,34 @@ const NewsPage = () => {
   const [list, setList] = useState([]);
   //console.log(token);
 
-  useEffect(() => {
+  const getNewsList = async () => {
     getScriptList(
       token,
       1,
       (res) => {
         setList(res.data.data.scripts);
+        // console.log(res);
       },
       (err) => {
         console.log(err);
         alert("ScriptList 로딩 에러");
       }
     );
+  };
+
+  useEffect(() => {
+    getNewsList();
   }, []);
+
+  //console.log(list);
 
   return (
     <>
-      <div>뉴스 페이지</div>
-      {list.map((i) => {
-        <div>1</div>;
-      })}
+      {list.map((i, index) => (
+        <div key={index}>
+          <div>{i.scriptTitle}</div>
+        </div>
+      ))}
     </>
   );
 };
@@ -50,12 +57,46 @@ const NewsPage = () => {
 // Speech categoryid : 2
 const SpeechPage = () => {
   const token = useSelector((state) => state.userReducer.token);
+  const [list, setList] = useState([]);
+  //console.log(token);
 
-  return <div>연설 페이지</div>;
+  const getSpeechList = async () => {
+    getScriptList(
+      token,
+      2,
+      (res) => {
+        setList(res.data.data.scripts);
+        //console.log(res);
+      },
+      (err) => {
+        console.log(err);
+        alert("ScriptList 로딩 에러");
+      }
+    );
+  };
+
+  useEffect(() => {
+    getSpeechList();
+  }, []);
+
+  //console.log(list);
+
+  return (
+    <>
+      {list.map((i, index) => (
+        <div key={index}>
+          <div>{i.scriptTitle}</div>
+        </div>
+      ))}
+    </>
+  );
 };
 
 const Sidebar = () => {
   const [selectedMenu, setSelectedMenu] = useState(null);
+  const [id, setId] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   const handleMenuClick = (menu) => {
     setSelectedMenu(menu);
@@ -75,12 +116,13 @@ const Sidebar = () => {
   return (
     <div style={{ display: "flex" }}>
       <Side>
+        <p
+          className="text-sky-950 font-bold text-2xl"
+          style={{ paddingBottom: "20px" }}
+        >
+          분류
+        </p>
         <Menu className="grid-cols-3">
-          <p
-            className="text-sky-950 font-bold text-2xl"
-            style={{ paddingBottom: "20px" }}>
-            분류
-          </p>
           {["뉴스", "연설"].map((menu, index) => (
             <div
               key={index}
@@ -91,18 +133,23 @@ const Sidebar = () => {
                 cursor: "pointer",
                 fontWeight: selectedMenu === menu ? "bold" : "normal",
               }}
-              onClick={() => handleMenuClick(menu)}>
+              onClick={() => handleMenuClick(menu)}
+            >
               {menu}
             </div>
           ))}
         </Menu>
       </Side>
-      <p
-        className="text-sky-950 font-bold text-2xl"
-        style={{ paddingBottom: "20px" }}>
-        목록
-      </p>
-      {renderSelectedComponent()}
+      <div style={{ flexDirection: "column", width: "15%" }}>
+        <p
+          className="text-sky-950 font-bold text-2xl"
+          style={{ paddingBottom: "20px" }}
+        >
+          목록
+        </p>
+        {renderSelectedComponent()}
+      </div>
+      <div>대본 제목이랑 대본 내용 출력되야함</div>
     </div>
   );
 };
