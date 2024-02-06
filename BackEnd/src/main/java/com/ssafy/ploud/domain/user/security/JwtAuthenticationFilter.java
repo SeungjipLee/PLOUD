@@ -65,5 +65,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     response.getWriter()
         .write("{\"status\":401, \"message\": \"" + msg + "\", \"data\" : \"null\"}");
   }
-
 }

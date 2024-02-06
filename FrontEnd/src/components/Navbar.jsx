@@ -21,8 +21,8 @@ const Navbar = () => {
 
   const onClickHandler = () => {
     dispatch(expireToken());
-    // 브라우저 로컬스토리지에서도 토큰을 삭제해야함
     localStorage.removeItem("user");
+    navigate('/');
   };
   return (
     <div className="Navbar w-screen h-20 fixed top-0 z-20 py-5">
