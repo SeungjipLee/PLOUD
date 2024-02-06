@@ -11,7 +11,7 @@ import lombok.Setter;
 public class ClearityResponse {
     String script;
     int scriptCnt;
-    float score;
+    double score;
 
     public ClearityResponse(ClearityDto clearityDto) {
         this.script = clearityDto.getRecognized();

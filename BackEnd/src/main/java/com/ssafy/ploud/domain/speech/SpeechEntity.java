@@ -89,6 +89,7 @@ public class SpeechEntity {
   public SpeechDetail toDto() {
     String mode = (isPersonal()) ? "연습 모드" : "스터디";
     return SpeechDetail.builder()
+        .title(title)
         .speechId(id)
         .userId(user.getUserId())
         .speechMode(mode)

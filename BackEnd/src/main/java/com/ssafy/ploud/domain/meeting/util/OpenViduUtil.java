@@ -9,23 +9,17 @@ import com.ssafy.ploud.domain.meeting.dto.response.MeetingInfoResponse;
 import io.openvidu.java.client.ConnectionProperties;
 import io.openvidu.java.client.ConnectionType;
 import io.openvidu.java.client.OpenVidu;
-import io.openvidu.java.client.OpenViduHttpException;
-import io.openvidu.java.client.OpenViduJavaClientException;
 import io.openvidu.java.client.OpenViduRole;
-import io.openvidu.java.client.Recording;
-import io.openvidu.java.client.RecordingProperties;
 import io.openvidu.java.client.Session;
 import jakarta.transaction.Transactional;
+import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -48,6 +42,21 @@ public class OpenViduUtil {
     public OpenViduUtil(@Value("${openvidu.url}") String OPENVIDU_URL,
         @Value("${openvidu.secret}") String OPENVIDU_SECRET) {
         this.openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+
+        File directory = new File("D:\\path\\to\\your\\upload\\directory");
+
+        if(directory.exists()){
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile()) { // 파일만 삭제
+                        file.delete();
+                    }
+                }
+            }
+        }else{
+            directory.mkdirs();
+        }
     }
 
     public Object join(MeetingJoinRequest request) {

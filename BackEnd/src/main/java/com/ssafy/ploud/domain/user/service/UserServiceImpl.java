@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
       String arr = readImage(user.getProfileImg(), null);
       return UserInfoResDto.toDto(user, arr);
     } catch(IOException e) {
-      throw new CustomException(ResponseCode.USER_NOT_FOUND);
+      throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
     }
   }
 
