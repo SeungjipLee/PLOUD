@@ -95,6 +95,8 @@ const SpeechPage = () => {
 const Sidebar = () => {
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [id, setId] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   const handleMenuClick = (menu) => {
     setSelectedMenu(menu);
