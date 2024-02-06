@@ -63,6 +63,8 @@ const TestPage = () => {
         decibels.current = [];
         // 녹화 시작
         startRecording();
+
+        console.log("speechId : " + speechId.current);
       },
       (error) => {
         console.log(error);
