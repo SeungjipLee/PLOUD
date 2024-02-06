@@ -6,6 +6,7 @@ import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.record.dto.request.RecordListRequest;
 import com.ssafy.ploud.domain.record.service.RecordService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "스피치 결과 조회 API", description = "목록 조회, 상세 조회, 영상 삭제, 통계 조회")
+@SecurityRequirement(name = "Bearer Authentication")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/record")
