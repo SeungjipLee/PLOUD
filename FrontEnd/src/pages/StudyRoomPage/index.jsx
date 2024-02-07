@@ -31,6 +31,19 @@ const StudyRoomPage = () => {
   const room = useSelector((state) => state.studyReducer.studyInfo.meetingInfo);
   const ovToken = useSelector((state) => state.studyReducer.studyInfo.token);
 
+  // 방에 있는 유저 목록 관리 { nickname : String }
+  const [roomUsers, setRoomUsers] = useState([]);
+  // 유저 닉네임 추가
+  const addUser = (newUser) => {
+    setRoomUsers((prevUsers) => [...prevUsers, newUser]);
+  };
+  // 특정 유저 닉네임 제거
+  const removeUser = (userNickname) => {
+    setRoomUsers((prevUsers) =>
+      prevUsers.filter((user) => user.nickname !== userNickname)
+    );
+  };
+
   // 비디오 정보
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
@@ -58,7 +71,6 @@ const StudyRoomPage = () => {
   // 녹화 Form
   const [title, setTitle] = useState("");
   const speechId = useRef(0);
-  const [whoSpeeching, setWhoSpeeching] = useState(false);
 
   const categoryName = () => {
     switch (room.categoryId) {
@@ -144,6 +156,11 @@ const StudyRoomPage = () => {
   // ---------- Variables After Speech ----------
   const [showComment, setShowComment] = useState(true);
 
+  // 신고 창 닫기
+  const closeModal = () => {
+    setReport(false)
+  }
+
   // 발표자 권한 변경
   const changePresenter = (e, index) => {
     console.log("clicked");
@@ -193,6 +210,33 @@ const StudyRoomPage = () => {
     setVideoDivClass(videoClassName);
   }, [subscribers]);
 
+  // 화면 모드
+  // 모드에 따라 비디오 컨테이너 클래스를 변경
+  // RoomPage-mid를 얼만큼 사용할 것인가
+  // RoomPage-mid div의 바로 하위 div의 크기를 결정
+  const getVideoContainerClass = () => {
+    switch (mode) {
+      case 0: // 대기화면
+        return subscribers.length > 3 ? "video-flex-big" : "video-flex";
+      case 1: // 발표화면
+        return "video-mode-2"; // 모드 2에 대한 클래스
+      case 2: // 면접화면
+        return "video-mode-3"; // 모드 3에 대한 클래스
+      default: // 기본???
+        return "video-flex";
+    }
+  };
+
+  // 모드에 따라 각 스트림 컨테이너 클래스를 변경
+  const getStreamContainerClass = (index) => {
+    if (mode === 2 && index === 0) {
+      return "stream-container-big"; // 첫 번째 스트림 크게
+    } else if (mode === 2) {
+      return "stream-container-small"; // 나머지 스트림 작게
+    }
+    return "stream-container col-md-6 col-xs-6"; // 기본 클래스
+  };
+
   // 녹화 시작
   const submitHandler = (e) => {
     e.preventDefault();
@@ -219,7 +263,6 @@ const StudyRoomPage = () => {
 
     setRecord(true);
     setRecordForm(false);
-    setFeedbackModal(true);
   };
 
   // 접속 시 실행
@@ -234,8 +277,9 @@ const StudyRoomPage = () => {
     session.current.on("streamCreated", (event) => {
       console.log(tag, "누가 접속했어요");
 
-      // var tmp = event.stream.connection.data.split('%/%');
-      // setChatList(chatList => [...chatList, {username: JSON.parse(tmp[0]).clientData, content : "님이 입장하였습니다."}]);
+      console.log(event.stream.connection.data.split("%/%"))
+      var tmp = event.stream.connection.data.split("%/%");
+      addUser({ nickname: JSON.parse(tmp[0]).clientData });
 
       var subscriber = session.current.subscribe(event.stream, undefined);
       setSubscriberse((subscribers) => [...subscribers, subscriber]);
@@ -245,7 +289,8 @@ const StudyRoomPage = () => {
     session.current.on("streamDestroyed", (event) => {
       console.log(tag, "누가 떠났어요");
 
-      // var tmp = event.stream.connection.data.split('%/%');
+      var tmp = event.stream.connection.data.split("%/%");
+      removeUser(JSON.parse(tmp[0]).clientData);
       // setChatList(chatList => [...chatList, {username: JSON.parse(tmp[0]).clientData, content : "님이 퇴장하였습니다."}]);
 
       deleteSubscriber(event.stream.streamManager);
@@ -293,12 +338,12 @@ const StudyRoomPage = () => {
 
       // 녹화 시작 신호를 받을 경우 처리할 것
       if (username != nickname) {
-        setWhoSpeeching(true);
+        // 녹화시작 버튼을 누르지 않은 사람은 피드백 모달이 열리게 됨
+        setFeedbackModal(true);
         // 내가 아닌 경우의 레이아웃 전환
       }
 
       // 버튼 비활성화
-      // whoSpeeching 변수로 ?
       // 방법은 생각을 ...
     });
 
@@ -314,7 +359,7 @@ const StudyRoomPage = () => {
 
       // 녹화 종료 신호를 받을 경우 처리할 것
       if (username != nickname) {
-        setWhoSpeeching(false);
+        setFeedbackModal(false);
       }
 
       // 녹화 종료의 경우 여기서 한 번에 처리해도 가능할 듯?
@@ -680,7 +725,11 @@ const StudyRoomPage = () => {
           <img src="/images/ploud_icon_bg.png" />
         </div>
         <div>
-          <select name="mode" id="mode" onChange={(e) => setMode(e.target.value)}>
+          <select
+            name="mode"
+            id="mode"
+            onChange={(e) => setMode(e.target.value)}
+          >
             <option value="0">0</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -698,24 +747,24 @@ const StudyRoomPage = () => {
               <UserVideoComponent streamManager={mainStreamManager} />
             </div>
           ) : null} */}
-            {/* <div id="video-container" className="col-md-6"> */}
-            <div id="video-container" className={videoDivClass}>
-              {publisher !== undefined ? (
-                <div className="stream-container col-md-6 col-xs-6">
-                  <UserVideoComponent streamManager={publisher} />
-                </div>
-              ) : null}
-            </div>
-            {subscribers.map((sub, i) => (
-              <div
-                key={sub.id}
-                className={`${videoDivClass} stream-container col-md-6 col-xs-6`}
-              >
-                <span>{sub.id}</span>
-                <UserVideoComponent streamManager={sub} />
+          {/* <div id="video-container" className="col-md-6"> */}
+          <div id="video-container" className={videoDivClass}>
+            {publisher !== undefined ? (
+              <div className="stream-container col-md-6 col-xs-6">
+                <UserVideoComponent streamManager={publisher} />
               </div>
-            ))}
+            ) : null}
           </div>
+          {subscribers.map((sub, i) => (
+            <div
+              key={sub.id}
+              className={`${videoDivClass} stream-container col-md-6 col-xs-6`}
+            >
+              <span>{sub.id}</span>
+              <UserVideoComponent streamManager={sub} />
+            </div>
+          ))}
+        </div>
       </div>
       <div className="flex justify-between video-room-button">
         <div className="button-empty items-center space-x-4">
@@ -846,7 +895,9 @@ const StudyRoomPage = () => {
         </Modal>
       )}
       {result && <ResultList />}
-      {report && <Report />}
+      {report && 
+        <Report users={roomUsers} closeModal={closeModal} />
+      }
       {recordForm && (
         <Modal
           title="녹화 정보 입력"
@@ -874,7 +925,7 @@ const StudyRoomPage = () => {
       {feedbackModal && (
         <Modal
           title="피드백 입력"
-          onClose={() => setFeedbackModal(false)}
+          // onClose={() => setFeedbackModal(false)}
           className="feedback-form"
         >
           <p>
@@ -892,4 +943,4 @@ const StudyRoomPage = () => {
   );
 };
 export default StudyRoomPage;
-
+ 
