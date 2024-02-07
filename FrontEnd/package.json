@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack serve --env development",
+    "dev": "set port=3000 && webpack serve --env development",
     "start": "webpack --config ./webpack.config.js",
     "build": "react-scripts build"
   },
@@ -23,6 +23,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-kakao-login": "^2.1.1",
+    "react-modal": "^3.16.1",
     "react-redux": "^9.1.0",
     "react-router-dom": "^6.21.3",
     "redux": "^5.0.1",
@@ -51,4 +52,3 @@
     "webpack-dev-server": "^4.15.1"
   }
 }
-

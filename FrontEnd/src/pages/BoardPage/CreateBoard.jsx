@@ -1,25 +1,54 @@
 import { useSelector,useDispatch } from "react-redux";
-import React, { useState } from "react";
-import Button from "../../components/Button";
+import React, { useEffect, useState } from "react";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import Modal from "react-modal";
 import { createboard } from "../../services/board";
+import { userVideos } from "../../services/user";
 // import { refreshAccessToken, updateNickname } from "../../features/user/userSlice";
 
 
 const CreateBoard = () => {
   // 로직
   const navigate = useNavigate();
+  const [ userVideoList, setUserVideoList ] = useState([])
+  
   const [formData, setFormData] = useState({
     title: "", 
     content: "",
   });
 
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await userVideos(
+          token,
+          (res) => {
+            console.log(res.data.data)
+            setUserVideoList(res.data.data)
+          },
+          (err) => console.log(err)
+        )
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getData()
+  },[])
+
   // const dispatch = useDispatch();
   const token  = useSelector((state) => state.userReducer.token);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -55,7 +84,7 @@ const CreateBoard = () => {
             <div className="text-center">
               <h2 className="font-extrabold text-2xl">게시글 작성</h2>
             </div>
-          <div className="border-2 border-black mx-20 px-10 my-5 rounded-xl">
+          <div className=" border-2 border-black mx-20 px-10 my-5 rounded-xl">
             <div className="mt-5 mb-2 text-xl">제목</div>
             <div>
               <input
@@ -67,8 +96,20 @@ const CreateBoard = () => {
                 />
             </div>
             <div className="mt-5 mb-2 text-xl">내용</div>
-            <div className="border rounded-md mb-10">
-            <div className="bg-white w-full h-7"><img src="images/createBoard.png" className="h-full pl-2"/></div>
+            <div className=" border rounded-md mb-10">
+            <button className="relative bg-white h-7" onClick={handleOpenModal}><img src="images/createBoard.png" className="h-full pl-2"/></button>
+            <Modal className="createmodal" isOpen={isModalOpen} onRequestClose={handleCloseModal}>
+              <button onClick={handleCloseModal}>Close</button>
+              <ul>
+                {userVideoList.map((video, index) => (
+                  <li key={index}>
+                    <div>Title: {video.title}</div>
+                    <div>Play Time: {video.playTime}</div>
+                    <div>Record Time: {video.recordTime}</div>
+                  </li>
+                ))}
+              </ul>
+            </Modal>
             <textarea
               name="content"
               value={formData.content}
