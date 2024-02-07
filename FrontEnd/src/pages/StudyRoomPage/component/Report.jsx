@@ -42,6 +42,7 @@ const Report = ({ users, closeModal }) => {
             onChange={(e) => {
               console.log(e, nickname)
               setNickname(e.target.value)}}
+            value={nickname}
           >
             <option value="">없음</option>
             {users.map((user, index) => {
@@ -58,7 +59,7 @@ const Report = ({ users, closeModal }) => {
           <span>내용 : </span>
           <select
             className="report-content"
-            value={nickname}
+            value={content1}
             onChange={(e) => setContent1(e.target.value)}
           >
             <option value="부적절1">부적절1</option>
