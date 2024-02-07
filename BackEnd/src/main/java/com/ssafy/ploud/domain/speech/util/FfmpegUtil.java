@@ -30,14 +30,19 @@ public class FfmpegUtil {
         log.debug("---------- FFMPEG AudioConvert Start! ----------");
 
         // ffmpeg build
-        ProcessBuilder processBuilder = new ProcessBuilder(
-            ffmpegPath,
-            "-i", inputAudioPath,
-            "-ar", "16000",
-            "-ac", "1",
-            outputAudioPath);
+        Process process = null;
+        try{
+            ProcessBuilder processBuilder = new ProcessBuilder(
+                ffmpegPath,
+                "-i", inputAudioPath,
+                "-ar", "16000",
+                "-ac", "1",
+                outputAudioPath);
 
-        Process process = processBuilder.start();
+            process = processBuilder.start();
+        } catch (Exception e){
+            log.debug(e.toString());
+        }
 
         int exitValue = process.waitFor();
 
