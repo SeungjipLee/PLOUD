@@ -2,6 +2,7 @@ package com.ssafy.ploud.domain.user.service;
 
 import com.ssafy.ploud.common.exception.CustomException;
 import com.ssafy.ploud.common.response.ResponseCode;
+import com.ssafy.ploud.domain.S3.service.S3Service;
 import com.ssafy.ploud.domain.speech.SpeechEntity;
 import com.ssafy.ploud.domain.speech.repository.SpeechRepository;
 import com.ssafy.ploud.domain.user.UserEntity;
@@ -49,6 +50,7 @@ public class UserServiceImpl implements UserService {
   private BCryptPasswordEncoder bCryptPasswordEncoder;
   private JwtTokenProvider jwtTokenProvider;
   private PasswordEncoder passwordEncoder;
+  private S3Service s3Service;
 
   @Override
   public void signUp(SignUpReqDto reqDto) {
@@ -128,12 +130,7 @@ public class UserServiceImpl implements UserService {
   public UserInfoResDto findUserByUserId(String userId) {
     UserEntity user = userRepository.findByUserId(userId)
         .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
-    try {
-      String arr = readImage(user.getProfileImg(), null);
-      return UserInfoResDto.toDto(user, arr);
-    } catch(IOException e) {
-      throw new CustomException(ResponseCode.INTERNAL_SERVER_ERROR);
-    }
+    return UserInfoResDto.toDto(user);
   }
 
   public String updateUserNickname(String userId, String newNickname) {
@@ -145,60 +142,14 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public String saveProfilePicture(MultipartFile file, String userId) {
-
+  public String saveProfilePicture(MultipartFile file, String dirName, String userId) {
     UserEntity user = userRepository.findById(userId)
         .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 
-    try {
-      String extension = StringUtils.getFilenameExtension(
-          file.getOriginalFilename());
+    String profileImgPath = s3Service.saveFile(file, "profile", userId);
+    user.updateUserProfileImg(profileImgPath);
 
-      String directoryPath = "C://ploud_img";
-      createFolderIfNotExists(directoryPath);
-
-      String imagePath =
-          //"C://ploud_img/profile_image_" + userId + "." + extension;
-          directoryPath + "/profile_image_" + userId + "." + extension;
-
-      file.transferTo(new File(imagePath));
-
-      user.updateUserProfileImg(imagePath);
-
-      return readImage(imagePath, extension);
-    } catch (IOException e) {
-      throw new CustomException(ResponseCode.BAD_REQUEST);
-    }
-  }
-
-  public void createFolderIfNotExists(String directoryPath) {
-    File Folder = new File(directoryPath);
-    if (!Folder.exists()) {
-      Folder.mkdir();
-      System.out.println("ploud_img 폴더 생성 완료");
-    }
-  }
-
-  public String readImage(String imagePath, String extension) throws IOException {
-    BufferedImage bImage = null;
-    if (imagePath == null) {
-      // default image
-      String imgURL = "https://postfiles.pstatic.net/MjAyMDAyMTBfODAg/MDAxNTgxMzA0MTE3ODMy.ACRLtB9v5NH-I2qjWrwiXLb7TeUiG442cJmcdzVum7cg.eTLpNg_n0rAS5sWOsofRrvBy0qZk_QcWSfUiIagTfd8g.JPEG.lattepain/1581304118739.jpg";
-      extension = "jpg";
-      URL urlInput = new URL(imgURL);
-      bImage = ImageIO.read(urlInput);
-    } else {
-      // user image
-      bImage = ImageIO.read(new File(imagePath));
-      extension = FilenameUtils.getExtension(imagePath);
-    }
-
-    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    ImageIO.write(bImage, extension, bos);
-
-    Encoder encoder = Base64.getEncoder();
-
-    return encoder.encodeToString(bos.toByteArray());
+    return profileImgPath;
   }
 
   public void updateUserPassword(String userId, String oldPassword, String newPassword) {

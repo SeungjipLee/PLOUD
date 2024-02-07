@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -32,7 +33,7 @@ public class S3ServiceImpl implements S3Service {
       metadata.setContentType(multipartFile.getContentType());
 
       // S3에 파일 저장하는 경로
-      String path = getFilename(type, userId);
+      String path = getFilename(type, userId, multipartFile);
 
       amazonS3.putObject(bucket, path, multipartFile.getInputStream(), metadata);
 
@@ -44,18 +45,21 @@ public class S3ServiceImpl implements S3Service {
 
   }
 
-  private String getFilename(String type, String userId) {
+  private String getFilename(String type, String userId, MultipartFile multipartFile) {
 
-    String filePath;
+    StringBuilder filePath = new StringBuilder();
+    String extension = StringUtils.getFilenameExtension(
+        multipartFile.getOriginalFilename());
 
     if (type.equals("profile")) {
-      filePath = "profile/" + userId;
+      filePath.append("profile/").append(userId);
     } else {
       LocalDateTime now = LocalDateTime.now();
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd_HHmm");
-      filePath = "speech/" + userId + "/" + now.format(formatter);
+      filePath.append("speech/").append(userId).append("/").append(now.format(formatter));
     }
 
-    return filePath;
+    filePath.append(".").append(extension);
+    return filePath.toString();
   }
 }

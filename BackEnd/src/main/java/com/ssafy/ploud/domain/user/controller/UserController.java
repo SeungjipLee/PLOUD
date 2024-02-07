@@ -137,7 +137,7 @@ public class UserController {
     if (loginUser == null) {
       throw new CustomException(ResponseCode.USER_LOGIN_RERQUIRED);
     }
-    return ApiResponse.ok("프로필 수정 완료", s3Service.saveFile(multipartFile, "profile", loginUser.getUsername()));
+    return ApiResponse.ok("프로필 수정 완료", userService.saveProfilePicture(multipartFile, "profile",loginUser.getUsername()));
   }
 
 
