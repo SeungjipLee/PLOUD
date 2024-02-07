@@ -17,8 +17,8 @@ public class SpeechAssessUtil {
 
     public int decibels(int[] decibels) {
         long res = 0;
-        for(int score : decibels){
-            res += 100 - (50 - score);
+        for(int db : decibels){
+            res += 100 - Math.abs(50 - db);
         }
 
         return (int)(res / decibels.length);
@@ -51,8 +51,8 @@ public class SpeechAssessUtil {
 
         Map<String, Integer> res = new HashMap<>();
 
-        if(clearity == 0) clearity = 69;
-        if(speed == 0) speed = 69;
+        if(clearity == 0) clearity = 59;
+        if(speed == 0) speed = 59;
 
         res.put("clearity", clearity);
         res.put("speed", speed);
