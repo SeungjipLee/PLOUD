@@ -33,12 +33,11 @@ public class BoardController {
       @RequestParam(name = "search", required = false) String search,
       @PageableDefault(size = 10) Pageable pageable) {
 
-      return ApiResponse.ok("게시글 목록 불러오기 성공", boardService.getAllBoards(pageable));
+    return ApiResponse.ok("게시글 목록 불러오기 성공", boardService.getAllBoards(pageable));
   }
 
   @PostMapping("/create")
-  public ApiResponse<?> createBoard(/*@RequestPart MultipartFile videoPath,*/
-      @RequestBody BoardRequest boardRequest) {
+  public ApiResponse<?> createBoard(@RequestBody BoardRequest boardRequest) {
     boardService.createBoard(boardRequest);
     return ApiResponse.ok("글쓰기 성공");
   }

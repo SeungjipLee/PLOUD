@@ -71,8 +71,11 @@ public enum ResponseCode {
   // 디렉터리
   ALREADY_EXISTS(HttpStatus.SC_CONFLICT, "폴더가 이미 존재합니다"),
 
+
   // 명언
-  SENTENCE_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "명언이 존재하지 않습니다");
+  SENTENCE_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "명언이 존재하지 않습니다"),
+  // S3
+  CANNOT_UPLOAD_FILE(HttpStatus.SC_INTERNAL_SERVER_ERROR, "파일 업로드 실패");
 
   private final int code;
   private final String message;
