@@ -173,8 +173,8 @@ public class SpeechServiceImpl implements SpeechService {
 
         log.debug("---------- SpeechServiceImpl clearty Execution ----------");
 
-        String currentWorkingDirectory = System.getProperty("user.dir");
-        log.debug("현재 작업중인 경로를 확인해보자 : " + currentWorkingDirectory);
+//        String currentWorkingDirectory = System.getProperty("user.dir");
+//        log.debug("현재 작업중인 경로를 확인해보자 : " + currentWorkingDirectory);
 
         File audioDir = new File("/audio");
 
@@ -242,7 +242,7 @@ public class SpeechServiceImpl implements SpeechService {
         } catch (Exception e) {
             throw new CustomException(ResponseCode.FILE_CONVERT_ERROR);
         } finally {
-//            dest.delete();
+            dest.delete();
         }
     }
 }

@@ -153,7 +153,7 @@ public class EtriUtil {
             audioContents = Base64.getEncoder().encodeToString(audioBytes);
         } finally {
             audioInputStream.close();
-//            outputFile.delete();
+            outputFile.delete();
         }
 
         Map<String, Object> map = new HashMap<>();
