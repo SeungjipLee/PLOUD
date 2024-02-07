@@ -17,17 +17,17 @@ public class BoardResponse {
   private String nickname;
   private String title;
   private String content;
-  //private String videoPath;
+  private String videoPath;
   private LocalDateTime registerTime;
   private int likeCount;
 
-  public static BoardResponse fromEntity(BoardEntity boardEntity) {
+  public static BoardResponse fromEntity(BoardEntity boardEntity, String nickname) {
     return BoardResponse.builder()
         .id(boardEntity.getId())
-        .nickname(boardEntity.getNickname())
+        .nickname(nickname)
         .title(boardEntity.getTitle())
         .content(boardEntity.getContent())
-        //    .videoPath(boardEntity.getVideoPath())
+        .videoPath(boardEntity.getVideoPath())
         .registerTime(boardEntity.getRegisterTime())
         .likeCount(boardEntity.getLikeCount())
         .build();

@@ -52,6 +52,7 @@ public enum ResponseCode {
   BOARD_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "게시글을 찾을 수 없습니다."),
   COMMENT_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "댓글을 찾을 수 없습니다."),
   NO_PERMISSION(HttpStatus.SC_UNAUTHORIZED, "권한이 없습니다."),
+  VIDEO_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "영상을 찾을 수 없습니다."),
 
   // JWT
   INVALID_JWT_TOKEN(HttpStatus.SC_UNAUTHORIZED, "invalid JWT token"),

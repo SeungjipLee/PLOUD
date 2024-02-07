@@ -9,7 +9,6 @@ public class BoardRequest {
 
   private String title;
   private String content;
-
-  // private MultipartFile videoPath;
+  private int videoId;
 
 }
