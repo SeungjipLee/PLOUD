@@ -54,12 +54,14 @@ public class SpeechServiceImpl implements SpeechService{
     private int cnt = 0;
 
     static {
-        File audioDir = new File("audio");
+        File audioDir = new File("/audio");
 
-//        if (!audioDir.exists()) {
-//            boolean created = audioDir.mkdirs();
-//        }
-//        else{
+        if (!audioDir.exists()) {
+            boolean created = audioDir.mkdirs();
+            log.debug("---------- 폴더 새로 생성 ----------");
+        }
+        else{
+            log.debug("---------- 폴더 이미 존재 ----------");
 //            File[] files = audioDir.listFiles();
 //            if (files != null) {
 //                for (File file : files) {
@@ -68,7 +70,7 @@ public class SpeechServiceImpl implements SpeechService{
 //                    }
 //                }
 //            }
-//        }
+        }
     }
 
     @Override
@@ -168,6 +170,13 @@ public class SpeechServiceImpl implements SpeechService{
     public ClearityResponse clearity(MultipartFile audioFile, Integer speechId, Boolean isLast) {
 
         log.debug("---------- SpeechServiceImpl clearty Execution ----------");
+
+        File audioDir = new File("/audio");
+
+        if (!audioDir.exists()) {
+            boolean created = audioDir.mkdirs();
+            log.debug("---------- 폴더 새로 생성 ----------");
+        }
 
         // 파일 경로
         String inputWavFile = "/audio/in_" + cnt + ".wav";
