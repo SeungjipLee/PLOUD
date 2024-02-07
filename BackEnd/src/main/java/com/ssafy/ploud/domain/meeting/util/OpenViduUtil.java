@@ -12,7 +12,6 @@ import io.openvidu.java.client.OpenVidu;
 import io.openvidu.java.client.OpenViduRole;
 import io.openvidu.java.client.Session;
 import jakarta.transaction.Transactional;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -74,9 +73,12 @@ public class OpenViduUtil {
             String token = this.mapSessions.get(request.getSessionId())
                 .createConnection(connectionProperties).getToken();
 
+            String token2 = this.mapSessions.get(request.getSessionId())
+                .createConnection(connectionProperties).getToken();
+
             this.mapSessionIdsTokens.get(request.getSessionId()).put(token, role);
 
-            return new MeetingInfoResponse(meetingInfo, token);
+            return new MeetingInfoResponse(meetingInfo, token, token2);
         } catch (Exception e) {
             throw new CustomException(ResponseCode.OPENVIDU_ERROR);
         }
@@ -94,6 +96,7 @@ public class OpenViduUtil {
             // Session 생성
             Session session = this.openVidu.createSession();
             String token = session.createConnection(connectionProperties).getToken();
+            String token2 = session.createConnection(connectionProperties).getToken();
 
             String sessionId = "session" + (num++);
 
@@ -105,7 +108,7 @@ public class OpenViduUtil {
             MeetingInfo meetingInfo = new MeetingInfo(sessionId, request);
             meetingList.add(meetingInfo);
 
-            return new MeetingInfoResponse(meetingInfo, token);
+            return new MeetingInfoResponse(meetingInfo, token, token2);
         } catch (Exception e) {
             throw new CustomException(ResponseCode.OPENVIDU_ERROR);
         }
