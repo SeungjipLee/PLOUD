@@ -56,9 +56,19 @@ public class SpeechServiceImpl implements SpeechService{
     static {
         File audioDir = new File("audio");
 
-        if (!audioDir.exists()) {
-            boolean created = audioDir.mkdirs();
-        }
+//        if (!audioDir.exists()) {
+//            boolean created = audioDir.mkdirs();
+//        }
+//        else{
+//            File[] files = audioDir.listFiles();
+//            if (files != null) {
+//                for (File file : files) {
+//                    if (file.isFile()) { // 파일만 삭제
+//                        file.delete();
+//                    }
+//                }
+//            }
+//        }
     }
 
     @Override
@@ -207,7 +217,7 @@ public class SpeechServiceImpl implements SpeechService{
         } catch (Exception e) {
             throw new CustomException(ResponseCode.FILE_CONVERT_ERROR);
         } finally {
-            dest.delete();
+//            dest.delete();
         }
     }
 }
