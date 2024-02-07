@@ -690,7 +690,6 @@ const StudyRoomPage = () => {
       </div>
       <div className="RoomPage-mid">
         {/* 대기화면 구성 */}
-        {mode === 0 && (
           <div
             className={subscribers.length > 3 ? "video-flex-big" : "video-flex"}
           >
@@ -717,45 +716,6 @@ const StudyRoomPage = () => {
               </div>
             ))}
           </div>
-        )}
-
-        {/* 면접화면 구성 */}
-        {mode === 1 && (
-          <div
-            className="video-flex-big">
-            <div id="main-video" className={videoDivClass}>
-              <UserVideoComponent streamManager={mainStreamManager} />
-            </div>
-            <div id="main-video" className={videoDivClass}>
-              <UserVideoComponent streamManager={mainStreamManager} />
-            </div>
-            <div id="main-video" className={videoDivClass}>
-              <UserVideoComponent streamManager={mainStreamManager} />
-            </div>
-            {/* {mainStreamManager !== undefined ? (
-          <div id="main-video" className={videoDivClass}>
-            <UserVideoComponent streamManager={mainStreamManager} />
-          </div>
-        ) : null} */}
-            {/* <div id="video-container" className="col-md-6"> */}
-            <div id="video-container" className={videoDivClass}>
-              {publisher !== undefined ? (
-                <div className="stream-container col-md-6 col-xs-6">
-                  <UserVideoComponent streamManager={publisher} />
-                </div>
-              ) : null}
-            </div>
-            {subscribers.map((sub, i) => (
-              <div
-                key={sub.id}
-                className={`${videoDivClass} stream-container col-md-6 col-xs-6`}
-              >
-                <span>{sub.id}</span>
-                <UserVideoComponent streamManager={sub} />
-              </div>
-            ))}
-          </div>
-        )}
       </div>
       <div className="flex justify-between video-room-button">
         <div className="button-empty items-center space-x-4">
