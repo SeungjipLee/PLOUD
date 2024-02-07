@@ -35,7 +35,7 @@ pipeline {
                 script {
                     sh 'docker stop ploud-spring-app || true'
                     sh 'docker rm ploud-spring-app || true'
-                    sh 'docker run -d -p 9000:8000 --name ploud-spring-app --network ploudnet ploud-spring-app:test'
+                    sh 'docker run -d -p 9000:8000 --name ploud-spring-app --network ploudnet -v /usr/local/bin/ffmpeg/ffmpeg:/usr/local/bin/ffmpeg/ffmpeg ploud-spring-app:test'
                 }
             }
         }
