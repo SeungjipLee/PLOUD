@@ -16,7 +16,7 @@ const MyChart = () => {
             const response = await getScoreList(
               token,
               (res) => {
-                console.log(res.data.data.scoreChange)
+                // console.log(res.data.data.scoreChange)
                 setScoreList(res.data.data.scoreChange)
               },
               (err) => console.log('여기')
@@ -30,7 +30,7 @@ const MyChart = () => {
     
     const dataLabels = scoreList.map(s=>s.date.split(' ')[0].replace(/\./g, '-'))
     const dataScores = scoreList.map(s=>s.grade)
-    console.log(dataLabels, dataScores)
+    // console.log(dataLabels, dataScores)
       
 
   const data = {
