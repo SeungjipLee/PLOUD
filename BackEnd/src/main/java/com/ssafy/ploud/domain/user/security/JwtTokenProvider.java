@@ -3,7 +3,7 @@ package com.ssafy.ploud.domain.user.security;
 import com.ssafy.ploud.common.exception.CustomException;
 import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.user.UserEntity;
-import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
+import com.ssafy.ploud.domain.user.dto.response.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

@@ -1,4 +1,4 @@
-package com.ssafy.ploud.domain.user.dto;
+package com.ssafy.ploud.domain.user.dto.response;
 
 import lombok.Data;
 
