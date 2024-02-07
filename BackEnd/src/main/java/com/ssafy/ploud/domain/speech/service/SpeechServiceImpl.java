@@ -179,12 +179,12 @@ public class SpeechServiceImpl implements SpeechService{
             dest = new File(inputWavFile);
 
             log.debug("---------- 파일 생성 완료 ----------");
-            log.debug("파일 경로 : " + dest.getPath());
-            
 
             try (FileOutputStream fos = new FileOutputStream(dest)) {
                 fos.write(audioFile.getBytes());
             }
+
+            log.debug("파일 경로 : " + dest.getPath() + ", 파일 크기 : " + dest.length());
 
             log.debug("명료도 평가 - 1 : InputFile 저장 성공");
 
