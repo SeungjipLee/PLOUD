@@ -14,11 +14,13 @@ import com.ssafy.ploud.domain.user.dto.request.SignUpReqDto;
 import com.ssafy.ploud.domain.user.dto.request.UpdatePwReqDto;
 import com.ssafy.ploud.domain.user.dto.response.UserInfoResDto;
 import com.ssafy.ploud.domain.user.dto.response.UserInfoUpdateReqDto;
+import com.ssafy.ploud.domain.user.dto.response.VideoInfoResponseDto;
 import com.ssafy.ploud.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -171,5 +173,14 @@ public class UserController {
   public ApiResponse<?> getUserPasswordByEmailAndId(@RequestBody FindPwReqDto reqDto) {
     userService.getUserPasswordByEmailAndId(reqDto.getEmail(), reqDto.getUserId());
     return ApiResponse.ok("임시 비밀번호 발급 성공");
+  }
+
+  @Operation(summary = "사용자의 영상 목록 조회", description = "사용자 자신이 녹화한 영상의 영상 번호, 발표 제목, 녹화 날짜, 재생 시간을 조회합니다")
+  @GetMapping("/videos")
+  public ApiResponse<List<VideoInfoResponseDto>> getUserVideoList(@AuthenticationPrincipal UserDetails loginUser) {
+    if(loginUser == null) {
+      throw new CustomException(ResponseCode.USER_LOGIN_RERQUIRED);
+    }
+    return ApiResponse.ok("영상 목록 조회 성공", userService.getAllVideos(loginUser.getUsername()));
   }
 }

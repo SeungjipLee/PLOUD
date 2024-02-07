@@ -5,6 +5,8 @@ import com.ssafy.ploud.domain.user.dto.request.LoginReqDto;
 import com.ssafy.ploud.domain.user.dto.response.LoginResDto;
 import com.ssafy.ploud.domain.user.dto.request.SignUpReqDto;
 import com.ssafy.ploud.domain.user.dto.response.UserInfoResDto;
+import com.ssafy.ploud.domain.user.dto.response.VideoInfoResponseDto;
+import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
@@ -34,6 +36,8 @@ public interface UserService {
   public void getUserPasswordByEmailAndId(String email, String userId); // 회원 비밀번호 찾기
 
   public String getUserIdByEmail(String userEmail); // 이메일로 사용자 아이디 찾기
+
+  public List<VideoInfoResponseDto> getAllVideos(String userId); // 사용자의 모든 영상 조회
 
 
 

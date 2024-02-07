@@ -2,6 +2,8 @@ package com.ssafy.ploud.domain.user.service;
 
 import com.ssafy.ploud.common.exception.CustomException;
 import com.ssafy.ploud.common.response.ResponseCode;
+import com.ssafy.ploud.domain.speech.SpeechEntity;
+import com.ssafy.ploud.domain.speech.repository.SpeechRepository;
 import com.ssafy.ploud.domain.user.UserEntity;
 import com.ssafy.ploud.domain.user.dto.response.FindIdResDto;
 import com.ssafy.ploud.domain.user.dto.response.JwtAuthResponse;
@@ -9,6 +11,7 @@ import com.ssafy.ploud.domain.user.dto.request.LoginReqDto;
 import com.ssafy.ploud.domain.user.dto.response.LoginResDto;
 import com.ssafy.ploud.domain.user.dto.request.SignUpReqDto;
 import com.ssafy.ploud.domain.user.dto.response.UserInfoResDto;
+import com.ssafy.ploud.domain.user.dto.response.VideoInfoResponseDto;
 import com.ssafy.ploud.domain.user.repository.UserRepository;
 import com.ssafy.ploud.domain.user.security.JwtTokenProvider;
 import java.awt.image.BufferedImage;
@@ -17,9 +20,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.mail.MessagingException;
@@ -40,6 +45,7 @@ public class UserServiceImpl implements UserService {
 
   private final Map<String, String> emailVerificationCodes = new HashMap<>();
   private UserRepository userRepository;
+  private SpeechRepository speechRepository;
   private BCryptPasswordEncoder bCryptPasswordEncoder;
   private JwtTokenProvider jwtTokenProvider;
   private PasswordEncoder passwordEncoder;
@@ -230,6 +236,19 @@ public class UserServiceImpl implements UserService {
     UserEntity user = userRepository.findByEmail(userEmail)
         .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
     return user.getUserId();
+  }
+
+  @Transactional(readOnly = true)
+  public List<VideoInfoResponseDto> getAllVideos(String userId) {
+    List<SpeechEntity> entities = speechRepository.findAllByUser_userIdAndSpeechVideoIsNotNull(
+        userId);
+    List<VideoInfoResponseDto> videoList = new ArrayList<>();
+
+    for(SpeechEntity entity : entities) {
+      videoList.add(VideoInfoResponseDto.of(entity));
+    }
+
+    return videoList;
   }
 
 
