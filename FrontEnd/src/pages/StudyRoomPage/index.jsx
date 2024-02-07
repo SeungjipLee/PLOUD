@@ -486,14 +486,11 @@ const StudyRoomPage = () => {
     stopRecording();
     sendSignal("rend", "님이 발표를 종료하였습니다.");
 
-    var sId = speechId.current;
-    speechId.current = -1;
-
     endSpeech(
       token,
       {
         sessionId: room.sessionId,
-        speechId: sId,
+        speechId: speechId.current,
         decibels: decibels.current,
       },
       (response) => {
@@ -506,21 +503,23 @@ const StudyRoomPage = () => {
 
     // 비동기 처리 헷갈리니까 5초 뒤에 하자
     setTimeout(() => {
-      recordResult(sId);
+      recordResult();
     }, 5000);
   };
 
-  const recordResult = (speechId) => {
+  const recordResult = () => {
     getRecordResult(
       token,
-      speechId,
+      speechId.current,
       (response) => {
         console.log("결과 받음");
         console.log(response);
         dispatch(addRecordList(response.data));
+        speechId.current = -1;
       },
       (error) => {
         console.log("결과 못 받음");
+        speechId.current = -1;
       }
     );
   };
