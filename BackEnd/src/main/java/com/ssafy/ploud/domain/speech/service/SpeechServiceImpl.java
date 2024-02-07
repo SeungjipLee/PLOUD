@@ -26,7 +26,9 @@ import com.ssafy.ploud.domain.user.UserEntity;
 import com.ssafy.ploud.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -38,7 +40,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SpeechServiceImpl implements SpeechService{
+public class SpeechServiceImpl implements SpeechService {
+
     private final OpenViduUtil openViduUtil;
     private final FfmpegUtil ffmpegUtil;
     private final EtriUtil etriUtil;
@@ -59,8 +62,7 @@ public class SpeechServiceImpl implements SpeechService{
         if (!audioDir.exists()) {
             boolean created = audioDir.mkdirs();
             log.debug("---------- 폴더 새로 생성 ----------");
-        }
-        else{
+        } else {
             log.debug("---------- 폴더 이미 존재 ----------");
 //            File[] files = audioDir.listFiles();
 //            if (files != null) {
@@ -107,7 +109,7 @@ public class SpeechServiceImpl implements SpeechService{
         speech.setUser(userEntity);
 
         int id = speechRepository.save(speech).getId();
-        System.out.println("speech id; "+id);
+        System.out.println("speech id; " + id);
         openViduUtil.findBySessionId(speechStartRequest.getSessionId()).setSpeechId(id);
 
         return speech.getId();
@@ -117,7 +119,7 @@ public class SpeechServiceImpl implements SpeechService{
     @Transactional
     public void endAndDecibel(SpeechEndRequest speechEndRequest) {
         String sessionId = speechEndRequest.getSessionId();
-        if(!sessionId.isEmpty()){
+        if (!sessionId.isEmpty()) {
             MeetingInfo meetingInfo = openViduUtil.findBySessionId(sessionId);
             meetingInfo.setSpeechId(-1);
         }
@@ -137,7 +139,7 @@ public class SpeechServiceImpl implements SpeechService{
         UserEntity user = speech.getUser();
         Duration duration = Duration.between(speech.getRecordTime(), speech.getSpeechEndTime());
         long practiceTimeInMinute = duration.toMinutes();
-        if(speech.isPersonal()) {
+        if (speech.isPersonal()) {
             user.updateSoloDuration(practiceTimeInMinute);
         } else {
             user.updateStudyDuration(practiceTimeInMinute);
@@ -149,7 +151,7 @@ public class SpeechServiceImpl implements SpeechService{
     public void feedback(FeedbackRequest feedbackRequest) {
         log.info(feedbackRequest.getSessionId());
         int speechId = openViduUtil.findSpeechIdBySessionId(feedbackRequest.getSessionId());
-        log.info("SpeechServiceImpl feedback speechId; "+speechId);
+        log.info("SpeechServiceImpl feedback speechId; " + speechId);
         SpeechEntity speechEntity = speechRepository.findById(speechId)
             .orElseThrow(() -> new CustomException(ResponseCode.SPEECH_NOT_FOUND));
         // speechId, userId, content로 fb 등록
@@ -162,7 +164,7 @@ public class SpeechServiceImpl implements SpeechService{
         int speechId = commentRequest.getSpeechId();
 
         SpeechEntity speechEntity = speechRepository.findById(speechId)
-            .orElseThrow(()-> new CustomException(ResponseCode.SPEECH_NOT_FOUND));
+            .orElseThrow(() -> new CustomException(ResponseCode.SPEECH_NOT_FOUND));
         speechEntity.updateComment(commentRequest.getComment());
     }
 
@@ -170,6 +172,9 @@ public class SpeechServiceImpl implements SpeechService{
     public ClearityResponse clearity(MultipartFile audioFile, Integer speechId, Boolean isLast) {
 
         log.debug("---------- SpeechServiceImpl clearty Execution ----------");
+
+        String currentWorkingDirectory = System.getProperty("user.dir");
+        log.debug("현재 작업중인 경로를 확인해보자 : " + currentWorkingDirectory);
 
         File audioDir = new File("/audio");
 
@@ -183,16 +188,20 @@ public class SpeechServiceImpl implements SpeechService{
         String outputWavFile = "/audio/out_" + cnt++ + ".wav";
 
         File dest = null;
+        dest = new File(inputWavFile);
+
+        try (FileOutputStream fos = new FileOutputStream(dest)) {
+            fos.write(audioFile.getBytes());
+        } catch (FileNotFoundException e) {
+            log.debug("---------- FileNotFoundException ----------");
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            log.debug("---------- IOException ----------");
+            throw new RuntimeException(e);
+        }
+
         try {
-            // 파일로 저장
-            dest = new File(inputWavFile);
-
             log.debug("---------- 파일 생성 완료 ----------");
-
-            try (FileOutputStream fos = new FileOutputStream(dest)) {
-                fos.write(audioFile.getBytes());
-            }
-
             log.debug("파일 경로 : " + dest.getPath() + ", 파일 크기 : " + dest.length());
 
             log.debug("명료도 평가 - 1 : InputFile 저장 성공");
@@ -212,7 +221,7 @@ public class SpeechServiceImpl implements SpeechService{
 
             speechAssessUtil.addClearity(speechId, clearityDto);
 
-            if(isLast){
+            if (isLast) {
                 Map<String, Integer> scores = speechAssessUtil.assess(speechId);
 
                 // 평가 등록하기
@@ -225,7 +234,7 @@ public class SpeechServiceImpl implements SpeechService{
 
                 log.debug("명료도 평가 - 5 : 평가 DB에 저장");
             }
-            if(clearityDto == null){
+            if (clearityDto == null) {
                 throw new CustomException(ResponseCode.ETRI_ERROR);
             }
 
