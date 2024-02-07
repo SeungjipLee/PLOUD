@@ -24,12 +24,16 @@ const StudyRoomPage = () => {
   const tag = "[StudyRoomPage]";
 
   const OV = useRef(null);
-  const session = useRef(null); // session을 useRef로 선언
+  const session = useRef(null);
+
+  const OVScreen = useRef(null);
+  const sessionScreen = useRef(null);
 
   // 기본 정보
   const { userId, token, nickname } = useSelector((state) => state.userReducer);
   const room = useSelector((state) => state.studyReducer.studyInfo.meetingInfo);
-  const ovToken = useSelector((state) => state.studyReducer.studyInfo.token);
+  const ovToken = useSelector((state) => state.studyReducer.studyInfo.ovToken);
+  const screenToken = useSelector((state) => state.studyReducer.studyInfo.screenToken);
 
   // 방에 있는 유저 목록 관리 { nickname : String }
   const [roomUsers, setRoomUsers] = useState([]);
@@ -85,42 +89,44 @@ const StudyRoomPage = () => {
     }
   };
 
+  const [publisherScreen, setPublisherScreen] = useState(undefined);
+
   // 화면 공유
   const handleScreenShare = async () => {
-    let tmpPublisher = await OV.current.initPublisherAsync(undefined, {
-      audioSource: undefined, // The source of audio. If undefined default microphone
+    let publisherScreen = await OVScreen.current.initPublisherAsync(undefined, {
+      audioSource: undefined,
       videoSource:
-        navigator.userAgent.indexOf("Firefox") !== -1 ? "window" : "screen", // The source of video. If undefined default webcam
-      publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-      publishVideo: true, // Whether you want to start publishing with your video enabled or not
-      resolution: "640x480", // The resolution of your video
-      frameRate: 30, // The frame rate of your video
-      insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-      mirror: false, // Whether to mirror your local video or not
+        navigator.userAgent.indexOf("Firefox") !== -1 ? "window" : "screen",
+      publishAudio: true,
+      publishVideo: true,
+      resolution: "640x480",
+      frameRate: 30,
+      insertMode: "APPEND",
+      mirror: false,
     });
 
-    session.current.publish(tmpPublisher);
-    setMainStreamManager(tmpPublisher);
-    setPublisher(tmpPublisher);
+
+    // 공유 중지를 감지하는 부분 인데 지금 안됨 더 찾아봐야 함
+    console.log(publisherScreen.stream.mediaStream.getVideoTracks()[0]);
+    const videoTrack = publisherScreen.stream.mediaStream.getVideoTracks()[0];
+    if (videoTrack) {
+      videoTrack.onended = () => {
+        handleScreenShare2();
+      };
+    }
+
+    sessionScreen.current.publish(publisherScreen);
+    setPublisherScreen(publisherScreen);
     setScreenShare(true);
   };
 
   const handleScreenShare2 = async () => {
-    let tmpPublisher = await OV.current.initPublisherAsync(undefined, {
-      audioSource: undefined, // The source of audio. If undefined default microphone
-      videoSource: undefined,
-      publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-      publishVideo: true, // Whether you want to start publishing with your video enabled or not
-      resolution: "640x480", // The resolution of your video
-      frameRate: 30, // The frame rate of your video
-      insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
-      mirror: false, // Whether to mirror your local video or not
-    });
-
-    session.current.publish(tmpPublisher);
-    setMainStreamManager(tmpPublisher);
-    setPublisher(tmpPublisher);
-    setScreenShare(false);
+    if (publisherScreen) {
+      sessionScreen.current.unpublish(publisherScreen);
+  
+      setPublisherScreen(null);
+      setScreenShare(false); // 화면 공유 상태 업데이트
+    }
   };
 
   // 참가자 목록
@@ -270,8 +276,10 @@ const StudyRoomPage = () => {
     console.log("joinSession");
 
     OV.current = new OpenVidu();
+    OVScreen.current = new OpenVidu();
 
     session.current = OV.current.initSession();
+    sessionScreen.current = OVScreen.current.initSession();
 
     // On every new Stream received...
     session.current.on("streamCreated", (event) => {
@@ -415,6 +423,14 @@ const StudyRoomPage = () => {
         console.log(tag, error);
         leaveSession();
       });
+
+      sessionScreen.current
+      .connect(screenToken, { clientData: "screen//" + nickname })
+      .then(async () => {
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   };
 
   const leaveSession = () => {
@@ -803,7 +819,7 @@ const StudyRoomPage = () => {
           {screenShare === false ? (
             <img onClick={handleScreenShare} src="/images/sharebutton.png" />
           ) : (
-            <img onClick={handleScreenShare2} src="/images/sharebutton.png" />
+            <img onClick={handleScreenShare2} src="/images/sharebutton_disabled.png" />
           )}
 
           {!isLast.current ? (
