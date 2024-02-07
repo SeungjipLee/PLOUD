@@ -24,24 +24,23 @@ public class BoardEntity {
 
   private String userId; // 작성자
 
-  private String nickname;
-
   private String title;   // 게시글 제목
 
   private String content; // 게시글 내용
 
-  // private String videoPath;
+  private String videoPath;
 
   private LocalDateTime registerTime; // 게시글 작성 시각
 
   private int likeCount;  // 좋아요 개수
 
-  public static BoardEntity createBoard(BoardRequest boardRequest) {
+  public static BoardEntity createBoard(BoardRequest boardRequest, String userId, String videoPath) {
     BoardEntity boardEntity = new BoardEntity();
 
+    boardEntity.userId = userId;
     boardEntity.title = boardRequest.getTitle();
     boardEntity.content = boardRequest.getContent();
-//  boardEntity.videoPath = boardRequest.getVideoPath().getOriginalFilename();
+    boardEntity.videoPath = videoPath;
     boardEntity.registerTime = LocalDateTime.now();
 
     return boardEntity;
