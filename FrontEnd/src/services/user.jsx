@@ -112,3 +112,11 @@ export const findPw = async (data, success, fail) => {
     .then(success)
     .catch(fail)
 }
+
+// data = { userNickname: String, content: String }
+export const reportUser = async (token, data, success, fail) => {
+  return await API(token)
+    .post("complain", data)
+    .then(success)
+    .catch(fail)
+}

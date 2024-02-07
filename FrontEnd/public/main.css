@@ -207,7 +207,6 @@ code {
 .Navbar {
   align-items: center;
   background-color: #fff;
-  border-radius: 8px 8px 0 0;
   box-shadow: 0 -1px 10px #999;
   display: flex;
   justify-content: start;

@@ -1,7 +1,7 @@
 package com.ssafy.ploud.domain.user;
 
 import com.ssafy.ploud.domain.speech.SpeechEntity;
-import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
+import com.ssafy.ploud.domain.user.dto.request.SignUpReqDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

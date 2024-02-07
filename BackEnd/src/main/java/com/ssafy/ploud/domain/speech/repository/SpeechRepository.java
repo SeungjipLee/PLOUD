@@ -11,4 +11,6 @@ public interface SpeechRepository extends JpaRepository<SpeechEntity, String> {
 
     List<SpeechEntity> findAllByUser_userIdOrderByRecordTimeAsc(String userId);
 
+    List<SpeechEntity> findAllByUser_userIdAndSpeechVideoIsNotNull(String userId);
+
 }
