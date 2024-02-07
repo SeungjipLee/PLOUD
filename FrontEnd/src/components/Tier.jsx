@@ -48,6 +48,7 @@ const Tier = () => {
 
   return(
     <>
+<<<<<<< HEAD
         {isBronze&& 
           <div>
             <img src='images/bronze.png'></img>
@@ -66,8 +67,21 @@ const Tier = () => {
            <p className='text-center me-2 text-xl font-bold'>골드</p>
          </div>
           }
+=======
+        {isBronze&& <img src='images/bronze.png'></img> }
+        {isSilver&& <img src='images/silver.png'></img> }
+        {isGold&& <img src='images/gold.png'></img> }
+>>>>>>> 19764a914789842ee506a9dbe1c61738de5d0715
     </>
   )
 };
 
+<<<<<<< HEAD
 export default Tier;
+=======
+<<<<<<< HEAD
+export default Tier;
+=======
+export default Tier;
+>>>>>>> 38714c0445dc4bf79f225ef2d20974520168c6bc
+>>>>>>> 19764a914789842ee506a9dbe1c61738de5d0715

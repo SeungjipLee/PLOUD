@@ -8,7 +8,10 @@ import ResultCard from "../../components/ResultCard";
 import { getSpeechList } from "../../services/statistic";
 import MyChart from "../../components/MyChart";
 import Tier from "../../components/Tier"
+<<<<<<< HEAD
 import { useNavigate } from "react-router-dom";
+=======
+>>>>>>> 19764a914789842ee506a9dbe1c61738de5d0715
 
 
 const MyPage = () => {
@@ -16,7 +19,11 @@ const MyPage = () => {
   const [ profile, setProfile ] = useState({})
   const base64Image = `data:image/png;base64,${profile.profileImg}`
   const [results, setResults] = useState([{}, {}, {}, {}, {}]);
+<<<<<<< HEAD
   const navigate = useNavigate()
+=======
+
+>>>>>>> 19764a914789842ee506a9dbe1c61738de5d0715
   
   useEffect(() => {
     const fetchData = async () => {
@@ -66,7 +73,11 @@ const MyPage = () => {
                 <div>
                   {profile.nickname}
                 </div>
+<<<<<<< HEAD
                 <button onClick={() => navigate('/patchinfo')}>회원 정보 수정</button>
+=======
+                <div>회원 정보 수정</div>
+>>>>>>> 19764a914789842ee506a9dbe1c61738de5d0715
               </div>
               <div className="w-32 h-64">
                   <Tier />

@@ -839,6 +839,7 @@ p {
   left: 550px;
   width: 400px;
   height: 400px;
+<<<<<<< HEAD
   background-color: rgb(255, 199, 161);
   overflow: auto;
   max-height: 90vh; /* viewport height의 90% */
@@ -857,4 +858,7 @@ p {
   border: 2px solid black;
   background-color: #192169;
   color: white;
+=======
+  background-color: #223872;
+>>>>>>> 19764a914789842ee506a9dbe1c61738de5d0715
 }
