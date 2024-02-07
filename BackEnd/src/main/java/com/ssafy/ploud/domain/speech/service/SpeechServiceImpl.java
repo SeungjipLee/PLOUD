@@ -61,17 +61,15 @@ public class SpeechServiceImpl implements SpeechService {
 
         if (!audioDir.exists()) {
             boolean created = audioDir.mkdirs();
-            log.debug("---------- 폴더 새로 생성 ----------");
         } else {
-            log.debug("---------- 폴더 이미 존재 ----------");
-//            File[] files = audioDir.listFiles();
-//            if (files != null) {
-//                for (File file : files) {
-//                    if (file.isFile()) { // 파일만 삭제
-//                        file.delete();
-//                    }
-//                }
-//            }
+            File[] files = audioDir.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile()) { // 파일만 삭제
+                        file.delete();
+                    }
+                }
+            }
         }
     }
 
@@ -171,53 +169,24 @@ public class SpeechServiceImpl implements SpeechService {
     @Override
     public ClearityResponse clearity(MultipartFile audioFile, Integer speechId, Boolean isLast) {
 
-        log.debug("---------- SpeechServiceImpl clearty Execution ----------");
-
-//        String currentWorkingDirectory = System.getProperty("user.dir");
-//        log.debug("현재 작업중인 경로를 확인해보자 : " + currentWorkingDirectory);
-
-        File audioDir = new File("/audio");
-
-        if (!audioDir.exists()) {
-            boolean created = audioDir.mkdirs();
-            log.debug("---------- 폴더 새로 생성 ----------");
-        }
-
         // 파일 경로
         String inputWavFile = "/audio/in_" + cnt + ".wav";
         String outputWavFile = "/audio/out_" + cnt++ + ".wav";
 
         File dest = null;
-        dest = new File(inputWavFile);
-
-        try (FileOutputStream fos = new FileOutputStream(dest)) {
-            fos.write(audioFile.getBytes());
-        } catch (FileNotFoundException e) {
-            log.debug("---------- FileNotFoundException ----------");
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            log.debug("---------- IOException ----------");
-            throw new RuntimeException(e);
-        }
-
         try {
-            log.debug("---------- 파일 생성 완료 ----------");
-            log.debug("파일 경로 : " + dest.getPath() + ", 파일 크기 : " + dest.length());
+            dest = new File(inputWavFile);
 
-            log.debug("명료도 평가 - 1 : InputFile 저장 성공");
+            try (FileOutputStream fos = new FileOutputStream(dest)) {
+                fos.write(audioFile.getBytes());
+            }
 
             // 파일 변환
             ffmpegUtil.convertAudio(inputWavFile, outputWavFile);
 
-            log.debug("명료도 평가 - 2 : 파일 변환 성공 InputFile -> OutputFile");
-
             Map<String, Object> audioInfo = etriUtil.fileToBase64(outputWavFile);
 
-            log.debug("명료도 평가 - 3 : OutputFile BASE64 Encoding");
-
             ClearityDto clearityDto = etriUtil.getScore(audioInfo);
-
-            log.debug("명료도 평가 - 4 : ETRI 점수 받아옴");
 
             speechAssessUtil.addClearity(speechId, clearityDto);
 
@@ -231,8 +200,6 @@ public class SpeechServiceImpl implements SpeechService {
                 score.updateClearity(scores.get("clearity"));
                 score.updateSpeed(scores.get("speed"));
                 scoreRepository.save(score);
-
-                log.debug("명료도 평가 - 5 : 평가 DB에 저장");
             }
             if (clearityDto == null) {
                 throw new CustomException(ResponseCode.ETRI_ERROR);
