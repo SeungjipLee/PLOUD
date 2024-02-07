@@ -839,5 +839,22 @@ p {
   left: 550px;
   width: 400px;
   height: 400px;
-  background-color: #223872;
+  background-color: rgb(255, 199, 161);
+  overflow: auto;
+  max-height: 90vh; /* viewport height의 90% */
+  padding: 1em;
+  border-radius: 20px;
+  
+}
+
+.createmodal ul {
+  overflow: auto;
+  max-height: 80vh; /* viewport height의 80% */
+}
+
+.modalList {
+  border-radius: 50px;
+  border: 2px solid black;
+  background-color: #192169;
+  color: white;
 }

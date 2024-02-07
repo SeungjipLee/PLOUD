@@ -14,6 +14,10 @@ const CreateBoard = () => {
   // 로직
   const navigate = useNavigate();
   const [ userVideoList, setUserVideoList ] = useState([])
+  const [ isSelectedVideo, setIsSelectedVideo ] = useState(false)
+  const [ selectedVideoTitle, setSelectedVideoTitle ] = useState("");
+  const [ postVideoId, setPostVideoId] = useState(0)
+
   
   const [formData, setFormData] = useState({
     title: "", 
@@ -60,21 +64,45 @@ const CreateBoard = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("전송");
-    console.log(formData);
     
-    createboard(
-      token,
-      formData, 
-      (response) => {
-        const id = response.data.id;
-        navigate(`/board/${id}`)
-      }, 
-      (error) => {
-        console.log(error);
-      }
-    )
+    const inputData = {
+      title: formData.title,
+      content: formData.content,
+      videoId: postVideoId
+    }
+  
+    if (formData.title === "" || formData.content === "") {
+      alert("제목과 내용을 모두 입력해주세요.");
+    } else {
+      createboard(
+        token,
+        inputData, 
+        (response) => {
+          navigate('/board')
+        }, 
+        (error) => {
+          console.log(error);
+        }
+      )
+    }
   }
+  
+
+  const formatDate = (date) => {
+    const year = date.substr(0,2);
+    const month = date.substr(2,2);
+    const day = date.substr(4,2);
+
+    return `${year}년 ${month}월 ${day}일`;
+  }
+
+  const handleVideoSelect = (video) => {
+    setPostVideoId(video.videoId);
+    setSelectedVideoTitle(video.title);
+    setIsSelectedVideo(true)
+    setIsModalOpen(false)
+  };
+
 
   return (
       <div className="mypage bg-white w-full min-h-screen">
@@ -97,15 +125,18 @@ const CreateBoard = () => {
             </div>
             <div className="mt-5 mb-2 text-xl">내용</div>
             <div className=" border rounded-md mb-10">
-            <button className="relative bg-white h-7" onClick={handleOpenModal}><img src="images/createBoard.png" className="h-full pl-2"/></button>
-            <Modal className="createmodal" isOpen={isModalOpen} onRequestClose={handleCloseModal}>
-              <button onClick={handleCloseModal}>Close</button>
+            <div className="flex">
+              <button className="bg-white h-7" onClick={handleOpenModal}><img src="images/createBoard.png" className="h-full pl-2"/> </button>
+              {isSelectedVideo&&<div className="pt-0.5">선택된 동영상 : {selectedVideoTitle}</div>}
+            </div>
+            <Modal className="createmodal" isOpen={isModalOpen} onRequestClose={handleCloseModal} ariaHideApp={false}>
+              <div className="text-center text-2xl font-bold">발표 선택</div>
               <ul>
                 {userVideoList.map((video, index) => (
-                  <li key={index}>
-                    <div>Title: {video.title}</div>
-                    <div>Play Time: {video.playTime}</div>
-                    <div>Record Time: {video.recordTime}</div>
+                  <li key={index} className="grid grid-col-12 text-center px-5 py-2 my-5 modalList" onClick={() =>handleVideoSelect(video)}>
+                    <div className="col-4 mx-2 text-xl font-bold">{video.title}</div>
+                    <div className="col-2 mx-2 pt-0.5">{video.playTime}분</div>
+                    <div className="col-6 pt-1 text-sm ">{formatDate(video.recordTime)}</div>
                   </li>
                 ))}
               </ul>

@@ -8,6 +8,7 @@ import ResultCard from "../../components/ResultCard";
 import { getSpeechList } from "../../services/statistic";
 import MyChart from "../../components/MyChart";
 import Tier from "../../components/Tier"
+import { useNavigate } from "react-router-dom";
 
 
 const MyPage = () => {
@@ -15,7 +16,7 @@ const MyPage = () => {
   const [ profile, setProfile ] = useState({})
   const base64Image = `data:image/png;base64,${profile.profileImg}`
   const [results, setResults] = useState([{}, {}, {}, {}, {}]);
-
+  const navigate = useNavigate()
   
   useEffect(() => {
     const fetchData = async () => {
@@ -65,7 +66,7 @@ const MyPage = () => {
                 <div>
                   {profile.nickname}
                 </div>
-                <div>회원 정보 수정</div>
+                <button onClick={() => navigate('/patchinfo')}>회원 정보 수정</button>
               </div>
               <div className="w-32 h-64">
                   <Tier />
