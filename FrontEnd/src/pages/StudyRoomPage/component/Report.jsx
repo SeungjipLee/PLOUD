@@ -3,7 +3,7 @@ import { reportUser } from "../../../services/user";
 import { useState } from "react";
 
 const Report = ({ users, closeModal }) => {
-  console.log(users)
+  console.log(users);
   const token = useSelector((state) => state.userReducer.token);
   const [nickname, setNickname] = useState("");
   const [content1, setContent1] = useState("");
@@ -11,6 +11,7 @@ const Report = ({ users, closeModal }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault;
+    console.log(nickname)
     // 신고 제출 api
     const data = {
       userNickname: nickname,
@@ -38,19 +39,26 @@ const Report = ({ users, closeModal }) => {
           <span>유저 : </span>
           <select
             className="report-user"
-            onChange={(e) => setNickname(e.target.value)}
+            onChange={(e) => {
+              console.log(e, nickname)
+              setNickname(e.target.value)}}
           >
-            {users.map((user, index) => (
+            <option value="">없음</option>
+            {users.map((user, index) => {
+              console.log(user.nickname)
+              return(
               <option key={index} value={user.nickname}>
-                {nickname}
+                {user.nickname}
               </option>
-            ))}
+              )
+            })}
           </select>
         </div>
         <div>
           <span>내용 : </span>
           <select
             className="report-content"
+            value={nickname}
             onChange={(e) => setContent1(e.target.value)}
           >
             <option value="부적절1">부적절1</option>

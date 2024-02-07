@@ -279,6 +279,7 @@ const StudyRoomPage = () => {
 
       console.log(event.stream.connection.data.split("%/%"))
       var tmp = event.stream.connection.data.split("%/%");
+      console.log(JSON.parse(tmp[0]).clientData)
       addUser({ nickname: JSON.parse(tmp[0]).clientData });
 
       var subscriber = session.current.subscribe(event.stream, undefined);
