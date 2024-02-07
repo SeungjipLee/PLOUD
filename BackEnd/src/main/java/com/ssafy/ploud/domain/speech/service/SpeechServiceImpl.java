@@ -179,6 +179,8 @@ public class SpeechServiceImpl implements SpeechService{
             dest = new File(inputWavFile);
 
             log.debug("---------- 파일 생성 완료 ----------");
+            log.debug("파일 경로 : " + dest.getPath());
+            
 
             try (FileOutputStream fos = new FileOutputStream(dest)) {
                 fos.write(audioFile.getBytes());
