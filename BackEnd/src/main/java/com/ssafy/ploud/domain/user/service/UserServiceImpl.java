@@ -20,6 +20,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.HashMap;
@@ -59,6 +60,8 @@ public class UserServiceImpl implements UserService {
   public LoginResDto login(LoginReqDto reqDto) {
     UserEntity user = userRepository.findById(reqDto.getUserId())
         .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
+    // 계정 잠금 확인
+    checkAccountStatus(user);
     if (!passwordEncoder.matches(reqDto.getPassword(), user.getPassword())) {
       throw new CustomException(ResponseCode.USER_NOT_FOUND);
     }
@@ -66,6 +69,17 @@ public class UserServiceImpl implements UserService {
     user.setRefreshToken(res.getRefreshToken());
     return new LoginResDto(res.getRefreshToken(), res.getAccessToken(), "Bearer",
         user.getNickname());
+  }
+
+  private void checkAccountStatus(UserEntity user) {
+    if(user.getRestrictDate() == null) return;
+    if(LocalDateTime.now().isBefore(user.getRestrictDate())) {
+      // 로그인 불가능
+      throw new CustomException(ResponseCode.USER_ACCOUNT_LOCKED);
+    } else {
+      // 로그인 가능
+      user.resetRestrictDate();
+    }
   }
 
   @Transactional(readOnly = true)

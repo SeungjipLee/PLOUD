@@ -21,8 +21,6 @@ public class QScoreEntity extends EntityPathBase<ScoreEntity> {
 
     public final NumberPath<Integer> clarity = createNumber("clarity", Integer.class);
 
-    public final NumberPath<Integer> eye = createNumber("eye", Integer.class);
-
     public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
     public final NumberPath<Integer> speed = createNumber("speed", Integer.class);

@@ -42,21 +42,6 @@ public class OpenViduUtil {
     public OpenViduUtil(@Value("${openvidu.url}") String OPENVIDU_URL,
         @Value("${openvidu.secret}") String OPENVIDU_SECRET) {
         this.openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
-
-        File directory = new File("D:\\path\\to\\your\\upload\\directory");
-
-        if(directory.exists()){
-            File[] files = directory.listFiles();
-            if (files != null) {
-                for (File file : files) {
-                    if (file.isFile()) { // 파일만 삭제
-                        file.delete();
-                    }
-                }
-            }
-        }else{
-            directory.mkdirs();
-        }
     }
 
     public Object join(MeetingJoinRequest request) {

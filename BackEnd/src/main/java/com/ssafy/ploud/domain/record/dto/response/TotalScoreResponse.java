@@ -8,14 +8,16 @@ import lombok.Data;
 @Builder
 public class TotalScoreResponse {
 
-  String personalTime;
-  String studyTime;
+//  String personalTime;
+//  String studyTime;
+  long totalTime;
   List<ScoreDetail> scoreChange;
 
-  public static TotalScoreResponse createResponse(String personalTime, String studyTime, List<ScoreDetail> scoreChangeList) {
+  public static TotalScoreResponse createResponse(long totalTime, List<ScoreDetail> scoreChangeList) {
     return TotalScoreResponse.builder()
-        .personalTime(personalTime)
-        .studyTime(studyTime)
+//        .personalTime(personalTime)
+//        .studyTime(studyTime)
+        .totalTime(totalTime)
         .scoreChange(scoreChangeList)
         .build();
   }

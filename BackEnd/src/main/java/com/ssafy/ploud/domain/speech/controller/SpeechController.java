@@ -37,6 +37,10 @@ public class SpeechController {
     @PostMapping("/start")
     public ApiResponse<?> startSpeech(@AuthenticationPrincipal UserDetails loginUser,
         @RequestBody SpeechStartRequest speechStartRequest) {
+        log.debug("---------- 녹화 시작 요청 ----------");
+        log.debug("UserID : " + loginUser.getUsername() + " , SessionID : " + speechStartRequest.getSessionId()
+        + ", Title : " + speechStartRequest.getTitle());
+
         speechStartRequest.setUserId(loginUser.getUsername());
         return ApiResponse.ok("성공", speechService.start(speechStartRequest));
     }
@@ -45,6 +49,9 @@ public class SpeechController {
     @PostMapping("/end")
     public ApiResponse<?> endSpeech(@RequestBody SpeechEndRequest speechEndRequest) {
         speechService.endAndDecibel(speechEndRequest);
+        log.debug("---------- 녹화 종료 요청 ----------");
+        log.debug("SessionId : " + speechEndRequest.getSessionId() +", SpeechID : " + speechEndRequest.getSpeechId());
+
         return ApiResponse.ok("성공");
     }
 
@@ -53,6 +60,9 @@ public class SpeechController {
     public ApiResponse<?> assessClearity( @RequestParam("audioFile") MultipartFile audioFile,
         @RequestParam("speechId") int speechId,
         @RequestParam("isLast") Boolean isLast) {
+        log.debug("---------- 명료도 평가 요청 ----------");
+        log.debug("SessionId : " + speechId + ", isLast : " + isLast);
+
         return ApiResponse.ok("성공", speechService.clearity(audioFile, speechId, isLast));
     }
 
@@ -60,6 +70,10 @@ public class SpeechController {
     @PostMapping("/fb")
     public ApiResponse<?> startSpeech(@AuthenticationPrincipal UserDetails loginUser,
         @RequestBody FeedbackRequest feedbackRequest) {
+        log.debug("---------- 피드백 등록 요청 ----------");
+        log.debug("UserID, " + loginUser.getUsername() + ", SessionId : " + feedbackRequest.getSessionId() +
+            ", Content : " + feedbackRequest.getContent());
+
         feedbackRequest.setUserId(loginUser.getUsername());
         speechService.feedback(feedbackRequest);
         return ApiResponse.ok("성공");
@@ -68,6 +82,9 @@ public class SpeechController {
     @Operation(summary = "개인 코멘트 등록", description = "스피치가 종료된 후 개인 코멘트를 등록한다.")
     @PostMapping("/comment")
     public ApiResponse<?> startSpeech(@RequestBody CommentRequest commentRequest) {
+        log.debug("---------- 코멘트 등록 요청 ----------");
+        log.debug("SpeechID : " + commentRequest.getSpeechId() + ", Comment : " + commentRequest.getComment());
+
         speechService.comment(commentRequest);
         return ApiResponse.ok("성공");
     }

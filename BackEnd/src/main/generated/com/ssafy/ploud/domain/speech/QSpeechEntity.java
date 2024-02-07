@@ -22,7 +22,7 @@ public class QSpeechEntity extends EntityPathBase<SpeechEntity> {
 
     public static final QSpeechEntity speechEntity = new QSpeechEntity("speechEntity");
 
-    public final EnumPath<SpeechCategory> category = createEnum("category", SpeechCategory.class);
+    public final NumberPath<Integer> categoryId = createNumber("categoryId", Integer.class);
 
     public final StringPath comment = createString("comment");
 
@@ -36,7 +36,11 @@ public class QSpeechEntity extends EntityPathBase<SpeechEntity> {
 
     public final com.ssafy.ploud.domain.script.QScriptEntity script;
 
+    public final DateTimePath<java.time.LocalDateTime> speechEndTime = createDateTime("speechEndTime", java.time.LocalDateTime.class);
+
     public final com.ssafy.ploud.domain.record.QVideoEntity speechVideo;
+
+    public final StringPath title = createString("title");
 
     public final com.ssafy.ploud.domain.user.QUserEntity user;
 

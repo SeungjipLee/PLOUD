@@ -26,6 +26,7 @@ public enum ResponseCode {
   USER_LOGIN_RERQUIRED(HttpStatus.SC_UNAUTHORIZED, "로그인이 필요합니다"),
   USER_IMAGE_ERROR(HttpStatus.SC_INTERNAL_SERVER_ERROR, "프로필 사진 읽는 중 오류 발생"),
   INVALID_USER_PW(HttpStatus.SC_BAD_REQUEST, "입력한 비밀번호와 현재 비밀번호가 일치하지 않습니다"),
+  USER_ACCOUNT_LOCKED(HttpStatus.SC_BAD_REQUEST, "신고 횟수 누적으로 계정이 정지되었습니다"),
 
   // 스터디 룸
   ROOM_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "방이 존재하지 않습니다"),
@@ -68,7 +69,13 @@ public enum ResponseCode {
   SPEECH_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "발표를 찾을 수 없습니다"),
 
   // 디렉터리
-  ALREADY_EXISTS(HttpStatus.SC_CONFLICT, "폴더가 이미 존재합니다");
+  ALREADY_EXISTS(HttpStatus.SC_CONFLICT, "폴더가 이미 존재합니다"),
+
+
+  // 명언
+  SENTENCE_NOT_FOUND(HttpStatus.SC_NOT_FOUND, "명언이 존재하지 않습니다"),
+  // S3
+  CANNOT_UPLOAD_FILE(HttpStatus.SC_INTERNAL_SERVER_ERROR, "파일 업로드 실패");
 
   private final int code;
   private final String message;

@@ -9,10 +9,8 @@ import com.ssafy.ploud.domain.record.ScoreEntity;
 import com.ssafy.ploud.domain.record.repository.FeedbackRepository;
 import com.ssafy.ploud.domain.record.repository.ScoreRepository;
 import com.ssafy.ploud.domain.record.repository.VideoRepository;
-import com.ssafy.ploud.domain.script.ScriptCategory;
 import com.ssafy.ploud.domain.script.ScriptEntity;
 import com.ssafy.ploud.domain.script.repository.ScriptRepository;
-import com.ssafy.ploud.domain.speech.CategoryEntity;
 import com.ssafy.ploud.domain.speech.SpeechEntity;
 import com.ssafy.ploud.domain.speech.dto.ClearityDto;
 import com.ssafy.ploud.domain.speech.dto.request.CommentRequest;
@@ -32,7 +30,6 @@ import java.io.FileOutputStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -55,6 +52,24 @@ public class SpeechServiceImpl implements SpeechService{
     private final ScriptRepository scriptRepository;
 
     private int cnt = 0;
+
+    static {
+        File audioDir = new File("audio");
+
+//        if (!audioDir.exists()) {
+//            boolean created = audioDir.mkdirs();
+//        }
+//        else{
+//            File[] files = audioDir.listFiles();
+//            if (files != null) {
+//                for (File file : files) {
+//                    if (file.isFile()) { // 파일만 삭제
+//                        file.delete();
+//                    }
+//                }
+//            }
+//        }
+    }
 
     @Override
     @Transactional
@@ -152,24 +167,39 @@ public class SpeechServiceImpl implements SpeechService{
     @Override
     public ClearityResponse clearity(MultipartFile audioFile, Integer speechId, Boolean isLast) {
 
+        log.debug("---------- SpeechServiceImpl clearty Execution ----------");
+
         // 파일 경로
-        String inputWavFile = "D:\\path\\to\\your\\upload\\directory\\in_" + cnt + ".wav";
-        String outputWavFile = "D:\\path\\to\\your\\upload\\directory\\out_" + cnt++ + ".wav";
+        String inputWavFile = "/audio/in_" + cnt + ".wav";
+        String outputWavFile = "/audio/out_" + cnt++ + ".wav";
 
         File dest = null;
         try {
             // 파일로 저장
             dest = new File(inputWavFile);
+
+            log.debug("---------- 파일 생성 완료 ----------");
+            log.debug("파일 경로 : " + dest.getPath());
+            
+
             try (FileOutputStream fos = new FileOutputStream(dest)) {
                 fos.write(audioFile.getBytes());
             }
 
+            log.debug("명료도 평가 - 1 : InputFile 저장 성공");
+
             // 파일 변환
             ffmpegUtil.convertAudio(inputWavFile, outputWavFile);
 
+            log.debug("명료도 평가 - 2 : 파일 변환 성공 InputFile -> OutputFile");
+
             Map<String, Object> audioInfo = etriUtil.fileToBase64(outputWavFile);
 
+            log.debug("명료도 평가 - 3 : OutputFile BASE64 Encoding");
+
             ClearityDto clearityDto = etriUtil.getScore(audioInfo);
+
+            log.debug("명료도 평가 - 4 : ETRI 점수 받아옴");
 
             speechAssessUtil.addClearity(speechId, clearityDto);
 
@@ -183,6 +213,8 @@ public class SpeechServiceImpl implements SpeechService{
                 score.updateClearity(scores.get("clearity"));
                 score.updateSpeed(scores.get("speed"));
                 scoreRepository.save(score);
+
+                log.debug("명료도 평가 - 5 : 평가 DB에 저장");
             }
             if(clearityDto == null){
                 throw new CustomException(ResponseCode.ETRI_ERROR);
@@ -192,7 +224,7 @@ public class SpeechServiceImpl implements SpeechService{
         } catch (Exception e) {
             throw new CustomException(ResponseCode.FILE_CONVERT_ERROR);
         } finally {
-            dest.delete();
+//            dest.delete();
         }
     }
 }

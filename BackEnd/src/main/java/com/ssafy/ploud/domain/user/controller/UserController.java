@@ -3,6 +3,7 @@ package com.ssafy.ploud.domain.user.controller;
 import com.ssafy.ploud.common.exception.CustomException;
 import com.ssafy.ploud.common.response.ApiResponse;
 import com.ssafy.ploud.common.response.ResponseCode;
+import com.ssafy.ploud.domain.S3.service.S3Service;
 import com.ssafy.ploud.domain.user.dto.EmailVerifyReqDto;
 import com.ssafy.ploud.domain.user.dto.FindIdReqDto;
 import com.ssafy.ploud.domain.user.dto.FindIdResDto;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,6 +44,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
 
   private final UserService userService;
+  private final S3Service s3Service;
 
   @Operation(summary = "회원가입")
   @PostMapping("/signup")
@@ -110,20 +113,32 @@ public class UserController {
     return ApiResponse.ok("닉네임 수정 완료", res);
   }
 
-  @Operation(summary = "회원 프로필 사진 수정", description = "이미지: base64로 인코딩된 값을 리턴한다")
+//  @Operation(summary = "회원 프로필 사진 수정", description = "이미지: base64로 인코딩된 값을 리턴한다")
+//  @PostMapping(value = "/img", consumes = {MediaType.APPLICATION_JSON_VALUE,
+//      MediaType.MULTIPART_FORM_DATA_VALUE})
+//  public ApiResponse<?> updateUserProfileImg(
+//      @AuthenticationPrincipal UserDetails loginUser,
+//      @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
+//    if (loginUser == null) {
+//      throw new CustomException(ResponseCode.USER_LOGIN_RERQUIRED);
+//    }
+//    Map<String, String> res = new HashMap<>();
+//    res.put("profileImg", userService.saveProfilePicture(multipartFile, loginUser.getUsername()));
+//    return ApiResponse.ok("프로필 사진 수정 완료", res);
+//
+//  }
+
+  @Operation(summary = "회원 프로필 수정")
   @PostMapping(value = "/img", consumes = {MediaType.APPLICATION_JSON_VALUE,
       MediaType.MULTIPART_FORM_DATA_VALUE})
-  public ApiResponse<?> updateUserProfileImg(
-      @AuthenticationPrincipal UserDetails loginUser,
-      @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
+  public ApiResponse<?> updateUserProfileImg(@AuthenticationPrincipal UserDetails loginUser,
+      @RequestParam("image") MultipartFile multipartFile) {
     if (loginUser == null) {
       throw new CustomException(ResponseCode.USER_LOGIN_RERQUIRED);
     }
-    Map<String, String> res = new HashMap<>();
-    res.put("profileImg", userService.saveProfilePicture(multipartFile, loginUser.getUsername()));
-    return ApiResponse.ok("프로필 사진 수정 완료", res);
-
+    return ApiResponse.ok("프로필 수정 완료", s3Service.saveFile(multipartFile, "profile", loginUser.getUsername()));
   }
+
 
   @Operation(summary = "비밀번호 변경")
   @PatchMapping("/pw")
