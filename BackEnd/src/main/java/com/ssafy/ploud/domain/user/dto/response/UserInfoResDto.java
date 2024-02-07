@@ -1,4 +1,4 @@
-package com.ssafy.ploud.domain.user.dto;
+package com.ssafy.ploud.domain.user.dto.response;
 
 import com.ssafy.ploud.domain.user.UserEntity;
 import java.time.Year;

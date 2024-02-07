@@ -1,8 +1,8 @@
 package com.ssafy.ploud.domain.user.controller;
 
 import com.ssafy.ploud.common.response.ApiResponse;
-import com.ssafy.ploud.domain.user.dto.GoogleLoginReqDto;
-import com.ssafy.ploud.domain.user.dto.JwtAuthResponse;
+import com.ssafy.ploud.domain.user.dto.request.GoogleLoginReqDto;
+import com.ssafy.ploud.domain.user.dto.response.JwtAuthResponse;
 import com.ssafy.ploud.domain.user.security.AuthService;
 import com.ssafy.ploud.domain.user.security.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;

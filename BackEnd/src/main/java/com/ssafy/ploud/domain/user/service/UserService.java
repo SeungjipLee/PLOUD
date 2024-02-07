@@ -1,10 +1,10 @@
 package com.ssafy.ploud.domain.user.service;
 
-import com.ssafy.ploud.domain.user.dto.FindIdResDto;
-import com.ssafy.ploud.domain.user.dto.LoginReqDto;
-import com.ssafy.ploud.domain.user.dto.LoginResDto;
-import com.ssafy.ploud.domain.user.dto.SignUpReqDto;
-import com.ssafy.ploud.domain.user.dto.UserInfoResDto;
+import com.ssafy.ploud.domain.user.dto.response.FindIdResDto;
+import com.ssafy.ploud.domain.user.dto.request.LoginReqDto;
+import com.ssafy.ploud.domain.user.dto.response.LoginResDto;
+import com.ssafy.ploud.domain.user.dto.request.SignUpReqDto;
+import com.ssafy.ploud.domain.user.dto.response.UserInfoResDto;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
@@ -34,5 +34,7 @@ public interface UserService {
   public void getUserPasswordByEmailAndId(String email, String userId); // 회원 비밀번호 찾기
 
   public String getUserIdByEmail(String userEmail); // 이메일로 사용자 아이디 찾기
+
+
 
 }
