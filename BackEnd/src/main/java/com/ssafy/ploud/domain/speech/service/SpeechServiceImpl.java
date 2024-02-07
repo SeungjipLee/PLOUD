@@ -169,12 +169,20 @@ public class SpeechServiceImpl implements SpeechService{
                 fos.write(audioFile.getBytes());
             }
 
+            log.debug("명료도 평가 - 1 : InputFile 저장 성공");
+
             // 파일 변환
             ffmpegUtil.convertAudio(inputWavFile, outputWavFile);
 
+            log.debug("명료도 평가 - 2 : 파일 변환 성공 InputFile -> OutputFile");
+
             Map<String, Object> audioInfo = etriUtil.fileToBase64(outputWavFile);
 
+            log.debug("명료도 평가 - 3 : OutputFile BASE64 Encoding");
+
             ClearityDto clearityDto = etriUtil.getScore(audioInfo);
+
+            log.debug("명료도 평가 - 4 : ETRI 점수 받아옴");
 
             speechAssessUtil.addClearity(speechId, clearityDto);
 
@@ -188,6 +196,8 @@ public class SpeechServiceImpl implements SpeechService{
                 score.updateClearity(scores.get("clearity"));
                 score.updateSpeed(scores.get("speed"));
                 scoreRepository.save(score);
+
+                log.debug("명료도 평가 - 5 : 평가 DB에 저장");
             }
             if(clearityDto == null){
                 throw new CustomException(ResponseCode.ETRI_ERROR);
