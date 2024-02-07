@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Button from "../../components/Button";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
@@ -7,12 +6,15 @@ import { Link } from "react-router-dom";
 import { getProfile } from "../../services/user";
 import { useSelector } from "react-redux";
 import ResultCard from "../../components/ResultCard";
+import { getSpeechList, getScoreList } from "../../services/statistic";
+import MyChart from "../../components/MyChart";
 
 const MyPage = () => {
   const { token } = useSelector((state) => state.userReducer)
   const [ profile, setProfile ] = useState({})
   const base64Image = `data:image/png;base64,${profile.profileImg}`
-
+  const [results, setResults] = useState([{}, {}, {}, {}, {}]);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -23,18 +25,25 @@ const MyPage = () => {
             console.log(res.data.data)
             setProfile(res.data.data)
           },
-          (err) => console.log(err)
+          (err) => console.log('여기')
         );
+        
+        const response2 = await getSpeechList(
+          token,
+          (res) => {
+            console.log(res.data.data)
+            setResults(res.data.data.slice(0, 5));
+          },
+          (err) => console.log('저기')
+        )       
       } catch (error) {
-        console.error("Profile fetch failed:", error);
+        console.error("쩌어기");
       }
     };
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   console.log(profile)
-  // }, [profile])
+  
 
   return (
       <div className="bg-white w-full min-h-screen">
@@ -53,9 +62,7 @@ const MyPage = () => {
               </div>
               <div className="text-sm py-2">
                 <p className="py-0.5">닉네임 : {profile.nickname}</p>
-                <p className="py-0.5">이름 : {profile.name}</p>
-                <p className="py-0.5">아이디 : {profile.userId}</p>
-                <p className="py-0.5">이메일 : {profile.email}</p>
+                <p>총 연습 시간 : </p>
               </div>
             </div>
                 <button 
@@ -63,20 +70,8 @@ const MyPage = () => {
                     <Link to="/patchinfo">회원정보 수정</Link>
                 </button>
             </div>
-          <div className="ms-5 me-10 bg-white box2 drop-shadow-md rounded-md">
-            <h2 className="ms-5 text-xl my-3">학습현황</h2>
-              <div className="flex">
-                <div className="w-72 h-44 mx-5 my-3">
-                  <img src="images/graph.PNG"/>
-                </div>
-                <div>
-                  <p className="text-xl py-2">학습시간</p>
-                  <p className="py-1">연습 :</p>
-                  <p className="py-1">스터디 :</p>
-                  <p className="py-1">총 합 :</p>
-                </div>
-              </div>
-
+          <div className="me-10 bg-white box2 drop-shadow-md rounded-md">
+                  <MyChart/>          
           </div>
         </div>
         <div className="flex justify-center">
@@ -88,11 +83,13 @@ const MyPage = () => {
               </span>
               <div className="flex justify-center">
                 {/* 여기에 5개의 결과 카드 나오도록 */}
-                <ResultCard/>
-                <ResultCard/>
-                <ResultCard/>
-                <ResultCard/>
-                <ResultCard/>
+                {results.map((result, index) => (
+                  <ResultCard 
+                    key={index}
+                    speechMode={result.speechMode}
+                    title={result.title}
+                  />
+                ))}
               </div>
             </div>
           </div>

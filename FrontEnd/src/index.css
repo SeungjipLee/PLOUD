@@ -471,7 +471,7 @@
 
 .Recard {
   transition: transform 0.3s ease;
-  background-image: url('../public/images/ResultCard.png');
+  background-image: url('../public/images/ResultCard1.png');
   background-size:cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -480,6 +480,10 @@
 
 .Recard:hover {
   transform: scale(1.05);
+  background-image: url('../public/images/ResultCard2.png');
+  background-size:cover;
+  background-repeat: no-repeat;
+  background-position: center;
   color:black;
 }
 
