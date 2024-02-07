@@ -24,6 +24,7 @@ public class FfmpegUtil {
 //        this.ffmpegPath = ffmpegPath;
 //    }
 
+    
     public static void convertAudio(String inputAudioPath, String outputAudioPath)
         throws Exception {
 
@@ -33,7 +34,7 @@ public class FfmpegUtil {
         Process process = null;
         try{
             ProcessBuilder processBuilder = new ProcessBuilder(
-                "~/usr/local/bin/ffmpeg/ffmpeg",
+                "/usr/local/bin/ffmpeg/ffmpeg",
                 "-i", inputAudioPath,
                 "-ar", "16000",
                 "-ac", "1",
