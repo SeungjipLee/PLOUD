@@ -111,8 +111,9 @@ public class RecordServiceImpl implements RecordService{
         }
 
         return TotalScoreResponse.createResponse(
-            convertMinuteToString(user.getSoloDurationInMinute()),
-            convertMinuteToString(user.getStudyDurationInMinute()),
+            user.getSoloDurationInMinute()+user.getStudyDurationInMinute(),
+//            convertMinuteToString(user.getSoloDurationInMinute()),
+//            convertMinuteToString(user.getStudyDurationInMinute()),
             dtoList);
     }
 
