@@ -168,8 +168,8 @@ public class SpeechServiceImpl implements SpeechService{
     public ClearityResponse clearity(MultipartFile audioFile, Integer speechId, Boolean isLast) {
 
         // 파일 경로
-        String inputWavFile = "audio\\in_" + cnt + ".wav";
-        String outputWavFile = "audio\\out_" + cnt++ + ".wav";
+        String inputWavFile = "/audio/in_" + cnt + ".wav";
+        String outputWavFile = "/audio/out_" + cnt++ + ".wav";
 
         File dest = null;
         try {
