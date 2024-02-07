@@ -479,6 +479,24 @@ const StudyRoomPage = () => {
     setChatvalue("");
   };
 
+  // 비디오 관련 함수
+  const [ isVideoRecording, setIsVideoRecording ] = useState(false);
+  const videoChunksRef = useRef([]); // 영상 정보
+
+  // 비디오 녹화 시작 함수
+  const videoRecordingStart = () => {
+    setIsVideoRecording(true);
+
+    // 녹화 시작
+  }
+
+  // 비디오 녹화 종료 함수
+  const videoRecordingEnd = () => {
+    setIsVideoRecording(false);
+
+    // 녹화 종료 및 영상 업로드
+  }
+
   // 녹화 종료 요청
   const speechEnd = () => {
     console.log("녹화 종료");
