@@ -55,4 +55,8 @@ const Tier = () => {
   )
 };
 
+<<<<<<< HEAD
 export default Tier;
+=======
+export default Tier;
+>>>>>>> 38714c0445dc4bf79f225ef2d20974520168c6bc
