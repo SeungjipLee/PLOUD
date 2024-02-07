@@ -167,6 +167,8 @@ public class SpeechServiceImpl implements SpeechService{
     @Override
     public ClearityResponse clearity(MultipartFile audioFile, Integer speechId, Boolean isLast) {
 
+        log.debug("---------- SpeechServiceImpl clearty Execution ----------");
+
         // 파일 경로
         String inputWavFile = "/audio/in_" + cnt + ".wav";
         String outputWavFile = "/audio/out_" + cnt++ + ".wav";
@@ -175,6 +177,9 @@ public class SpeechServiceImpl implements SpeechService{
         try {
             // 파일로 저장
             dest = new File(inputWavFile);
+
+            log.debug("---------- 파일 생성 완료 ----------");
+
             try (FileOutputStream fos = new FileOutputStream(dest)) {
                 fos.write(audioFile.getBytes());
             }
