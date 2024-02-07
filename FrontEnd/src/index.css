@@ -832,3 +832,12 @@ p {
   background-color: #060515;
   color: white;
 }
+
+.createmodal {
+  position: absolute;
+  top: 200px;
+  left: 550px;
+  width: 400px;
+  height: 400px;
+  background-color: #223872;
+}

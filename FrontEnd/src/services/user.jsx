@@ -120,3 +120,10 @@ export const reportUser = async (token, data, success, fail) => {
     .then(success)
     .catch(fail)
 }
+
+export const userVideos = async (token, success, fail) => {
+  return await API(token)
+    .get("user/videos")
+    .then(success)
+    .catch(fail)
+}
