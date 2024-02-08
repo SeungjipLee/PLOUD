@@ -2,13 +2,13 @@ import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 
-const BarChart = () => {
+const BarChart = ({ scores }) => { // props로 scores 배열을 받음
   const data = {
-    labels: ['명료도', '발화속도', '성량', '발표태도'],
+    labels: ['명료도', '발화속도', '성량', '평균점수'],
     datasets: [
       {
         label: '점수',
-        data: [63, 77, 90, 70],
+        data: scores, // 외부에서 받은 scores 데이터 사용
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(255, 159, 64, 0.2)',
