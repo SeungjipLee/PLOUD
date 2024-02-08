@@ -303,11 +303,24 @@
   width: 100%;
   height: 1080px;
 }
-.RoomPage-mid {
-  height: 760px;
+.RoomPage-top {
   display: flex;
+  position: relative;
+  height: 150px;
+}
+.RoomPage-mid {
+  height: 660px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
 }
+.RoomPage-bottom {
+  display: flex;
+  justify-content: space-between;
+}
+
 .roompage-icon {
   width: 200px;
 }
@@ -345,7 +358,7 @@
   padding: 2px;
 }
 
-.video-room-button img {
+.RoomPage-bottom img {
   width: 50px;
 }
 
@@ -471,8 +484,8 @@
 
 .Recard {
   transition: transform 0.3s ease;
-  background-image: url('../public/images/ResultCard1.png');
-  background-size:cover;
+  background-image: url("../public/images/ResultCard1.png");
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   color: transparent;
@@ -480,11 +493,11 @@
 
 .Recard:hover {
   transform: scale(1.05);
-  background-image: url('../public/images/ResultCard2.png');
-  background-size:cover;
+  background-image: url("../public/images/ResultCard2.png");
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  color:black;
+  color: black;
 }
 
 .chat {
@@ -857,4 +870,121 @@ p {
   border: 2px solid black;
   background-color: #192169;
   color: white;
+}
+/* .video-flex-mode1-presenter{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  width: 1380px;
+  height: 720px;
+  padding: 2px;
+}
+
+.mode1-top {
+  display: flex;
+  justify-content: center;
+}
+
+.mode1-bottom video {
+  padding: 10px;
+  width: 300px;
+  height: auto;
+  cursor: pointer;
+} */
+
+.video-flex-mode1-presenter {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* 화상회의 화면 전체 높이 */
+  width: 100%;
+  padding: 15px 0px;
+}
+
+.mode1-top {
+  display: flex;
+  flex-wrap: wrap;
+  height: 540px;
+  justify-content: center;
+  gap: 10px; /* 참가자간 간격 */
+  margin-bottom: 10px; /* 상단 참가자들과 하단 참가자 사이의 간격 */
+}
+
+/* .mode1-top > div {
+  flex: 1 1 auto; 
+  max-width: calc(
+    50% - 10px
+  ); 
+  text-align: center;
+} */
+.mode1-top > div {
+  flex: 1;
+  max-width: calc(50% - 10px); /* 기본적으로 2열로 표시 */
+  text-align: center;
+}
+
+.mode1-bottom {
+  display: flex;
+  height: 200px;
+  justify-content: center; /* 하단 참가자 중앙 정렬 */
+  align-items: center;
+}
+
+.mode1-bottom > div {
+  /* 하단 참가자 스타일 설정, 필요에 따라 조절 */
+  max-width: 200px; /* 하단 참가자 화면의 최대 너비 */
+  text-align: center; /* span 태그를 중앙 정렬 */
+}
+.mode1-top.single-row > div { /* 3개일 때는 너비를 조정하여 한 줄에 모두 표시 */
+  max-width: calc(
+    33.33% - 10px
+  ); 
+  display: flex;
+  align-items: center;
+}
+
+.mode1-top.multi-row > div {
+  max-height: calc(50% - 10px); /* 기존 스타일 유지 */
+  display: flex;
+  flex: wrap;
+  justify-content: space-between;
+
+  align-items: center;
+}
+
+.mode1-bottom video {
+  height: 100%;
+  width: auto;
+}
+
+.video-element {
+  border-radius: 10px;
+}
+
+.mode-select{
+  z-index: 100;
+  position: absolute;
+  left: 0;
+}
+
+.mode2-top {
+  display: flex;
+
+  height: 150px;
+
+}
+.mode2-top video {
+  height: 150px;
+  width: auto;
+}
+
+.mode2-main {
+  display: flex;
+  width: 100%;
+  height: 600px;
+    
+}
+
+.mode2-top-left {
+  width: 250px;
 }
