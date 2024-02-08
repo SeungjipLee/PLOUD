@@ -8,6 +8,7 @@ import Report from "./component/Report";
 import ResultList from "./component/ResultList";
 import { addRecordList } from "../../features/record/recordSlice";
 import { getRecordResult } from "../../services/record";
+import { useCallback } from "react";
 import {
   startSpeech,
   endSpeech,
@@ -51,7 +52,7 @@ const StudyRoomPage = () => {
   // 비디오 정보
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
-  const [subscribers, setSubscriberse] = useState([]);
+  const [subscribers, setSubscribers] = useState([]);
   const [videoDivClass, setVideoDivClass] = useState("");
 
   // 비디오 녹화 관련 함수
@@ -130,7 +131,7 @@ const StudyRoomPage = () => {
       sessionScreen.current.unpublish(publisherScreen);
   
       setPublisherScreen(null);
-      setScreenShare(false); // 화면 공유 상태 업데이트
+      setScreenShare(false);
     }
   };
 
@@ -283,10 +284,7 @@ const StudyRoomPage = () => {
     OVScreen.current = new OpenVidu();
 
     session.current = OV.current.initSession();
-    // session01에 kyd1126으로 접속
-
-    sessionScreen.current = OVScreen.current.initSession(); // 내 PC 2번
-    // session01에 screen//kyd1126으로 접속
+    sessionScreen.current = OVScreen.current.initSession();
 
     // On every new Stream received...
     session.current.on("streamCreated", (event) => {
@@ -294,11 +292,14 @@ const StudyRoomPage = () => {
 
       console.log(event.stream.connection.data.split("%/%"))
       var tmp = event.stream.connection.data.split("%/%");
-      console.log(JSON.parse(tmp[0]).clientData)
-      addUser({ nickname: JSON.parse(tmp[0]).clientData });
+      var nickname = JSON.parse(tmp[0]).clientData;
+      addUser({ nickname: nickname });
 
+      console.log(nickname + "님이 접속")
+      
       var subscriber = session.current.subscribe(event.stream, undefined);
-      setSubscriberse((subscribers) => [...subscribers, subscriber]);
+
+      setSubscribers((subscribers) => [...subscribers, subscriber]);
     });
 
     // On every Stream destroyed...
@@ -306,8 +307,10 @@ const StudyRoomPage = () => {
       console.log(tag, "누가 떠났어요");
 
       var tmp = event.stream.connection.data.split("%/%");
-      removeUser(JSON.parse(tmp[0]).clientData);
-      // setChatList(chatList => [...chatList, {username: JSON.parse(tmp[0]).clientData, content : "님이 퇴장하였습니다."}]);
+      var nickname = JSON.parse(tmp[0]).clientData;
+      removeUser(nickname);
+
+      console.log(nickname + "님이 떠남")
 
       deleteSubscriber(event.stream.streamManager);
     });
@@ -432,7 +435,7 @@ const StudyRoomPage = () => {
       });
 
       sessionScreen.current
-      .connect(screenToken, { clientData: "screen//" + nickname })
+      .connect(screenToken, { clientData: nickname + "screen" })
       .then(async () => {
       })
       .catch((error) => {
@@ -466,12 +469,18 @@ const StudyRoomPage = () => {
     navigate("/study");
   };
 
-  const deleteSubscriber = (streamManager) => {
-    let index = subscribers.indexOf(streamManager, 0);
-    if (index > -1) {
-      setSubscriberse(subscribers.splice(index, 1));
-    }
-  };
+  const deleteSubscriber = useCallback((streamManager) => {
+    setSubscribers((prevSubscribers) => {
+      const index = prevSubscribers.indexOf(streamManager);
+      if (index > -1) {
+        const newSubscribers = [...prevSubscribers];
+        newSubscribers.splice(index, 1);
+        return newSubscribers;
+      } else {
+        return prevSubscribers;
+      }
+    });
+  }, []);
 
   // 채팅 전송
   const handleMessageSubmit = async (e) => {
@@ -503,11 +512,14 @@ const StudyRoomPage = () => {
   };
 
   const [videoRecorder, setVideoRecorder] = useState(null);
+  const videoStartTime = useRef(null);
 
   // 비디오 녹화 시작 함수
   const videoRecordingStart = () => {
     isVideoRecording.current = true;
     videoChunksRef.current = [];
+
+    videoStartTime.current = new Date().getTime();
 
     navigator.mediaDevices
     .getUserMedia({ video: true, audio: true})
@@ -548,6 +560,9 @@ const StudyRoomPage = () => {
     // const vFormData = new FormData();
     // vFormData.append("videoFile", videoFile);
     // vFormData.append("speechId", speechId.current);
+
+    var videoPlayTime = new Date().getTime() - videoStartTime.current;
+    console.log("영상 길이 : " + videoPlayTime / 1000 + "(초)");
 
     // 아래는 임시로 다운로드 해보려고 작성함 추후 삭제
     const url = URL.createObjectURL(videoFile);
@@ -847,10 +862,10 @@ const StudyRoomPage = () => {
           </div>
           {subscribers.map((sub, i) => (
             <div
-              key={sub.id}
+              key={sub}
               className={`${videoDivClass} stream-container col-md-6 col-xs-6`}
             >
-              <span>{sub.id}</span>
+              {/* <span>{sub.nickname}</span> */}
               <UserVideoComponent streamManager={sub} />
             </div>
           ))}
