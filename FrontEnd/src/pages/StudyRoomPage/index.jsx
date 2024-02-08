@@ -54,6 +54,10 @@ const StudyRoomPage = () => {
   const [subscribers, setSubscriberse] = useState([]);
   const [videoDivClass, setVideoDivClass] = useState("");
 
+  // 비디오 녹화 관련 함수
+  const isVideoRecording = useRef(false);
+  const videoChunksRef = useRef([]); // 영상 정보
+
   // 화면 모드
   // 0 대기 1 면접 2 발표 3 대본
   const [mode, setMode] = useState(1);
@@ -108,6 +112,7 @@ const StudyRoomPage = () => {
 
     // 공유 중지를 감지하는 부분 인데 지금 안됨 더 찾아봐야 함
     console.log(publisherScreen.stream.mediaStream.getVideoTracks()[0]);
+
     const videoTrack = publisherScreen.stream.mediaStream.getVideoTracks()[0];
     if (videoTrack) {
       videoTrack.onended = () => {
@@ -154,8 +159,6 @@ const StudyRoomPage = () => {
 
   const [recordingTime, setRecordingTime] = useState(0); // 녹화 시간
   const [recordingInterval, setRecordingInterval] = useState(null);
-
-  const audioChunksRef = useRef([]); // 음성 정보
 
   const decibels = useRef([]);
 
@@ -262,6 +265,7 @@ const StudyRoomPage = () => {
       (res) => {
         speechId.current = res.data.data;
         startRecording();
+        videoRecordingStart();
         sendSignal("rstart", "님이 발표를 시작하였습니다.");
       },
       (err) => console.log(err)
@@ -495,22 +499,71 @@ const StudyRoomPage = () => {
     setChatvalue("");
   };
 
-  // 비디오 관련 함수
-  const [ isVideoRecording, setIsVideoRecording ] = useState(false);
-  const videoChunksRef = useRef([]); // 영상 정보
+  const [videoRecorder, setVideoRecorder] = useState(null);
 
   // 비디오 녹화 시작 함수
   const videoRecordingStart = () => {
-    setIsVideoRecording(true);
+    isVideoRecording.current = true;
+    videoChunksRef.current = [];
 
-    // 녹화 시작
+    navigator.mediaDevices
+    .getUserMedia({ video: true, audio: true})
+    .then((stream) => {
+  
+    const vRecorder = new MediaRecorder(stream)
+    setVideoRecorder(vRecorder);
+
+    vRecorder.ondataavailable = (e) => {
+      if (e.data.size > 0) {
+        uploadVideo(e.data); // e.data : videoChunk
+      }
+    };
+    
+    vRecorder.start();
+    
+    })
+    .catch((error) => {
+    console.log(error);
+    });
   }
 
   // 비디오 녹화 종료 함수
   const videoRecordingEnd = () => {
-    setIsVideoRecording(false);
+    isVideoRecording.current = false;
 
-    // 녹화 종료 및 영상 업로드
+    if (videoRecorder && videoRecorder.state === "recording") {
+      videoRecorder.stop();
+    }
+  }
+
+  // 영상 보내기
+  const uploadVideo = (data) => {
+    var tmp = [];
+    tmp.push(data);
+
+    const videoFile = new Blob(tmp, { type: "video/webm" });
+    // const vFormData = new FormData();
+    // vFormData.append("videoFile", videoFile);
+    // vFormData.append("speechId", speechId.current);
+
+    // 아래는 임시로 다운로드 해보려고 작성함 추후 삭제
+    const url = URL.createObjectURL(videoFile);
+
+    if (confirm("녹화된 비디오를 다운로드하시겠습니까?")) {
+      const a = document.createElement("a");
+      document.body.appendChild(a);
+      a.style = "display: none";
+      a.href = url;
+      a.download = "recordedVideo.webm";
+      a.click();
+  
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } else {
+      window.URL.revokeObjectURL(url);
+      console.log("다운로드가 취소되었습니다.");
+    }
+    // 여기까지 삭제하고 S3 업로드 요청
   }
 
   // 녹화 종료 요청
@@ -519,6 +572,7 @@ const StudyRoomPage = () => {
     isLast.current = true;
     // 녹화 중지 함수 실행
     stopRecording();
+    videoRecordingEnd();
     sendSignal("rend", "님이 발표를 종료하였습니다.");
 
     endSpeech(
@@ -607,7 +661,6 @@ const StudyRoomPage = () => {
   const startRecording = () => {
     isLast.current = false;
     isRecording.current = true;
-    audioChunksRef.current = []; // 오디오 청크를 새 배열로 초기화
     setRecordingTime(0);
 
     // recordTime 측정
