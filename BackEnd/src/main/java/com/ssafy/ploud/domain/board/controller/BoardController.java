@@ -57,14 +57,14 @@ public class BoardController {
   }
 
   @PutMapping("/{id}")
-  public ApiResponse<?> updateBoard(@PathVariable int id, @RequestBody BoardRequest boardRequest) {
-    boardService.updateBoard(id, boardRequest);
+  public ApiResponse<?> updateBoard(@PathVariable int id, @RequestBody BoardRequest boardRequest, @AuthenticationPrincipal UserDetails loginUser) {
+    boardService.updateBoard(id, boardRequest, loginUser.getUsername());
     return ApiResponse.ok("글 수정 성공");
   }
 
   @DeleteMapping("/{id}")
-  public ApiResponse<?> deleteBoard(@PathVariable int id) {
-    boardService.deleteBoard(id);
+  public ApiResponse<?> deleteBoard(@PathVariable int id,  @AuthenticationPrincipal UserDetails loginUser) {
+    boardService.deleteBoard(id, loginUser.getUsername());
     return ApiResponse.ok("글 삭제 성공");
   }
 }

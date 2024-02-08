@@ -23,19 +23,17 @@ public class HeartServiceImpl implements HeartService{
   private final UserRepository userRepository;
   private final BoardRepository boardRepository;
   @Override
-  public void insert(HeartRequest heartRequest) {
+  public void insert(HeartRequest heartRequest, String userId) {
 
-    UserEntity user = userRepository.findByUserId(heartRequest.getUserId())
-        .orElseThrow(()->  new CustomException(ResponseCode.USER_NOT_FOUND));
     BoardEntity board = boardRepository.findById(heartRequest.getBoardId())
         .orElseThrow(() -> new CustomException(ResponseCode.BOARD_NOT_FOUND));
 
-    if(heartRepository.findByUserAndBoard(user, board).isPresent()){
+    if(heartRepository.findByUser_UserIdAndBoard(userId, board).isPresent()){
       throw new CustomException(ResponseCode.ALREADY_PRESS);
     }
 
     HeartEntity heartEntity = HeartEntity.builder()
-        .user(user)
+        .userId(userId)
         .board(board)
         .build();
 
@@ -43,13 +41,12 @@ public class HeartServiceImpl implements HeartService{
   }
 
   @Override
-  public void delete(HeartRequest heartRequest) {
-    UserEntity user = userRepository.findByUserId(heartRequest.getUserId())
-        .orElseThrow(()-> new CustomException(ResponseCode.USER_NOT_FOUND));
+  public void delete(HeartRequest heartRequest, String userId) {
+
     BoardEntity board = boardRepository.findById(heartRequest.getBoardId())
         .orElseThrow(() -> new CustomException(ResponseCode.BOARD_NOT_FOUND));
 
-    HeartEntity heart = (HeartEntity) heartRepository.findByUserAndBoard(user, board)
+    HeartEntity heart = (HeartEntity) heartRepository.findByUser_UserIdAndBoard(userId, board)
         .orElseThrow(()->  new CustomException(ResponseCode.HEART_NOT_FOUND));
 
     heartRepository.delete(heart);

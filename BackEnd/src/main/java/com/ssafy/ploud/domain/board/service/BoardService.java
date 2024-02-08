@@ -14,9 +14,9 @@ public interface BoardService {
 
   BoardResponse getBoardById(int id);
 
-  void updateBoard(int id, BoardRequest boardRequest);
+  void updateBoard(int id, BoardRequest boardRequest, String userId);
 
-  void deleteBoard(int id);
+  void deleteBoard(int id, String userId);
 
   void updateCount(BoardResponse board, boolean heart);
 
