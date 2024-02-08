@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface HeartRepository extends JpaRepository<HeartEntity, String> {
 
-  Optional<Object> findByUser_UserIdAndBoard(String userId, BoardEntity board);
+  Optional<HeartEntity> findByUserIdAndBoard(String userId, BoardEntity board);
 
   void delete(HeartEntity heart);
 }
