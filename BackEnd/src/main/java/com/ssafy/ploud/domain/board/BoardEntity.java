@@ -46,12 +46,10 @@ public class BoardEntity {
     return boardEntity;
   }
 
-  public static BoardEntity updateBoard(BoardRequest boardRequest, BoardEntity boardEntity) {
+  public static void updateBoard(BoardRequest boardRequest, BoardEntity boardEntity, String videoPath) {
     boardEntity.setTitle(boardRequest.getTitle());
     boardEntity.setContent(boardRequest.getContent());
-//  boardEntity.setVideoPath(boardRequest.getVideoPath().getOriginalFilename());
+    boardEntity.setVideoPath(videoPath);
     boardEntity.setRegisterTime(LocalDateTime.now());   // 수정 시각으로 업데이트
-
-    return boardEntity;
   }
 }

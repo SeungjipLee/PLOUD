@@ -7,9 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CommentRequest {
 
-  private int id;
   private int boardId;
-  private String userId;
   private String comment;
   
 }

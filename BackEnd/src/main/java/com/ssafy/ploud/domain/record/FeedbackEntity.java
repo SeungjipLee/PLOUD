@@ -60,8 +60,4 @@ public class FeedbackEntity {
     this.speech = speech;
   }
 
-  public FeedbackDetail toDto() {
-    return new FeedbackDetail(content, timeLog);
-  }
-
 }
