@@ -8,7 +8,7 @@ public interface CommentService {
 
   List<CommentResponse> getCommentsByBoardId(int boardId);
 
-  void createComment(CommentRequest commentRequest);
+  void createComment(CommentRequest commentRequest, String userId);
 
-  void deleteComment(int id);
+  void deleteComment(int id, String userId);
 }
