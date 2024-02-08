@@ -2,18 +2,28 @@ import { useEffect, useState } from "react";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
-import { Link } from "react-router-dom";
 import { getProfile } from "../../services/user";
 import { useSelector } from "react-redux";
 import ResultCard from "../../components/ResultCard";
-import { getSpeechList, getScoreList } from "../../services/statistic";
+import { getSpeechList } from "../../services/statistic";
 import MyChart from "../../components/MyChart";
+import Tier from "../../components/Tier"
+<<<<<<< HEAD
+import { useNavigate } from "react-router-dom";
+=======
+>>>>>>> 19764a914789842ee506a9dbe1c61738de5d0715
+
 
 const MyPage = () => {
   const { token } = useSelector((state) => state.userReducer)
   const [ profile, setProfile ] = useState({})
   const base64Image = `data:image/png;base64,${profile.profileImg}`
   const [results, setResults] = useState([{}, {}, {}, {}, {}]);
+<<<<<<< HEAD
+  const navigate = useNavigate()
+=======
+
+>>>>>>> 19764a914789842ee506a9dbe1c61738de5d0715
   
   useEffect(() => {
     const fetchData = async () => {
@@ -35,14 +45,13 @@ const MyPage = () => {
             setResults(res.data.data.slice(0, 5));
           },
           (err) => console.log('저기')
-        )       
+        )
       } catch (error) {
         console.error("쩌어기");
       }
     };
     fetchData();
   }, []);
-
   
 
   return (
@@ -52,24 +61,32 @@ const MyPage = () => {
           <h2 className="font-extrabold text-2xl">마이페이지</h2>
         </div>
         <div className="flex place-self-center container1">
-          <div className="ms-10 me-5 bg-white box1 drop-shadow-md rounded-md">
-            <h2 className="ms-5 text-xl my-3">프로필</h2>
-            <div className="flex">
-              <div className="w-32 h-32 mx-5">
+          
+          <div className="ms-12 me-5 bg-white box1 drop-shadow-md rounded-md">
+            <div className="flex ms-5 mt-5">
+              <div className="w-32 h-64 mx-5 flex flex-col">
+                <div>
                 {!profile.profileImg&&
                 <img src="images/Profile.PNG"/>}
                 {profile.profileImg&&<img src={`${base64Image}`}/>}
+                </div>
+                <div>
+                  {profile.nickname}
+                </div>
+<<<<<<< HEAD
+                <button onClick={() => navigate('/patchinfo')}>회원 정보 수정</button>
+=======
+                <div>회원 정보 수정</div>
+>>>>>>> 19764a914789842ee506a9dbe1c61738de5d0715
               </div>
-              <div className="text-sm py-2">
-                <p className="py-0.5">닉네임 : {profile.nickname}</p>
-                <p>총 연습 시간 : </p>
+              <div className="w-32 h-64">
+                  <Tier />
               </div>
+              
             </div>
-                <button 
-                  className="bg-gray-400 text-white rounded-md p-1 mx-7 mb-3">
-                    <Link to="/patchinfo">회원정보 수정</Link>
-                </button>
             </div>
+
+
           <div className="me-10 bg-white box2 drop-shadow-md rounded-md">
                   <MyChart/>          
           </div>
