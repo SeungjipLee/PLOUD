@@ -265,6 +265,10 @@ const StudyRoomPage = () => {
       params,
       (res) => {
         speechId.current = res.data.data;
+        console.log(res.data.data);
+
+        console.log("발표 시작 : " + speechId.current);
+
         startRecording();
         videoRecordingStart();
         sendSignal("rstart", "님이 발표를 시작하였습니다.");
@@ -777,6 +781,8 @@ const StudyRoomPage = () => {
     // console.log("평가 요청");
     var tmp = [];
     tmp.push(data);
+
+    console.log("평가요청 : " + speechId.current);
 
     const audioFile = new Blob(tmp, { type: "audio/wav" });
     const formData = new FormData();

@@ -112,6 +112,7 @@ public class SpeechServiceImpl implements SpeechService {
         openViduUtil.findBySessionId(speechStartRequest.getSessionId()).setSpeechId(id);
         Map<String, Integer> res = new HashMap<>();
         res.put("speechId",speech.getId());
+
         return res;
     }
 
