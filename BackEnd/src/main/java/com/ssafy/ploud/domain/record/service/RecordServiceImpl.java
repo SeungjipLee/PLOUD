@@ -53,7 +53,7 @@ public class RecordServiceImpl implements RecordService{
         // feedback list 조회
         List<FeedbackDetail> feedbackDetailList = new ArrayList<>();
         for (FeedbackEntity feedback : feedbackRepository.findBySpeechId(speechId)) {
-            feedbackDetailList.add(feedback.toDto());
+            feedbackDetailList.add(FeedbackDetail.of(feedback));
         }
 
         return RecordDetailResponse.of(speechEntity, videoDetail, feedbackDetailList);
