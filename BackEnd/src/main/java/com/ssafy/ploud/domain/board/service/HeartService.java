@@ -4,7 +4,7 @@ import com.ssafy.ploud.domain.board.dto.request.HeartRequest;
 
 public interface HeartService {
 
-  void insert(HeartRequest heartRequest);
+  void insert(HeartRequest heartRequest, String userId);
 
-  void delete(HeartRequest heartRequest);
+  void delete(HeartRequest heartRequest, String userId);
 }
