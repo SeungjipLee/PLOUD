@@ -20,9 +20,10 @@ const BoardDetail = () => {
   });
 
   useEffect(()=> {
+    console.log(boardId)
     const fetchBoard = async() => {
       try {
-        const response = await axios.get(`/api/board/${boardId}`, {
+        const response = await axios.get(`http://localhost:3000/api/board/${boardId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

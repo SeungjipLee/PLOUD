@@ -34,9 +34,8 @@ const Router = () => {
         <Route path="/createpw" element={<ResetPwPage />} />
         <Route path="/createboard" element={<CreateBoard />} />
         <Route path="/test" element={<TestPage />} />
-        <Route path="/board-detail" element={<BoardDetail />} />
+        <Route path="/board/:boardId" element={<BoardDetail />} />
         <Route path="/interview" element={<InterviewScreenPresenter/>} />
-        <Route path="/1" element={<MyChart/>} />
       </Routes>
     </BrowserRouter>
   );

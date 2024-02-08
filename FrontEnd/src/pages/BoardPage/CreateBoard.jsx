@@ -71,8 +71,8 @@ const CreateBoard = () => {
       videoId: postVideoId
     }
   
-    if (formData.title === "" || formData.content === "") {
-      alert("제목과 내용을 모두 입력해주세요.");
+    if (formData.title === "" || formData.content === "" || postVideoId==0) {
+      alert("제목과 내용과 영상을 모두 입력해주세요.");
     } else {
       createboard(
         token,
