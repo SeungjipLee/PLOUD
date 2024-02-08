@@ -31,9 +31,9 @@ public class HeartEntity {
   @Column(name = "heart_id")
   private int id;
 
-  @ManyToOne(fetch = LAZY)
-  @JoinColumn(name = "user_id")
-  private UserEntity user;
+//  @ManyToOne(fetch = LAZY)
+//  @JoinColumn(name = "user_id")
+  private String userId;
 
   @ManyToOne(fetch = LAZY)
   @JoinColumn(name = "board_id")
