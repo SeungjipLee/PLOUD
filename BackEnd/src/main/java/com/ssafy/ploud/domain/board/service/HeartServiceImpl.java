@@ -7,48 +7,48 @@ import com.ssafy.ploud.domain.board.HeartEntity;
 import com.ssafy.ploud.domain.board.dto.request.HeartRequest;
 import com.ssafy.ploud.domain.board.repository.BoardRepository;
 import com.ssafy.ploud.domain.board.repository.HeartRepository;
-import com.ssafy.ploud.domain.user.UserEntity;
-import com.ssafy.ploud.domain.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
 
 @Service
 @RequiredArgsConstructor
 public class HeartServiceImpl implements HeartService{
 
   private final HeartRepository heartRepository;
-  private final UserRepository userRepository;
   private final BoardRepository boardRepository;
+
   @Override
-  public void insert(HeartRequest heartRequest, String userId) {
+  @Transactional
+  public Map<String, Integer> updateHeart(HeartRequest heartRequest, String userId) {
 
     BoardEntity board = boardRepository.findById(heartRequest.getBoardId())
         .orElseThrow(() -> new CustomException(ResponseCode.BOARD_NOT_FOUND));
+    System.out.println(board.getVideoPath());
 
-    if(heartRepository.findByUser_UserIdAndBoard(userId, board).isPresent()){
-      throw new CustomException(ResponseCode.ALREADY_PRESS);
+    Optional<HeartEntity> heartEntityOptional = heartRepository.findByUserIdAndBoard(userId, board);
+
+    if (!heartEntityOptional.isPresent()) {
+      // heartEntity가 존재하지 않으면 새 heartEntity를 생성해서 저장
+      HeartEntity heart = HeartEntity.builder()
+          .userId(userId)
+          .board(board)
+          .build();
+
+      heartRepository.save(heart);
+      board.updateLikeCount(true);
+    } else {
+      HeartEntity heartEntity = heartEntityOptional.get();
+      // heartEntity가 존재한다면 기존 heartEntity를 삭제
+      heartRepository.delete(heartEntity);
+      board.updateLikeCount(false);
     }
 
-    HeartEntity heartEntity = HeartEntity.builder()
-        .userId(userId)
-        .board(board)
-        .build();
-
-    heartRepository.save(heartEntity);
-  }
-
-  @Override
-  public void delete(HeartRequest heartRequest, String userId) {
-
-    BoardEntity board = boardRepository.findById(heartRequest.getBoardId())
-        .orElseThrow(() -> new CustomException(ResponseCode.BOARD_NOT_FOUND));
-
-    HeartEntity heart = (HeartEntity) heartRepository.findByUser_UserIdAndBoard(userId, board)
-        .orElseThrow(()->  new CustomException(ResponseCode.HEART_NOT_FOUND));
-
-    heartRepository.delete(heart);
+    Map<String, Integer> res = new HashMap<>();
+    res.put("heartCount", board.getLikeCount());
+    return res;
   }
 }

@@ -42,6 +42,7 @@ public class BoardEntity {
     boardEntity.content = boardRequest.getContent();
     boardEntity.videoPath = videoPath;
     boardEntity.registerTime = LocalDateTime.now();
+    boardEntity.likeCount = 0; // default value
 
     return boardEntity;
   }
@@ -51,5 +52,14 @@ public class BoardEntity {
     boardEntity.setContent(boardRequest.getContent());
     boardEntity.setVideoPath(videoPath);
     boardEntity.setRegisterTime(LocalDateTime.now());   // 수정 시각으로 업데이트
+  }
+
+  public int updateLikeCount(boolean added) {
+    if(added) {
+      likeCount++;
+    } else {
+      likeCount--;
+    }
+    return likeCount;
   }
 }

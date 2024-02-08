@@ -2,7 +2,6 @@ package com.ssafy.ploud.domain.board;
 
 import static jakarta.persistence.FetchType.LAZY;
 
-import com.ssafy.ploud.domain.user.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,8 +30,6 @@ public class HeartEntity {
   @Column(name = "heart_id")
   private int id;
 
-//  @ManyToOne(fetch = LAZY)
-//  @JoinColumn(name = "user_id")
   private String userId;
 
   @ManyToOne(fetch = LAZY)
