@@ -29,7 +29,7 @@ const MainPage = () => {
         </div>
         <div className="Main2 mb-24">
           <div className="video mx-16 ms-36 me-12">
-            <video src="videos/mainvideo.mp4" autoPlay loop />
+            <video src="/videos/mainvideo.mp4" autoPlay loop />
           </div>
           <div className='Main2Container'>
             <div className="mainBlueB text-white card mx-16 me-36 ms-12 text-center pt-5 my-5">Carousel</div>

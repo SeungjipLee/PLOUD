@@ -283,7 +283,10 @@ const StudyRoomPage = () => {
     OVScreen.current = new OpenVidu();
 
     session.current = OV.current.initSession();
-    sessionScreen.current = OVScreen.current.initSession();
+    // session01에 kyd1126으로 접속
+
+    sessionScreen.current = OVScreen.current.initSession(); // 내 PC 2번
+    // session01에 screen//kyd1126으로 접속
 
     // On every new Stream received...
     session.current.on("streamCreated", (event) => {
