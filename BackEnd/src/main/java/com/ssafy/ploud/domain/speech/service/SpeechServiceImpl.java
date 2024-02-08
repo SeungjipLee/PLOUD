@@ -31,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -75,7 +76,7 @@ public class SpeechServiceImpl implements SpeechService {
 
     @Override
     @Transactional
-    public int start(SpeechStartRequest speechStartRequest) {
+    public Map<String, Integer> start(SpeechStartRequest speechStartRequest) {
         if (!speechStartRequest.isPersonal()) {
             if (openViduUtil.findSpeechIdBySessionId(speechStartRequest.getSessionId()) != -1) {
                 throw new CustomException(ResponseCode.RECORD_PROCEEDING);
@@ -109,8 +110,9 @@ public class SpeechServiceImpl implements SpeechService {
         int id = speechRepository.save(speech).getId();
         System.out.println("speech id; " + id);
         openViduUtil.findBySessionId(speechStartRequest.getSessionId()).setSpeechId(id);
-
-        return speech.getId();
+        Map<String, Integer> res = new HashMap<>();
+        res.put("speechId",speech.getId());
+        return res;
     }
 
     @Override
