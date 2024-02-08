@@ -14,13 +14,10 @@ const CreateBoard = () => {
   // 로직
   const navigate = useNavigate();
   const [ userVideoList, setUserVideoList ] = useState([])
-<<<<<<< HEAD
   const [ isSelectedVideo, setIsSelectedVideo ] = useState(false)
   const [ selectedVideoTitle, setSelectedVideoTitle ] = useState("");
   const [ postVideoId, setPostVideoId] = useState(0)
 
-=======
->>>>>>> 19764a914789842ee506a9dbe1c61738de5d0715
   
   const [formData, setFormData] = useState({
     title: "", 
@@ -128,7 +125,6 @@ const CreateBoard = () => {
             </div>
             <div className="mt-5 mb-2 text-xl">내용</div>
             <div className=" border rounded-md mb-10">
-<<<<<<< HEAD
             <div className="flex">
               <button className="bg-white h-7" onClick={handleOpenModal}><img src="images/createBoard.png" className="h-full pl-2"/> </button>
               {isSelectedVideo&&<div className="pt-0.5">선택된 동영상 : {selectedVideoTitle}</div>}
@@ -141,17 +137,6 @@ const CreateBoard = () => {
                     <div className="col-4 mx-2 text-xl font-bold">{video.title}</div>
                     <div className="col-2 mx-2 pt-0.5">{video.playTime}분</div>
                     <div className="col-6 pt-1 text-sm ">{formatDate(video.recordTime)}</div>
-=======
-            <button className="relative bg-white h-7" onClick={handleOpenModal}><img src="images/createBoard.png" className="h-full pl-2"/></button>
-            <Modal className="createmodal" isOpen={isModalOpen} onRequestClose={handleCloseModal}>
-              <button onClick={handleCloseModal}>Close</button>
-              <ul>
-                {userVideoList.map((video, index) => (
-                  <li key={index}>
-                    <div>Title: {video.title}</div>
-                    <div>Play Time: {video.playTime}</div>
-                    <div>Record Time: {video.recordTime}</div>
->>>>>>> 19764a914789842ee506a9dbe1c61738de5d0715
                   </li>
                 ))}
               </ul>
