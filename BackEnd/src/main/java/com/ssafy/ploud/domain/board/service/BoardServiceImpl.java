@@ -77,11 +77,10 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   @Transactional
-  public void updateBoard(int id, BoardRequest boardRequest) {
+  public void updateBoard(int id, BoardRequest boardRequest, String userId) {
 
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String userId = authentication.getName();
-
+    VideoEntity videoEntity = videoRepository.findById(boardRequest.getVideoId())
+        .orElseThrow(()-> new CustomException(ResponseCode.VIDEO_NOT_FOUND));
     BoardEntity boardEntity = boardRepository.findById(id)
         .orElseThrow(() -> new CustomException(ResponseCode.BOARD_NOT_FOUND));
 
@@ -89,15 +88,12 @@ public class BoardServiceImpl implements BoardService {
       throw new CustomException(ResponseCode.NO_PERMISSION);
     }
 
-    BoardEntity.updateBoard(boardRequest, boardEntity);
-    boardRepository.save(boardEntity);
+    BoardEntity.updateBoard(boardRequest, boardEntity, videoEntity.getVideoPath());
   }
 
   @Override
   @Transactional
-  public void deleteBoard(int id) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String userId = authentication.getName();
+  public void deleteBoard(int id, String userId) {
 
     BoardEntity boardEntity = boardRepository.findById(id)
         .orElseThrow(() -> new CustomException(ResponseCode.BOARD_NOT_FOUND));
