@@ -54,6 +54,7 @@ const StudyRoomPage = () => {
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscriberse] = useState([]);
+  const [screenStream, setScreenStream] = useState(undefined);
   const [videoDivClass, setVideoDivClass] = useState("");
 
   // 화면 모드
@@ -754,11 +755,11 @@ const StudyRoomPage = () => {
 
   return (
     <div className="RoomPage">
-      <div className="flex">
+      <div className="RoomPage-top">
         <div className="roompage-icon">
           <img src="/images/ploud_icon_bg.png" />
         </div>
-        <div>
+        <div className="mode-select">
           <select
             name="mode"
             id="mode"
@@ -770,6 +771,38 @@ const StudyRoomPage = () => {
             <option value="3">3</option>
           </select>
         </div>
+        {/* 발표 -  */}
+        {mode == "2" && (
+          <div className="mode2-top">
+            <div className="mode2-top-left"></div>
+            {/* 상단 발표자, 참가자 일렬로 작은 화면으로 나열 */}
+            <div className="flex flex-row justify-center items-center space-x-2 w-full py-2">
+              {mainStreamManager !== publisher &&
+                mainStreamManager !== undefined && (
+                  <div className="relative">
+                    <div className="aspect-w-4 aspect-h-3">
+                      <UserVideoComponent streamManager={mainStreamManager} />
+                    </div>
+                  </div>
+                )}
+
+              {publisher !== undefined && (
+                <div className="relative">
+                  <div className="aspect-w-4 aspect-h-3">
+                    <UserVideoComponent streamManager={publisher} />
+                  </div>
+                </div>
+              )}
+              {subscribers.map((sub, i) => (
+                <div key={i} className="relative">
+                  <div className="aspect-w-4 aspect-h-3">
+                    <UserVideoComponent streamManager={sub} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="RoomPage-mid">
@@ -785,19 +818,23 @@ const StudyRoomPage = () => {
                 </div>
               ) : null}
             </div>
-            {subscribers.map((sub, i) => (
-              <div
-                key={sub.id}
-                className={`${videoDivClass} stream-container col-md-6 col-xs-6`}
-              >
-                <span>{sub.id}</span>
-                <UserVideoComponent streamManager={sub} />
-              </div>
-            ))}
+            {subscribers.map((sub, i) => {
+              if (sub !== publisher) {
+                return(
+                <div
+                  key={sub.id}
+                  className={`${videoDivClass} stream-container col-md-6 col-xs-6`}
+                >
+                  <UserVideoComponent streamManager={sub} />
+                </div>
+                )
+              }
+            })}
           </div>
         )}
 
         {/* ---------------------------------------면접 화면 구성(발표자) -----------------------------------------------*/}
+        {/* p - 발표자, s - 청자 */}
         {mode == "1" && mainStreamManager == publisher && (
           <div className="video-flex-mode1-presenter">
             <div
@@ -807,7 +844,6 @@ const StudyRoomPage = () => {
             >
               {subscribers.map((sub, i) => (
                 <div key={sub.id}>
-                  <span>{sub.id}</span>
                   <UserVideoComponent streamManager={sub} />
                 </div>
               ))}
@@ -820,8 +856,9 @@ const StudyRoomPage = () => {
           </div>
         )}
 
-        {/* ---------------------------------------발표 화면 구성 -----------------------------------------------*/}
-        {mode == "2" && (
+        {/* ---------------------------------------면접 화면 구성(청자) -----------------------------------------------*/}
+        {/* Main - 발표자, sub - 참가자, pub - 참가자 */}
+        {mode == "3" && (
           <div
             className={subscribers.length > 3 ? "video-flex-big" : "video-flex"}
           >
@@ -830,59 +867,29 @@ const StudyRoomPage = () => {
                 <UserVideoComponent streamManager={mainStreamManager} />
               </div>
             ) : null}
-            {/* <div id="video-container" className="col-md-6"> */}
-            <div id="video-container" className={videoDivClass}></div>
-            {subscribers.map((sub, i) => (
-              <div
-                key={sub.id}
-                className={`${videoDivClass} stream-container col-md-6 col-xs-6`}
-              >
-                <span>{sub.id}</span>
-                <UserVideoComponent streamManager={sub} />
+          </div>
+        )}
+
+        {/* ---------------------------------------발표 화면 구성 -----------------------------------------------*/}
+        {/* mainStreamManager - 발표자, screenStream - 공유화면, p - 참가자, subscribers - 참가자 */}
+        {/* 발표 화면 구성 */}
+        {mode == "2" && (
+          <div className="mode2-main">
+            {/* 메인 - 공유화면 크게 */}
+            {publisherScreen && (
+              <div className="flex-1 w-full h-full">
+                <div className="w-full h-full max-w-4xl max-h-96 mx-auto">
+                  <div className="aspect-w-4 aspect-h-3">
+                    <UserVideoComponent streamManager={screenStream} />
+                  </div>
+                </div>
               </div>
-            ))}
+            )}
           </div>
         )}
       </div>
 
-      {/* ---------------------------------------면접 화면 구성(청자) -----------------------------------------------*/}
-      {mode == "3" && (
-        <div
-          className={subscribers.length > 3 ? "video-flex-big" : "video-flex"}
-        >
-          {mainStreamManager !== undefined ? (
-            <div id="main-video" className={videoDivClass}>
-              <UserVideoComponent streamManager={mainStreamManager} />
-            </div>
-          ) : null}
-          <div id="video-container" className={videoDivClass}></div>
-          <div
-            key={sub.id}
-            className={`${videoDivClass} stream-container col-md-6 col-xs-6`}
-          >
-            <span>{sub.id}</span>
-            <UserVideoComponent streamManager={sub} />
-          </div>
-          <div
-            key={sub.id}
-            className={`${videoDivClass} stream-container col-md-6 col-xs-6`}
-          >
-            <span>{sub.id}</span>
-            <UserVideoComponent streamManager={sub} />
-          </div>
-          {/* {subscribers.map((sub, i) => (
-            <div
-              key={sub.id}
-              className={`${videoDivClass} stream-container col-md-6 col-xs-6`}
-            >
-              <span>{sub.id}</span>
-              <UserVideoComponent streamManager={sub} />
-            </div>
-          ))} */}
-        </div>
-      )}
-
-      <div className="flex justify-between video-room-button">
+      <div className="RoomPage-bottom">
         <div className="button-empty items-center space-x-4">
           <img
             onClick={(e) => {
