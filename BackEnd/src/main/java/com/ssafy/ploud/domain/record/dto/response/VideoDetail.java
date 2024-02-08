@@ -12,6 +12,7 @@ import lombok.Setter;
 public class VideoDetail {
 
   String videoPath;
-  int playTime;
+  long playTime;
+
 
 }
