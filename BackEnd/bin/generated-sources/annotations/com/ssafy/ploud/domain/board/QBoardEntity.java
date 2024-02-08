@@ -25,13 +25,13 @@ public class QBoardEntity extends EntityPathBase<BoardEntity> {
 
     public final NumberPath<Integer> likeCount = createNumber("likeCount", Integer.class);
 
-    public final StringPath nickname = createString("nickname");
-
     public final DateTimePath<java.time.LocalDateTime> registerTime = createDateTime("registerTime", java.time.LocalDateTime.class);
 
     public final StringPath title = createString("title");
 
     public final StringPath userId = createString("userId");
+
+    public final StringPath videoPath = createString("videoPath");
 
     public QBoardEntity(String variable) {
         super(BoardEntity.class, forVariable(variable));
