@@ -2,10 +2,12 @@ package com.ssafy.ploud.domain.speech.service;
 
 import com.ssafy.ploud.common.exception.CustomException;
 import com.ssafy.ploud.common.response.ResponseCode;
+import com.ssafy.ploud.domain.S3.service.S3Service;
 import com.ssafy.ploud.domain.meeting.dto.MeetingInfo;
 import com.ssafy.ploud.domain.meeting.util.OpenViduUtil;
 import com.ssafy.ploud.domain.record.FeedbackEntity;
 import com.ssafy.ploud.domain.record.ScoreEntity;
+import com.ssafy.ploud.domain.record.VideoEntity;
 import com.ssafy.ploud.domain.record.repository.FeedbackRepository;
 import com.ssafy.ploud.domain.record.repository.ScoreRepository;
 import com.ssafy.ploud.domain.record.repository.VideoRepository;
@@ -17,6 +19,7 @@ import com.ssafy.ploud.domain.speech.dto.request.CommentRequest;
 import com.ssafy.ploud.domain.speech.dto.request.FeedbackRequest;
 import com.ssafy.ploud.domain.speech.dto.request.SpeechEndRequest;
 import com.ssafy.ploud.domain.speech.dto.request.SpeechStartRequest;
+import com.ssafy.ploud.domain.speech.dto.request.VideoUploadRequest;
 import com.ssafy.ploud.domain.speech.dto.response.ClearityResponse;
 import com.ssafy.ploud.domain.speech.repository.SpeechRepository;
 import com.ssafy.ploud.domain.speech.util.EtriUtil;
@@ -51,6 +54,7 @@ public class SpeechServiceImpl implements SpeechService {
     private final UserRepository userRepository;
     private final SpeechRepository speechRepository;
     private final VideoRepository videoRepository;
+    private final S3Service s3Service;
     private final ScoreRepository scoreRepository;
     private final FeedbackRepository feedbackRepository;
     private final ScriptRepository scriptRepository;
@@ -213,5 +217,18 @@ public class SpeechServiceImpl implements SpeechService {
         } finally {
             dest.delete();
         }
+    }
+
+    @Transactional
+    public void uploadVideo(VideoUploadRequest reqdto, String userId) {
+
+        SpeechEntity speech = speechRepository.findById(reqdto.getSpeechId())
+            .orElseThrow(() -> new CustomException(ResponseCode.SPEECH_NOT_FOUND));
+
+        String videoPath = s3Service.saveFile(reqdto.getVideo(), "speech", userId);
+
+        VideoEntity video = VideoEntity.createEntity(videoPath, reqdto.getSpeechTimeInSeconds());
+        speech.setVideo(video);
+        videoRepository.save(video);
     }
 }
