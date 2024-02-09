@@ -1123,3 +1123,12 @@ p {
   color: white;
   background-color: #060515;
 }
+
+.typing {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
+.typing img{
+  width: 30px;
+}
