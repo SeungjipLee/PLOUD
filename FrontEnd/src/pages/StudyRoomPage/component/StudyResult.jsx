@@ -113,7 +113,9 @@ const StudyResult = ({ onClose, speechId }) => {
         <div className="result-section-1 mx-5">
           <div className="p-2">
             <div className="score rounded-xl w-68 h-52 m-auto py-16">
-              <video src={videoPath}>비디오 들어올 곳</video>
+              <video src={videoPath} type="video/webm">
+              Your browser does not support the video tag.
+              </video>
             </div>
           </div>
           <div className="p-2">
