@@ -42,6 +42,8 @@ const StudyRoomPage = () => {
   const screenToken = useSelector(
     (state) => state.studyReducer.studyInfo.screenToken
   );
+  // 코멘트 입력 중 여부
+  const [typing, setTyping] = useState(false);
 
   // 방에 있는 유저 목록 관리 { nickname : String }
   const [roomUsers, setRoomUsers] = useState([]);
@@ -149,17 +151,20 @@ const StudyRoomPage = () => {
   // 화면 공유
   const handleScreenShare = async () => {
     try {
-    let publisherScreen = await OVScreen.current.initPublisherAsync(undefined, {
-      audioSource: undefined,
-      videoSource:
-        navigator.userAgent.indexOf("Firefox") !== -1 ? "window" : "screen",
-      publishAudio: true,
-      publishVideo: true,
-      resolution: "640x480",
-      frameRate: 30,
-      insertMode: "APPEND",
-      mirror: false,
-    })} catch (err) {console.log(err)}
+      let publisherScreen = await OVScreen.current.initPublisherAsync(
+        undefined,
+        {
+          audioSource: undefined,
+          videoSource:
+            navigator.userAgent.indexOf("Firefox") !== -1 ? "window" : "screen",
+          publishAudio: true,
+          publishVideo: true,
+          resolution: "640x480",
+          frameRate: 30,
+          insertMode: "APPEND",
+          mirror: false,
+        }
+      );
 
     publisherScreen.stream.mediaStream.getVideoTracks()[0].onended = () => {
       // 실행 되는데 publisherScreen 때문에 안닫힘
@@ -170,7 +175,7 @@ const StudyRoomPage = () => {
     setPublisherScreen(publisherScreen);
     setScreenShare(true);
     setMode("3");
-  };
+  } catch {(err) => console.log(err)}}
 
   const handleScreenShare2 = async () => {
     if (publisherScreen) {
@@ -260,7 +265,7 @@ const StudyRoomPage = () => {
   useEffect(() => {
     if (!presenter) return;
     console.log("[presenter]", presenter);
-    if (OV.current == null) joinSession();
+    if (OV.current ==null) joinSession();
   }, [presenter]);
 
   // 사람 수 마다 화면이 다르게 배치되도록 분기처리
@@ -440,6 +445,19 @@ const StudyRoomPage = () => {
           else return { userId: user.userId, presenter: false };
         })
       );
+    });
+
+    // 코멘트 입력 여부 수신
+    session.current.on("signal:Typing", (event) => {
+      if (typing) return;
+      var p = JSON.parse(event.data).chatvalue;
+      console.log("[코멘트 입력중 수신함]");
+      //
+      setTyping(true);
+
+      setTimeout(() => {
+        setTyping(false);
+      }, 5000);
     });
 
     // 방장이 떠남
@@ -677,7 +695,7 @@ const StudyRoomPage = () => {
       token,
       vFormData,
       (response) => {
-        console.log("영상 업로드 성공");        
+        console.log("영상 업로드 성공");
       },
       (error) => {
         console.log("영상 업로드 실패");
@@ -741,7 +759,7 @@ const StudyRoomPage = () => {
   // 피드백 등록 요청
   const feedbackPost = (e) => {
     if (e.key !== "Enter") return;
-
+    sendSignal("Typing", "typing")
     postFeedback(
       token,
       {
@@ -946,7 +964,8 @@ const StudyRoomPage = () => {
                         <span className="nickname-overlay">
                           {getUserNickname(sub)}
                         </span>
-                        <UserVideoComponent streamManager={sub} />
+                        <UserVideoComponent isTyping={
+                          (getUserNickname(sub) !== presenter) ? typing : false} streamManager={sub} />
                       </div>
                     </div>
                   );
@@ -959,7 +978,8 @@ const StudyRoomPage = () => {
                     <span className="nickname-overlay">
                       {getUserNickname(publisher)}
                     </span>
-                    <UserVideoComponent streamManager={publisher} />
+                    <UserVideoComponent isTyping={
+                          (getUserNickname(publisher) !== presenter) ? typing : false} streamManager={publisher} />
                   </div>
                 </div>
               )}
@@ -975,7 +995,8 @@ const StudyRoomPage = () => {
                         <span className="nickname-overlay">
                           {getUserNickname(sub)}
                         </span>
-                        <UserVideoComponent streamManager={sub} />
+                        <UserVideoComponent isTyping={
+                          (getUserNickname(sub) !== presenter) ? typing : false} streamManager={sub} />
                       </div>
                     </div>
                   );
@@ -996,7 +1017,8 @@ const StudyRoomPage = () => {
                     <span className="nickname-overlay">
                       {getUserNickname(publisher)}
                     </span>
-                    <UserVideoComponent streamManager={publisher} />
+                    <UserVideoComponent isTyping={
+                          (getUserNickname(publisher) !== presenter) ? typing : false} streamManager={publisher} />
                   </div>
                 </div>
               )}
@@ -1012,7 +1034,8 @@ const StudyRoomPage = () => {
                         <span className="nickname-overlay">
                           {getUserNickname(sub)}
                         </span>
-                        <UserVideoComponent streamManager={sub} />
+                        <UserVideoComponent isTyping={
+                          (getUserNickname(sub) !== presenter) ? typing : false} streamManager={sub} />
                       </div>
                     </div>
                   );
@@ -1035,7 +1058,8 @@ const StudyRoomPage = () => {
                   <span className="nickname-overlay">
                     {getUserNickname(publisher)}
                   </span>
-                  <UserVideoComponent streamManager={publisher} />
+                  <UserVideoComponent isTyping={
+                          (getUserNickname(publisher) !== presenter) ? typing : false} streamManager={publisher} />
                 </div>
               ) : null}
             </div>
@@ -1049,7 +1073,8 @@ const StudyRoomPage = () => {
                     <span className="nickname-overlay">
                       {getUserNickname(sub)}
                     </span>
-                    <UserVideoComponent streamManager={sub} />
+                    <UserVideoComponent isTyping={
+                          (getUserNickname(sub) !== presenter) ? typing : false} streamManager={sub} />
                   </div>
                 );
               }
@@ -1070,16 +1095,19 @@ const StudyRoomPage = () => {
                   : "multi-row"
               }`}
             >
-              {subscribers.filter((sub) => getUserNickname(sub) !== "screen").map((sub, i) => (
-                <div key={i} className="relative">
-                  <div className="mode1-each">
-                    <span className="nickname-overlay">
-                      {getUserNickname(sub)}
-                    </span>
-                    <UserVideoComponent streamManager={sub} />
+              {subscribers
+                .filter((sub) => getUserNickname(sub) !== "screen")
+                .map((sub, i) => (
+                  <div key={i} className="relative">
+                    <div className="mode1-each">
+                      <span className="nickname-overlay">
+                        {getUserNickname(sub)}
+                      </span>
+                      <UserVideoComponent isTyping={
+                          (getUserNickname(sub) !== presenter) ? typing : false} streamManager={sub} />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
             <div className="mode1-bottom">
               <div className="mode1-each">
@@ -1087,7 +1115,8 @@ const StudyRoomPage = () => {
                   {getUserNickname(publisher)}
                 </span>
                 {publisher !== undefined ? (
-                  <UserVideoComponent streamManager={publisher} />
+                  <UserVideoComponent isTyping={
+                    (getUserNickname(publisher) !== presenter) ? typing : false} streamManager={publisher} />
                 ) : null}
               </div>
             </div>
@@ -1101,14 +1130,12 @@ const StudyRoomPage = () => {
             {subscribers.map((sub, i) => {
               if (getUserNickname(sub) == presenter) {
                 return (
-                  <div
-                    key={sub.id}
-                    className="mode3-each"
-                  >
+                  <div key={sub.id} className="mode3-each">
                     <span className="nickname-overlay">
                       {getUserNickname(sub)}
                     </span>
-                    <UserVideoComponent streamManager={sub} />
+                    <UserVideoComponent isTyping={
+                          (getUserNickname(sub) !== presenter) ? typing : false} streamManager={sub} />
                   </div>
                 );
               }
@@ -1126,15 +1153,9 @@ const StudyRoomPage = () => {
               if (getUserNickname(sub) === "screen") {
                 console.log(sub);
                 return (
-                  // <div key={i} className="flex-1 w-full h-full">
-                  //   <div className="w-full h-full max-w-4xl max-h-96 mx-auto">
-                  //     <div className="aspect-w-4 aspect-h-3">
-                  //       <UserVideoComponent streamManager={sub} />
-                  //     </div>
-                  //   </div>
-                  // </div>
                   <div key={i} className="mode2-main-screen">
-                    <UserVideoComponent streamManager={sub} />
+                    <UserVideoComponent isTyping={
+                          (getUserNickname(sub) !== presenter) ? typing : false} streamManager={sub} />
                   </div>
                 );
               }
@@ -1256,9 +1277,13 @@ const StudyRoomPage = () => {
                   ))}
                 {userId !== room.managerId &&
                   (data.presenter ? (
-                    <div className="presenter presenter-button Button">발표자</div>
+                    <div className="presenter presenter-button Button">
+                      발표자
+                    </div>
                   ) : (
-                    <div className="participant presenter-button Button">발표자</div>
+                    <div className="participant presenter-button Button">
+                      발표자
+                    </div>
                   ))}
               </div>
             ))}
