@@ -2,6 +2,7 @@ package com.ssafy.ploud.domain.board.dto.response;
 
 import com.ssafy.ploud.domain.board.BoardEntity;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,7 +19,7 @@ public class BoardResponse {
   private String title;
   private String content;
   private String videoPath;
-  private LocalDateTime registerTime;
+  private String registerTime;
   private int likeCount;
 
   public static BoardResponse fromEntity(BoardEntity boardEntity, String nickname) {
@@ -28,7 +29,7 @@ public class BoardResponse {
         .title(boardEntity.getTitle())
         .content(boardEntity.getContent())
         .videoPath(boardEntity.getVideoPath())
-        .registerTime(boardEntity.getRegisterTime())
+        .registerTime(boardEntity.getRegisterTime().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm")))
         .likeCount(boardEntity.getLikeCount())
         .build();
   }

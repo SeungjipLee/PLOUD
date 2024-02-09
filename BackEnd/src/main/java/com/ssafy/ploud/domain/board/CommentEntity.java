@@ -30,11 +30,11 @@ public class CommentEntity {
 
   private LocalDateTime registerTime; // 댓글 작성 시각
 
-  public static CommentEntity createComment(CommentRequest commentRequest) {
+  public static CommentEntity createComment(CommentRequest commentRequest, String userId) {
     CommentEntity commentEntity = new CommentEntity();
 
     commentEntity.boardId = commentRequest.getBoardId();
-    commentEntity.userId = commentRequest.getUserId();
+    commentEntity.userId = userId;
     commentEntity.comment = commentRequest.getComment();
     commentEntity.registerTime = LocalDateTime.now();
 

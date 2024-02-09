@@ -1,7 +1,5 @@
 package com.ssafy.ploud.domain.board.service;
 
-import static com.ssafy.ploud.domain.board.QBoardEntity.boardEntity;
-
 import com.ssafy.ploud.common.exception.CustomException;
 import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.board.BoardEntity;
@@ -14,18 +12,10 @@ import com.ssafy.ploud.domain.user.UserEntity;
 import com.ssafy.ploud.domain.user.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -58,6 +48,7 @@ public class BoardServiceImpl implements BoardService {
 
     VideoEntity videoEntity = videoRepository.findById(boardRequest.getVideoId())
         .orElseThrow(()-> new CustomException(ResponseCode.VIDEO_NOT_FOUND));
+    System.out.println(videoEntity.getVideoPath());
     BoardEntity boardEntity = BoardEntity.createBoard(boardRequest, userId, videoEntity.getVideoPath());
 
     boardRepository.save(boardEntity);
@@ -77,11 +68,10 @@ public class BoardServiceImpl implements BoardService {
 
   @Override
   @Transactional
-  public void updateBoard(int id, BoardRequest boardRequest) {
+  public void updateBoard(int id, BoardRequest boardRequest, String userId) {
 
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String userId = authentication.getName();
-
+    VideoEntity videoEntity = videoRepository.findById(boardRequest.getVideoId())
+        .orElseThrow(()-> new CustomException(ResponseCode.VIDEO_NOT_FOUND));
     BoardEntity boardEntity = boardRepository.findById(id)
         .orElseThrow(() -> new CustomException(ResponseCode.BOARD_NOT_FOUND));
 
@@ -89,15 +79,12 @@ public class BoardServiceImpl implements BoardService {
       throw new CustomException(ResponseCode.NO_PERMISSION);
     }
 
-    BoardEntity.updateBoard(boardRequest, boardEntity);
-    boardRepository.save(boardEntity);
+    BoardEntity.updateBoard(boardRequest, boardEntity, videoEntity.getVideoPath());
   }
 
   @Override
   @Transactional
-  public void deleteBoard(int id) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String userId = authentication.getName();
+  public void deleteBoard(int id, String userId) {
 
     BoardEntity boardEntity = boardRepository.findById(id)
         .orElseThrow(() -> new CustomException(ResponseCode.BOARD_NOT_FOUND));
@@ -108,18 +95,5 @@ public class BoardServiceImpl implements BoardService {
 
     boardRepository.deleteById(id);
   }
-
-  @Override
-  @Transactional
-  public void updateCount(BoardResponse board, boolean heart) {
-    if (heart) {
-      board.setLikeCount(board.getLikeCount() + 1);
-    } else {
-      board.setLikeCount(board.getLikeCount() - 1);
-    }
-
-    entityManager.merge(board);
-  }
-
 
 }
