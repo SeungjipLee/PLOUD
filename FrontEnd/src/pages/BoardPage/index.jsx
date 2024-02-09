@@ -23,7 +23,7 @@ const BoardPage = () => {
           {
             page:page,
             size:10,
-            sort:["id"]
+            sort:["id", "desc"]
           },
           (res) => {
             console.log(res.data.data)
@@ -62,7 +62,7 @@ const BoardPage = () => {
         <tbody>
           {showList.map((s, index) => (
             <tr key={index} className="h-12">
-              <td>{page * 10 + (10 - index)}</td>
+              <td>{showList.length - index}</td> {/* 페이지 내 역순 번호 할당 */}
               <td>
                 <Link to={`/board/${s.id}`}>{s.title}</Link>
               </td>

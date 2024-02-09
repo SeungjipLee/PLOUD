@@ -1,77 +1,45 @@
 import { useSelector,useDispatch } from "react-redux";
 import React, { useEffect, useState } from "react";
-import Button from "../../components/Button";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
-// import { refreshAccessToken, updateNickname } from "../../features/user/userSlice";
+import { getboardDetail } from "../../services/board";
 
 
 const BoardDetail = () => {
   
-  const { token, nickname }  = useSelector((state) => state.userReducer);
+  const { token }  = useSelector((state) => state.userReducer);
   const { boardId } = useParams();
-  const [board, setBoard] = useState({
-    nickname: "",
-    title: "", 
-    content: "",
-  });
+  const [ title, setTitle ] = useState("")
+  const [ nickname, setNickname ] = useState("")
+  const [ likeCount, setLikeCount ] = useState(0)
+  const [ registerTime, setRegisterTime ] = useState("")
+  const [ videoPath, setVideoPath ] = useState("")
 
   useEffect(()=> {
-    console.log(boardId)
-    const fetchBoard = async() => {
+    const getBoard = async() => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/board/${boardId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const response = await getboardDetail (
+          token,
+          boardId,
+          (res) => {
+            console.log(res.data.data)
+            setTitle(res.data.data.title)
+            setNickname(res.data.data.nickname)
+            setLikeCount(res.data.data.likeCount)
+            setRegisterTime(res.data.data.registerTime)
+            setVideoPath(res.data.data.videoPath)
           },
-        });
-        
-        const { nickname, title, content } = response.data;
-        setBoard({  // 이 부분을 setboard가 아닌 setBoard로 수정
-          nickname,
-          title,
-          content,
-        });
+          (err) => console.log(err)
+        )
       } catch(error){
         console.log(error);
       }
     }
-    fetchBoard();
+    getBoard();
   }, [boardId, token]);
   
-  
-
-  const [selectedFile, setSelectedFile] = useState();
-  const [preview, setPreview] = useState();
-  
-  const isImage = (file) => {
-    return file && file['type'].split('/')[0] === 'image';
-  };
-  
-  const isVideo = (file) => {
-    return file && file['type'].split('/')[0] === 'video';
-  };
-
-  const handleFileInput = (e) => {
-    const file = e.target.files[0];
-    setSelectedFile(file);
-  
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result);
-      };
-      if (isImage(file)) {
-        reader.readAsDataURL(file);
-      } else if (isVideo(file)) {
-        // 비디오의 경우 FileReader 대신 URL.createObjectURL을 사용
-        setPreview(URL.createObjectURL(file));
-      }
-    }
-  };
 
   return (
       <div className="mypage bg-white w-full">
@@ -83,32 +51,25 @@ const BoardDetail = () => {
             </div>
 
           <div className="border-2 border-black mx-20 px-10 mt-5 my-2 rounded-xl">
-            <div className="mt-5 mb-2 text-2xl font-bold">{board.title}</div>
+            <div className="mt-5 mb-2 text-2xl font-bold">{title}</div>
             <div className="flex text-sm mb-3">
-              <div className="me-4">2024.01.24 Wed</div>
+              <div className="me-4">{registerTime.split("T")[0]}</div>
               <div className="me-1"><img src="images/Profile.png" className="w-5 h-5"/></div>
-              <div className="me-4">Tony</div>
-              <div className="me-4 my-0.5">조회수 : 35</div>
-              <div className="my-0.5">좋아요 : 11</div>
+              <div className="me-4">{nickname}</div>
+              <div className="my-0.5">좋아요 : {likeCount}</div>
+              <button className="my-0.5">❤️ or 🤍</button>
             </div>
             <div className="flex items-start space-x-2 flex-wrap">
             <div className="flex-none" style={{ maxWidth: '200px' }}>
-            {preview && isImage(selectedFile) && (
-            <img src={preview} alt="Preview" className="w-full h-auto"/>
-            )}
-            {preview && isVideo(selectedFile) && (
-              <video className="w-full h-auto" controls>
-                <source src={preview} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            )}
-            {!preview && <img src="images/Profile.png" className="w-full h-36 my-2"/>}
-                <input
-                  type="file"
-                  accept="image/*, video/*"
-                  onChange={handleFileInput}
-                  className="text-xs w-full ms-5"
-                />
+            <div>
+              {/* 여기에 video 태그를 추가합니다. */}
+              {videoPath && (
+                  <video className="w-full h-auto" controls>
+                      <source src={videoPath} type="video/mp4" />
+                      Your browser does not support the video tag.
+                  </video>
+              )}
+            </div>
                 <div className="flex my-2">
                     <button className="mx-2 text-white border bg-blue-500 rounded-md py-1 px-2">수정</button>
                     <button className="mx-2 text-white border bg-red-500 rounded-md py-1 px-2">삭제</button>
@@ -126,6 +87,18 @@ const BoardDetail = () => {
 
           <div className="border-2 border-black mx-20 px-10 mt-10 rounded-xl">
             <div className="my-5 text-2xl font-bold">댓글</div>
+
+            <div className="grid grid-cols-12 gap-4 Comment rounded-2xl p-7 mt-7 mb-5">
+                <div className="flex items-center col-span-2 px-3">
+                    <img src="images/Profile.PNG" className="w-10 h-10 rounded-2xl"/>
+                </div>
+                <div className="col-span-8">
+                    <textarea className="w-full me-2 h-20 px-5 py-2 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600" cols="30" rows="5" placeholder="댓글 입력"></textarea>
+                </div>
+                <div className="col-span-2 flex items-center">
+                    <button className="mx-2 text-white border bg-blue-500 rounded-md py-1 px-2">댓글<br/>작성</button>
+                </div>
+            </div>
 
             <div className="grid grid-cols-12 gap-4 border rounded-2xl p-2 my-3 bg-sky-100">
                 <img src="images/Profile.PNG" className="w-7 h-7 rounded-2xl col-span-1"/>
@@ -146,17 +119,7 @@ const BoardDetail = () => {
                 <div className="col-span-3">2024.01.26</div>
             </div>
 
-            <div className="grid grid-cols-12 gap-4 Comment rounded-2xl p-7 mt-7 mb-5">
-                <div className="flex items-center col-span-2 px-3">
-                    <img src="images/Profile.PNG" className="w-10 h-10 rounded-2xl"/>
-                </div>
-                <div className="col-span-8">
-                    <textarea className="w-full me-2 h-20 px-5 py-2 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600" cols="30" rows="5" placeholder="댓글 입력"></textarea>
-                </div>
-                <div className="col-span-2 flex items-center">
-                    <button className="mx-2 text-white border bg-blue-500 rounded-md py-1 px-2">댓글<br/>작성</button>
-                </div>
-            </div>
+            
             
             
           </div>
