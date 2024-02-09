@@ -133,18 +133,15 @@ const StudyResult = ({ onClose, speechId }) => {
               <span onClick={handleDetail} className="mx-10 text-gray-400 font-bold cursor-pointer">피드백</span>
           </div>}
 
-
           {isDetail&&<div className="bg-white h-72 mb-2 rounded-md pt-5">
             <BarChart scores={[scores.clarity, scores.speed, scores.volume, scores.grade]} />
           </div>}
-
 
           {!isDetail&&<div className="h-12 mb-2 text-center text-xl">
               <span onClick={handleDetail} className="mx-10 text-gray-400 font-bold cursor-pointer">세부 결과</span>
               <span className="mx-10 text-3xl">|</span>
               <span className="mx-10 font-bold">피드백</span>
           </div>}
-
 
           {!isDetail&&<div className="h-72 mb-2">
             <div className="flex flex-row">
