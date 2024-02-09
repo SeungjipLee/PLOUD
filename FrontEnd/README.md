@@ -150,7 +150,28 @@ useDispatch : dispatch action 수행
     1. 상태를 변경하고 바로 사용할 경우 업데이트가 느리기 때문에 즉각적으로 변수를 전달해야 한다면 직접 값을 선언하고 사용
     2. useState를 사용하고 싶다면 useEffect 로 상태 변경을 감지하면 실행되도록 해야 함
 
+6. 상태 값 할당 이후 특정 작업을 수행하고 싶을 때
+    useEffect 로 특정 상태가 변경될 때 수행하게 해도 처음에 마운트 될 때도 시행되니
+    초기값이면 리턴하게 해서 실제로 값이 반영됐을 때 수행하게 함
+```jsx
+  useEffect(() => {
+    if (room.managerId === userId) {
+      console.log(nickname)
+      setPresenter(nickname)
+      setUserList([{ userId: nickname, presenter: true }]);
+    } else {
+      setUserList([{ userId: nickname, presenter: false }])
+      joinSession()
+    }
+    
+  }, []);
 
+  useEffect(() => {
+    if (!presenter) return // 이부분 추가
+    console.log("[presenter]", presenter)
+    if (OV.current == null) joinSession();
+  }, [presenter]);
+```
 
 ## 오류
 
