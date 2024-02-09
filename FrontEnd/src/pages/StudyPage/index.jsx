@@ -221,7 +221,7 @@ const StudyPage = () => {
         </Page>
       </div>
       {modal && (
-        <CreateModal title="방 생성" onClose={changeModalState}>
+        <CreateModal title="방 생성" onClose={changeModalState} className="create-room">
           <CreateForm />
         </CreateModal>
       )}

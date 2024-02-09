@@ -105,7 +105,6 @@ const CreateForm = () => {
             <select
               id="categoryId"
               name="categoryId"
-              style={{ color: "black" }}
               onChange={handleChange}
             >
               <option value="0">전체</option>
@@ -185,8 +184,6 @@ const CreateForm = () => {
           <button
             type="submit"
             style={{
-              backgroundColor: "white",
-              color: "black",
               padding: "5px",
               fontWeight: "bold",
               borderRadius: "5px",
