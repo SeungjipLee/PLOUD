@@ -80,8 +80,9 @@ const BoardPage = () => {
           ))}
         </tbody>
         </table>
+      </div>
 
-        
+      <div className="outline2 mx-auto">
         <div align="right">
           <Link to={"/createboard"}>
             <button className="write border writeBtn rounded-md py-1 px-4 mt-4">글쓰기</button>
@@ -91,7 +92,6 @@ const BoardPage = () => {
             1 2 3 4 5(페이지 처리)
         </div>
       </div>
-
       </Page>
     </div>
   );
