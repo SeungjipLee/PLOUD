@@ -32,7 +32,8 @@ const ResultList = (data) => {
 
   return (
     <>
-      <Modal className="result-list" title="결과">
+      <div className="result-list bg-grad-y-black">
+        <h1>결과</h1>
         <div>
           {recordList.map((item, index) => (
             <div key={index} onClick={(e) => handleClick(e, index)}>
@@ -40,7 +41,7 @@ const ResultList = (data) => {
             </div>
           ))}
         </div>
-      </Modal>
+      </div>
       {modal && <StudyResult onClose={handleClose}></StudyResult>}
     </>
   );
