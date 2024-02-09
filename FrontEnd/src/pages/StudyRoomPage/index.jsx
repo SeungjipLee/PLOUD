@@ -6,8 +6,8 @@ import { OpenVidu } from "openvidu-browser";
 import UserVideoComponent from "./component/UserVideoComponent";
 import Report from "./component/Report";
 import ResultList from "./component/ResultList";
-import { addRecordList } from "../../features/record/recordSlice";
-import { getRecordResult, initRecordList } from "../../services/record";
+import { addRecordList, initRecordList } from "../../features/record/recordSlice";
+import { getRecordResult } from "../../services/record";
 import { useCallback } from "react";
 import {
   startSpeech,
