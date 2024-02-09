@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "게시판 API")
@@ -38,6 +39,16 @@ public class BoardController {
       @PageableDefault(size = 10,
           sort = {"username"}, direction = Sort.Direction.DESC) Pageable pageable) {
     return ApiResponse.ok("게시글 목록 불러오기 성공", boardService.getAllBoards(pageable).getContent());
+  }
+
+  @GetMapping("/search")
+  @Operation(summary = "게시글 제목으로 검색")
+  public ApiResponse<List<BoardResponse>> searchBoardsByTitle(
+      @RequestParam(name = "title") String title,
+      @PageableDefault(size = 10,
+          sort = {"username"}, direction = Sort.Direction.DESC) Pageable pageable) {
+    return ApiResponse.ok("게시글 검색 성공",
+        boardService.searchBoardsByTitle(title, pageable).getContent());
   }
 
   @PostMapping("/create")

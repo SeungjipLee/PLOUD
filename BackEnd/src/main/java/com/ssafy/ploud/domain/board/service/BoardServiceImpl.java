@@ -37,6 +37,16 @@ public class BoardServiceImpl implements BoardService {
         boardEntity.getUserId()), false));
   }
 
+  @Override
+  public Page<BoardResponse> searchBoardsByTitle(String title, Pageable pageable) {
+
+    Page<BoardEntity> boardEntities = boardRepository.findByTitleContainingIgnoreCase(title,
+        pageable);
+
+    return boardEntities.map(boardEntity -> BoardResponse.fromEntity(boardEntity, getNickname(
+        boardEntity.getUserId()), false));
+  }
+
   private String getNickname(String userId) {
     return userRepository.findNicknameByUserId(userId).getNickname();
 

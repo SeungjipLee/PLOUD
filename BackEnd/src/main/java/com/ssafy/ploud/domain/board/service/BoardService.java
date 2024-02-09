@@ -17,4 +17,5 @@ public interface BoardService {
 
   void deleteBoard(int id, String userId);
 
+  Page<BoardResponse> searchBoardsByTitle(String title, Pageable pageable);
 }
