@@ -31,11 +31,11 @@ public class S3ServiceImpl implements S3Service {
       ObjectMetadata metadata = new ObjectMetadata();
       metadata.setContentLength(multipartFile.getSize());
 
-//      if(type.equals("speech")){
-//        metadata.setContentType("video/webm");
-//      }else {
+      if(type.equals("speech")){
+        metadata.setContentType("video/webm");
+      }else {
         metadata.setContentType(multipartFile.getContentType());
-//      }
+      }
 
       // S3에 파일 저장하는 경로
       String path = getFilename(type, userId, multipartFile);

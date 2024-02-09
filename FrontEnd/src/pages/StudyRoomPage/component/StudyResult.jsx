@@ -49,7 +49,7 @@ const StudyResult = ({ onClose, speechId }) => {
             console.log(res.data.data)
             setScores(res.data.data.score)
             setFeedbacks(res.data.data.feedbacks)
-            setVideoPath(res.data.data.video.videopath)
+            setVideoPath(res.data.data.video.videoPath)
           },
           (err) => console.log(err)
         );
