@@ -18,5 +18,5 @@ export const recordSlice = createSlice({
   },
 });
 
-export const { addRecordList } = recordSlice.actions;
+export const { addRecordList, initRecordList } = recordSlice.actions;
 export default recordSlice.reducer;
