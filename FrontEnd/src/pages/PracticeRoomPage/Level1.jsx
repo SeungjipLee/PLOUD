@@ -104,14 +104,16 @@ const Level1 = () => {
         console.log(error);
       }
     );
+    console.log("평가 끝");
 
     // 비동기 처리 헷갈리니까 5초 뒤에 하자
     setTimeout(() => {
       recordResult();
-    }, 3000);
+    }, 5000);
   };
 
   const recordResult = () => {
+    console.log("5초 뒤 실행");
     setResultScreen(true);
   };
 
