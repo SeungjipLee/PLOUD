@@ -39,12 +39,7 @@ const Router = () => {
         <Route path="/createboard" element={<CreateBoard />} />
         <Route path="/test" element={<TestPage />} />
         <Route path="/board/:boardId" element={<BoardDetail />} />
-<<<<<<< HEAD
         <Route path="/interview" element={<InterviewScreenPresenter/>} />
-=======
-        <Route path="/result/:resultId" element={<StudyResult />} />
-        <Route path="/interview" element={<InterviewScreenPresenter />} />
->>>>>>> fe/feature/script
       </Routes>
     </BrowserRouter>
   );
