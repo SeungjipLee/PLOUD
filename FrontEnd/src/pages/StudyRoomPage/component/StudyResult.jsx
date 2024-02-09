@@ -1,20 +1,34 @@
 import Modal from "../../../components/Modal";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
 import BarChart from "../../../components/BarChart";
 import { getRecordResult } from "../../../services/record";
-import { postComment } from "../../../services/board";
+import { postComment } from "../../../services/speech";
 
-const StudyResult = ({ onClose }) => {
+const StudyResult = ({ onClose, speechId }) => {
   const [ isDetail,setIsDetail ] = useState(true)
   const { token } = useSelector((state) => state.userReducer)
-  const resultId  = 1
+  const resultId  = speechId
   const [ scores, setScores ] = useState({})
-  const [ feedbacks, setFeedbacks ] = useState({})
+  const [ feedbacks, setFeedbacks ] = useState([])
   const [ myFeedback, setMyFeedback ] = useState('')
   const [ videoPath, setVideoPath ] = useState('')
-  const [countdown, setCountdown] = useState(20);
+  const [ countdown, setCountdown ] = useState(20);
+  const [ grade, setGrade ] = useState('')
+
+  useEffect(() => {
+    if (scores.grade < 20) {
+      setGrade('E');
+    } else if (scores.grade < 40) {
+      setGrade('D');
+    } else if (scores.grade < 60) {
+      setGrade('C');
+    } else if (scores.grade < 80) {
+      setGrade('B');
+    } else {
+      setGrade('A');
+    }
+  }, [scores.grade]); 
 
   const formatTimeLog = (timeLog) => {
     const match = timeLog.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
@@ -105,7 +119,7 @@ const StudyResult = ({ onClose }) => {
           <div className="p-2">
             <div className="score w-68 h-36 m-auto grid grid-cols-2 text-center place-content-center rounded-xl">
               <div className="text-2xl mt-5 ps-5 pb-4 ms-5">결과   :</div>
-              <div className="text-5xl me-5 pt-2 pe-5 me-5">A</div>                
+              <div className="text-5xl me-5 pt-2 pe-5 me-5">{grade}</div>                
             </div>
           </div>
         </div>
@@ -137,7 +151,7 @@ const StudyResult = ({ onClose }) => {
                 <div className="mx-5 mb-3 bg-white h-52 p-5">
                   {feedbacks.map((feedback, index) => (
                     <p key={index} className="py-0.5">
-                      {formatTimeLog(feedback.timeLog)} - {feedback.content}
+                      {feedback.timeLog} - {feedback.content}
                     </p>
                   ))}
                 </div>

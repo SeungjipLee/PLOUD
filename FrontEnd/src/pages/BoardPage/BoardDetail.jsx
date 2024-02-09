@@ -33,6 +33,8 @@ const BoardDetail = () => {
           },
           (err) => console.log(err)
         )
+
+      //   const response2 = await 
       } catch(error){
         console.log(error);
       }
@@ -57,7 +59,7 @@ const BoardDetail = () => {
               <div className="me-1"><img src="images/Profile.png" className="w-5 h-5"/></div>
               <div className="me-4">{nickname}</div>
               <div className="my-0.5">좋아요 : {likeCount}</div>
-              <button className="my-0.5">❤️ or 🤍</button>
+              <button className="my-0.5 ms-20">❤️ or 🤍</button>
             </div>
             <div className="flex items-start space-x-2 flex-wrap">
             <div className="flex-none" style={{ maxWidth: '200px' }}>
@@ -71,7 +73,7 @@ const BoardDetail = () => {
               )}
             </div>
                 <div className="flex my-2">
-                    <button className="mx-2 text-white border bg-blue-500 rounded-md py-1 px-2">수정</button>
+                    <Link to={"/createboard"}><button className="mx-2 text-white border bg-gray-400 rounded-md py-1 px-2">수정</button></Link>
                     <button className="mx-2 text-white border bg-red-500 rounded-md py-1 px-2">삭제</button>
                     <Link to={"/board"}><button className="mx-2 text-white border bg-gray-400 rounded-md py-1 px-2">목록</button></Link>
                 </div>

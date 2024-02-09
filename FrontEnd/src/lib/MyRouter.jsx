@@ -35,7 +35,6 @@ const Router = () => {
         <Route path="/createboard" element={<CreateBoard />} />
         <Route path="/test" element={<TestPage />} />
         <Route path="/board/:boardId" element={<BoardDetail />} />
-        <Route path="/result/:resultId" element={<StudyResult />} />
         <Route path="/interview" element={<InterviewScreenPresenter/>} />
       </Routes>
     </BrowserRouter>
