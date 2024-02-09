@@ -11,10 +11,10 @@ public interface BoardService {
 
   void createBoard(BoardRequest boardRequest, String userId);
 
-  BoardResponse getBoardById(int id);
+  BoardResponse getBoardById(int id, String loginUser);
 
   void updateBoard(int id, BoardRequest boardRequest, String userId);
 
   void deleteBoard(int id, String userId);
-  
+
 }
