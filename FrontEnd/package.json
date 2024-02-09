@@ -6,7 +6,7 @@
   "homepage": ".",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "set port=3000 && webpack serve --env development",
+    "dev": "webpack serve --env development",
     "start": "webpack --config ./webpack.config.js",
     "build": "react-scripts build"
   },
