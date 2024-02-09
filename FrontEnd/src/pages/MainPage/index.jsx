@@ -4,6 +4,7 @@ import Page from "../../components/Page";
 import Footer from "../../components/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import NoSkipResult from "../MyPage/NoSkipResult";
 
 
 const MainPage = () => {
