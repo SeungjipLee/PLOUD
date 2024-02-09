@@ -30,13 +30,12 @@ const RoomCard = ({ data, children }) => {
             <div className="overflow-ellipsis">{title}</div>
             {isPrivate && <img src="/images/private_icon.png" alt="" />}
           </div>
-          <div>
-            <p>{managerId}</p>
-            <p>
-              {currentPeople} / {maxPeople}
-            </p>
-          </div>
+          <p>{managerId}</p>
           <div>{categoryName()}</div>
+          <div className="pt-2" style={{"display":"flex", alignItems: "center"}}>
+            <img src="images/person_emoji.png" alt="" align="left" style={{position: "static", "width":"20px", "height":"20px"}}/>        
+            <span className="pl-3">  {currentPeople} / {maxPeople}</span>
+          </div>
           {children}
         </div>
       </Card>
