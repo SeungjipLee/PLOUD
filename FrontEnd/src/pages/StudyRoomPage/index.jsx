@@ -6,7 +6,10 @@ import { OpenVidu } from "openvidu-browser";
 import UserVideoComponent from "./component/UserVideoComponent";
 import Report from "./component/Report";
 import ResultList from "./component/ResultList";
-import { addRecordList, initRecordList } from "../../features/record/recordSlice";
+import {
+  addRecordList,
+  initRecordList,
+} from "../../features/record/recordSlice";
 import { getRecordResult } from "../../services/record";
 import { useCallback } from "react";
 import {
@@ -70,7 +73,7 @@ const StudyRoomPage = () => {
   const setClassName = (subs) => {
     // console.log(subs);
     const subscribersWithOutScreen = subs.filter(
-      (sub) => getUserNickname(sub) !== "screen"
+      (sub, i) => getUserNickname(sub) !== "screen"
     );
     // console.log(subscribersWithOutScreen);
     const selected =
@@ -124,7 +127,7 @@ const StudyRoomPage = () => {
   const speechId = useRef(0);
 
   // 결과 관련
-  const [currentResult, setCurrentResult ] = useState(null);
+  const [currentResult, setCurrentResult] = useState(null);
   const recordList = useSelector((state) => state.recordReducer.recordList);
 
   const categoryName = () => {
@@ -196,6 +199,7 @@ const StudyRoomPage = () => {
 
   // ---------- Variables During Speech ----------
   const [feedbackModal, setFeedbackModal] = useState(false);
+  const [feedbackButton, setFeedbackButton] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [comment, setComment] = useState("");
 
@@ -240,18 +244,27 @@ const StudyRoomPage = () => {
     });
     console.log(users);
     setUserList(users);
+    console.log("[발표자 권한 버튼 클릭 시 시그널 보냄]")
     sendSignal("WhoIsP", userId);
   };
+  
+  useEffect(() => {
+    if (room.managerId === userId) {
+      console.log(nickname)
+      setPresenter(nickname)
+      setUserList([{ userId: nickname, presenter: true }]);
+    } else {
+      setUserList([{ userId: nickname, presenter: false }])
+      joinSession()
+    }
+    
+  }, []);
 
   useEffect(() => {
-    joinSession();
-    if (presenter === "") {
-      setPresenter(nickname);
-    }
-    // if (userList == []) {
-    setUserList([{ userId: nickname, presenter: true }]);
-    // }
-  }, []);
+    if (!presenter) return
+    console.log("[presenter]", presenter)
+    if (OV.current == null) joinSession();
+  }, [presenter]);
 
   // 사람 수 마다 화면이 다르게 배치되도록 분기처리
   // 1. 화면 나오는 최상위 className 변경 => div 크기 변경
@@ -361,7 +374,8 @@ const StudyRoomPage = () => {
     session.current.on("streamCreated", (event) => {
       console.log(tag, "누가 접속했어요");
 
-      if (room.managerId === nickname) {
+      if (room.managerId === userId) {
+        console.log("[접속 시 시그널 보냄]", presenter)
         sendSignal("WhoIsP", presenter);
       }
 
@@ -370,8 +384,13 @@ const StudyRoomPage = () => {
       var nickname = JSON.parse(tmp[0]).clientData;
       addUser({ nickname: nickname });
 
-      if ((nickname.split("//").length > 1 ? "screen" : nickname) !== "screen") {
-        setUserList((userList) => [...userList, { userId: nickname, presenter: false }]);
+      if (
+        (nickname.split("//").length > 1 ? "screen" : nickname) !== "screen"
+      ) {
+        setUserList((userList) => [
+          ...userList,
+          { userId: nickname, presenter: false },
+        ]);
       }
 
       console.log(nickname + "님이 접속");
@@ -415,11 +434,15 @@ const StudyRoomPage = () => {
     // 발표자 시그널 수신
     session.current.on("signal:WhoIsP", (event) => {
       var p = JSON.parse(event.data).chatvalue;
+      console.log("[발표 시그널 수신함]", p);
       setPresenter(p);
-      setUserList((userList) => userList.map((user, i) => {
-        if (user.userId === p) return {userId:user.userId, presenter:true}
-        else return {userId:user.userId, presenter:false}
-      }))
+      setUserList((userList) =>
+        userList.map((user, i) => {
+          if (user.userId === p)
+            return { userId: user.userId, presenter: true };
+          else return { userId: user.userId, presenter: false };
+        })
+      );
     });
 
     // 방장이 떠남
@@ -448,6 +471,7 @@ const StudyRoomPage = () => {
       if (username != nickname) {
         // 녹화시작 버튼을 누르지 않은 사람은 피드백 모달이 열리게 됨
         setFeedbackModal(true);
+        setFeedbackButton(true);
         // 내가 아닌 경우의 레이아웃 전환
       }
 
@@ -468,6 +492,7 @@ const StudyRoomPage = () => {
       // 녹화 종료 신호를 받을 경우 처리할 것
       if (username != nickname) {
         setFeedbackModal(false);
+        setFeedbackButton(false);
       }
 
       // 녹화 종료되면 결과 화면 발표자한테 보여주기
@@ -711,14 +736,14 @@ const StudyRoomPage = () => {
       (response) => {
         console.log("결과 받음");
         console.log(response);
-        
+
         // 결과 목록에 추가
         dispatch(addRecordList(response.data));
 
         // 결과 보여주기
         setResultScreen(true);
 
-        setTimeout(()=>{
+        setTimeout(() => {
           speechId.current = -1;
         }, 1000);
       },
@@ -749,7 +774,7 @@ const StudyRoomPage = () => {
   };
 
   // 피드백 등록 요청
-  const feedbackPost = () => {
+  const feedbackPost = (e) => {
     if (e.key !== "Enter") return;
 
     postFeedback(
@@ -1072,15 +1097,19 @@ const StudyRoomPage = () => {
               {subscribers.map((sub, i) => (
                 <div key={i} className="relative">
                   <div className="mode1-each">
-                  <span className="nickname-overlay">{getUserNickname(sub)}</span>
-                  <UserVideoComponent streamManager={sub} />
-                </div>
+                    <span className="nickname-overlay">
+                      {getUserNickname(sub)}
+                    </span>
+                    <UserVideoComponent streamManager={sub} />
+                  </div>
                 </div>
               ))}
             </div>
             <div className="mode1-bottom">
               <div className="mode1-each">
-                <span className="nickname-overlay">{getUserNickname(publisher)}</span>
+                <span className="nickname-overlay">
+                  {getUserNickname(publisher)}
+                </span>
                 {publisher !== undefined ? (
                   <UserVideoComponent streamManager={publisher} />
                 ) : null}
@@ -1179,6 +1208,15 @@ const StudyRoomPage = () => {
           <img onClick={leaveSession} src="/images/exitbutton.png" alt="" />
         </div>
         <div className="flex items-center space-x-4">
+          {feedbackButton && (
+            <img
+              onClick={(e) => {
+                console.log(e);
+                setFeedbackModal(!feedbackModal);
+              }}
+              src="/images/feedbackbutton.png"
+            />
+          )}
           <img
             onClick={(e) => {
               console.log(e);
@@ -1241,8 +1279,9 @@ const StudyRoomPage = () => {
           </div>
         </div>
       )}
-      {chat && (
-        <Modal className="chat" title="채팅">
+      {!feedbackModal && chat && (
+        <Modal className="chat">
+          <h1>채팅</h1>
           <div className="chat-area">
             {chatList &&
               chatList.map((item, index) => {
@@ -1272,11 +1311,8 @@ const StudyRoomPage = () => {
       {result && <ResultList />}
       {report && <Report users={roomUsers} closeModal={closeModal} />}
       {recordForm && (
-        <Modal
-          title="녹화 정보 입력"
-          onClose={(e) => setRecordForm(false)}
-          className={"record-form"}
-        >
+        <Modal onClose={(e) => setRecordForm(false)} className={"record-form"}>
+          <h1>녹화 정보 입력</h1>
           <form onSubmit={submitHandler}>
             <div>
               <p>
@@ -1297,17 +1333,17 @@ const StudyRoomPage = () => {
       )}
       {feedbackModal && (
         <Modal
-          title="피드백 입력"
           // onClose={() => setFeedbackModal(false)}
           className="feedback-form"
         >
+          <h1>피드백 입력</h1>
           <p>
             내용 :{" "}
             <input
               type="text"
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
-              onKeyDown={feedbackPost}
+              onKeyDown={(e) => feedbackPost(e)}
             />
           </p>
         </Modal>
