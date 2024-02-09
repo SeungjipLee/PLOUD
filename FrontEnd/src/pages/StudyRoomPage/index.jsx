@@ -184,12 +184,11 @@ const StudyRoomPage = () => {
   // 참가자 목록
   const [captain, setCaptain] = useState(true);
   const [presenter, setPresenter] = useState("");
-  const [userList, setUserList] = useState([
-    { userId: "test01", presenter: true },
-    { userId: "test02", presenter: false },
-    { userId: "test03", presenter: false },
-    { userId: "test04", presenter: false },
-  ]);
+  const [userList, setUserList] = useState([]);
+  // { userId: "test01", presenter: true },
+  // { userId: "test02", presenter: false },
+  // { userId: "test03", presenter: false },
+  // { userId: "test04", presenter: false },
 
   // 채팅 정보
   const [chatvalue, setChatvalue] = useState("");
@@ -232,7 +231,7 @@ const StudyRoomPage = () => {
   };
 
   // 발표자 권한 변경
-  const changePresenter = (e, index) => {
+  const changePresenter = (userId, index) => {
     console.log("clicked");
     const users = userList.map((u, i) => {
       if (u.presenter) return { ...u, presenter: false };
@@ -241,10 +240,17 @@ const StudyRoomPage = () => {
     });
     console.log(users);
     setUserList(users);
+    sendSignal("WhoIsP", userId);
   };
 
   useEffect(() => {
     joinSession();
+    if (presenter === "") {
+      setPresenter(nickname);
+    }
+    // if (userList == []) {
+    setUserList([{ userId: nickname, presenter: true }]);
+    // }
   }, []);
 
   // 사람 수 마다 화면이 다르게 배치되도록 분기처리
@@ -355,10 +361,18 @@ const StudyRoomPage = () => {
     session.current.on("streamCreated", (event) => {
       console.log(tag, "누가 접속했어요");
 
+      if (room.managerId === nickname) {
+        sendSignal("WhoIsP", presenter);
+      }
+
       console.log(event.stream.connection.data.split("%/%"));
       var tmp = event.stream.connection.data.split("%/%");
       var nickname = JSON.parse(tmp[0]).clientData;
       addUser({ nickname: nickname });
+
+      if ((nickname.split("//").length > 1 ? "screen" : nickname) !== "screen") {
+        setUserList((userList) => [...userList, { userId: nickname, presenter: false }]);
+      }
 
       console.log(nickname + "님이 접속");
 
@@ -396,6 +410,16 @@ const StudyRoomPage = () => {
           { username: username, content: content },
         ]);
       }
+    });
+
+    // 발표자 시그널 수신
+    session.current.on("signal:WhoIsP", (event) => {
+      var p = JSON.parse(event.data).chatvalue;
+      setPresenter(p);
+      setUserList((userList) => userList.map((user, i) => {
+        if (user.userId === p) return {userId:user.userId, presenter:true}
+        else return {userId:user.userId, presenter:false}
+      }))
     });
 
     // 방장이 떠남
@@ -446,6 +470,10 @@ const StudyRoomPage = () => {
         setFeedbackModal(false);
       }
 
+      // 녹화 종료되면 결과 화면 발표자한테 보여주기
+      if (username === nickname) {
+        setResultScreen(true);
+      }
       // 녹화 종료의 경우 여기서 한 번에 처리해도 가능할 듯?
 
       // 레이아웃 전환
@@ -1035,7 +1063,10 @@ const StudyRoomPage = () => {
           <div className="mode-1">
             <div
               className={`mode1-top ${
-                subscribers.length <= 3 ? "single-row" : "multi-row"
+                subscribers.filter((sub) => getUserNickname(sub) !== "screen")
+                  .length <= 3
+                  ? "single-row"
+                  : "multi-row"
               }`}
             >
               {subscribers.map((sub, i) => (
@@ -1061,9 +1092,7 @@ const StudyRoomPage = () => {
         {/* ---------------------------------------면접 화면 구성(청자) -----------------------------------------------*/}
         {/* Main - 발표자, sub - 참가자, pub - 참가자 */}
         {mode == "3" && (
-          <div
-            className={subscribers.length > 3 ? "video-flex-big" : "video-flex"}
-          >
+          <div>
             {mainStreamManager !== undefined ? (
               <div id="main-video" className={videoDivClass}>
                 <UserVideoComponent streamManager={mainStreamManager} />
@@ -1188,14 +1217,14 @@ const StudyRoomPage = () => {
                 {captain &&
                   (data.presenter ? (
                     <div
-                      onClick={(e) => changePresenter(e, index)}
+                      onClick={(e) => changePresenter(data.userId, index)}
                       className="presenter presneter-button"
                     >
                       발표자
                     </div>
                   ) : (
                     <div
-                      onClick={(e) => changePresenter(e, index)}
+                      onClick={(e) => changePresenter(data.userId, index)}
                       className="participant presneter-button"
                     >
                       발표자
