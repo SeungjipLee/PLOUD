@@ -33,7 +33,7 @@ const Report = ({ users, closeModal }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="report">
+      <div className="report bg-grad-y-black">
         <h1>신고하기</h1>
         <div>
           <span>유저 : </span>
