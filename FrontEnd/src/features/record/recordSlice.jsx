@@ -12,6 +12,9 @@ export const recordSlice = createSlice({
       console.log(action.payload);
       state.recordList = [...state.recordList, action.payload.data];
     },
+    initRecordList: (state, action) => {
+      state.recordList = [];
+    },
   },
 });
 

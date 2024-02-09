@@ -28,7 +28,7 @@ const StudyResult = ({ onClose }) => {
   useEffect(() => {
     const getData = () => {
       try {
-        const response = getRecordResult(
+        getRecordResult(
           token,
           resultId,
           (res) => {

@@ -7,7 +7,7 @@ import UserVideoComponent from "./component/UserVideoComponent";
 import Report from "./component/Report";
 import ResultList from "./component/ResultList";
 import { addRecordList } from "../../features/record/recordSlice";
-import { getRecordResult } from "../../services/record";
+import { getRecordResult, initRecordList } from "../../services/record";
 import { useCallback } from "react";
 import {
   startSpeech,
@@ -342,6 +342,7 @@ const StudyRoomPage = () => {
 
   // 접속 시 실행
   const joinSession = () => {
+    dispatch(initRecordList(0));
     console.log("joinSession");
 
     OV.current = new OpenVidu();
