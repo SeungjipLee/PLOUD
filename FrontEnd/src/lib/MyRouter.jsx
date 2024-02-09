@@ -14,7 +14,7 @@ import StudyRoomPage from "../pages/StudyRoomPage"
 import CreateBoard from "../pages/BoardPage/CreateBoard";
 import BoardDetail from "../pages/BoardPage/BoardDetail";
 import InterviewScreenPresenter from "../pages/StudyRoomPage/component/InterviewScreenPresenter";
-import MyChart from "../components/MyChart"
+import StudyResult from "../pages/StudyRoomPage/component/StudyResult";
 
 const Router = () => {
   return (
@@ -34,9 +34,9 @@ const Router = () => {
         <Route path="/createpw" element={<ResetPwPage />} />
         <Route path="/createboard" element={<CreateBoard />} />
         <Route path="/test" element={<TestPage />} />
-        <Route path="/board-detail" element={<BoardDetail />} />
+        <Route path="/board/:boardId" element={<BoardDetail />} />
+        <Route path="/result/:resultId" element={<StudyResult />} />
         <Route path="/interview" element={<InterviewScreenPresenter/>} />
-        <Route path="/1" element={<MyChart/>} />
       </Routes>
     </BrowserRouter>
   );

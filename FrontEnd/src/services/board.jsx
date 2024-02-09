@@ -1,11 +1,10 @@
 import API from "../utils/Api";
 
-
 export const getboardList = async (token, data, success, fail) => {
   return await API(token)
-    .post("board", data)
+    .get(`board/?page=${data.page}&size=${data.size}&sort=${data.sort}`)
     .then(success)
-    .catch(fail)
+    .catch(fail);
 }
 
 

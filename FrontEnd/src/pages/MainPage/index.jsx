@@ -11,7 +11,7 @@ import Tier from "../../components/Tier";
 const MainPage = () => {
   const { isLogined } = useSelector((state) => state.userReducer);
   const navigate = useNavigate()
-
+  
   const handleLink = (path) => {
     if (isLogined) {
       navigate(path)
@@ -23,6 +23,7 @@ const MainPage = () => {
 
   return (
     <div className="Main">
+      {/* <StudyResult/> */}
       <Page header={<Navbar />} footer={<Footer />}>
         <div className="Main1 mb-24">
           <img src="images/2.png" className="w-full h-full object-cover"/>
