@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
-  "homepage": ".",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack serve --env development",
@@ -16,7 +15,6 @@
     "@material-tailwind/react": "^2.1.8",
     "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^2.1.0",
-    "aws-sdk": "^2.1553.0",
     "axios": "^1.6.5",
     "chart.js": "^4.4.1",
     "chartjs-adapter-date-fns": "^3.0.0",
