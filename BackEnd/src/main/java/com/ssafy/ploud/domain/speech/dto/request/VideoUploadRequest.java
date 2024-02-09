@@ -9,9 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
 public class VideoUploadRequest {
-
   private int speechId;
   private long speechTimeInSeconds;
   private MultipartFile video;
-
 }

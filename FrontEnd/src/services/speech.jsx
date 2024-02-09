@@ -54,3 +54,14 @@ export const postComment = async (token, data, success, fail) => {
     .then(success)
     .catch(fail)
 }
+
+/**
+ * @param data video, speechId, speechTimeInSeconds
+ * @returns ok
+ */
+export const uploadVideo = async (token, data, success, fail) => {
+  return await API(token)
+    .post("speech/video", data)
+    .then(success)
+    .catch(fail)
+}

@@ -10,6 +10,7 @@ import {
   endSpeech,
   assessSpeech,
   postComment,
+  uploadVideo
 } from "../../services/speech";
 
 const Level1 = () => {
@@ -44,6 +45,7 @@ const Level1 = () => {
   // 비디오 녹화 관련 함수
   const isVideoRecording = useRef(false);
   const videoChunksRef = useRef([]);
+  const videoStartTime = useRef(null);
   const [videoRecorder, setVideoRecorder] = useState(null);
 
   const [recordingTime, setRecordingTime] = useState(0);
@@ -228,8 +230,6 @@ const Level1 = () => {
     formData.append("speechId", speechId.current);
     formData.append("isLast", isLast.current);
 
-    console.log("평가 요청 : " + speechId.current);
-
     assessSpeech(
       token,
       formData,
@@ -258,7 +258,7 @@ const Level1 = () => {
 
         vRecorder.ondataavailable = (e) => {
           if (e.data.size > 0) {
-            uploadVideo(e.data); // e.data : videoChunk
+            videoUpload(e.data); // e.data : videoChunk
           }
         };
 
@@ -279,36 +279,29 @@ const Level1 = () => {
   };
 
   // 영상 보내기
-  const uploadVideo = (data) => {
+  const videoUpload = (data) => {
     var tmp = [];
     tmp.push(data);
-
-    const videoFile = new Blob(tmp, { type: "video/webm" });
-    // const vFormData = new FormData();
-    // vFormData.append("videoFile", videoFile);
-    // vFormData.append("speechId", speechId.current);
 
     var videoPlayTime = new Date().getTime() - videoStartTime.current;
     console.log("영상 길이 : " + videoPlayTime / 1000 + "(초)");
 
-    // 아래는 임시로 다운로드 해보려고 작성함 추후 삭제
-    const url = URL.createObjectURL(videoFile);
+    const videoFile = new Blob(tmp, { type: "video/webm" });
+    const vFormData = new FormData();
+    vFormData.append("video", videoFile);
+    vFormData.append("speechId", speechId.current);
+    vFormData.append("speechTimeInSeconds", videoPlayTime);
 
-    if (confirm("녹화된 비디오를 다운로드하시겠습니까?")) {
-      const a = document.createElement("a");
-      document.body.appendChild(a);
-      a.style = "display: none";
-      a.href = url;
-      a.download = "recordedVideo.webm";
-      a.click();
-
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    } else {
-      window.URL.revokeObjectURL(url);
-      console.log("다운로드가 취소되었습니다.");
-    }
-    // 여기까지 삭제하고 S3 업로드 요청
+    uploadVideo(
+      token,
+      vFormData,
+      (response) => {
+        console.log("영상 업로드 성공");        
+      },
+      (error) => {
+        console.log("영상 업로드 실패");
+      }
+    );
   };
 
   // 화면 공유 시작

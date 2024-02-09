@@ -6,7 +6,10 @@ import { OpenVidu } from "openvidu-browser";
 import UserVideoComponent from "./component/UserVideoComponent";
 import Report from "./component/Report";
 import ResultList from "./component/ResultList";
-import { addRecordList, initRecordList } from "../../features/record/recordSlice";
+import {
+  addRecordList,
+  initRecordList,
+} from "../../features/record/recordSlice";
 import { getRecordResult } from "../../services/record";
 import { useCallback } from "react";
 import {
@@ -15,6 +18,7 @@ import {
   assessSpeech,
   postFeedback,
   postComment,
+  uploadVideo,
 } from "../../services/speech";
 import Modal from "../../components/Modal";
 import Button from "../../components/Button";
@@ -124,7 +128,7 @@ const StudyRoomPage = () => {
   const speechId = useRef(0);
 
   // 결과 관련
-  const [currentResult, setCurrentResult ] = useState(null);
+  const [currentResult, setCurrentResult] = useState(null);
   const recordList = useSelector((state) => state.recordReducer.recordList);
 
   const categoryName = () => {
@@ -371,8 +375,13 @@ const StudyRoomPage = () => {
       var nickname = JSON.parse(tmp[0]).clientData;
       addUser({ nickname: nickname });
 
-      if ((nickname.split("//").length > 1 ? "screen" : nickname) !== "screen") {
-        setUserList((userList) => [...userList, { userId: nickname, presenter: false }]);
+      if (
+        (nickname.split("//").length > 1 ? "screen" : nickname) !== "screen"
+      ) {
+        setUserList((userList) => [
+          ...userList,
+          { userId: nickname, presenter: false },
+        ]);
       }
 
       console.log(nickname + "님이 접속");
@@ -417,10 +426,13 @@ const StudyRoomPage = () => {
     session.current.on("signal:WhoIsP", (event) => {
       var p = JSON.parse(event.data).chatvalue;
       setPresenter(p);
-      setUserList((userList) => userList.map((user, i) => {
-        if (user.userId === p) return {userId:user.userId, presenter:true}
-        else return {userId:user.userId, presenter:false}
-      }))
+      setUserList((userList) =>
+        userList.map((user, i) => {
+          if (user.userId === p)
+            return { userId: user.userId, presenter: true };
+          else return { userId: user.userId, presenter: false };
+        })
+      );
     });
 
     // 방장이 떠남
@@ -618,7 +630,7 @@ const StudyRoomPage = () => {
 
         vRecorder.ondataavailable = (e) => {
           if (e.data.size > 0) {
-            uploadVideo(e.data); // e.data : videoChunk
+            videoUpload(e.data); // e.data : videoChunk
           }
         };
 
@@ -639,36 +651,29 @@ const StudyRoomPage = () => {
   };
 
   // 영상 보내기
-  const uploadVideo = (data) => {
+  const videoUpload = (data) => {
     var tmp = [];
     tmp.push(data);
-
-    const videoFile = new Blob(tmp, { type: "video/webm" });
-    // const vFormData = new FormData();
-    // vFormData.append("videoFile", videoFile);
-    // vFormData.append("speechId", speechId.current);
 
     var videoPlayTime = new Date().getTime() - videoStartTime.current;
     console.log("영상 길이 : " + videoPlayTime / 1000 + "(초)");
 
-    // 아래는 임시로 다운로드 해보려고 작성함 추후 삭제
-    const url = URL.createObjectURL(videoFile);
+    const videoFile = new Blob(tmp, { type: "video/webm" });
+    const vFormData = new FormData();
+    vFormData.append("video", videoFile);
+    vFormData.append("speechId", speechId.current);
+    vFormData.append("speechTimeInSeconds", videoPlayTime);
 
-    if (confirm("녹화된 비디오를 다운로드하시겠습니까?")) {
-      const a = document.createElement("a");
-      document.body.appendChild(a);
-      a.style = "display: none";
-      a.href = url;
-      a.download = "recordedVideo.webm";
-      a.click();
-
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    } else {
-      window.URL.revokeObjectURL(url);
-      console.log("다운로드가 취소되었습니다.");
-    }
-    // 여기까지 삭제하고 S3 업로드 요청
+    uploadVideo(
+      token,
+      vFormData,
+      (response) => {
+        console.log("영상 업로드 성공");        
+      },
+      (error) => {
+        console.log("영상 업로드 실패");
+      }
+    );
   };
 
   // 녹화 종료 요청
@@ -860,8 +865,6 @@ const StudyRoomPage = () => {
     formData.append("speechId", speechId.current);
     formData.append("isLast", isLast.current);
 
-    console.log("평가 요청 : " + speechId.current);
-
     assessSpeech(
       token,
       formData,
@@ -1048,15 +1051,19 @@ const StudyRoomPage = () => {
               {subscribers.map((sub, i) => (
                 <div key={i} className="relative">
                   <div className="mode1-each">
-                  <span className="nickname-overlay">{getUserNickname(sub)}</span>
-                  <UserVideoComponent streamManager={sub} />
-                </div>
+                    <span className="nickname-overlay">
+                      {getUserNickname(sub)}
+                    </span>
+                    <UserVideoComponent streamManager={sub} />
+                  </div>
                 </div>
               ))}
             </div>
             <div className="mode1-bottom">
               <div className="mode1-each">
-                <span className="nickname-overlay">{getUserNickname(publisher)}</span>
+                <span className="nickname-overlay">
+                  {getUserNickname(publisher)}
+                </span>
                 {publisher !== undefined ? (
                   <UserVideoComponent streamManager={publisher} />
                 ) : null}
