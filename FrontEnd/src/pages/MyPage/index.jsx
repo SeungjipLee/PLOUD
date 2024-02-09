@@ -9,6 +9,9 @@ import { getSpeechList } from "../../services/statistic";
 import MyChart from "../../components/MyChart";
 import Tier from "../../components/Tier"
 import { useNavigate } from "react-router-dom";
+import NoSkipResult from "./NoSkipResult";
+import PracticeResult from "../PracticePage/PracticeResult";
+
 
 
 const MyPage = () => {
@@ -17,9 +20,10 @@ const MyPage = () => {
   const base64Image = `data:image/png;base64,${profile.profileImg}`
   const [results, setResults] = useState([{}, {}, {}, {}, {}]);
   const navigate = useNavigate()
+  const [modalOpen, setModalOpen] = useState({})
   
   useEffect(() => {
-    const fetchData = async () => {
+    const getData = async () => {
       try {
         const response = await getProfile(
           token,
@@ -34,8 +38,10 @@ const MyPage = () => {
         const response2 = await getSpeechList(
           token,
           (res) => {
-            console.log(res.data.data)
-            setResults(res.data.data.slice(0, 5));
+            const results = res.data.data.slice(0, 5);
+            setResults(results);
+            const initialModalOpen = results.reduce((acc, result) => ({ ...acc, [result.speechId]: false }), {});
+            setModalOpen(initialModalOpen);
           },
           (err) => console.log('저기')
         )
@@ -43,9 +49,16 @@ const MyPage = () => {
         console.error("쩌어기");
       }
     };
-    fetchData();
+    getData();
   }, []);
   
+  const handleModalOpen = (id) => {
+    setModalOpen({ ...modalOpen, [id]: true });
+  };
+
+  const handleModalClose = (id) => {
+    setModalOpen({ ...modalOpen, [id]: false });
+  };
 
   return (
       <div className="bg-white w-full min-h-screen">
@@ -89,13 +102,21 @@ const MyPage = () => {
               </span>
               <div className="flex justify-center">
                 {/* 여기에 5개의 결과 카드 나오도록 */}
-                {results.map((result, index) => (
+                {results.map((result, index) => {
+              const handleOpen = () => handleModalOpen(result.speechId);
+              const handleClose = () => handleModalClose(result.speechId);
+
+              return (
+                <div onClick={handleOpen} key={index}>
                   <ResultCard 
-                    key={index}
                     speechMode={result.speechMode}
                     title={result.title}
                   />
-                ))}
+                  {result.speechMode === "스터디" && modalOpen[result.speechId] && <NoSkipResult onClose={handleClose} speechId={result.speechId} />}
+                  {result.speechMode === "연습 모드" && modalOpen[result.speechId] && <PracticeResult onClose={handleClose} speechId={result.speechId} />}
+                </div>
+              );
+            })}
               </div>
             </div>
           </div>

@@ -609,11 +609,12 @@ p {
 .study-result {
   position: absolute;
   border-radius: 10px;
-  top: 100px;
-  left: 100px;
+  top: -350px;
+  left: -100px;
   width: 1000px;
   height: 600px;
   background-color: #ffffff;
+  z-index: 999;
 }
 
 .result-section {

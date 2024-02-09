@@ -63,8 +63,10 @@ const PracticeResult = ({ onClose, speechId }) => {
     <Modal
       title="연습 결과 발표"
       className="study-result"
+      style={{ position: 'fixed', top: '100px', left: '100px', zIndex:999 }}
+      onClick={onClose}
     >
-      <div className="result-section">
+      <div className="result-section" onClick={(e) => e.stopPropagation()}>
         <div className="result-section-1 mx-5">
           <div className="p-2">
             <div className="score rounded-xl w-68 h-52 m-auto py-16">
