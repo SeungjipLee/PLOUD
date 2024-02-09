@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-  mode: 'development', // 배포 : production
+  mode: "development", // 배포 : production
   devtool: "source-map", // hidden-source-map
   resolve: {
     extensions: [".js", ".jsx"],
@@ -17,10 +17,12 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
-          options: { presets: [
-            "@babel/preset-env",
-            ["@babel/preset-react", {"runtime": "automatic"}]
-          ] },
+          options: {
+            presets: [
+              "@babel/preset-env",
+              ["@babel/preset-react", { runtime: "automatic" }],
+            ],
+          },
         },
       },
       {

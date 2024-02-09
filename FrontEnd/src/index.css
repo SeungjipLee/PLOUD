@@ -339,6 +339,14 @@
   width: 200px;
 }
 
+.PracticeRoomPage-mid {
+  height: 660px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* pLoud */
 .ploud-icon {
   width: 327px;
@@ -957,7 +965,6 @@ p {
   max-width: 200px; /* 하단 참가자 화면의 최대 너비 */
   text-align: center; /* span 태그를 중앙 정렬 */
 }
-
 
 .mode1-bottom video {
   height: 100%;
