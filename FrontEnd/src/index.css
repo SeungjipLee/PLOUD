@@ -325,6 +325,14 @@
   width: 200px;
 }
 
+.PracticeRoomPage-mid {
+  height: 660px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* pLoud */
 .ploud-icon {
   width: 327px;
@@ -857,7 +865,6 @@ p {
   max-height: 90vh; /* viewport height의 90% */
   padding: 1em;
   border-radius: 20px;
-  
 }
 
 .createmodal ul {
@@ -935,10 +942,9 @@ p {
   max-width: 200px; /* 하단 참가자 화면의 최대 너비 */
   text-align: center; /* span 태그를 중앙 정렬 */
 }
-.mode1-top.single-row > div { /* 3개일 때는 너비를 조정하여 한 줄에 모두 표시 */
-  max-width: calc(
-    33.33% - 10px
-  ); 
+.mode1-top.single-row > div {
+  /* 3개일 때는 너비를 조정하여 한 줄에 모두 표시 */
+  max-width: calc(33.33% - 10px);
   display: flex;
   align-items: center;
 }
@@ -961,7 +967,7 @@ p {
   border-radius: 10px;
 }
 
-.mode-select{
+.mode-select {
   z-index: 100;
   position: absolute;
   left: 0;
@@ -971,7 +977,6 @@ p {
   display: flex;
 
   height: 150px;
-
 }
 .mode2-top video {
   height: 150px;
@@ -982,7 +987,6 @@ p {
   display: flex;
   width: 100%;
   height: 600px;
-    
 }
 
 .mode2-top-left {

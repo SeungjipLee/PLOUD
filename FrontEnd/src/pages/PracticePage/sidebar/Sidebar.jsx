@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { getScriptList, getScriptDetail } from "../../../services/script";
+import { Link } from "react-router-dom";
+import Level1 from "../../PracticeRoomPage/Level1";
+import Level2 from "../../PracticeRoomPage/Level2";
 
 const Side = styled.div`
   flex-direction: column;
@@ -102,10 +105,11 @@ const SpeechPage = ({ setId }) => {
   );
 };
 
-const ScriptPage = ({ id }) => {
+const ScriptPage = ({ id, level }) => {
   // id 바뀔 때 마다 렌더링 되야함(단 id값 정의되지 않았을떄는 렌더링x), 스크립트 부분
   const token = useSelector((state) => state.userReducer.token);
   const [list, setList] = useState([]);
+  const [content, setContent] = useState("");
 
   const getDetail = async () => {
     getScriptDetail(
@@ -113,6 +117,7 @@ const ScriptPage = ({ id }) => {
       id,
       (res) => {
         setList(res.data.data);
+        setContent(res.data.data.content);
       },
       (err) => {
         console.log(err);
@@ -126,15 +131,37 @@ const ScriptPage = ({ id }) => {
   }, [id]);
 
   return (
-    <div style={{ width: "800px" }}>
-      <div>제목 : {list.title}</div>
-      <br />
-      <div style={{ overflowWrap: "break-word" }}>내용 : {list.content}</div>
+    <div>
+      <div
+        style={{ maxWidth: "1000px", overflowY: "auto", maxHeight: "500px" }}>
+        <div>제목 : {list.title}</div>
+        <br />
+        <div style={{ overflowWrap: "break-word", flex: "auto" }}>
+          내용 : {list.content}
+        </div>
+        <br />
+      </div>
+      {id != "" && level == 1 && (
+        <Link
+          className="bg-slate-300"
+          to="/practice/Level1"
+          state={{ content: content }}>
+          녹화 페이지 이동
+        </Link>
+      )}
+      {id != "" && level == 2 && (
+        <Link
+          className="bg-slate-300"
+          to="/practice/Level2"
+          state={{ content: content }}>
+          녹화 페이지 이동
+        </Link>
+      )}
     </div>
   );
 };
 
-const Sidebar = () => {
+const Sidebar = ({ level }) => {
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [id, setId] = useState("");
   const [title, setTitle] = useState("");
@@ -198,7 +225,7 @@ const Sidebar = () => {
           style={{ paddingBottom: "20px" }}>
           스크립트
         </p>
-        {id != "" && <ScriptPage id={id} />}
+        {id != "" && <ScriptPage id={id} level={level} />}
       </div>
     </div>
   );
