@@ -7,8 +7,8 @@ const Footer = () => {
             <br />
             <hr />
             <div className="mt-4">About Us : SSAFY E207 926</div>
-            <div className="my-0.5">Contact Us : ploud_admin@gmail.com</div>
-            <div className="my-0.5">Have a nice day!</div>
+            <div className="my-0.5">Contact Us : ploud.e207@gmail.com</div>
+            {/* <div className="my-0.5">Have a nice day!</div> */}
         </div>
     )
 }

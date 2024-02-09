@@ -17,7 +17,7 @@ import PracticeResult from "../PracticePage/PracticeResult";
 const MyPage = () => {
   const { token } = useSelector((state) => state.userReducer)
   const [ profile, setProfile ] = useState({})
-  const base64Image = `data:image/png;base64,${profile.profileImg}`
+  const profileImgPath = `${profile.profileImg}`
   const [results, setResults] = useState([{}, {}, {}, {}, {}]);
   const navigate = useNavigate()
   const [modalOpen, setModalOpen] = useState({})
@@ -71,15 +71,15 @@ const MyPage = () => {
           <div className="ms-12 me-5 bg-white box1 drop-shadow-md rounded-md">
             <div className="flex ms-5 mt-5">
               <div className="w-32 h-64 mx-5 flex flex-col">
-                <div>
+                <div style={{"width":"130px","height":"130px", "overflow":"hidden","borderRadius":"5%"}}>
                 {!profile.profileImg&&
-                <img src="images/Profile.PNG"/>}
-                {profile.profileImg&&<img src={`${base64Image}`}/>}
+                <img src="images/Profile.PNG" style={{"width":"100%", "height":"100%", "objectFit":"cover"}}/>}
+                {profile.profileImg&&<img src={`${profileImgPath}`} style={{"width":"100%", "height":"100%", "objectFit":"cover"}}/>}
                 </div>
-                <div>
+                <div style={{"textAlign": "center", "fontWeight":"bold"}}>
                   {profile.nickname}
                 </div>
-                <button onClick={() => navigate('/patchinfo')}>회원 정보 수정</button>
+                <button onClick={() => navigate('/patchinfo')} className="writeBtn rounded-md py-1 px-1 mt-3" >회원 정보 수정</button>
               </div>
               <div className="w-32 h-64">
                   <Tier />

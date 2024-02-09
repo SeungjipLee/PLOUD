@@ -50,20 +50,20 @@ const Tier = () => {
     <>
         {isBronze&& 
           <div>
-            <img src='images/bronze.png'></img>
-            <p className='text-center me-2 text-xl font-bold'>브론즈</p>
+            <img src='images/bronze.png' style={{filter:"drop-shadow(0px 6px 6px #624637)"}}></img>
+            <p className='text-center me-2 text-xl font-bold' style={{color:"#624637"}}>브론즈</p>
           </div>
           }
         {isSilver&&
          <div>
-           <img src='images/silver.png'></img>
-           <p className='text-center me-2 text-xl font-bold'>실버</p>
+           <img src='images/silver.png' style={{filter:"drop-shadow(0px 6px 6px #c0c0c0"}}></img>
+           <p className='text-center me-2 text-xl font-bold ' style={{color:"#c0c0c0"}}>실버</p>
          </div>
           }
         {isGold&&
          <div>
-           <img src='images/gold.png'></img> 
-           <p className='text-center me-2 text-xl font-bold'>골드</p>
+           <img src='images/gold.png' style={{filter:"drop-shadow(0px 6px 6px #ffd700"}}></img> 
+           <p className='text-center me-2 text-xl font-bold' style={{color:"#ffd700"}}>골드</p>
          </div>
           }
     </>
