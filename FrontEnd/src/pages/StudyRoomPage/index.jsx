@@ -68,11 +68,11 @@ const StudyRoomPage = () => {
 
   // 공유화면도 subs 이기때문에 실질적인 subs수를 체크하기 위함
   const setClassName = (subs) => {
-    console.log(subs);
+    // console.log(subs);
     const subscribersWithOutScreen = subs.filter(
       (sub) => getUserNickname(sub) !== "screen"
     );
-    console.log(subscribersWithOutScreen);
+    // console.log(subscribersWithOutScreen);
     const selected =
       subscribersWithOutScreen.length > 3 ? "video-flex-big" : "video-flex";
     return selected;
@@ -122,6 +122,10 @@ const StudyRoomPage = () => {
   // 녹화 Form
   const [title, setTitle] = useState("");
   const speechId = useRef(0);
+
+  // 결과 관련
+  const [currentResult, setCurrentResult ] = useState(null);
+  const recordList = useSelector((state) => state.recordReducer.recordList);
 
   const categoryName = () => {
     switch (room.categoryId) {
@@ -441,10 +445,6 @@ const StudyRoomPage = () => {
         setFeedbackModal(false);
       }
 
-      // 녹화 종료되면 결과 화면 발표자한테 보여주기
-      if (username === nickname) {
-        setResultScreen(true);
-      }
       // 녹화 종료의 경우 여기서 한 번에 처리해도 가능할 듯?
 
       // 레이아웃 전환
@@ -682,8 +682,16 @@ const StudyRoomPage = () => {
       (response) => {
         console.log("결과 받음");
         console.log(response);
+        
+        // 결과 목록에 추가
         dispatch(addRecordList(response.data));
-        speechId.current = -1;
+
+        // 결과 보여주기
+        setResultScreen(true);
+
+        setTimeout(()=>{
+          speechId.current = -1;
+        }, 1000);
       },
       (error) => {
         console.log("결과 못 받음");

@@ -34,9 +34,9 @@ const ResultList = (data) => {
     <>
       <Modal className="result-list" title="결과">
         <div>
-          {resultList.map((item, index) => (
+          {recordList.map((item, index) => (
             <div key={index} onClick={(e) => handleClick(e, index)}>
-              {item.name}
+              - {item.startsAt} : {item.title}
             </div>
           ))}
         </div>
