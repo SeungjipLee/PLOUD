@@ -1,11 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
 import Footer from "../../components/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import StudyResult from "../StudyRoomPage/component/StudyResult";
-import Tier from "../../components/Tier";
 
 
 const MainPage = () => {
@@ -20,10 +18,12 @@ const MainPage = () => {
       navigate('/login')
     }
   }
-
+  const [modal, setModal] = useState(true)
+  const handleClose = () => {
+    setModal(false)
+  }
   return (
     <div className="Main">
-      {/* <StudyResult/> */}
       <Page header={<Navbar />} footer={<Footer />}>
         <div className="Main1 mb-24">
           <img src="images/2.png" className="w-full h-full object-cover"/>
