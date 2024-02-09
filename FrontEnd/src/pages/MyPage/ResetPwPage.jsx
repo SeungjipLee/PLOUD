@@ -16,6 +16,7 @@ const ResetPwPage = () => {
   const [ oldValue, setOldValue ] = useState('')
   const [ oldValueRe, setOldValueRe ] = useState('')
   const [ newValue, setNewValue ] = useState('')
+  const profileImgPath = `${profile.profileImg}`
   const validatePassword = () =>
     /^(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{6,15}$/.test(newValue);
   const navigate = useNavigate()
@@ -71,8 +72,11 @@ const ResetPwPage = () => {
       <div className="flex justify-center relative bg-white rounded-md outline1 mx-auto my-5">
         <div className="outline1 py-10">
           <div className="flex fetImg ">
-            <div><img src="images/Profile.PNG" className="w-48 h-48"/></div>
-            <p className="pt-2">{profile.nickname}</p>
+            <div className="w-48 h-48" style={{"overflow":"hidden","borderRadius":"5%"}}>
+              {!profile.profileImg && <img src="images/Profile.PNG" style={{"width":"100%", "height":"100%", "objectFit":"cover"}}/>}
+              {profileImgPath && <img src={`${profileImgPath}`} style={{"width":"100%", "height":"100%", "objectFit":"cover"}}/>}
+            </div>
+            <p className="pt-2" style={{fontWeight:"bold"}}>{profile.nickname}</p>
           </div>
           <div className="flex justify-center my-4">
           <form action="" className="mx-1">
@@ -97,7 +101,7 @@ const ResetPwPage = () => {
           </form>
           </div>
           <div className="flex justify-center m-10">
-              <button onClick={handleSubmit} className="bg-gray-400 text-white rounded-md px-3 py-1 mx-3 my-3">비밀번호 변경하기</button>
+              <button onClick={handleSubmit} className="custom-btn btn-1 rounded-md px-3 py-1 mx-3 my-3">비밀번호 변경하기</button>
           </div>
         </div>
       </div>

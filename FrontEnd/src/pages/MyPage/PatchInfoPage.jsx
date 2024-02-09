@@ -145,7 +145,8 @@ const PatchInfoPage = () => {
                   <img src={preview} alt="Preview" className="w-44 h-44"/>
                 </div>
               )}
-              {!preview && <img src={`${profileImgPath}`} />}
+              {!preview && !profile.profileImg && <img src="images/Profile.PNG"/>}
+              {!preview && profile.profileImg && <img src={`${profileImgPath}`} />}
               <br />
               <input type="file" accept="image/*" onChange={handleFileInput} className="mb-3" required />
             </div>
