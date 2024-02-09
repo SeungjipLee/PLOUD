@@ -18,6 +18,7 @@ import {
 } from "../../services/speech";
 import Modal from "../../components/Modal";
 import Button from "../../components/Button";
+import StudyResult from "./component/StudyResult";
 
 const StudyRoomPage = () => {
   const navigate = useNavigate();
@@ -65,6 +66,44 @@ const StudyRoomPage = () => {
   // 0 대기 1 면접 2 발표 3 대본
   const [mode, setMode] = useState("0");
 
+  // 공유화면도 subs 이기때문에 실질적인 subs수를 체크하기 위함
+  const setClassName = (subs) => {
+    console.log(subs);
+    const subscribersWithOutScreen = subs.filter(
+      (sub) => getUserNickname(sub) !== "screen"
+    );
+    console.log(subscribersWithOutScreen);
+    const selected =
+      subscribersWithOutScreen.length > 3 ? "video-flex-big" : "video-flex";
+    return selected;
+  };
+
+  // 페이지 상단 높이 조절
+  const setClassRoomPageTOP = () => {
+    switch (mode) {
+      case "0":
+        return "RoomPage-top-basic";
+      case "1":
+        return "RoomPage-top-basic";
+      case "2":
+        return "RoomPage-top";
+      case "3":
+        return "RoomPage-top";
+    }
+  };
+
+  const setClassRoomPageMID = () => {
+    switch (mode) {
+      case "0":
+        return "RoomPage-mid-basic";
+      case "1":
+        return "RoomPage-mid-basic";
+      case "2":
+        return "RoomPage-mid";
+      case "3":
+        return "RoomPage-mid";
+    }
+  };
   // 비디오 구성 버튼 활성/비활성화 상태
   const [mic, setMic] = useState(true);
   const [video, setVideo] = useState(true);
@@ -72,6 +111,7 @@ const StudyRoomPage = () => {
   const [recordForm, setRecordForm] = useState(false);
   const [record, setRecord] = useState(false);
   const [result, setResult] = useState(false);
+  const [resultScreen, setResultScreen] = useState(false);
   const [report, setReport] = useState(false);
   const [chat, setChat] = useState(false);
   const [user, setUser] = useState(false);
@@ -125,6 +165,7 @@ const StudyRoomPage = () => {
     sessionScreen.current.publish(publisherScreen);
     setPublisherScreen(publisherScreen);
     setScreenShare(true);
+    setMode("2");
   };
 
   const handleScreenShare2 = async () => {
@@ -138,6 +179,7 @@ const StudyRoomPage = () => {
 
   // 참가자 목록
   const [captain, setCaptain] = useState(true);
+  const [presenter, setPresenter] = useState("");
   const [userList, setUserList] = useState([
     { userId: "test01", presenter: true },
     { userId: "test02", presenter: false },
@@ -167,9 +209,22 @@ const StudyRoomPage = () => {
   // ---------- Variables After Speech ----------
   const [showComment, setShowComment] = useState(true);
 
+  // 사용법 publisher, mainStreamManager, subscriber 등을 넣으면 닉네임을 파싱해서 반환해줌
+  const getUserNickname = (streamObject) => {
+    const nickname = JSON.parse(
+      streamObject.stream.connection.data.split("%/%")[0]
+    ).clientData;
+    return nickname.split("//").length > 1 ? "screen" : nickname;
+  };
+
   // 신고 창 닫기
   const closeModal = () => {
     setReport(false);
+  };
+
+  // 결과 창 닫기
+  const handleResultClose = () => {
+    setResultScreen(false);
   };
 
   // 발표자 권한 변경
@@ -193,9 +248,10 @@ const StudyRoomPage = () => {
   // 2. 각 화면에 들어갈 className 변경 => video 크기 변경
   // useEffect 로 subscribers 수에 따라 결정
   useEffect(() => {
-    console.log(subscribers.length);
     let videoClassName = "";
-    switch (subscribers.length) {
+    switch (
+      subscribers.filter((sub) => getUserNickname(sub) !== "screen").length
+    ) {
       // case 0:
       //   videoClassName = "video-div-size-6";
       //   break;
@@ -265,8 +321,7 @@ const StudyRoomPage = () => {
       token,
       params,
       (res) => {
-        speechId.current = res.data.data;
-        console.log(res.data.data);
+        speechId.current = res.data.data.speechId;
 
         console.log("발표 시작 : " + speechId.current);
 
@@ -300,8 +355,8 @@ const StudyRoomPage = () => {
       var nickname = JSON.parse(tmp[0]).clientData;
       addUser({ nickname: nickname });
 
-      console.log(nickname + "님이 접속")
-      
+      console.log(nickname + "님이 접속");
+
       var subscriber = session.current.subscribe(event.stream, undefined);
 
       setSubscribers((subscribers) => [...subscribers, subscriber]);
@@ -315,7 +370,7 @@ const StudyRoomPage = () => {
       var nickname = JSON.parse(tmp[0]).clientData;
       removeUser(nickname);
 
-      console.log(nickname + "님이 떠남")
+      console.log(nickname + "님이 떠남");
 
       deleteSubscriber(event.stream.streamManager);
     });
@@ -386,6 +441,10 @@ const StudyRoomPage = () => {
         setFeedbackModal(false);
       }
 
+      // 녹화 종료되면 결과 화면 발표자한테 보여주기
+      if (username === nickname) {
+        setResultScreen(true);
+      }
       // 녹화 종료의 경우 여기서 한 번에 처리해도 가능할 듯?
 
       // 레이아웃 전환
@@ -439,10 +498,9 @@ const StudyRoomPage = () => {
         leaveSession();
       });
 
-      sessionScreen.current
-      .connect(screenToken, { clientData: nickname + "screen" })
-      .then(async () => {
-      })
+    sessionScreen.current
+      .connect(screenToken, { clientData: nickname + "//screen" })
+      .then(async () => {})
       .catch((error) => {
         console.log(error);
       });
@@ -527,25 +585,23 @@ const StudyRoomPage = () => {
     videoStartTime.current = new Date().getTime();
 
     navigator.mediaDevices
-    .getUserMedia({ video: true, audio: true})
-    .then((stream) => {
-  
-    const vRecorder = new MediaRecorder(stream)
-    setVideoRecorder(vRecorder);
+      .getUserMedia({ video: true, audio: true })
+      .then((stream) => {
+        const vRecorder = new MediaRecorder(stream);
+        setVideoRecorder(vRecorder);
 
-    vRecorder.ondataavailable = (e) => {
-      if (e.data.size > 0) {
-        uploadVideo(e.data); // e.data : videoChunk
-      }
-    };
-    
-    vRecorder.start();
-    
-    })
-    .catch((error) => {
-    console.log(error);
-    });
-  }
+        vRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) {
+            uploadVideo(e.data); // e.data : videoChunk
+          }
+        };
+
+        vRecorder.start();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   // 비디오 녹화 종료 함수
   const videoRecordingEnd = () => {
@@ -554,7 +610,7 @@ const StudyRoomPage = () => {
     if (videoRecorder && videoRecorder.state === "recording") {
       videoRecorder.stop();
     }
-  }
+  };
 
   // 영상 보내기
   const uploadVideo = (data) => {
@@ -579,7 +635,7 @@ const StudyRoomPage = () => {
       a.href = url;
       a.download = "recordedVideo.webm";
       a.click();
-  
+
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } else {
@@ -587,7 +643,7 @@ const StudyRoomPage = () => {
       console.log("다운로드가 취소되었습니다.");
     }
     // 여기까지 삭제하고 S3 업로드 요청
-  }
+  };
 
   // 녹화 종료 요청
   const speechEnd = () => {
@@ -832,7 +888,8 @@ const StudyRoomPage = () => {
 
   return (
     <div className="RoomPage">
-      <div className="RoomPage-top">
+      {/* <div className="RoomPage-top"> */}
+      <div className={setClassRoomPageTOP()}>
         <div className="roompage-icon">
           <img src="/images/ploud_icon_bg.png" />
         </div>
@@ -848,87 +905,146 @@ const StudyRoomPage = () => {
             <option value="3">3</option>
           </select>
         </div>
-        {/* 발표 -  */}
+        {/* 발표 화면 상단 구성 */}
         {mode == "2" && (
           <div className="mode2-top">
             <div className="mode2-top-left"></div>
-            {/* 상단 발표자, 참가자 일렬로 작은 화면으로 나열 */}
+            {/* 참가자 일렬로 작은 화면으로 나열 // 순서 : 발표자, 참여자... */}
             <div className="flex flex-row justify-center items-center space-x-2 w-full py-2">
-              {mainStreamManager !== publisher &&
-                mainStreamManager !== undefined && (
-                  <div className="relative">
-                    <div className="aspect-w-4 aspect-h-3">
-                      <UserVideoComponent streamManager={mainStreamManager} />
+              {/* sub 돌면서 발표자 닉네임과 같으면 첫화면으로 송출 */}
+              {subscribers.map((sub, i) => {
+                if (getUserNickname(sub) === presenter) {
+                  console.log(sub);
+                  return (
+                    <div key={i} className="relative">
+                      <div className="mode2-top-each">
+                        <span className="nickname-overlay">
+                          {getUserNickname(sub)}
+                        </span>
+                        <UserVideoComponent streamManager={sub} />
+                      </div>
                     </div>
-                  </div>
-                )}
-
-              {publisher !== undefined && (
+                  );
+                }
+              })}
+              {/* {publisher !== mainStreamManager && ( */}
+              {publisher && (
                 <div className="relative">
-                  <div className="aspect-w-4 aspect-h-3">
+                  <div className="mode2-top-each">
+                    <span className="nickname-overlay">
+                      {getUserNickname(publisher)}
+                    </span>
                     <UserVideoComponent streamManager={publisher} />
                   </div>
                 </div>
               )}
-              {subscribers.map((sub, i) => (
-                <div key={i} className="relative">
-                  <div className="aspect-w-4 aspect-h-3">
-                    <UserVideoComponent streamManager={sub} />
-                  </div>
-                </div>
-              ))}
+              {subscribers.map((sub, i) => {
+                if (getUserNickname(sub) != "screen") {
+                  console.log(sub);
+                  return (
+                    <div key={i} className="relative">
+                      <div className="mode2-top-each">
+                        <span className="nickname-overlay">
+                          {getUserNickname(sub)}
+                        </span>
+                        <UserVideoComponent streamManager={sub} />
+                      </div>
+                    </div>
+                  );
+                }
+              })}
+            </div>
+          </div>
+        )}
+        {mode == "3" && (
+          <div className="mode2-top">
+            <div className="mode2-top-left"></div>
+            {/* 참가자 일렬로 작은 화면으로 나열 // 순서 : 참여자... */}
+            <div className="flex flex-row justify-center items-center space-x-2 w-full py-2">
+              {/* sub 돌면서 발표자를 제외한 나머지 사람들 송출 */}
+              {subscribers.map((sub, i) => {
+                if (
+                  getUserNickname(sub) != "screen" &&
+                  getUserNickname(sub) != presenter
+                ) {
+                  console.log(sub);
+                  return (
+                    <div key={i} className="relative">
+                      <div className="mode2-top-each">
+                        <span className="nickname-overlay">
+                          {getUserNickname(sub)}
+                        </span>
+                        <UserVideoComponent streamManager={sub} />
+                      </div>
+                    </div>
+                  );
+                }
+              })}
             </div>
           </div>
         )}
       </div>
 
-      <div className="RoomPage-mid">
+      {/* <div className="RoomPage-mid"> */}
+      <div className={setClassRoomPageMID()}>
         {/* ---------------------------------------대기 화면 구성 -----------------------------------------------*/}
+        {/* publisher - 나, subscriber - 그 외 */}
         {mode == "0" && (
-          <div
-            className={subscribers.length > 3 ? "video-flex-big" : "video-flex"}
-          >
+          <div className={setClassName(subscribers)}>
             <div id="video-container" className={videoDivClass}>
               {publisher !== undefined ? (
-                <div className="stream-container col-md-6 col-xs-6">
+                <div className="mode0-each col-md-6 col-xs-6">
+                  <span className="nickname-overlay">
+                    {getUserNickname(publisher)}
+                  </span>
                   <UserVideoComponent streamManager={publisher} />
                 </div>
               ) : null}
             </div>
             {subscribers.map((sub, i) => {
-              if (sub !== publisher) {
-                return(
-                <div
-                  key={sub.id}
-                  className={`${videoDivClass} stream-container col-md-6 col-xs-6`}
-                >
-                  <UserVideoComponent streamManager={sub} />
-                </div>
-                )
+              if (sub !== publisher && getUserNickname(sub) != "screen") {
+                return (
+                  <div
+                    key={sub.id}
+                    className={`${videoDivClass} mode0-each col-md-6 col-xs-6`}
+                  >
+                    <span className="nickname-overlay">
+                      {getUserNickname(sub)}
+                    </span>
+                    <UserVideoComponent streamManager={sub} />
+                  </div>
+                );
               }
             })}
           </div>
         )}
 
         {/* ---------------------------------------면접 화면 구성(발표자) -----------------------------------------------*/}
+        {/* subscriber - 발표자 이외 */}
         {/* p - 발표자, s - 청자 */}
         {mode == "1" && mainStreamManager == publisher && (
-          <div className="video-flex-mode1-presenter">
+          <div className="mode-1">
             <div
               className={`mode1-top ${
                 subscribers.length <= 3 ? "single-row" : "multi-row"
               }`}
             >
               {subscribers.map((sub, i) => (
-                <div key={sub.id}>
+                <div key={i} className="relative">
+                  <div className="mode1-each">
+                  <span className="nickname-overlay">{getUserNickname(sub)}</span>
                   <UserVideoComponent streamManager={sub} />
+                </div>
                 </div>
               ))}
             </div>
             <div className="mode1-bottom">
-              {publisher !== undefined ? (
-                <UserVideoComponent streamManager={publisher} />
-              ) : null}
+              <div className="mode1-each">
+                <span className="nickname-overlay">{getUserNickname(publisher)}</span>
+                {publisher !== undefined ? (
+                  <UserVideoComponent streamManager={publisher} />
+                ) : null}
+              </div>
             </div>
           </div>
         )}
@@ -948,20 +1064,28 @@ const StudyRoomPage = () => {
         )}
 
         {/* ---------------------------------------발표 화면 구성 -----------------------------------------------*/}
-        {/* mainStreamManager - 발표자, screenStream - 공유화면, p - 참가자, subscribers - 참가자 */}
+        {/* mainStreamManager - 발표자, publisherScreen - 공유화면, p - 참가자, subscribers - 참가자 */}
         {/* 발표 화면 구성 */}
         {mode == "2" && (
           <div className="mode2-main">
             {/* 메인 - 공유화면 크게 */}
-            {publisherScreen && (
-              <div className="flex-1 w-full h-full">
-                <div className="w-full h-full max-w-4xl max-h-96 mx-auto">
-                  <div className="aspect-w-4 aspect-h-3">
-                    <UserVideoComponent streamManager={screenStream} />
+            {subscribers.map((sub, i) => {
+              if (getUserNickname(sub) === "screen") {
+                console.log(sub);
+                return (
+                  // <div key={i} className="flex-1 w-full h-full">
+                  //   <div className="w-full h-full max-w-4xl max-h-96 mx-auto">
+                  //     <div className="aspect-w-4 aspect-h-3">
+                  //       <UserVideoComponent streamManager={sub} />
+                  //     </div>
+                  //   </div>
+                  // </div>
+                  <div key={i} className="mode2-main-screen">
+                    <UserVideoComponent streamManager={sub} />
                   </div>
-                </div>
-              </div>
-            )}
+                );
+              }
+            })}
           </div>
         )}
       </div>
@@ -1102,6 +1226,10 @@ const StudyRoomPage = () => {
             />
           </div>
         </Modal>
+      )}
+      {/* 발표자가 녹화종료를 눌렀을 때, 결과리스트에서 선택했을 때 결과 화면을 볼 수 있음 */}
+      {resultScreen && (
+        <StudyResult onClose={handleResultClose} speechId={speechId.current} />
       )}
       {result && <ResultList />}
       {report && <Report users={roomUsers} closeModal={closeModal} />}
