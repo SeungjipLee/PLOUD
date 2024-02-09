@@ -38,8 +38,6 @@ const BoardPage = () => {
     getBoard();
   }, [token, page]);
 
-
-  
   return (
     <div className="mypage bg-white w-full">
       <Page header={<Navbar />} footer={<Footer />}>
@@ -48,15 +46,24 @@ const BoardPage = () => {
       </div>
 
       {/* 완전 밖 */}
-      <div className="OutBox flex justify-center relative bg-gray-100 rounded-md outline2 mx-auto mt-5">
+      <div className="OutBox rounded-md outline2 mx-auto mt-5">
+
+      <div className="study-main-search flex justify-center mb-3">
+        <img src="./images/search_icon.PNG"/>
+        <input type="text"
+          className="search-room-input"
+          placeholder="게시글 제목으로 검색"/>
+        <button className="border searchBtn p-1 ms-3 rounded-md bg-sky-300 writeBtn">검색</button>
+      </div>
+
       <table className="table-auto text-center bg-white h-44">
         <thead className="underLine">
           <tr>
-            <th className="w-6">No</th>
-            <th className="w-56">제목</th>
-            <th className="w-6">작성자</th>
-            <th className="w-6">좋아요</th>
-            <th className="w-6">등록일</th>
+            <th className="w-6" style={{backgroundColor:"#EBEAFA"}}>No</th>
+            <th className="w-56" style={{backgroundColor:"#EBEAFA"}}>제목</th>
+            <th className="w-6" style={{backgroundColor:"#EBEAFA"}}>작성자</th>
+            <th className="w-6" style={{backgroundColor:"#EBEAFA"}}>좋아요</th>
+            <th className="w-6" style={{backgroundColor:"#EBEAFA"}}>등록일</th>
           </tr>
         </thead>
         <tbody>
@@ -73,19 +80,18 @@ const BoardPage = () => {
           ))}
         </tbody>
         </table>
-      </div>
-      <div className="relative">
-        <div className="searchForm">
-          <input type="text"
-              className="block rounded-md py-1 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 me-3 my-12"
-              placeholder="검색"/>
+
+        
+        <div align="right">
+          <Link to={"/createboard"}>
+            <button className="write border writeBtn rounded-md py-1 px-4 mt-4">글쓰기</button>
+          </Link>
         </div>
-        <button className="absolute border searchBtn p-1 rounded-md bg-sky-300 writeBtn">찾기</button>
-        <Link to={"/createboard"}>
-        <button className="absolute top-24 write top-16 border writeBtn rounded-md py-1 px-4">글쓰기</button>
-        </Link>
+        <div align="center" className="mt-3 mb-3">
+            1 2 3 4 5(페이지 처리)
+        </div>
       </div>
-      <div className="w-full h-44 bg-white"></div>
+
       </Page>
     </div>
   );
