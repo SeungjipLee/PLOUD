@@ -226,7 +226,6 @@ public class SpeechServiceImpl implements SpeechService {
 
     @Transactional
     public void uploadVideo(VideoUploadRequest reqdto, String userId) {
-
         SpeechEntity speech = speechRepository.findById(reqdto.getSpeechId())
             .orElseThrow(() -> new CustomException(ResponseCode.SPEECH_NOT_FOUND));
 

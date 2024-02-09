@@ -5,12 +5,12 @@ import { useNavigate } from "react-router";
 import Modal from "../../components/Modal";
 import Button from "../../components/Button";
 import StudyResult from "../StudyRoomPage/component/StudyResult";
-import {  
+import {
   startSpeech,
   endSpeech,
   assessSpeech,
   postComment,
-  uploadVideo
+  uploadVideo,
 } from "../../services/speech";
 
 const Level1 = () => {
@@ -20,17 +20,15 @@ const Level1 = () => {
   const location = useLocation();
   const content = location.state.content;
 
+  const [feedback, setFeedback] = useState("");
+
   const videoRef = useRef(null);
+  const screenShareVideoRef = useRef(null);
 
-  const leaveSession = () => {
-    navigate("/practice");
-  };
-
-  //
   const [screenShare, setScreenShare] = useState(false);
   const [resultScreen, setResultScreen] = useState(false);
+  const [screenStream, setScreenStream] = useState(null);
 
-  // -----------------   녹화 관련 함수 -----------------
   const [title, setTitle] = useState("");
   const [recordForm, setRecordForm] = useState(false);
   const speechId = useRef(-1);
@@ -38,7 +36,7 @@ const Level1 = () => {
   const isRecording = useRef(false);
   const isLast = useRef(true);
 
-  const [mediaRecorder, setMediaRecorder] = useState(null); // 녹음
+  const [mediaRecorder, setMediaRecorder] = useState(null);
 
   const decibels = useRef([]);
 
@@ -46,10 +44,57 @@ const Level1 = () => {
   const isVideoRecording = useRef(false);
   const videoChunksRef = useRef([]);
   const videoStartTime = useRef(null);
+
+  const [stream, setStream] = useState(null);
   const [videoRecorder, setVideoRecorder] = useState(null);
 
   const [recordingTime, setRecordingTime] = useState(0);
   const [recordingInterval, setRecordingInterval] = useState(null);
+
+  const [video, setVideo] = useState(true);
+
+  useEffect(() => {
+    // 로직 작성
+    // 평가 요청을 받았을 떄 속도가 빠르다, 발음 점수가 낮다.
+    // 실시간 데시벨 측정으로 목소리 크기
+    setFeedback("실시간 피드백이요");
+
+    if (navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: true })
+        .then((stream) => {
+          videoRef.current.srcObject = stream;
+
+          const vRecorder = new MediaRecorder(stream);
+          setStream(stream);
+          setVideoRecorder(vRecorder);
+
+          vRecorder.ondataavailable = (event) => {
+            if (e.data.size > 0) {
+              videoUpload(e.data); // e.data : videoChunk
+            }
+          };
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, []);
+
+  const toggleVideo = () => {
+    const newVideo = !video;
+    setVideo(newVideo);
+
+    if (stream) {
+      stream.getVideoTracks().forEach((track) => {
+        track.enabled = !track.enabled;
+      });
+      // 이건 나중에 삭제
+      stream.getAudioTracks().forEach((track) => {
+        track.enabled = !track.enabled;
+      });
+    }
+  };
 
   // 시작 버튼 누르면
   const speechStart = (e) => {
@@ -247,28 +292,13 @@ const Level1 = () => {
 
   // 비디오 녹화 시작
   const videoRecordingStart = () => {
-    isVideoRecording.current = true;
-    videoChunksRef.current = [];
+    if (videoRecorder) {
+      isVideoRecording.current = true;
+      videoChunksRef.current = [];
+      videoStartTime.current = new Date().getTime();
 
-    videoStartTime.current = new Date().getTime();
-
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((stream) => {
-        const vRecorder = new MediaRecorder(stream);
-        setVideoRecorder(vRecorder);
-
-        vRecorder.ondataavailable = (e) => {
-          if (e.data.size > 0) {
-            videoUpload(e.data); // e.data : videoChunk
-          }
-        };
-
-        vRecorder.start();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      videoRecorder.start();
+    }
   };
 
   // 비디오 녹화 종료 함수
@@ -298,7 +328,7 @@ const Level1 = () => {
       token,
       vFormData,
       (response) => {
-        console.log("영상 업로드 성공");        
+        console.log("영상 업로드 성공");
       },
       (error) => {
         console.log("영상 업로드 실패");
@@ -307,13 +337,29 @@ const Level1 = () => {
   };
 
   // 화면 공유 시작
-  const handleScreenShare = async () => {
+  const startScreenShare = async () => {
     setScreenShare(true);
+    navigator.mediaDevices
+      .getDisplayMedia({ video: true })
+      .then((screenStream) => {
+        screenShareVideoRef.current.srcObject = screenStream;
+        setScreenStream(screenStream);
+
+        console.log(screenStream.getVideoTracks()[0]);
+        screenStream.getVideoTracks()[0].onended = () => {
+          stopScreenShare();
+        };
+      })
+      .catch((err) => console.error("화면 공유 오류: ", err));
   };
 
   // 화면 공유 종료
-  const handleScreenShare2 = async () => {
+  const stopScreenShare = async () => {
     setScreenShare(false);
+    if (screenStream) {
+      screenStream.getTracks().forEach((track) => track.stop());
+      screenShareVideoRef.current.srcObject = null;
+    }
   };
 
   // 결과 창 닫기
@@ -322,28 +368,77 @@ const Level1 = () => {
     speechId.current = -1;
   };
 
+  const leaveSession = () => {
+    navigate("/practice");
+  };
+
   return (
     <div className="RoomPage">
       <div className="PracticeRoomPage-mid">
-        <div style={{ width: "50%", height: "600px" }}>
-          <video ref={videoRef} autoPlay />
-        </div>
         <div
           style={{
             width: "50%",
             height: "600px",
-            overflowWrap: "break-word",
-            flex: "auto",
-            overflowY: "auto",
-            backgroundColor: "#E6E4DC",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          {content}
+          <div>
+            <video
+              style={{ width: "100%", height: "500px" }}
+              ref={videoRef}
+              autoPlay
+            />
+          </div>
+          <div
+            style={{
+              width: "500px",
+              margin: "30px",
+              height: "200px",
+              lineHeight: "100px",
+              borderRadius: "10px",
+              backgroundColor: "#444A78",
+              textAlign: "center",
+              fontSize: "24px",
+              fontWeight: "bold",
+              color: "white",
+            }}
+          >
+            {feedback}
+          </div>
         </div>
+        {screenShare ? (
+          <div
+          style={{
+            width: "50%",
+            height: "600px",
+            margin: "-30px 80px 0 20px",
+          }}
+        >
+            <video ref={screenShareVideoRef} autoPlay></video>
+          </div>
+        ) : (
+          <div
+            style={{
+              width: "50%",
+              height: "600px",
+              margin: "-30px 80px 0 20px",
+              overflowWrap: "break-word",
+              flex: "auto",
+              overflowY: "auto",
+              backgroundColor: "#F8F5F0",
+            }}
+          >
+            {content}
+          </div>
+        )}
       </div>
 
       {/* Bottom - 버튼 */}
-      <div className="RoomPage-bottom">
+      <div className="RoomPage-bottom" style={{justifyContent:"center"}}>
+        <div className="flex items-center space-x-16">
         {!isLast.current ? (
           <img onClick={speechEnd} src="/images/recordbutton_activated.png" />
         ) : !recordForm ? (
@@ -361,15 +456,21 @@ const Level1 = () => {
             src="/images/recordbutton_disabled.png"
           />
         )}
+        {video ? (
+          <img onClick={toggleVideo} src="/images/videobutton.png" />
+        ) : (
+          <img onClick={toggleVideo} src="/images/videobutton_disabled.png" />
+        )}
         {screenShare === false ? (
-          <img onClick={handleScreenShare} src="/images/sharebutton.png" />
+          <img onClick={startScreenShare} src="/images/sharebutton.png" />
         ) : (
           <img
-            onClick={handleScreenShare2}
+            onClick={stopScreenShare}
             src="/images/sharebutton_disabled.png"
           />
         )}
         <img onClick={leaveSession} src="/images/exitbutton.png" alt="" />
+        </div>
       </div>
 
       {/* 녹화 폼 */}

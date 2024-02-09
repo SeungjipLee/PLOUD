@@ -158,22 +158,17 @@ const StudyRoomPage = () => {
       frameRate: 30,
       insertMode: "APPEND",
       mirror: false,
-    });
-
-    // 공유 중지를 감지하는 부분 인데 지금 안됨 더 찾아봐야 함
-    console.log(publisherScreen.stream.mediaStream.getVideoTracks()[0]);
-
-    const videoTrack = publisherScreen.stream.mediaStream.getVideoTracks()[0];
-    if (videoTrack) {
-      videoTrack.onended = () => {
-        handleScreenShare2();
-      };
-    }
+    }); 
 
     sessionScreen.current.publish(publisherScreen);
     setPublisherScreen(publisherScreen);
     setScreenShare(true);
     setMode("2");
+
+    publisherScreen.stream.mediaStream.getVideoTracks()[0].onended = () => {
+      // 실행은 되는데 publisherScreen 때문에 안됨
+      handleScreenShare2();
+    };
   };
 
   const handleScreenShare2 = async () => {
