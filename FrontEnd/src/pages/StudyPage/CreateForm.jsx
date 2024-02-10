@@ -106,6 +106,7 @@ const CreateForm = () => {
               id="categoryId"
               name="categoryId"
               onChange={handleChange}
+              style={{color:"black"}}
             >
               <option value="0">전체</option>
               <option value="1">면접</option>
@@ -184,6 +185,8 @@ const CreateForm = () => {
           <button
             type="submit"
             style={{
+              backgroundColor: "#FFFFFF",
+              color: "#0C134F",
               padding: "5px",
               fontWeight: "bold",
               borderRadius: "5px",

@@ -15,20 +15,31 @@ const StudyResult = ({ onClose, speechId }) => {
   const [ videoPath, setVideoPath ] = useState('')
   const [ countdown, setCountdown ] = useState(20);
   const [ grade, setGrade ] = useState('')
+  const [ speech, setSpeech ] = useState({})
+  const [ resultTextColor, setResultTextColor ] = useState("#000000")
 
   useEffect(() => {
     if (scores.grade < 20) {
       setGrade('E');
+      setResultTextColor("#393939");
     } else if (scores.grade < 40) {
       setGrade('D');
+      setResultTextColor("#0C134F");
     } else if (scores.grade < 60) {
       setGrade('C');
+      setResultTextColor("#624637");
     } else if (scores.grade < 80) {
       setGrade('B');
+      setResultTextColor("#c0c0c0");
     } else {
       setGrade('A');
+      setResultTextColor("#ffd700");
     }
   }, [scores.grade]); 
+
+  const gradeStyle = {
+    background: `linear-gradient(to top, ${resultTextColor} 40%, transparent 40%)`
+  };
 
   const formatTimeLog = (timeLog) => {
     const match = timeLog.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
@@ -47,6 +58,7 @@ const StudyResult = ({ onClose, speechId }) => {
           resultId,
           (res) => {
             console.log(res.data.data)
+            setSpeech(res.data.data.speech)
             setScores(res.data.data.score)
             setFeedbacks(res.data.data.feedbacks)
             setVideoPath(res.data.data.video.videoPath)
@@ -97,7 +109,10 @@ const StudyResult = ({ onClose, speechId }) => {
           "speechId": resultId,
           "comment": myFeedback
         },
-        (res) => console.log(res),
+        (res) => {
+          console.log(res);
+          alert("내 피드백이 등록되었습니다")
+        },
         (err) => console.log(err)
       )
     } catch (err) {console.log(err)}
@@ -109,27 +124,36 @@ const StudyResult = ({ onClose, speechId }) => {
       title="스터디 결과 발표 - 스터디룸"
       className="study-result"
     >
-      <div className="result-section">
+      {/* <div className="result-section">
         <div className="result-section-1 mx-5">
           <div className="p-2">
             <div className="score rounded-xl w-68 h-52 m-auto py-16">
               <video src={videoPath} type="video/webm">
               Your browser does not support the video tag.
-              </video>
+              </video> */}
+    <div className="p-5 ps-10 pe-10">
+      <div className="result-section" style={{justifyContent:"space-between"}}>
+        <div className="result-section-1" style={{display:"flex", flexDirection:"column", justifyContent:"space-around"}}>
+          <div className="pb-3">
+            {speech.startsAt}   #{speech.title}    #{speech.category}
+          </div>
+          <div>
+            <div className="rounded-xl w-68 h-52 m-auto" style={{width:"100%", height:"100%"}}>
+              <video controls src={videoPath} type="video/webm">Your browser does not support the video tag.</video>
             </div>
           </div>
           <div className="p-2">
-            <div className="score w-68 h-36 m-auto grid grid-cols-2 text-center place-content-center rounded-xl">
-              <div className="text-2xl mt-5 ps-5 pb-4 ms-5">결과   :</div>
-              <div className="text-5xl me-5 pt-2 pe-5 me-5">{grade}</div>                
+            <div className="w-68 h-36 m-auto grid grid-cols-2 text-center place-content-center rounded-xl"
+              style={{backgroundColor:"#EBEAFA"}}>
+              <div className="text-2xl mt-5 ps-5 pb-4 ms-5">결과:</div>
+              <div className="text-5xl me-5 pt-2 me-5" style={gradeStyle}>{grade}</div>                              
             </div>
           </div>
         </div>
         <div className="result-section-2 mx-7">
 
           {isDetail&&<div className="h-12 mb-2 text-center text-xl">
-              <span className="mx-10 font-bold">세부 결과</span>
-              <span className="mx-10 text-3xl">|</span>
+              <span className="mx-10 font-bold" style={{color:"#F3704B"}}>세부 결과</span>              <span className="mx-10 text-3xl">|</span>
               <span onClick={handleDetail} className="mx-10 text-gray-400 font-bold cursor-pointer">피드백</span>
           </div>}
 
@@ -140,10 +164,10 @@ const StudyResult = ({ onClose, speechId }) => {
           {!isDetail&&<div className="h-12 mb-2 text-center text-xl">
               <span onClick={handleDetail} className="mx-10 text-gray-400 font-bold cursor-pointer">세부 결과</span>
               <span className="mx-10 text-3xl">|</span>
-              <span className="mx-10 font-bold">피드백</span>
+              <span className="mx-10 font-bold" style={{color:"#F3704B"}}>피드백</span>
           </div>}
 
-          {!isDetail&&<div className="h-72 mb-2">
+          {/* {!isDetail&&<div className="h-72 mb-2">
             <div className="flex flex-row">
               <div className="basis-2/3 flex flex-col rounded-xl bg-gray-200 w-24 h-64 m-4">
                 <div className="mx-2 my-2 bg-gray-200 h-8 text-xl text-center font-bold py-1">시간별 피드백</div>
@@ -165,17 +189,39 @@ const StudyResult = ({ onClose, speechId }) => {
                 </div>
               </div>
             </div>
-          </div>}
-          <div className="h-10">
-          {countdown > 0 && (
-            <div className="text-sm text-end me-5">
-              <button onClick={handleSkip}>skip</button>
+          </div>} */}
+          {!isDetail&&<div style={{width:"100%"}} className="h-72 mb-2 rounded-md">
+            <div>
+              <div align="center" className="text-xl text-center font-bold py-1" style={{backgroundColor:"#343B71", color:"#FFFFFF" }}>시간별 피드백</div>
+              <div style={{overflow:"auto", height:"130px"}} className="p-3 bg-gray-100">
+                {feedbacks.map((feedback, index) => (
+                  <p key={index} className="py-0.5">
+                    {feedback.timeLog} - {feedback.content}
+                  </p>
+                ))}
+              </div>
             </div>
-          )}
-          <div className="text-end">
+            <div>
+              <div align="center" className="text-xl text-center font-bold py-1" style={{backgroundColor:"#343B71", color:"#FFFFFF" }}>나의 피드백</div>
+              {/* <div style={{overflow:"auto", height:"50px"}} className="p-3">
+                {`${speech.comment}`}
+              </div> */}
+              <div style={{overflow:"auto", height:"50px"}}>
+                <textarea name="" id="" cols="20" rows="3" className="bg-gray-100" placeholder="피드백을 남겨보세요." style={{width:"100%"}} onChange={(e)=>setMyFeedback(e.target.value)}></textarea>
+              </div>
+              <div align="right">
+                <button className="mt-3 mb-3 mx-auto p-1" style={{backgroundColor: "#343B71", color: "#FFFFFF", borderRadius: "10%"}} onClick={handleSubmit}>작성</button>
+              </div>
+            </div>
+          </div>}
+
+          <div className="h-10 text-end">
             {countdown > 0
               ? `이 창은 ${countdown}초 후 자동으로 닫힙니다.`
               : "모달이 곧 닫힙니다."}
+              {countdown > 0 && 
+              <button onClick={handleSkip} className="ms-3">skip</button>
+              }
           </div>
         </div>
       </div>
