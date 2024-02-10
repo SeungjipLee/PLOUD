@@ -622,12 +622,26 @@ p {
 }
 
 .study-result {
-  position: absolute;
+  /* position: absolute; */
   border-radius: 10px;
-  top: -350px;
+  /* top: -350px;
   left: -100px;
   width: 1000px;
-  height: 600px;
+  height: 600px; */
+  position: fixed;
+  top: 40%; /* 상단 위치를 부모 요소의 중간으로 조정 */
+  left: 50%; /* 왼쪽 위치를 부모 요소의 중간으로 조정 */
+  transform: translate(-50%, -50%); /* 요소를 정확한 중앙으로 이동 */
+  background-color: #ffffff;
+  z-index: 999;
+}
+
+.study-result-mypage {
+  border-radius: 10px;
+  position: fixed;
+  top: -5%; /* 상단 위치를 부모 요소의 중간으로 조정 */
+  left: 50%; /* 왼쪽 위치를 부모 요소의 중간으로 조정 */
+  transform: translate(-50%, -50%); /* 요소를 정확한 중앙으로 이동 */
   background-color: #ffffff;
   z-index: 999;
 }
@@ -787,16 +801,17 @@ p {
 }
 
 .record-form {
-  border: rgb(85, 85, 85) solid 1px;
-  position: absolute;
+  /* border: rgb(85, 85, 85) solid 1px; */
+  /* position: absolute; */
+  position: fixed;
   display: flex;
   flex-direction: column;
   padding: 20px;
-  border-radius: 5px;
+  border-radius: 10px;
   width: 400px;
   height: 330px;
-  background-color: #060515;
-  color: white;
+  background-color: #FFFFFF;
+  color: #0C134F;
   top: 40%; /* 상단 위치를 부모 요소의 중간으로 조정 */
   left: 50%; /* 왼쪽 위치를 부모 요소의 중간으로 조정 */
   transform: translate(-50%, -50%); /* 요소를 정확한 중앙으로 이동 */

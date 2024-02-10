@@ -1322,14 +1322,15 @@ const StudyRoomPage = () => {
       {result && <ResultList />}
       {report && <Report users={roomUsers} closeModal={closeModal} />}
       {recordForm && (
-        <Modal onClose={(e) => setRecordForm(false)} className={"record-form"}>
-          <h1>녹화 정보 입력</h1>
+        <Modal title="녹화 정보 입력" onClose={(e) => setRecordForm(false)} className={"record-form"}>
+          {/* <h1 style={{fontWeight:"bold"}}>녹화 정보 입력</h1> */}
           <form onSubmit={submitHandler}>
-            <div>
+            <div className="ms-3">
               <p>
-                제목 :
+                <span>제목 :</span>
                 <input
-                  placeholder="제목 입력..."
+                  placeholder="제목 입력"
+                  style={{backgroundColor:"#e5e7eb"}}
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                 ></input>
@@ -1337,8 +1338,9 @@ const StudyRoomPage = () => {
               <p>카테고리 : {categoryName()}</p>
               <p>분류 : 스터디</p>
             </div>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}></div>
-            <Button>녹화 시작</Button>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button style={{backgroundColor:"#0C134F", color:"#FFFFFF", fontWeight:"bold"}}>녹화 시작</Button>
+            </div>
           </form>
         </Modal>
       )}
