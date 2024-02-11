@@ -10,7 +10,8 @@ import MyChart from "../../components/MyChart";
 import Tier from "../../components/Tier"
 import { useNavigate } from "react-router-dom";
 import NoSkipResult from "./NoSkipResult";
-import PracticeResult from "../PracticePage/PracticeResult";
+import PracticeResult from "./PracticeResult";
+// import PracticeResult from "../PracticePage/PracticeResult";
 
 
 

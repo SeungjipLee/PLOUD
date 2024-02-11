@@ -112,7 +112,8 @@ const NoSkipResult = ({ onClose, speechId }) => {
         <div className="result-section-2 mx-7">
 
           {isDetail&&<div className="h-12 mb-2 text-center text-xl">
-          <span className="mx-10 font-bold" style={{color:"#F3704B"}}>세부 결과</span>              <span className="mx-10 text-3xl">|</span>
+          <span className="mx-10 font-bold" style={{color:"#F3704B"}}>세부 결과</span>              
+          <span className="mx-10 text-3xl">|</span>
               <span onClick={handleDetail} className="mx-10 text-gray-400 font-bold cursor-pointer">피드백</span>
           </div>}
 
@@ -147,7 +148,7 @@ const NoSkipResult = ({ onClose, speechId }) => {
             </div>
             <div style={{backgroundColor:"#343B71", color:"#FFFFFF"}}>
               <div align="center" className="text-xl text-center font-bold py-1" style={{backgroundColor:"#343B71", color:"#FFFFFF" }}>나의 피드백</div>
-              <div style={{overflow:"auto", height:"50px"}} className="p-3">
+              <div style={{overflow:"auto", height:"50px"}} className="pl-3 pr-3">
                 {speech.comment && `${speech.comment}`}
               </div>      
             </div>
