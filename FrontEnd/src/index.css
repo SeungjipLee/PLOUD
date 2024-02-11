@@ -1147,3 +1147,7 @@ p {
 .typing img{
   width: 30px;
 }
+
+.practice-startText:hover {
+  color: #F3704B
+}

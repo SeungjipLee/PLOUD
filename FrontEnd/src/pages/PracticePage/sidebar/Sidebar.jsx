@@ -53,7 +53,9 @@ const NewsPage = ({ setId }) => {
           <button
             onClick={() => {
               setId(i.scriptId);
-            }}>
+            }}
+            className="mb-2"
+            style={{textAlign:"left"}}>
             {i.scriptTitle}
           </button>
         </div>
@@ -87,8 +89,6 @@ const SpeechPage = ({ setId }) => {
     getSpeechList();
   }, []);
 
-  //console.log(list);
-
   return (
     <>
       {list.map((i, index) => (
@@ -96,7 +96,10 @@ const SpeechPage = ({ setId }) => {
           <button
             onClick={() => {
               setId(i.scriptId);
-            }}>
+            }}
+            className="mb-2"
+            style={{textAlign:"left"}}
+            >
             {i.scriptTitle}
           </button>
         </div>
@@ -132,16 +135,15 @@ const ScriptPage = ({ id, level }) => {
 
   return (
     <div>
-      <div
-        style={{ maxWidth: "1000px", overflowY: "auto", maxHeight: "500px" }}>
-        <div>제목 : {list.title}</div>
-        <br />
+      <div>
+        <div className="text-sky-950 font-bold text-xl">{list.title}</div>
+        <br/>
         <div style={{ overflowWrap: "break-word", flex: "auto" }}>
-          내용 : {list.content}
+          {list.content}
         </div>
         <br />
       </div>
-      {id != "" && level == 1 && (
+      {/* {id != "" && level == 1 && (
         <Link
           className="bg-slate-300"
           to="/practice/Level1"
@@ -156,7 +158,7 @@ const ScriptPage = ({ id, level }) => {
           state={{ content: content }}>
           녹화 페이지 이동
         </Link>
-      )}
+      )} */}
     </div>
   );
 };
@@ -187,45 +189,52 @@ const Sidebar = ({ level }) => {
   }, [id]);
 
   return (
-    <div style={{ display: "flex" }}>
-      <Side>
-        <Menu className="grid-cols-3">
-          <p
-            className="text-sky-950 font-bold text-2xl"
-            style={{ paddingBottom: "20px" }}>
-            분류
-          </p>
-          {["뉴스", "연설"].map((menu, index) => (
-            <div
+    <div style={{ height:"600px" }}>
+      {/* 분류 */}
+      <div className="pb-1 mb-3" style={{borderBottom:"1px solid #0C134F"}}>
+        <span
+          className="text-sky-950 font-bold text-2xl"
+          style={{ paddingBottom: "20px", marginRight: "20px" }}>
+          분류
+          </span>
+            {["뉴스", "연설"].map((menu, index) => (
+            <span
               key={index}
               style={{
-                color: "gray",
+                color: selectedMenu===menu ? "#F3704B" : "gray",
                 textDecoration: "none",
-                marginBottom: "20px",
+                marginRight: "20px",
                 cursor: "pointer",
                 fontWeight: selectedMenu === menu ? "bold" : "normal",
               }}
               onClick={() => handleMenuClick(menu)}>
               {menu}
-            </div>
+            </span>
           ))}
-        </Menu>
-      </Side>
-      <div style={{ flexDirection: "column", width: "15%" }}>
-        <p
-          className="text-sky-950 font-bold text-2xl"
-          style={{ paddingBottom: "20px" }}>
-          목록
-        </p>
-        {renderSelectedComponent()}
       </div>
-      <div style={{ paddingLeft: "30px" }}>
-        <p
-          className="text-sky-950 font-bold text-2xl"
-          style={{ paddingBottom: "20px" }}>
-          스크립트
-        </p>
-        {id != "" && <ScriptPage id={id} level={level} />}
+      {/* 제목 목록, 스크립트 */}
+      <div style={{ display:"grid", gridTemplateColumns: "1fr 2fr"}}>
+        <div style={{borderRight:"1px solid #0C134F"}}>
+          <p className="text-sky-950 font-bold text-2xl pb-3">
+            목록
+          </p>
+          <div className="pe-2" style={{height:"500px", overflowY: "auto"}}>
+          {renderSelectedComponent()}
+          </div>
+        </div>
+        <div className="p-2" style={{height: "530px", overflowY: "auto"}}>
+          {id != "" && <ScriptPage id={id} level={level} />}
+        </div>
+      </div>
+      {/* 녹화 페이지 이동 */}
+      <div align="right" className="mt-6" style={{fontWeight:"bold", color:"#0C134F"}}>
+        {id != "" && level == 1 && (
+          <Link
+            to="/practice/Level1"
+            state={{ content: content }}>
+            <span className="practice-startText">녹화 시작하기 ▶</span>
+          </Link>
+        )}
       </div>
     </div>
   );
