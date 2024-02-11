@@ -7,6 +7,13 @@ export const getboardList = async (token, data, success, fail) => {
     .catch(fail);
 }
 
+export const searchBoard = async (token, data, success, fail) => {
+  return await API(token)
+  .get(`board/search?title=${data.title}&page=${data.page}&size=${data.size}&sort=${data.sort}`)
+  .then(success)
+  .catch(fail)
+}
+
 
 export const createboard = async (token, data, success, fail) => {
   return await API(token)
@@ -40,9 +47,9 @@ export const deleteboard = async (token, id, success, fail) => {
 }
 
 // 좋아요 기능 /api/board/heart
-export const likeboard = async (token, id, success, fail) => {
+export const likeboard = async (token, boardId, success, fail) => {
   return await API(token)
-    .get(`board/heart/${id}`)
+    .post('board/heart', boardId)
     .then(success)
     .catch(fail)
 }
@@ -61,9 +68,9 @@ export const getComment = async (token, boardId, success, fail) => {
 }
 
 
-export const postComment = async (token, data, boardId, success, fail) => {
+export const postComment = async (token, data, success, fail) => {
   return await API(token)
-    .get("comment", data)
+    .post("comment", data)
     .then(success)
     .catch(fail)
 }
