@@ -2,7 +2,7 @@ import axios from "axios";
 // import { useDispatch } from "react-redux";
 // import { getToken } from "../features/user/userSlice";
 
-const DOMAIN = "https://i10e207.p.ssafy.io";
+const DOMAIN = "http://localhost:8000";
 // const DOMAIN = "http://localhost:8000";
 
 const API = (token) => {
@@ -44,7 +44,7 @@ const API = (token) => {
         //     localStorage.removeItem("user");
 
         //     alert("다시 로그인해 주세요");
-        //     window.location = '/login'  
+        //     window.location = '/login'
         // }
         return Promise.reject(error);
       } else {
