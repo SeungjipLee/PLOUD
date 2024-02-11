@@ -29,24 +29,6 @@ const PracticeResult = ({ onClose, speechId }) => {
     setIsDetail(!isDetail)
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    try {
-      const response = postComment(
-        token,
-        {
-          "speechId": resultId,
-          "comment": myFeedback
-        },
-        (res) => {
-          console.log(res);
-          alert("내 피드백이 등록되었습니다")
-        },
-        (err) => console.log(err)
-      )
-    } catch (err) {console.log(err)}
-    }
-
   useEffect(() => {
     if (scores.grade < 20) {
       setGrade('E');
