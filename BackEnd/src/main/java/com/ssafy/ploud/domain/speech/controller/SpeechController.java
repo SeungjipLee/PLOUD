@@ -76,7 +76,7 @@ public class SpeechController {
 
     @Operation(summary = "명료도, 발화속도 평가", description = "ETRI로 API 요청을 보내고 score 점수를 반환한다.")
     @PostMapping("/assess")
-    public ApiResponse<?> assessClearity( @RequestParam("audioFile") MultipartFile audioFile,
+    public ApiResponse<?> assessClearity(@RequestParam("audioFile") MultipartFile audioFile,
         @RequestParam("speechId") int speechId,
         @RequestParam("isLast") Boolean isLast) {
         log.debug("---------- 명료도 평가 요청 ----------");

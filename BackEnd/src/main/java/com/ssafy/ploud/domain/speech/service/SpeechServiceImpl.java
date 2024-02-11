@@ -113,7 +113,11 @@ public class SpeechServiceImpl implements SpeechService {
 
         int id = speechRepository.save(speech).getId();
         System.out.println("speech id; " + id);
-        openViduUtil.findBySessionId(speechStartRequest.getSessionId()).setSpeechId(id);
+
+        if(!speechStartRequest.isPersonal()){
+            openViduUtil.findBySessionId(speechStartRequest.getSessionId()).setSpeechId(id);
+        }
+
         Map<String, Integer> res = new HashMap<>();
         res.put("speechId",speech.getId());
 
@@ -222,7 +226,6 @@ public class SpeechServiceImpl implements SpeechService {
 
     @Transactional
     public void uploadVideo(VideoUploadRequest reqdto, String userId) {
-
         SpeechEntity speech = speechRepository.findById(reqdto.getSpeechId())
             .orElseThrow(() -> new CustomException(ResponseCode.SPEECH_NOT_FOUND));
 

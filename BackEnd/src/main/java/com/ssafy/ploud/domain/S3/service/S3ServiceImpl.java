@@ -10,11 +10,13 @@ import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class S3ServiceImpl implements S3Service {
@@ -30,7 +32,13 @@ public class S3ServiceImpl implements S3Service {
 
       ObjectMetadata metadata = new ObjectMetadata();
       metadata.setContentLength(multipartFile.getSize());
-      metadata.setContentType(multipartFile.getContentType());
+
+      if(type.equals("speech")){
+        log.debug("speech video upload");
+        metadata.setContentType("video/webm");
+      }else {
+        metadata.setContentType(multipartFile.getContentType());
+      }
 
       // S3에 파일 저장하는 경로
       String path = getFilename(type, userId, multipartFile);
