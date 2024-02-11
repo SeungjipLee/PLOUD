@@ -29,7 +29,7 @@ const PracticePage = () => {
   }, []);
 
   return (
-    <div style={{backgroundColor:"#EBEAFA"}}>
+    <div style={{ backgroundColor: "#EBEAFA" }}>
       <Page header={<Navbar />} footer={<Footer />}>
         <div style={{ paddingTop: "130px" }}></div>
         <div
@@ -39,65 +39,84 @@ const PracticePage = () => {
           혼자 연습
         </div>
         <div style={{ paddingLeft: "120px", paddingRight: "120px" }}>
-          
-          <div style={{ paddingTop: "30px", display:"flex", justifyContent:"space-between" }}>
+          <div
+            style={{
+              paddingTop: "30px",
+              display: "flex",
+              justifyContent: "space-between",
+            }}>
             <div>
-            {currentPage === "write" ? (
-              <>
-                <Button
-                  ref={buttonRef}
-                  variant="outlined"
-                  className="border border-blue-950 p-2 bg-white focus:text-blue-900"
-                  style={{ borderTopLeftRadius: '20%' }}
-                  onClick={() => setCurrentPage("write")}>
-                  대본입력
-                </Button>
-                <Button
-                  variant="outlined"
-                  className="border border-blue-950 p-2 bg-gray-400 text-white"
-                  style={{ borderTopRightRadius: '20%' }}
-                  onClick={() => setCurrentPage("select")}>
-                  대본선택
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button
-                  ref={buttonRef}
-                  variant="outlined"
-                  className="border border-blue-950  p-2 bg-gray-400 text-white"
-                  style={{ borderTopLeftRadius: '20%'}}
-                  onClick={() => setCurrentPage("write")}>
-                  대본입력
-                </Button>
-                <Button
-                  variant="outlined"
-                  className="border border-blue-950 p-2 bg-white focus:text-blue-900"
-                  style={{ borderTopRightRadius: '20%' }}
-                  onClick={() => setCurrentPage("select")}>
-                  대본선택
-                </Button>
-              </>
-            )}
+              {currentPage === "write" ? (
+                <>
+                  <Button
+                    ref={buttonRef}
+                    variant="outlined"
+                    className="border border-blue-950 p-2 bg-white focus:text-blue-900"
+                    style={{ borderTopLeftRadius: "20%" }}
+                    onClick={() => setCurrentPage("write")}>
+                    대본입력
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    className="border border-blue-950 p-2 bg-gray-400 text-white"
+                    style={{ borderTopRightRadius: "20%" }}
+                    onClick={() => setCurrentPage("select")}>
+                    대본선택
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    ref={buttonRef}
+                    variant="outlined"
+                    className="border border-blue-950  p-2 bg-gray-400 text-white"
+                    style={{ borderTopLeftRadius: "20%" }}
+                    onClick={() => setCurrentPage("write")}>
+                    대본입력
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    className="border border-blue-950 p-2 bg-white focus:text-blue-900"
+                    style={{ borderTopRightRadius: "20%" }}
+                    onClick={() => setCurrentPage("select")}>
+                    대본선택
+                  </Button>
+                </>
+              )}
             </div>
 
             {/* 단계선택 */}
-            {currentPage === "write" && (<div>
-              <span className="font-bold text-blue-950">단계</span>
-              <select
-                className="border border-blue-950 p-1 bg-whittext-blue-900 ml-4"
-                value={level}
-                onChange={handleLevel}>
-                <option value="1">level 1</option>
-                <option value="2">level 2</option>
-                <option value="3">level 3</option>
-                <option value="4">level 4</option>
-              </select>
-              </div>)}
+            {currentPage === "write" && (
+              <div>
+                <span className="font-bold text-blue-950">단계</span>
+                <select
+                  className="border border-blue-950 p-1 bg-whittext-blue-900 ml-4"
+                  value={level}
+                  onChange={handleLevel}>
+                  <option value="1">level 1</option>
+                  <option value="2">level 2</option>
+                  <option value="3">level 3</option>
+                  <option value="4">level 4</option>
+                </select>
+              </div>
+            )}
+            {currentPage === "select" && (
+              <div>
+                <span className="font-bold text-blue-950">단계</span>
+                <select
+                  className="border border-blue-950 p-1 bg-whittext-blue-900 ml-4"
+                  value={level}
+                  onChange={handleLevel}>
+                  <option value="1">level 1</option>
+                  <option value="2">level 2</option>
+                  <option value="3">level 3</option>
+                  <option value="4">level 4</option>
+                </select>
+              </div>
+            )}
           </div>
           {currentPage === "write" && <ScriptWrite level={level} />}
           {currentPage === "select" && <ScriptSelect level={level} />}
-          
         </div>
       </Page>
     </div>
@@ -126,24 +145,23 @@ const ScriptWrite = ({ level }) => {
           onChange={titleChange}
         />
         <textarea
-          style={{ resize:"none" }}
+          style={{ resize: "none" }}
           className="h-full w-full border border-blue-950 rounded p-2 h-80 bg-white"
           color="blue"
           placeholder="내용을 입력해 주세요. (최대 3000자)"
           onChange={contentChange}
         />
-        <div align="right" className="mt-3" style={{fontWeight:"bold", color:"#0C134F"}}>
+        <div
+          align="right"
+          className="mt-3"
+          style={{ fontWeight: "bold", color: "#0C134F" }}>
           {level == 1 && (
-            <Link
-              to="/practice/Level1"
-              state={{ content: content }}>
+            <Link to="/practice/Level1" state={{ content: content }}>
               <span className="practice-startText">녹화 시작하기 ▶</span>
             </Link>
           )}
           {level == 2 && (
-            <Link
-              to="/practice/Level2"
-              state={{ content: content }}>
+            <Link to="/practice/Level2" state={{ content: content }}>
               <span className="practice-startText">녹화 시작하기 ▶</span>
             </Link>
           )}
@@ -162,7 +180,7 @@ const ScriptSelect = ({ level }) => {
         //   paddingLeft: "10px",
         //   paddingTop: "20px",
         // }}
-        >
+      >
         <Sidebar level={level} />
       </div>
     </>
