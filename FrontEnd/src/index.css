@@ -1062,6 +1062,7 @@ p {
   border-radius: 5px;
   padding: 2px 5px;
   position: absolute;
+  z-index: 10;
 }
 
 .mode2-top-each:hover .nickname-overlay {
@@ -1082,13 +1083,13 @@ p {
   position: absolute;
   padding: 2px 5px;
   border-radius: 5px;
+  z-index: 10;
 }
 
 .mode0-each:hover .nickname-overlay {
   display: block;
   opacity: 1;
   background-color: rgb(255, 255, 255, 0.5);
-
   height: 30px;
 }
 
@@ -1107,6 +1108,7 @@ p {
   position: absolute;
   padding: 2px 5px;
   border-radius: 5px;
+  z-index: 10;
 }
 
 .mode1-each:hover .nickname-overlay {
@@ -1124,7 +1126,23 @@ p {
 .mode3-each video {
   width: 40vw;
 }
-
+.mode3-each {
+  position: relative;
+  padding: 0px 10px;
+}
+.mode3-each span {
+  display: none;
+  position: absolute;
+  padding: 2px 5px;
+  border-radius: 5px;
+  z-index: 10;
+}
+.mode3-each:hover .nickname-overlay {
+  display: block;
+  opacity: 1;
+  background-color: rgb(255, 255, 255, 0.5);
+  height: 30px;
+}
 .create-room {
   background: linear-gradient(to bottom, #3a3758, #100e2c);
 }

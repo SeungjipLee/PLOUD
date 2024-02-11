@@ -220,6 +220,7 @@ const StudyRoomPage = () => {
 
   // 사용법 publisher, mainStreamManager, subscriber 등을 넣으면 닉네임을 파싱해서 반환해줌
   const getUserNickname = (streamObject) => {
+    console.log(streamObject)
     const nickname = JSON.parse(
       streamObject.stream.connection.data.split("%/%")[0]
     ).clientData;
