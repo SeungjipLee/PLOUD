@@ -1188,3 +1188,31 @@ p {
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   filter: blur(5px);
 }
+
+.script-box {
+  width: 50%;
+  /* max-width: 600px; */
+  height: "600px";
+
+  background-color: #f4e8c1;
+  background-color: #F8F5F0;
+
+  border: 1px solid #e2d5b8;
+  box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+
+  margin: -30px 80px 0 20px;
+  padding: 22px;
+  
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 16px; 
+  white-space: pre-wrap;
+  word-wrap: break-word;
+
+  overflow-wrap: break-word;
+  flex: auto;
+  overflow-y: auto; 
+  
+  /* 줄 추가 */
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  background-size: 100% 22px; /* 줄 간격 조정 */
+}
