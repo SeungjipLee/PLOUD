@@ -20,7 +20,7 @@ const Level1 = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
-  const scriptTitle = location.state.title;  
+  const scriptTitle = location.state.title;
   const content = location.state.content;
 
   const [feedback, setFeedback] = useState("");
@@ -55,10 +55,14 @@ const Level1 = () => {
   const [recordingInterval, setRecordingInterval] = useState(null);
 
   const [video, setVideo] = useState(true);
+  const [mic, setMic] = useState(false);
 
   // 피드백 관련
   const tmpDecibels = useRef([]); // 임시 데시벨 데이터 저장(3초)
   const isFeedback = useRef(false);
+
+  // 마이크 테스트 관련
+  const [micTestContent, setMicTestContent] = useState("");
 
   useEffect(() => {
     // 로직 작성
@@ -440,6 +444,93 @@ const Level1 = () => {
     navigate("/practice");
   };
 
+  const [micColor, setMicColor] = useState("green");
+
+  useEffect(() => {
+    let micStream;
+    let micAudioContext;
+    let micSource;
+
+    const startMicTest = async () => {
+      navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then((micStream) => {
+          micAudioContext = new AudioContext();
+          micSource = micAudioContext.createMediaStreamSource(micStream);
+          const micAnalyzer = micAudioContext.createAnalyser();
+          micAnalyzer.fftSize = 2048;
+          micSource.connect(micAnalyzer);
+
+          function analyzeMicAudio() {
+            if (!mic) {
+              return;
+            }
+  
+            const micStoredData = new Uint8Array(micAnalyzer.frequencyBinCount);
+            micAnalyzer.getByteFrequencyData(micStoredData);
+  
+            let micSum = 0;
+            for (let i = 0; i < micStoredData.length; i++) {
+              micSum += micStoredData[i];
+            }
+  
+            const micAverage = micSum / micStoredData.length;
+  
+            const micDecibel = calcDecibel(micAverage);
+
+            console.log(micDecibel);
+            
+            // mic-color-box
+
+            if(micDecibel < 25){
+              setMicTestContent("목소리가 거의 들리지 않아요!");
+              setMicColor("red");
+            } else if (micDecibel < 40) {
+              setMicTestContent("조금만 크게 말해주세요!");
+              setMicColor("orange");
+            } else if (micDecibel < 70) {
+              setMicTestContent("목소리의 크기가 적당해요!");
+              setMicColor("green");
+            } else if (micDecibel < 80) {
+              setMicTestContent("조금만 작게 말해주세요!");
+              setMicColor("orange");
+            } else {
+              setMicTestContent("목소리가 너무 커요!");
+              setMicColor("red");
+            }
+  
+            setTimeout(analyzeMicAudio, 100);
+          }
+  
+          analyzeMicAudio();
+        })
+        .catch((error) => {
+          console.log("마이크 테스트 에러");
+        });
+    };
+
+    const stopMicTest = () => {
+      if (micAudioContext) micAudioContext.close();
+      if (micStream) micStream.getTracks().forEach((track) => track.stop());
+      setMicTestContent("");
+    };
+
+    if (mic) {
+      startMicTest();
+    } else {
+      stopMicTest();
+    }
+
+    // Cleanup function
+    return () => {
+      stopMicTest();
+    };
+  }, [mic]);
+
+  const toggleMic = () => {
+    setMic(!mic); // 상태 업데이트
+  };
+
   return (
     <div className="RoomPage">
       <div className="roompage-icon">
@@ -454,7 +545,8 @@ const Level1 = () => {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-          }}>
+          }}
+        >
           <div>
             <video
               style={{ width: "100%", height: "500px" }}
@@ -475,7 +567,8 @@ const Level1 = () => {
               fontSize: "24px",
               fontWeight: "bold",
               color: "white",
-            }}>
+            }}
+          >
             {feedback}
           </div>
         </div>
@@ -485,17 +578,22 @@ const Level1 = () => {
               width: "50%",
               height: "600px",
               margin: "-30px 80px 0 20px",
-            }}>
+            }}
+          >
             <video ref={screenShareVideoRef} autoPlay></video>
           </div>
         ) : (
           <div className="script-box">
-            <p style={{
-              fontSize: "20px",
-              fontWeight: "bold",
-              textAlign: "center",
-              marginBottom: "23px",
-            }}>{scriptTitle}</p>
+            <p
+              style={{
+                fontSize: "20px",
+                fontWeight: "bold",
+                textAlign: "center",
+                marginBottom: "23px",
+              }}
+            >
+              {scriptTitle}
+            </p>
             {content}
           </div>
         )}
@@ -504,6 +602,11 @@ const Level1 = () => {
       {/* Bottom - 버튼 */}
       <div className="RoomPage-bottom" style={{ justifyContent: "center" }}>
         <div className="flex items-center space-x-16">
+          {mic ? (
+            <img onClick={toggleMic} src="/images/micbutton.png" />
+          ) : (
+            <img onClick={toggleMic} src="/images/micbutton_disabled.png" />
+          )}
           {!isLast.current ? (
             <img onClick={speechEnd} src="/images/recordbutton_activated.png" />
           ) : !recordForm ? (
@@ -538,12 +641,37 @@ const Level1 = () => {
         </div>
       </div>
 
+      {/* 마이크 테스트 폼 */}
+      {mic && (
+        <Modal
+          title="마이크테스트"
+          onClose={(e) => setMic(false)}
+          className={"mic-test-form"}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <p className="mic-text-box">{micTestContent}</p>
+            <div className="mic-color-box"
+            style={{
+              backgroundColor: micColor
+            }}></div>
+          </div>
+        </Modal>
+      )}
+
       {/* 녹화 폼 */}
       {recordForm && (
         <Modal
           title="녹화 정보 입력"
           onClose={(e) => setRecordForm(false)}
-          className={"record-form"}>
+          className={"record-form"}
+        >
           <form onSubmit={speechStart}>
             <div>
               <p>
@@ -552,7 +680,8 @@ const Level1 = () => {
                   placeholder="제목 입력..."
                   value={title}
                   style={{ color: "white" }}
-                  onChange={(e) => setTitle(e.target.value)}></input>
+                  onChange={(e) => setTitle(e.target.value)}
+                ></input>
               </p>
               <p>카테고리 : 전체</p>
               <p>분류 : 개인</p>

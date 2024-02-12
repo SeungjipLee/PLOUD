@@ -1315,3 +1315,37 @@ input[type=number]::-webkit-outer-spin-button {
 .slideshowDot.active {
   background-color: #F3704B;
 }
+
+.mic-test-form {
+  border: rgb(85, 85, 85) solid 3px;
+  box-shadow: 1px 1px 1px rgb(85, 85, 85);
+  /* position: absolute; */
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  padding: 1 0px;
+  border-radius: 10px;
+  width: 300px;
+  height: 200px;
+  background-color: #ffffff;
+  color: #0c134f;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+
+}
+
+.mic-text-box {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.mic-color-box{
+  width: 36px;
+  height: 36px;
+  background-color: green;
+  border-radius: 50%;
+}
