@@ -76,6 +76,8 @@
 .footer {
   background: #0c134f;
   color: white;
+  bottom: 0; /* 하단에 위치 */
+  height: 170px; /* 푸터 높이 */
 }
 
 .footerLogo {
