@@ -4,9 +4,6 @@ import Footer from "../../components/Footer";
 
 const PracticePage1 = () => {
 
-
-
-
     return (
       <div className="bg-white w-full min-h-screen">
           <Page header={<Navbar />} footer={<Footer />}>
