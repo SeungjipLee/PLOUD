@@ -247,6 +247,13 @@ const Level1 = () => {
 
   const addDecibel = (newDecibel) => {
     decibels.current.push(newDecibel);
+  
+    // Decibel deque로 데이터 관리
+    if(false){
+      changeFeedback("침묵이 길어지고 있어요!");
+    }else if(false){
+      changeFeedback("목소리가 너무 크게 들려요!");
+    }
   };
 
   // 녹화 종료
@@ -282,6 +289,15 @@ const Level1 = () => {
       formData,
       (response) => {
         // console.log(response.data);
+
+        // 실시간 피드백
+
+        if(response.data.scriptCnt > 15){
+          changeFeedback("조금만 천천히 말해보아요!");
+        }else if(response.data.score < 3){
+          changeFeedback("발음에 유의해 주세요!");
+        }
+
       },
       (error) => {
         console.log("평가 실패");
@@ -361,6 +377,17 @@ const Level1 = () => {
       screenShareVideoRef.current.srcObject = null;
     }
   };
+
+  const changeFeedback = async (fb) => {
+    if (feedback == ""){
+      setFeedback(fb);
+    
+      setTimeout(() => {
+        setFeedback("");
+      }, 2000);
+    }
+  };
+
 
   // 결과 창 닫기
   const handleResultClose = () => {
