@@ -159,7 +159,12 @@ public class SpeechServiceImpl implements SpeechService {
     @Transactional
     public void feedback(FeedbackRequest feedbackRequest) {
         log.info(feedbackRequest.getSessionId());
-        int speechId = openViduUtil.findSpeechIdBySessionId(feedbackRequest.getSessionId());
+        int speechId = 0;
+        if(feedbackRequest.getSessionId().isEmpty()){
+            speechId = feedbackRequest.getSpeechId();
+        }else{
+            speechId = openViduUtil.findSpeechIdBySessionId(feedbackRequest.getSessionId());
+        }
         log.info("SpeechServiceImpl feedback speechId; " + speechId);
         SpeechEntity speechEntity = speechRepository.findById(speechId)
             .orElseThrow(() -> new CustomException(ResponseCode.SPEECH_NOT_FOUND));
