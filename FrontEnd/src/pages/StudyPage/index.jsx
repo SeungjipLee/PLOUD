@@ -30,7 +30,7 @@ const StudyPage = () => {
   const [categoryId, setCategoryId] = useState(0);
   const [isSecret, setIsSecret] = useState(false);
   const [isEnter, setIsEnter] = useState(false);
-  const [sessionId, setSessionId] = useState("")
+  const [sessionId, setSessionId] = useState("");
   const [password, setPassword] = useState("");
   const userId = useSelector((state) => state.userReducer.user_id);
   // 최초 마운트, 카테고리 변경 시 검색
@@ -70,10 +70,10 @@ const StudyPage = () => {
 
   // 방 클릭시 인원, 잠금여부 판단
   const joinStudyRoom = async (data) => {
-    setPassword("")
+    setPassword("");
     console.log(data);
-    setSessionId(data.sessionId)
-    
+    setSessionId(data.sessionId);
+
     if (data.currentPeople === data.maxPeople) {
       alert("입장 인원 초과");
       return;
@@ -116,6 +116,7 @@ const StudyPage = () => {
       >
         <Page header={<Navbar />} footer={<Footer />}>
           <div className="study-main">
+            
             <div className="flex place-content-between">
               <div className="flex">
                 <Button
@@ -166,8 +167,7 @@ const StudyPage = () => {
                 >
                   기타
                 </Button>
-              </div>
-              <div className="study-main-search">
+                <div className="study-main-search">
                 {/* {word === "" && <img src="./images/search_icon.PNG" alt="" />} */}
                 <img src="./images/search_icon.PNG" alt="" />
                 <input
@@ -179,6 +179,11 @@ const StudyPage = () => {
                   onKeyDown={handleKeyDown}
                 />
               </div>
+              </div>
+              
+              <div className="create-room-button">
+              <Button onClick={changeModalState}>방 만들기</Button>
+            </div>
             </div>
             <div className="grid room-list">
               {studyList.slice((page - 1) * 9, page * 9).map((data, index) => (
@@ -214,31 +219,46 @@ const StudyPage = () => {
                 &gt;
               </button>
             </div>
-            <div className="create-room-button">
+            {/* <div className="create-room-button">
               <Button onClick={changeModalState}>방 만들기</Button>
-            </div>
+            </div> */}
           </div>
         </Page>
       </div>
       {modal && (
-        <CreateModal title="방 생성" onClose={changeModalState} className={"create-room"}>
+        <CreateModal
+          title="방 생성"
+          onClose={changeModalState}
+          className={"create-room"}
+        >
           <CreateForm />
         </CreateModal>
       )}
       {isSecret && isEnter && (
-        <JoinConfirmModal title="비밀번호를 입력해 주세요" onClose={(e) => setIsEnter(false)}>
+        <JoinConfirmModal
+          title="비밀번호를 입력해 주세요"
+          onClose={(e) => setIsEnter(false)}
+        >
           <input
             style={{ color: "black" }}
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => {if (e.key === "Enter"){ console.log(e); handleJoin() }}}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                console.log(e);
+                handleJoin();
+              }
+            }}
           />
         </JoinConfirmModal>
       )}
       {!isSecret && isEnter && (
-        <JoinConfirmModal title="방에 입장하시겠습니까?" onClose={(e) => setIsEnter(false)}>
-          <div className="button-container"> 
+        <JoinConfirmModal
+          title="방에 입장하시겠습니까?"
+          onClose={(e) => setIsEnter(false)}
+        >
+          <div className="button-container">
             <button onClick={handleJoin}>예</button>
           </div>
         </JoinConfirmModal>
