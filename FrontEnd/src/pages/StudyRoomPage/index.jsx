@@ -394,7 +394,9 @@ const StudyRoomPage = () => {
       console.log(event.stream.connection.data.split("%/%"));
       var tmp = event.stream.connection.data.split("%/%");
       var nickname = JSON.parse(tmp[0]).clientData;
-      addUser({ nickname: nickname });
+      if (nickname.split("//").length == 1) {
+        addUser({ nickname: nickname });
+      }
 
       if (
         (nickname.split("//").length > 1 ? "screen" : nickname) !== "screen"
@@ -493,6 +495,7 @@ const StudyRoomPage = () => {
           setMode("2");
         }
       }
+      setRecord(true);
       setChatList((chatList) => [
         ...chatList,
         { username: username, content: content },
@@ -514,7 +517,7 @@ const StudyRoomPage = () => {
     session.current.on("signal:rend", (event) => {
       var username = JSON.parse(event.data).nickname;
       var content = JSON.parse(event.data).chatvalue;
-
+      setRecord(false);
       setChatList((chatList) => [
         ...chatList,
         { username: username, content: content },
@@ -953,18 +956,25 @@ const StudyRoomPage = () => {
       <div className={setClassRoomPageTOP()}>
         <div className="roompage-icon">
           <img src="/images/ploud_icon_bg.png" />
-        </div>
-        <div className="mode-select">
-          <select
-            name="mode"
-            id="mode"
-            onChange={(e) => setMode(e.target.value)}
-          >
-            <option value="0">기본화면</option>
-            <option value="1">화면구성1</option>
-            <option value="2">화면구성2</option>
-            <option value="3">화면공유</option>
-          </select>
+          <div className="roompage-icon2">
+            {record && (
+              <div className="on-air">
+                <img src="/images/recording.png" />
+              </div>
+            )}
+            <div className="mode-select">
+              <select
+                name="mode"
+                id="mode"
+                onChange={(e) => setMode(e.target.value)}
+              >
+                <option value="0">기본화면</option>
+                <option value="1">면접모드(발표자)</option>
+                <option value="2">면접모드(면접관)</option>
+                <option value="3">발표모드(화면공유)</option>
+              </select>
+            </div>
+          </div>
         </div>
         {/* 발표 화면 상단 구성 */}
         {mode == "3" && (
