@@ -5,11 +5,12 @@ import Footer from "../../components/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Slideshow from "./Slideshow";
-
+import { getSpeechCount } from "../../services/speech"
 
 const MainPage = () => {
   const { isLogined } = useSelector((state) => state.userReducer);
   const navigate = useNavigate()
+  const [ speechCount, setSpeechCount ] = useState(0);
   
   const handleLink = (path) => {
     if (isLogined) {
@@ -26,6 +27,16 @@ const MainPage = () => {
   
   // scroll animation
   useEffect(() => {
+    // get speech count
+    getSpeechCount(
+      (res) => {
+        console.log(res.data.data)
+        setSpeechCount(res.data.data.count)
+      },
+      (err) => console.log("스피치 개수 불러오는 중 오류 발생")
+    );
+    // end get speech count
+
     var scrollEvent = function() {
       // 사용자 모니터 화면 높이 + 스크롤이 움직인 높이
       var scroll = window.innerHeight + window.scrollY;
@@ -44,11 +55,11 @@ const MainPage = () => {
     }
 
     // 스크롤 이벤트 리스너 등록
-    window.addEventListener('scroll', scrollEvent);
+    window.addEventListener('scroll',scrollEvent);
 
     // 컴포넌트가 언마운트될 때 리스너 제거
     return () => {
-      window.removeEventListener('scroll', scrollEvent);
+      window.removeEventListener('scroll',scrollEvent);
     };
   }, []);
   // end scroll animation
@@ -70,8 +81,9 @@ const MainPage = () => {
         </div>
         <div>
           <div className='Main2Container me-36'>
-            <div className="mainBlueB text-white card text-center pt-5 my-5" style={{borderRadius:"10%"}}>
-              누적 발표수 또는 누적 영상 시간 수
+            <div className="mainBlueB text-white card text-center pt-5 my-5" style={{borderRadius:"10%", display:"flex", flexDirection:"column", justifyContent:"center"}}>
+              <div className="font-extrabold text-2xl">누적 발표수</div>
+              <div className="mt-3 font-extrabold text-2xl">{`${speechCount}`}</div>
             </div>
             <Slideshow className="mainBlueB text-white card text-center pt-5 my-5"></Slideshow>
           </div>
