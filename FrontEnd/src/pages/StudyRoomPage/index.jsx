@@ -394,7 +394,9 @@ const StudyRoomPage = () => {
       console.log(event.stream.connection.data.split("%/%"));
       var tmp = event.stream.connection.data.split("%/%");
       var nickname = JSON.parse(tmp[0]).clientData;
-      addUser({ nickname: nickname });
+      if (nickname.split("//").length == 1) {
+        addUser({ nickname: nickname });
+      }
 
       if (
         (nickname.split("//").length > 1 ? "screen" : nickname) !== "screen"
