@@ -198,6 +198,9 @@
 .pagination > button {
   padding: 0px 30px;
 }
+.pagination img{
+  width: 10px;
+}
 
 .create-room-button {
   /* position: relative; */
@@ -420,7 +423,7 @@
 
 .room-list {
   height: 70vh;
-  width: 60vw;
+  width: 960px;
   padding: 5vh 0;
 }
 
@@ -816,7 +819,7 @@ p {
   /* background-color: #B0B0B0; */
   width: 241px;
   height: 100px;
-  background: linear-gradient(to bottom, #435380, #2f2468);
+  background: linear-gradient(to bottom, #3a3758, #100e2c);
   border-radius: 5px;
 }
 

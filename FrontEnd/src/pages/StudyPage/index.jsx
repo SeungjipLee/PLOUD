@@ -53,11 +53,7 @@ const StudyPage = () => {
       data,
       (response) => {
         dispatch(getStudyList(response.data.data));
-        setMaxPage(
-          response.data.data.length > 9
-            ? Math.floor(response.data.data.length / 9) + 1
-            : 1
-        );
+        setMaxPage(Math.floor((response.data.data.length-1) / 9) + 1 );
       },
       (error) => console.log(error)
     );
@@ -203,7 +199,7 @@ const StudyPage = () => {
               </div>
               <div className="pagination">
                 <button onClick={(e) => (page > 1 ? setPage(page - 1) : null)}>
-                  &lt;
+                  <img src="/images/leftbutton.png"/>
                 </button>
                 {page > 1 && (
                   <span onClick={(e) => setPage(page - 1)}>{page - 1}</span>
@@ -218,7 +214,7 @@ const StudyPage = () => {
                 <button
                   onClick={(e) => (page < maxPage ? setPage(page + 1) : null)}
                 >
-                  &gt;
+                  <img src="/images/rightbutton.png"/>
                 </button>
               </div>
               {/* <div className="create-room-button">
