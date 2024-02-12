@@ -62,7 +62,7 @@ export const likeboard = async (token, boardId, success, fail) => {
 
 export const getComment = async (token, boardId, success, fail) => {
   return await API(token)
-    .get(`comment/${boardId}`)
+    .get(`comment/{boardId}?boardId=${boardId}`)
     .then(success)
     .catch(fail)
 }
