@@ -107,7 +107,7 @@ const SpeechPage = ({ setId }) => {
   );
 };
 
-const ScriptPage = ({ id, setContent }) => {
+const ScriptPage = ({ id, setTitle, setContent }) => {
   // id 바뀔 때 마다 렌더링 되야함(단 id값 정의되지 않았을떄는 렌더링x), 스크립트 부분
   const token = useSelector((state) => state.userReducer.token);
   const [list, setList] = useState([]);
@@ -118,6 +118,7 @@ const ScriptPage = ({ id, setContent }) => {
       id,
       (res) => {
         setList(res.data.data);
+        setTitle(res.data.data.title);
         setContent(res.data.data.content);
       },
       (err) => {
@@ -219,7 +220,7 @@ const Sidebar = ({ level }) => {
           </div>
         </div>
         <div className="p-2" style={{ height: "530px", overflowY: "auto" }}>
-          {id != "" && <ScriptPage id={id} setContent={setContent} />}
+          {id != "" && <ScriptPage id={id} setTitle={setTitle} setContent={setContent} />}
         </div>
       </div>
       {/* 녹화 페이지 이동 */}
@@ -228,7 +229,7 @@ const Sidebar = ({ level }) => {
         className="mt-6"
         style={{ fontWeight: "bold", color: "#0C134F" }}>
         {id != "" && (
-          <Link to="/practice/Level1" state={{ content: content }}>
+          <Link to="/practice/Level1" state={{ title: title, content: content }}>
             <span className="practice-startText">녹화 시작하기 ▶</span>
           </Link>
         )}
