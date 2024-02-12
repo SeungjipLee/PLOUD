@@ -436,7 +436,7 @@ const Level1 = () => {
   };
 
   const leaveSession = () => {
-    navigate("/practice");
+    navigate("/practice1");
   };
 
   return (
