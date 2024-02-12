@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -106,5 +107,11 @@ public class SpeechController {
 
         speechService.comment(commentRequest);
         return ApiResponse.ok("성공");
+    }
+
+    @Operation(summary = "누적 발표 개수 조회", description="모든 스피치 개수를 조회한다")
+    @GetMapping("/count")
+    public ApiResponse<?> getAllSpeechCount() {
+        return ApiResponse.ok("누적 발표 개수 조회 성공", speechService.findAllSpeechCount());
     }
 }

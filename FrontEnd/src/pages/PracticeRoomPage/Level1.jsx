@@ -488,17 +488,7 @@ const Level1 = () => {
             <video ref={screenShareVideoRef} autoPlay></video>
           </div>
         ) : (
-          <div
-            style={{
-              width: "50%",
-              height: "600px",
-              margin: "-30px 80px 0 20px",
-              overflowWrap: "break-word",
-              flex: "auto",
-              overflowY: "auto",
-              backgroundColor: "#F8F5F0",
-              whiteSpace: "pre-wrap",
-            }}>
+          <div className="script-box">
             {content}
           </div>
         )}
