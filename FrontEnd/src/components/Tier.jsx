@@ -11,6 +11,8 @@ const Tier = () => {
     const [ isBronze, setIsBronze ] = useState(false)
     const [ isSilver, setIsSilver ] = useState(false)
     const [ isGold, setIsGold ] = useState(false)
+    const [ showModal, setShowModal ] = useState(false)
+    const [ tier, setTier ] = useState(0)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,6 +21,7 @@ const Tier = () => {
               token,
               (res) => {
                 console.log(res.data.data.totalTime)
+                setTier(res.data.data.totalTime)
                 const tier = res.data.data.totalTime
                 if (tier < 60) {
                     setIsBronze(true)
@@ -38,16 +41,34 @@ const Tier = () => {
               (err) => console.log('여기')
             );       
           } catch (error) {
-            console.error("쩌어기");
+            console.error(error);
           }
         };
         fetchData();
       }, []);
     
-    
+      const Modal = () => (
+        <div style={{
+          position: 'absolute', top: '30px', left:'150px',
+          background: 'white', padding: '20px', borderRadius: '5px',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', width: '300px', height:'100px', zIndex:'1000',
+        }}>
+          {isBronze&&<p>현재 티어는 브론즈 입니다.</p>}
+          {isBronze&&<p>실버까지는 {60-tier}시간 남았습니다.</p>}
+          {isSilver&&<p>현재 티어는 실버 입니다.</p>}
+          {isSilver&&<p>골드까지는 {120-tier}시간 남았습니다.</p>}
+          {isGold&&<p>현재 티어는 골드 입니다.</p>}
+          {isGold&&<p>현재 최고 티어입니다.</p>}
+        </div>
+      );
+      
+      const handleInfo = () => {
+        setShowModal(!showModal)
+      }
+
 
   return(
-    <>
+    <div className='relative'>
         {isBronze&& 
           <div>
             <img src='images/bronze.png' style={{filter:"drop-shadow(0px 6px 6px #624637)"}}></img>
@@ -66,7 +87,13 @@ const Tier = () => {
            <p className='text-center me-2 text-xl font-bold' style={{color:"#ffd700"}}>골드</p>
          </div>
           }
-    </>
+        <img
+           src="/images/info.png"
+           className="w-10 h-10 rounded-2xl absolute bottom-28 left-28"
+           onClick={handleInfo}
+          />
+        {showModal && <Modal />}
+    </div>
   )
 };
 

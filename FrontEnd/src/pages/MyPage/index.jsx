@@ -39,6 +39,7 @@ const MyPage = () => {
         const response2 = await getSpeechList(
           token,
           (res) => {
+            console.log(res.data.data)
             const results = res.data.data.slice(0, 5);
             setResults(results);
             const initialModalOpen = results.reduce((acc, result) => ({ ...acc, [result.speechId]: false }), {});
@@ -69,7 +70,7 @@ const MyPage = () => {
         </div>
         <div className="flex place-self-center container1">
           
-          <div className="ms-12 me-5 bg-white box1 drop-shadow-md rounded-md">
+          <div className="ms-12 me-5 bg-white box1 drop-shadow-md rounded-md z-10">
             <div className="flex ms-5 mt-5">
               <div className="w-32 h-64 mx-5 flex flex-col">
                 <div style={{"width":"130px","height":"130px", "overflow":"hidden","borderRadius":"5%"}}>
@@ -85,17 +86,16 @@ const MyPage = () => {
               <div className="w-32 h-64">
                   <Tier />
               </div>
-              
             </div>
             </div>
 
 
-          <div className="me-10 bg-white box2 drop-shadow-md rounded-md">
+          <div className="me-10 bg-white box2 drop-shadow-md pb-4 rounded-md">
                   <MyChart/>          
           </div>
         </div>
-        <div className="flex justify-center">
-          <div className="mx-10 box3 flex justify-center">
+        <div className="flex justify-center z-20">
+          <div className="mx-10 box3 flex justify-center z-20">
             <div className="box4 py-3 drop-shadow-md rounded-md">
               <span className="ms-5 text-xl">나의 발표 결과</span>
               <span className="text-xs text-gray-500 mx-5">
@@ -108,7 +108,7 @@ const MyPage = () => {
               const handleClose = () => handleModalClose(result.speechId);
 
               return (
-                <div onClick={handleOpen} key={index}>
+                <div onClick={handleOpen} key={index} >
                   <ResultCard 
                     speechMode={result.speechMode}
                     title={result.title}

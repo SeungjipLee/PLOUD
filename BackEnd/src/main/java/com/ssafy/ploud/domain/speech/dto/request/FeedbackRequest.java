@@ -10,5 +10,6 @@ import lombok.Setter;
 public class FeedbackRequest {
     private String userId;
     private String sessionId;
+    private int speechId;
     private String content;
 }

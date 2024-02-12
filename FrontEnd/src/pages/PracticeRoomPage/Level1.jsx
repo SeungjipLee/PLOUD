@@ -2,6 +2,7 @@ import { useEffect, useCallback, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { debounce } from "lodash";
 import Modal from "../../components/Modal";
 import Button from "../../components/Button";
 import StudyResult from "../StudyRoomPage/component/StudyResult";
@@ -9,6 +10,7 @@ import {
   startSpeech,
   endSpeech,
   assessSpeech,
+  postFeedback,
   postComment,
   uploadVideo,
 } from "../../services/speech";
@@ -53,11 +55,14 @@ const Level1 = () => {
 
   const [video, setVideo] = useState(true);
 
+  // 피드백 관련
+  const tmpDecibels = useRef([]); // 임시 데시벨 데이터 저장(3초)
+  const isFeedback = useRef(false);
+
   useEffect(() => {
     // 로직 작성
     // 평가 요청을 받았을 떄 속도가 빠르다, 발음 점수가 낮다.
     // 실시간 데시벨 측정으로 목소리 크기
-    setFeedback("실시간 피드백이요");
 
     if (navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices
@@ -71,7 +76,8 @@ const Level1 = () => {
 
           vRecorder.ondataavailable = (e) => {
             if (e.data.size > 0) {
-              videoUpload(e.data); // e.data : videoChunk
+              // 주석해제하기
+              // videoUpload(e.data); // e.data : videoChunk
             }
           };
         })
@@ -87,10 +93,6 @@ const Level1 = () => {
 
     if (stream) {
       stream.getVideoTracks().forEach((track) => {
-        track.enabled = !track.enabled;
-      });
-      // 이건 나중에 삭제
-      stream.getAudioTracks().forEach((track) => {
         track.enabled = !track.enabled;
       });
     }
@@ -247,13 +249,57 @@ const Level1 = () => {
 
   const addDecibel = (newDecibel) => {
     decibels.current.push(newDecibel);
-  
-    // Decibel deque로 데이터 관리
-    if(false){
+
+    if (tmpDecibels.current.length >= 30) {
+      tmpDecibels.current.shift();
+    }
+    tmpDecibels.current.push(newDecibel);
+
+    // 3초 동안 30데시벨 이하
+    const isSilent = decibels.current.slice(-30).every((db) => db < 30);
+
+    console.log("데시벨 : " + newDecibel);
+
+    if (!isFeedback.current && tmpDecibels.current.length >= 30 && isSilent) {
+      isFeedback.current = true;
       changeFeedback("침묵이 길어지고 있어요!");
-    }else if(false){
+    } else if (!isFeedback.current && tmpDecibels.current.slice(-1)[0] >= 70) {
+      isFeedback.current = true;
       changeFeedback("목소리가 너무 크게 들려요!");
     }
+  };
+
+  const changeFeedback = (fb) => {
+    console.log("피드백 수락");
+    setFeedback(fb);
+    feedbackPost(fb);
+
+    setTimeout(() => {
+      setFeedback("");
+      
+      setTimeout(() => {
+        isFeedback.current = false;
+      }, 2500);
+    }, 2500);
+  };
+
+  // 피드백 전송
+  const feedbackPost = (tmpFb) => {
+    // be로 요청
+    postFeedback(
+      token,
+      {
+        sessionId: "",
+        speechId: speechId.current,
+        content: tmpFb,
+      },
+      (response) => {
+        console.log("피드백 등록 성공");
+      },
+      (error) => {
+        console.log("피드백 등록 실패");
+      }
+    );
   };
 
   // 녹화 종료
@@ -288,16 +334,21 @@ const Level1 = () => {
       token,
       formData,
       (response) => {
-        // console.log(response.data);
-
+        console.log("음성 평가 결과");
+        console.log(response.data);
+        console.log(
+          "개수 : " +
+            response.data.scriptCnt +
+            ", 점수 : " +
+            response.data.score
+        );
         // 실시간 피드백
 
-        if(response.data.scriptCnt > 15){
-          changeFeedback("조금만 천천히 말해보아요!");
-        }else if(response.data.score < 3){
-          changeFeedback("발음에 유의해 주세요!");
+        if (response.data.scriptCnt > 15) {
+          changeFeedback("조금만 천천히 말해주세요!");
+        } else if (response.data.score < 3) {
+          changeFeedback("발음을 정확하게 해주세요!");
         }
-
       },
       (error) => {
         console.log("평가 실패");
@@ -378,17 +429,6 @@ const Level1 = () => {
     }
   };
 
-  const changeFeedback = async (fb) => {
-    if (feedback == ""){
-      setFeedback(fb);
-    
-      setTimeout(() => {
-        setFeedback("");
-      }, 2000);
-    }
-  };
-
-
   // 결과 창 닫기
   const handleResultClose = () => {
     setResultScreen(false);
@@ -417,6 +457,7 @@ const Level1 = () => {
               style={{ width: "100%", height: "500px" }}
               ref={videoRef}
               autoPlay
+              muted
             />
           </div>
           <div
@@ -438,12 +479,12 @@ const Level1 = () => {
         </div>
         {screenShare ? (
           <div
-          style={{
-            width: "50%",
-            height: "600px",
-            margin: "-30px 80px 0 20px",
-          }}
-        >
+            style={{
+              width: "50%",
+              height: "600px",
+              margin: "-30px 80px 0 20px",
+            }}
+          >
             <video ref={screenShareVideoRef} autoPlay></video>
           </div>
         ) : (
@@ -464,39 +505,39 @@ const Level1 = () => {
       </div>
 
       {/* Bottom - 버튼 */}
-      <div className="RoomPage-bottom" style={{justifyContent:"center"}}>
+      <div className="RoomPage-bottom" style={{ justifyContent: "center" }}>
         <div className="flex items-center space-x-16">
-        {!isLast.current ? (
-          <img onClick={speechEnd} src="/images/recordbutton_activated.png" />
-        ) : !recordForm ? (
-          <img
-            onClick={(e) => {
-              setRecordForm(!recordForm);
-            }}
-            src="/images/recordbutton.png"
-          />
-        ) : (
-          <img
-            onClick={(e) => {
-              setRecordForm(!recordForm);
-            }}
-            src="/images/recordbutton_disabled.png"
-          />
-        )}
-        {video ? (
-          <img onClick={toggleVideo} src="/images/videobutton.png" />
-        ) : (
-          <img onClick={toggleVideo} src="/images/videobutton_disabled.png" />
-        )}
-        {screenShare === false ? (
-          <img onClick={startScreenShare} src="/images/sharebutton.png" />
-        ) : (
-          <img
-            onClick={stopScreenShare}
-            src="/images/sharebutton_disabled.png"
-          />
-        )}
-        <img onClick={leaveSession} src="/images/exitbutton.png" alt="" />
+          {!isLast.current ? (
+            <img onClick={speechEnd} src="/images/recordbutton_activated.png" />
+          ) : !recordForm ? (
+            <img
+              onClick={(e) => {
+                setRecordForm(!recordForm);
+              }}
+              src="/images/recordbutton.png"
+            />
+          ) : (
+            <img
+              onClick={(e) => {
+                setRecordForm(!recordForm);
+              }}
+              src="/images/recordbutton_disabled.png"
+            />
+          )}
+          {video ? (
+            <img onClick={toggleVideo} src="/images/videobutton.png" />
+          ) : (
+            <img onClick={toggleVideo} src="/images/videobutton_disabled.png" />
+          )}
+          {screenShare === false ? (
+            <img onClick={startScreenShare} src="/images/sharebutton.png" />
+          ) : (
+            <img
+              onClick={stopScreenShare}
+              src="/images/sharebutton_disabled.png"
+            />
+          )}
+          <img onClick={leaveSession} src="/images/exitbutton.png" alt="" />
         </div>
       </div>
 
@@ -514,6 +555,7 @@ const Level1 = () => {
                 <input
                   placeholder="제목 입력..."
                   value={title}
+                  style={{ color: "white" }}
                   onChange={(e) => setTitle(e.target.value)}
                 ></input>
               </p>
