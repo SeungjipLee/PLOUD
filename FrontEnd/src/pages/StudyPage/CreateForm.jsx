@@ -5,7 +5,6 @@ import { useDispatch } from "react-redux";
 import { getStudy } from "../../features/study/studySlice";
 import { useNavigate } from "react-router";
 
-
 const CreateForm = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -29,10 +28,10 @@ const CreateForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData.categoryId)
+    console.log(formData.categoryId);
     if (formData.categoryId == "" || formData.categoryId == "0") {
-      alert("카테고리를 선택해 주세요.")
-      return
+      alert("카테고리를 선택해 주세요.");
+      return;
     }
     console.log("전송 ");
     console.log(formData);
@@ -42,7 +41,7 @@ const CreateForm = () => {
       formData,
       (response) => {
         dispatch(getStudy(response.data));
-        navigate("/study/room")
+        navigate("/study/room");
       },
       (error) => {
         console.log(error);
@@ -54,10 +53,26 @@ const CreateForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // 최대 인원 증가 함수
+  const incrementMaxPeople = () => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      maxPeople: prevFormData.maxPeople < 6 ? prevFormData.maxPeople + 1 : 6, // 최대값은 6
+    }));
+  };
+
+  // 최대 인원 감소 함수
+  const decrementMaxPeople = () => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      maxPeople: prevFormData.maxPeople > 2 ? prevFormData.maxPeople - 1 : 2, // 최소값은 2
+    }));
+  };
+
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "20px" }}>
+        <div style={{ marginBottom: "10px" }}>
           <label htmlFor="title">
             <span
               style={{
@@ -90,7 +105,7 @@ const CreateForm = () => {
             style={{ display: "flex", alignItems: "center" }}
           >
             <span style={{ marginRight: "20px" }}>인원설정</span>
-            <input
+            {/* <input
               type="number"
               id="maxPeople"
               name="maxPeople"
@@ -99,8 +114,33 @@ const CreateForm = () => {
               style={{ color: "black", paddingLeft: "10px", width: "40px" }}
               min="2"
               max="6"
-            />
+            /> */}
+            <div className="flex items-center">
+              <button
+                type="button"
+                onClick={decrementMaxPeople}
+                className="p-2 text-lg rounded" 
+                // className="text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                -
+              </button>
+              <input
+                type="number" // text 타입으로 변경하여 직접 입력 방지
+                readOnly // 값 변경을 버튼을 통해서만 가능하게 설정
+                className="text-center w-8 border-gray-300 text-sm text-black"
+                value={formData.maxPeople}
+              />
+              <button
+                type="button"
+                onClick={incrementMaxPeople}
+                className="p-2 text-lg rounded" 
+                // className="text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                +
+              </button>
+            </div>
           </label>
+
           <label
             htmlFor="categoryId"
             style={{ display: "flex", alignItems: "center" }}
@@ -110,7 +150,7 @@ const CreateForm = () => {
               id="categoryId"
               name="categoryId"
               onChange={handleChange}
-              style={{color:"black"}}
+              style={{ color: "white" }}
             >
               <option value="0">선택</option>
               <option value="1">면접</option>

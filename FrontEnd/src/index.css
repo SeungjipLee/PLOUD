@@ -1188,3 +1188,9 @@ p {
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   filter: blur(5px);
 }
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+

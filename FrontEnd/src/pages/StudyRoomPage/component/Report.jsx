@@ -62,10 +62,10 @@ const Report = ({ users, closeModal }) => {
             value={content1}
             onChange={(e) => setContent1(e.target.value)}
           >
-            <option value="부적절1">부적절1</option>
-            <option value="부적절2">부적절2</option>
-            <option value="부적절3">부적절3</option>
-            <option value="부적절4">부적절4</option>
+            <option value="부적절한 닉네임">부적절한 닉네임</option>
+            <option value="부적절한 화면">부적절한 화면</option>
+            <option value="불법 광고">불법 광고</option>
+            <option value="직접 입력하기">직접 입력하기</option>
           </select>
         </div>
         <div>
