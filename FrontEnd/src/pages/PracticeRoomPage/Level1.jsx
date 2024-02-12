@@ -69,7 +69,7 @@ const Level1 = () => {
           setStream(stream);
           setVideoRecorder(vRecorder);
 
-          vRecorder.ondataavailable = (event) => {
+          vRecorder.ondataavailable = (e) => {
             if (e.data.size > 0) {
               videoUpload(e.data); // e.data : videoChunk
             }
