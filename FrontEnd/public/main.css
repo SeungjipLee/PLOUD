@@ -346,7 +346,7 @@ code {
 }
 .Page > main {
   flex-grow: 1;
-  margin: 8px 0;
+  /* margin: 8px 0; */
 }
 .Page > footer {
   bottom: 0;
