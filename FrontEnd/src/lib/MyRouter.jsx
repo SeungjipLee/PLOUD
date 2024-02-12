@@ -19,10 +19,12 @@ import Level2 from "../pages/PracticeRoomPage/Level2";
 import Level3 from "../pages/PracticeRoomPage/Level3";
 import PracticePage1 from "../pages/PracticePage/index1";
 import PracticePage2 from "../pages/PracticePage/index2";
+import ScrollToTop from "../components/ScrollToTop";
 
 const Router = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -31,8 +33,8 @@ const Router = () => {
         <Route path="/study" element={<StudyPage />} />
         <Route path="/study/room" element={<StudyRoomPage />} />
         <Route path="/practice" element={<PracticePage />} />
-        <Route path="/practice1" element={<PracticePage1/>} />
-        <Route path="/practice2" element={<PracticePage2/>} />
+        <Route path="/practice1" element={<PracticePage1 />} />
+        <Route path="/practice2" element={<PracticePage2 />} />
         <Route path="/practice/Level1" element={<Level1 />} />
         <Route path="/practice/Level2" element={<Level2 />} />
         <Route path="/practice/Level3" element={<Level3 />} />
