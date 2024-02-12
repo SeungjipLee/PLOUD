@@ -346,6 +346,7 @@
 }
 
 .roompage-icon {
+  position: relative;
   width: 200px;
 }
 
@@ -410,6 +411,7 @@
 
 .room-list {
   height: 70vh;
+  width: 60vw;
   padding: 5vh 0;
 }
 
@@ -1022,16 +1024,27 @@ p {
   height: 100%;
   width: auto;
 }
-
+.roompage-icon2 {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: 2vh;
+  height: 9vh;
+}
 .video-element {
   border-radius: 10px;
 }
-
-.mode-select {
+.on-air {
   z-index: 100;
-  position: absolute;
-  top: 8vh;
-  left: 0;
+  /* position: absolute; */
+  width:80px;
+}
+.mode-select {
+  display: flex;
+  align-items: center;
+  z-index: 100;
+  /* position: absolute; */
 }
 
 .mode-select select {
@@ -1194,3 +1207,6 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0;
 }
 
+::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
