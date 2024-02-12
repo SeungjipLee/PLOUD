@@ -163,8 +163,8 @@
 .study-main {
   display: inline-block;
   width: 980px;
-  margin: 100px 25%;
-  height: 100%;
+  margin: 120px 25%;
+  height: 80vh;
 }
 
 .pagination {
@@ -184,19 +184,20 @@
 }
 
 .create-room-button {
-  position: relative;
+  /* position: relative; */
 }
 
 .create-room-button > button {
-  position: absolute;
+  /* position: absolute; */
   background: linear-gradient(to bottom, #3a3758, #100e2c);
   color: white;
   font-weight: bold;
   border-radius: 10px;
   width: 100px;
   height: 40px;
-  right: 30px;
-  bottom: -10px;
+  margin-left: 20px;
+  /* right: 30px; */
+  /* bottom: -10px; */
 }
 
 .LoginBox {
@@ -401,7 +402,8 @@
 }
 
 .room-list {
-  height: 560px;
+  height: 70vh;
+  padding: 5vh 0;
 }
 
 .subtitle {

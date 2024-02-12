@@ -29,7 +29,11 @@ const CreateForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    console.log(formData.categoryId)
+    if (formData.categoryId == "" || formData.categoryId == "0") {
+      alert("카테고리를 선택해 주세요.")
+      return
+    }
     console.log("전송 ");
     console.log(formData);
 
@@ -108,7 +112,7 @@ const CreateForm = () => {
               onChange={handleChange}
               style={{color:"black"}}
             >
-              <option value="0">전체</option>
+              <option value="0">선택</option>
               <option value="1">면접</option>
               <option value="2">발표</option>
               <option value="3">기타</option>
