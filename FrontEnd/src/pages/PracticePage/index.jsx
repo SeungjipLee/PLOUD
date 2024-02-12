@@ -31,7 +31,7 @@ const PracticePage = () => {
   return (
     <div style={{ backgroundColor: "#EBEAFA" }}>
       <Page header={<Navbar />} footer={<Footer />}>
-        <div style={{ paddingTop: "130px" }}></div>
+        <div style={{ paddingTop: "100px" }}></div>
         <div
           align="center"
           style={{ paddingLeft: "120px", paddingRight: "120px" }}

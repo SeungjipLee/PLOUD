@@ -168,31 +168,7 @@ html {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, Courier New, monospace;
 }
-.Button {
-  background-color: transparent;
-  border: 1px solid #ced4da;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 8px;
-}
-.Button:focus,
-.Button:hover {
-  cursor: pointer;
-  text-decoration: underline;
-}
-.Button.brand {
-  border: 1px solid #2ac1bc;
-  border: 1px solid var(--brand-color);
-  color: #2ac1bc;
-  color: var(--brand-color);
-}
-.Button.brand-solid,
-.Button.brand:focus,
-.Button.brand:hover {
-  background-color: #2ac1bc;
-  background-color: var(--brand-color);
-  color: #fff;
-}
+
 .Button.brand-solid {
   border: 1px solid #2ac1bc;
   border: 1px solid var(--brand-color);

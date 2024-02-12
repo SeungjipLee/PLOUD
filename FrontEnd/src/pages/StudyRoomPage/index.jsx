@@ -728,6 +728,8 @@ const StudyRoomPage = () => {
       }
     );
 
+    dispatch(addRecordList({speechId: speechId.current, title: title}))
+
     // 비동기 처리 헷갈리니까 5초 뒤에 하자
     setTimeout(() => {
       recordResult();
