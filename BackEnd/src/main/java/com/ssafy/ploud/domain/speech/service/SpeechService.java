@@ -16,4 +16,6 @@ public interface SpeechService {
     void comment(CommentRequest commentRequest);
     ClearityResponse clearity(MultipartFile audioFile, Integer speechId, Boolean isLast);
     void uploadVideo(VideoUploadRequest reqdto, String userId);
+
+    Map<String, Long> findAllSpeechCount();
 }

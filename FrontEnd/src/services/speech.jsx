@@ -65,3 +65,10 @@ export const uploadVideo = async (token, data, success, fail) => {
     .then(success)
     .catch(fail)
 }
+
+export const getSpeechCount = async (success, fail) => {
+  return await API(null)
+    .get("speech/count")
+    .then(success)
+    .catch(fail)
+}
