@@ -166,16 +166,19 @@ const StudyRoomPage = () => {
         }
       );
 
-    publisherScreen.stream.mediaStream.getVideoTracks()[0].onended = () => {
-      // 실행 되는데 publisherScreen 때문에 안닫힘
-      handleScreenShare2();    
-    };
+      publisherScreen.stream.mediaStream.getVideoTracks()[0].onended = () => {
+        // 실행 되는데 publisherScreen 때문에 안닫힘
+        handleScreenShare2();
+      };
 
-    sessionScreen.current.publish(publisherScreen);
-    setPublisherScreen(publisherScreen);
-    setScreenShare(true);
-    setMode("3");
-  } catch {(err) => console.log(err)}}
+      sessionScreen.current.publish(publisherScreen);
+      setPublisherScreen(publisherScreen);
+      setScreenShare(true);
+      setMode("3");
+    } catch {
+      (err) => console.log(err);
+    }
+  };
 
   const handleScreenShare2 = async () => {
     if (publisherScreen) {
@@ -220,7 +223,7 @@ const StudyRoomPage = () => {
 
   // 사용법 publisher, mainStreamManager, subscriber 등을 넣으면 닉네임을 파싱해서 반환해줌
   const getUserNickname = (streamObject) => {
-    console.log(streamObject)
+    console.log(streamObject);
     const nickname = JSON.parse(
       streamObject.stream.connection.data.split("%/%")[0]
     ).clientData;
@@ -266,7 +269,7 @@ const StudyRoomPage = () => {
   useEffect(() => {
     if (!presenter) return;
     console.log("[presenter]", presenter);
-    if (OV.current ==null) joinSession();
+    if (OV.current == null) joinSession();
   }, [presenter]);
 
   // 사람 수 마다 화면이 다르게 배치되도록 분기처리
@@ -333,6 +336,12 @@ const StudyRoomPage = () => {
   // 녹화 시작
   const submitHandler = (e) => {
     e.preventDefault();
+
+    if (room.categoryId === 2) {
+      setMode("3");
+    } else {
+      setMode("1");
+    }
 
     console.log("녹음 시작");
 
@@ -477,7 +486,13 @@ const StudyRoomPage = () => {
     session.current.on("signal:rstart", (event) => {
       var username = JSON.parse(event.data).nickname;
       var content = JSON.parse(event.data).chatvalue;
-
+      if (presenter != nickname) {
+        if (room.categoryId === 2) {
+          setMode("3");
+        } else {
+          setMode("2");
+        }
+      }
       setChatList((chatList) => [
         ...chatList,
         { username: username, content: content },
@@ -728,7 +743,7 @@ const StudyRoomPage = () => {
       }
     );
 
-    dispatch(addRecordList({speechId: speechId.current, title: title}))
+    dispatch(addRecordList({ speechId: speechId.current, title: title }));
 
     // 비동기 처리 헷갈리니까 5초 뒤에 하자
     setTimeout(() => {
@@ -762,7 +777,7 @@ const StudyRoomPage = () => {
   // 피드백 등록 요청
   const feedbackPost = (e) => {
     if (e.key !== "Enter") return;
-    sendSignal("Typing", "typing")
+    sendSignal("Typing", "typing");
     postFeedback(
       token,
       {
@@ -967,8 +982,12 @@ const StudyRoomPage = () => {
                         <span className="nickname-overlay">
                           {getUserNickname(sub)}
                         </span>
-                        <UserVideoComponent isTyping={
-                          (getUserNickname(sub) !== presenter) ? typing : false} streamManager={sub} />
+                        <UserVideoComponent
+                          isTyping={
+                            getUserNickname(sub) !== presenter ? typing : false
+                          }
+                          streamManager={sub}
+                        />
                       </div>
                     </div>
                   );
@@ -981,8 +1000,14 @@ const StudyRoomPage = () => {
                     <span className="nickname-overlay">
                       {getUserNickname(publisher)}
                     </span>
-                    <UserVideoComponent isTyping={
-                          (getUserNickname(publisher) !== presenter) ? typing : false} streamManager={publisher} />
+                    <UserVideoComponent
+                      isTyping={
+                        getUserNickname(publisher) !== presenter
+                          ? typing
+                          : false
+                      }
+                      streamManager={publisher}
+                    />
                   </div>
                 </div>
               )}
@@ -998,8 +1023,12 @@ const StudyRoomPage = () => {
                         <span className="nickname-overlay">
                           {getUserNickname(sub)}
                         </span>
-                        <UserVideoComponent isTyping={
-                          (getUserNickname(sub) !== presenter) ? typing : false} streamManager={sub} />
+                        <UserVideoComponent
+                          isTyping={
+                            getUserNickname(sub) !== presenter ? typing : false
+                          }
+                          streamManager={sub}
+                        />
                       </div>
                     </div>
                   );
@@ -1020,8 +1049,14 @@ const StudyRoomPage = () => {
                     <span className="nickname-overlay">
                       {getUserNickname(publisher)}
                     </span>
-                    <UserVideoComponent isTyping={
-                          (getUserNickname(publisher) !== presenter) ? typing : false} streamManager={publisher} />
+                    <UserVideoComponent
+                      isTyping={
+                        getUserNickname(publisher) !== presenter
+                          ? typing
+                          : false
+                      }
+                      streamManager={publisher}
+                    />
                   </div>
                 </div>
               )}
@@ -1037,8 +1072,12 @@ const StudyRoomPage = () => {
                         <span className="nickname-overlay">
                           {getUserNickname(sub)}
                         </span>
-                        <UserVideoComponent isTyping={
-                          (getUserNickname(sub) !== presenter) ? typing : false} streamManager={sub} />
+                        <UserVideoComponent
+                          isTyping={
+                            getUserNickname(sub) !== presenter ? typing : false
+                          }
+                          streamManager={sub}
+                        />
                       </div>
                     </div>
                   );
@@ -1061,8 +1100,12 @@ const StudyRoomPage = () => {
                   <span className="nickname-overlay">
                     {getUserNickname(publisher)}
                   </span>
-                  <UserVideoComponent isTyping={
-                          (getUserNickname(publisher) !== presenter) ? typing : false} streamManager={publisher} />
+                  <UserVideoComponent
+                    isTyping={
+                      getUserNickname(publisher) !== presenter ? typing : false
+                    }
+                    streamManager={publisher}
+                  />
                 </div>
               ) : null}
             </div>
@@ -1076,8 +1119,12 @@ const StudyRoomPage = () => {
                     <span className="nickname-overlay">
                       {getUserNickname(sub)}
                     </span>
-                    <UserVideoComponent isTyping={
-                          (getUserNickname(sub) !== presenter) ? typing : false} streamManager={sub} />
+                    <UserVideoComponent
+                      isTyping={
+                        getUserNickname(sub) !== presenter ? typing : false
+                      }
+                      streamManager={sub}
+                    />
                   </div>
                 );
               }
@@ -1106,8 +1153,12 @@ const StudyRoomPage = () => {
                       <span className="nickname-overlay">
                         {getUserNickname(sub)}
                       </span>
-                      <UserVideoComponent isTyping={
-                          (getUserNickname(sub) !== presenter) ? typing : false} streamManager={sub} />
+                      <UserVideoComponent
+                        isTyping={
+                          getUserNickname(sub) !== presenter ? typing : false
+                        }
+                        streamManager={sub}
+                      />
                     </div>
                   </div>
                 ))}
@@ -1118,8 +1169,12 @@ const StudyRoomPage = () => {
                   {getUserNickname(publisher)}
                 </span>
                 {publisher !== undefined ? (
-                  <UserVideoComponent isTyping={
-                    (getUserNickname(publisher) !== presenter) ? typing : false} streamManager={publisher} />
+                  <UserVideoComponent
+                    isTyping={
+                      getUserNickname(publisher) !== presenter ? typing : false
+                    }
+                    streamManager={publisher}
+                  />
                 ) : null}
               </div>
             </div>
@@ -1137,8 +1192,12 @@ const StudyRoomPage = () => {
                     <span className="nickname-overlay">
                       {getUserNickname(sub)}
                     </span>
-                    <UserVideoComponent isTyping={
-                          (getUserNickname(sub) !== presenter) ? typing : false} streamManager={sub} />
+                    <UserVideoComponent
+                      isTyping={
+                        getUserNickname(sub) !== presenter ? typing : false
+                      }
+                      streamManager={sub}
+                    />
                   </div>
                 );
               }
@@ -1157,8 +1216,12 @@ const StudyRoomPage = () => {
                 console.log(sub);
                 return (
                   <div key={i} className="mode2-main-screen">
-                    <UserVideoComponent isTyping={
-                          (getUserNickname(sub) !== presenter) ? typing : false} streamManager={sub} />
+                    <UserVideoComponent
+                      isTyping={
+                        getUserNickname(sub) !== presenter ? typing : false
+                      }
+                      streamManager={sub}
+                    />
                   </div>
                 );
               }
@@ -1325,7 +1388,11 @@ const StudyRoomPage = () => {
       {result && <ResultList />}
       {report && <Report users={roomUsers} closeModal={closeModal} />}
       {recordForm && (
-        <Modal title="녹화 정보 입력" onClose={(e) => setRecordForm(false)} className={"record-form"}>
+        <Modal
+          title="녹화 정보 입력"
+          onClose={(e) => setRecordForm(false)}
+          className={"record-form"}
+        >
           {/* <h1 style={{fontWeight:"bold"}}>녹화 정보 입력</h1> */}
           <form onSubmit={submitHandler}>
             <div className="ms-3">
@@ -1333,7 +1400,7 @@ const StudyRoomPage = () => {
                 <span>제목 :</span>
                 <input
                   placeholder="제목 입력"
-                  style={{backgroundColor:"#e5e7eb"}}
+                  style={{ backgroundColor: "#e5e7eb" }}
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                 ></input>
@@ -1342,7 +1409,15 @@ const StudyRoomPage = () => {
               <p>분류 : 스터디</p>
             </div>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button style={{backgroundColor:"#0C134F", color:"#FFFFFF", fontWeight:"bold"}}>녹화 시작</Button>
+              <Button
+                style={{
+                  backgroundColor: "#0C134F",
+                  color: "#FFFFFF",
+                  fontWeight: "bold",
+                }}
+              >
+                녹화 시작
+              </Button>
             </div>
           </form>
         </Modal>
