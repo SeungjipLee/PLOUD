@@ -24,6 +24,7 @@ import Modal from "../../components/Modal";
 import Button from "../../components/Button";
 import StudyResult from "./component/StudyResult";
 import LoadingScreen from "./component/Loading";
+import TimerComponent from "../../components/Timer";
 
 const StudyRoomPage = () => {
   const navigate = useNavigate();
@@ -973,7 +974,10 @@ const StudyRoomPage = () => {
           <div className="roompage-icon2">
             {record && (
               <div className="on-air">
+                <div className="on-air-img">
                 <img src="/images/recording.png" />
+                </div>
+                <TimerComponent isActive={record} resetTimer={!record} />
               </div>
             )}
             <div className="mode-select">

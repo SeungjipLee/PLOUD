@@ -1048,9 +1048,17 @@ p {
   border-radius: 10px;
 }
 .on-air {
+  display: flex;
   z-index: 100;
-  /* position: absolute; */
-  width:80px;
+  color: white;
+  width: 150px;
+  justify-content: space-between;
+}
+.on-air-img {
+  width: 80px;
+}
+.timer {
+  font-size: 20px;
 }
 .mode-select {
   display: flex;
