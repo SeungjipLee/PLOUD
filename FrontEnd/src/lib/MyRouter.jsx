@@ -17,6 +17,8 @@ import InterviewScreenPresenter from "../pages/StudyRoomPage/component/Interview
 import StudyResult from "../pages/StudyRoomPage/component/StudyResult";
 import Level1 from "../pages/PracticeRoomPage/Level1";
 import Level2 from "../pages/PracticeRoomPage/Level2";
+import PracticePage1 from "../pages/PracticePage/index1";
+import PracticePage2 from "../pages/PracticePage/index2";
 
 const Router = () => {
   return (
@@ -29,6 +31,8 @@ const Router = () => {
         <Route path="/study" element={<StudyPage />} />
         <Route path="/study/room" element={<StudyRoomPage />} />
         <Route path="/practice" element={<PracticePage />} />
+        <Route path="/practice1" element={<PracticePage1/>} />
+        <Route path="/practice2" element={<PracticePage2/>} />
         <Route path="/practice/Level1" element={<Level1 />} />
         <Route path="/practice/Level2" element={<Level2 />} />
         <Route path="/findpw" element={<FindPwPage />} />
