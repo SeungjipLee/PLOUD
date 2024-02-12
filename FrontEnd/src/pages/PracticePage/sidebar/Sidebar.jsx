@@ -227,13 +227,8 @@ const Sidebar = ({ level }) => {
         align="right"
         className="mt-6"
         style={{ fontWeight: "bold", color: "#0C134F" }}>
-        {id != "" && level == 1 && (
+        {id != "" && (
           <Link to="/practice/Level1" state={{ content: content }}>
-            <span className="practice-startText">녹화 시작하기 ▶</span>
-          </Link>
-        )}
-        {id != "" && level == 2 && (
-          <Link to="/practice/Level2" state={{ content: content }}>
             <span className="practice-startText">녹화 시작하기 ▶</span>
           </Link>
         )}

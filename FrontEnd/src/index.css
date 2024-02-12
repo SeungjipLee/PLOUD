@@ -350,7 +350,7 @@
 }
 
 .PracticeRoomPage-mid {
-  height: 800px;
+  height: 80vh;
   position: relative;
   display: flex;
   align-items: center;
@@ -819,8 +819,8 @@ p {
   border-radius: 10px;
   width: 400px;
   height: 330px;
-  background-color: #FFFFFF;
-  color: #0C134F;
+  background-color: #ffffff;
+  color: #0c134f;
   top: 40%; /* 상단 위치를 부모 요소의 중간으로 조정 */
   left: 50%; /* 왼쪽 위치를 부모 요소의 중간으로 조정 */
   transform: translate(-50%, -50%); /* 요소를 정확한 중앙으로 이동 */
@@ -1035,14 +1035,13 @@ p {
 }
 
 .mode-select select {
-  background:#06051500;
+  background: #06051500;
   color: white;
 }
 .mode-select select option {
   background-color: #121025;
   color: white;
 }
-
 
 .mode2-top {
   display: flex;
@@ -1171,14 +1170,21 @@ p {
   top: 5px;
   left: 5px;
 }
-.typing img{
+.typing img {
   width: 30px;
 }
 
 .practice-startText:hover {
-  color: #F3704B
+  color: #f3704b;
 }
 
 .Study {
   background-color: white;
+}
+
+/* 글자 blur 처리 */
+.blur-text {
+  color: transparent;
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  filter: blur(5px);
 }

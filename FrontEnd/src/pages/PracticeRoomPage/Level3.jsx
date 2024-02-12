@@ -15,7 +15,7 @@ import {
   uploadVideo,
 } from "../../services/speech";
 
-const Level2 = () => {
+const Level3 = () => {
   const { token } = useSelector((state) => state.userReducer);
   const navigate = useNavigate();
 
@@ -443,8 +443,8 @@ const Level2 = () => {
     const words = text.split(" ");
     return words.map((word, index) => (
       <span key={index} className="word">
-        {(index + 1) % 8 === 0 && <span className="blur-text">{word}</span>}
-        {(index + 1) % 8 !== 0 && (
+        {(index + 1) % 4 === 0 && <span className="blur-text">{word}</span>}
+        {(index + 1) % 4 !== 0 && (
           <>
             {word} <></>
           </>
@@ -587,4 +587,4 @@ const Level2 = () => {
   );
 };
 
-export default Level2;
+export default Level3;
