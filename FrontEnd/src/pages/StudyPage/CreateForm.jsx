@@ -28,7 +28,10 @@ const CreateForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData.categoryId);
+    if (!formData.title.trim()) {
+      alert("제목을 입력해 주세요.");
+      return;
+    }
     if (formData.categoryId == "" || formData.categoryId == "0") {
       alert("카테고리를 선택해 주세요.");
       return;
