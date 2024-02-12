@@ -3,10 +3,19 @@ import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { getScriptList, getScriptDetail } from "../../services/script";
 
 const PracticePage2 = () => {
   const [level, setLevel] = useState("1");
+  const [category, setCategory] = useState("News");
 
+  const handleCategoty1 = () => {
+    setCategory("Speech");
+  };
+
+  const handleCategoty2 = () => {
+    setCategory("News");
+  };
   return (
     <div className="bg-white w-full min-h-screen">
       <Page header={<Navbar />} footer={<Footer />}>
@@ -45,12 +54,30 @@ const PracticePage2 = () => {
             </div>
             <div className="flex mb-5">
               <div className="text-xl mainBlueF font-bold py-1">3. 분류 :</div>
-              <button className="ms-5 bg-blue-500 text-white rounded-xl px-2 ">
-                뉴스
-              </button>
-              <button className="ms-3 bg-blue-300 text-gray-200 rounded-xl px-2 ">
-                연설
-              </button>
+              {category == "News" && (
+                <>
+                  <button className="ms-5 bg-blue-500 text-white rounded-xl px-2 ">
+                    뉴스
+                  </button>
+                  <button
+                    className="ms-3 bg-blue-300 text-gray-200 rounded-xl px-2 "
+                    onClick={handleCategoty1}>
+                    연설
+                  </button>
+                </>
+              )}
+              {category == "Speech" && (
+                <>
+                  <button
+                    className="ms-5 bg-blue-300 text-gray-200 rounded-xl px-2 "
+                    onClick={handleCategoty2}>
+                    뉴스
+                  </button>
+                  <button className="ms-3 bg-blue-500 text-white rounded-xl px-2 ">
+                    연설
+                  </button>
+                </>
+              )}
             </div>
             <div className="flex mb-10 w-full">
               <div className="text-xl mainBlueF font-bold pt-1">4. 내용 :</div>
