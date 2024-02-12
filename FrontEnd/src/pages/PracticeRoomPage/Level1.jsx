@@ -276,7 +276,7 @@ const Level1 = () => {
 
     setTimeout(() => {
       setFeedback("");
-      
+
       setTimeout(() => {
         isFeedback.current = false;
       }, 2500);
@@ -441,6 +441,9 @@ const Level1 = () => {
 
   return (
     <div className="RoomPage">
+      <div className="roompage-icon">
+        <img src="/images/ploud_icon_bg.png" />
+      </div>
       <div className="PracticeRoomPage-mid">
         <div
           style={{
@@ -450,8 +453,7 @@ const Level1 = () => {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-          }}
-        >
+          }}>
           <div>
             <video
               style={{ width: "100%", height: "500px" }}
@@ -472,8 +474,7 @@ const Level1 = () => {
               fontSize: "24px",
               fontWeight: "bold",
               color: "white",
-            }}
-          >
+            }}>
             {feedback}
           </div>
         </div>
@@ -483,8 +484,7 @@ const Level1 = () => {
               width: "50%",
               height: "600px",
               margin: "-30px 80px 0 20px",
-            }}
-          >
+            }}>
             <video ref={screenShareVideoRef} autoPlay></video>
           </div>
         ) : (
@@ -497,8 +497,8 @@ const Level1 = () => {
               flex: "auto",
               overflowY: "auto",
               backgroundColor: "#F8F5F0",
-            }}
-          >
+              whiteSpace: "pre-wrap",
+            }}>
             {content}
           </div>
         )}
@@ -546,8 +546,7 @@ const Level1 = () => {
         <Modal
           title="녹화 정보 입력"
           onClose={(e) => setRecordForm(false)}
-          className={"record-form"}
-        >
+          className={"record-form"}>
           <form onSubmit={speechStart}>
             <div>
               <p>
@@ -556,8 +555,7 @@ const Level1 = () => {
                   placeholder="제목 입력..."
                   value={title}
                   style={{ color: "white" }}
-                  onChange={(e) => setTitle(e.target.value)}
-                ></input>
+                  onChange={(e) => setTitle(e.target.value)}></input>
               </p>
               <p>카테고리 : 전체</p>
               <p>분류 : 개인</p>

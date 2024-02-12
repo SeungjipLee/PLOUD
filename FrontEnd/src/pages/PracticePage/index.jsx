@@ -100,20 +100,6 @@ const PracticePage = () => {
                 </select>
               </div>
             )}
-            {currentPage === "select" && (
-              <div>
-                <span className="font-bold text-blue-950">단계</span>
-                <select
-                  className="border border-blue-950 p-1 bg-whittext-blue-900 ml-4"
-                  value={level}
-                  onChange={handleLevel}>
-                  <option value="1">level 1</option>
-                  <option value="2">level 2</option>
-                  <option value="3">level 3</option>
-                  <option value="4">level 4</option>
-                </select>
-              </div>
-            )}
           </div>
           {currentPage === "write" && <ScriptWrite level={level} />}
           {currentPage === "select" && <ScriptSelect level={level} />}
@@ -162,6 +148,11 @@ const ScriptWrite = ({ level }) => {
           )}
           {level == 2 && (
             <Link to="/practice/Level2" state={{ content: content }}>
+              <span className="practice-startText">녹화 시작하기 ▶</span>
+            </Link>
+          )}
+          {level == 3 && (
+            <Link to="/practice/Level3" state={{ content: content }}>
               <span className="practice-startText">녹화 시작하기 ▶</span>
             </Link>
           )}
