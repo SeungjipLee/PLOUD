@@ -10,7 +10,7 @@ export const recordSlice = createSlice({
   reducers: {
     addRecordList: (state, action) => {
       console.log(action.payload);
-      state.recordList = [...state.recordList, action.payload.data];
+      state.recordList = [...state.recordList, action.payload];
     },
     initRecordList: (state, action) => {
       state.recordList = [];

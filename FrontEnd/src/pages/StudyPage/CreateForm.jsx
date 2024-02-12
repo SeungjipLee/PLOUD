@@ -53,7 +53,7 @@ const CreateForm = () => {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "30px" }}>
+        <div style={{ marginBottom: "20px" }}>
           <label htmlFor="title">
             <span
               style={{
@@ -76,7 +76,7 @@ const CreateForm = () => {
           style={{
             display: "flex",
             marginBottom: "20px",
-            marginRight: "20px",
+            // marginRight: "20px",
             alignItems: "center",
             justifyContent: "space-between",
           }}
@@ -105,8 +105,8 @@ const CreateForm = () => {
             <select
               id="categoryId"
               name="categoryId"
-              style={{ color: "black" }}
               onChange={handleChange}
+              style={{color:"black"}}
             >
               <option value="0">전체</option>
               <option value="1">면접</option>
@@ -151,7 +151,7 @@ const CreateForm = () => {
             )}
           </label>
 
-          <div style={{ marginRight: "20px" }}>
+          <div>
             <label htmlFor="public" style={{ margin: "0 5px" }}>
               공개
             </label>
@@ -179,14 +179,14 @@ const CreateForm = () => {
           style={{
             display: "flex",
             justifyContent: "center",
-            marginTop: "40px",
+            marginTop: "30px",
           }}
         >
           <button
             type="submit"
             style={{
-              backgroundColor: "white",
-              color: "black",
+              backgroundColor: "#FFFFFF",
+              color: "#0C134F",
               padding: "5px",
               fontWeight: "bold",
               borderRadius: "5px",

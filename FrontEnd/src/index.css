@@ -110,7 +110,7 @@
 }
 
 .study-category-button-activate {
-  background: linear-gradient(to bottom, #223872, #2f2468);
+  background: linear-gradient(to bottom, #3a3758, #100e2c);
   color: white;
 }
 
@@ -189,7 +189,7 @@
 
 .create-room-button > button {
   position: absolute;
-  background: linear-gradient(to bottom, #223872, #2f2468);
+  background: linear-gradient(to bottom, #3a3758, #100e2c);
   color: white;
   font-weight: bold;
   border-radius: 10px;
@@ -238,7 +238,7 @@
   border-radius: 15px;
   padding: 20px;
   /* background-color: #1d267d; */
-  background: linear-gradient(to bottom, #435380, #2f2468);
+  background: linear-gradient(to bottom, #3a3758, #100e2c);
   color: white;
   margin: 10px 20px;
 }
@@ -622,12 +622,26 @@ p {
 }
 
 .study-result {
-  position: absolute;
+  /* position: absolute; */
   border-radius: 10px;
-  top: -350px;
+  /* top: -350px;
   left: -100px;
   width: 1000px;
-  height: 600px;
+  height: 600px; */
+  position: fixed;
+  top: 40%; /* 상단 위치를 부모 요소의 중간으로 조정 */
+  left: 50%; /* 왼쪽 위치를 부모 요소의 중간으로 조정 */
+  transform: translate(-50%, -50%); /* 요소를 정확한 중앙으로 이동 */
+  background-color: #ffffff;
+  z-index: 999;
+}
+
+.study-result-mypage {
+  border-radius: 10px;
+  position: fixed;
+  top: -5%; /* 상단 위치를 부모 요소의 중간으로 조정 */
+  left: 50%; /* 왼쪽 위치를 부모 요소의 중간으로 조정 */
+  transform: translate(-50%, -50%); /* 요소를 정확한 중앙으로 이동 */
   background-color: #ffffff;
   z-index: 999;
 }
@@ -718,7 +732,7 @@ p {
 
 .OutBox {
   width: 1000px;
-  height: 500px;
+  height: 600px;
 }
 
 .searchForm {
@@ -787,16 +801,17 @@ p {
 }
 
 .record-form {
-  border: rgb(85, 85, 85) solid 1px;
-  position: absolute;
+  /* border: rgb(85, 85, 85) solid 1px; */
+  /* position: absolute; */
+  position: fixed;
   display: flex;
   flex-direction: column;
   padding: 20px;
-  border-radius: 5px;
+  border-radius: 10px;
   width: 400px;
   height: 330px;
-  background-color: #060515;
-  color: white;
+  background-color: #FFFFFF;
+  color: #0C134F;
   top: 40%; /* 상단 위치를 부모 요소의 중간으로 조정 */
   left: 50%; /* 왼쪽 위치를 부모 요소의 중간으로 조정 */
   transform: translate(-50%, -50%); /* 요소를 정확한 중앙으로 이동 */
@@ -1047,6 +1062,7 @@ p {
   border-radius: 5px;
   padding: 2px 5px;
   position: absolute;
+  z-index: 10;
 }
 
 .mode2-top-each:hover .nickname-overlay {
@@ -1067,13 +1083,13 @@ p {
   position: absolute;
   padding: 2px 5px;
   border-radius: 5px;
+  z-index: 10;
 }
 
 .mode0-each:hover .nickname-overlay {
   display: block;
   opacity: 1;
   background-color: rgb(255, 255, 255, 0.5);
-
   height: 30px;
 }
 
@@ -1092,6 +1108,7 @@ p {
   position: absolute;
   padding: 2px 5px;
   border-radius: 5px;
+  z-index: 10;
 }
 
 .mode1-each:hover .nickname-overlay {
@@ -1108,4 +1125,51 @@ p {
 
 .mode3-each video {
   width: 40vw;
+}
+.mode3-each {
+  position: relative;
+  padding: 0px 10px;
+}
+.mode3-each span {
+  display: none;
+  position: absolute;
+  padding: 2px 5px;
+  border-radius: 5px;
+  z-index: 10;
+}
+.mode3-each:hover .nickname-overlay {
+  display: block;
+  opacity: 1;
+  background-color: rgb(255, 255, 255, 0.5);
+  height: 30px;
+}
+.create-room {
+  background: linear-gradient(to bottom, #3a3758, #100e2c);
+}
+
+.create-room select {
+  background: #06051500;
+  color: white;
+}
+
+.create-room select option {
+  color: white;
+  background-color: #060515;
+}
+
+.typing {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
+.typing img{
+  width: 30px;
+}
+
+.practice-startText:hover {
+  color: #F3704B
+}
+
+.Study {
+  background-color: white;
 }

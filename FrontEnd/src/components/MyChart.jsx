@@ -40,7 +40,7 @@ const MyChart = () => {
         label: '점수',
         data: dataScores,
         fill: false,
-        borderColor: 'rgb(75, 192, 192)',
+        borderColor: 'rgb(243, 112, 75)',
         tension: 0.1
       }
     ]

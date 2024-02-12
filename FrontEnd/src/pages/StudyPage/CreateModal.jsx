@@ -3,7 +3,7 @@ function CreateModal({ title, children, onClose }) {
         <div
           style={{
             position: "fixed",
-            top: "35%",
+            top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             backgroundColor: "#001356",
@@ -19,9 +19,10 @@ function CreateModal({ title, children, onClose }) {
             display: 'flex', 
             justifyContent: 'space-between', 
             alignItems: 'center',
+            marginTop: "20px",
             marginBottom: "30px",
             fontSize: "20px"}}>
-            <h1>{title}</h1>
+            <h1 style={{fontWeight:"bold"}}>{title}</h1>
             <button onClick={onClose} className="close"></button>
           </div>
           {children}

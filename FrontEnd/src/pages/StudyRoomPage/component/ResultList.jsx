@@ -9,16 +9,12 @@ const ResultList = (data) => {
   const [resultNum, setResultNum] = useState(0);
   const [modal, setModal] = useState(false);
   
-  const recordList = useSelector((state) => state.recordReducer.recordList);
   
   // 녹화한 것들 결과 리스트 가져와서 목록 보여주기
   // 중앙저장소에 결과 데이터들 저장해둘 것
   // const resultList = useSelector((state) => state.ResultReducer)
-  const resultList = [
-    { id: 1, name: "결과1" },
-    { id: 2, name: "결과2" },
-    { id: 3, name: "결과3" },
-  ];
+  const recordList = useSelector((state) => state.recordReducer.recordList);
+  const [speechId, setSpeechId] = useState(null)
 
   const handleClose = () => {
     setModal(false);
@@ -26,6 +22,8 @@ const ResultList = (data) => {
 
   // 결과 클릭 시 결과 모달창 띄우기
   const handleClick = (e, index) => {
+    setSpeechId(recordList[index].speechId)
+    console.log(e)
     // index 에 해당하는 데이터 들고와서 결과창 만들어서 보여주기
     setModal(true);
   };
@@ -37,12 +35,12 @@ const ResultList = (data) => {
         <div>
           {recordList.map((item, index) => (
             <div key={index} onClick={(e) => handleClick(e, index)}>
-              - {item.startsAt} : {item.title}
+              제목 : {item.title}
             </div>
           ))}
         </div>
       </div>
-      {modal && <StudyResult onClose={handleClose}></StudyResult>}
+      {modal && <StudyResult onClose={handleClose} speechId={speechId}></StudyResult>}
     </>
   );
 };

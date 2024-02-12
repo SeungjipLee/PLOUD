@@ -44,7 +44,7 @@ const API = (token) => {
         //     localStorage.removeItem("user");
 
         //     alert("다시 로그인해 주세요");
-        //     window.location = '/login'  
+        //     window.location = '/login'
         // }
         return Promise.reject(error);
       } else {

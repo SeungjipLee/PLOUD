@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import BarChart from "../../components/BarChart";
 import { getRecordResult } from "../../services/record";
 import { getSentence } from "../../services/sentence"
-import { postComment } from "../../services/speech";
 
 const PracticeResult = ({ onClose, speechId }) => {
   const [ isDetail,setIsDetail ] = useState(true)
@@ -16,7 +15,6 @@ const PracticeResult = ({ onClose, speechId }) => {
   const [ about, setAbout ] = useState({})
   const [ sentence, setSentence ] = useState('') // 명언
   const [ resultTextColor, setResultTextColor ] = useState("#000000")
-  const [ myFeedback, setMyFeedback ] = useState('')
 
 
   const formatTimeLog = (timeLog) => {
@@ -30,24 +28,6 @@ const PracticeResult = ({ onClose, speechId }) => {
   const handleDetail = () => {
     setIsDetail(!isDetail)
   }
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    try {
-      const response = postComment(
-        token,
-        {
-          "speechId": resultId,
-          "comment": myFeedback
-        },
-        (res) => {
-          console.log(res);
-          alert("내 피드백이 등록되었습니다")
-        },
-        (err) => console.log(err)
-      )
-    } catch (err) {console.log(err)}
-    }
 
   useEffect(() => {
     if (scores.grade < 20) {
@@ -89,10 +69,7 @@ const PracticeResult = ({ onClose, speechId }) => {
         
         const randomSentenceResponse = getSentence(
           token,
-          (res) => {
-            console.log(res.data.data)
-            setSentence(res.data.data.sentence)
-          },
+          (res) => setSentence(res.data.data.sentence),
           (err) => console.log(err)
         );
 
@@ -108,8 +85,7 @@ const PracticeResult = ({ onClose, speechId }) => {
   return (
     <Modal
       title="연습 결과 발표"
-      className="study-result"
-      style={{ position: 'fixed', top: '100px', left: '100px', zIndex:999 }}
+      className="study-result-mypage"
       onClick={onClose}
     >
       {/* <div className="result-section" onClick={(e) => e.stopPropagation()}>
@@ -128,20 +104,19 @@ const PracticeResult = ({ onClose, speechId }) => {
               </div>
             </div>
             <div className="p-2">
-              <div className="w-68 h-36 m-auto grid grid-cols-2 text-center place-content-center rounded-xl"
+              <div className="w-68 h-36 grid grid-cols-2 text-center place-content-center rounded-xl"
                 style={{backgroundColor:"#EBEAFA"}}>
                 <div className="text-2xl mt-5 ps-5 pb-4 ms-5">결과:</div>
                 <div className="text-5xl me-5 pt-2 me-5" style={gradeStyle}>{grade}</div>                              
               </div>
             </div>
           </div>
-
           <div className="result-section-2 mx-7">
 
             {isDetail && <div className="h-12 mb-2 text-center text-xl">
-                <span className="mx-10 font-bold" style={{color:"#F3704B"}}>세부 결과</span>              
-                <span className="mx-10 text-3xl">|</span>
-                <span onClick={handleDetail} className="mx-10 text-gray-400 font-bold cursor-pointer">피드백 작성</span>
+            <span className="mx-10 font-bold" style={{color:"#F3704B"}}>세부 결과</span>              
+            <span className="mx-10 text-3xl">|</span>
+              <span onClick={handleDetail} className="mx-10 text-gray-400 font-bold cursor-pointer">피드백</span>
             </div>}
 
             {isDetail && <div className="bg-white h-72 mb-2 rounded-md">
@@ -154,32 +129,28 @@ const PracticeResult = ({ onClose, speechId }) => {
             {!isDetail && <div className="h-12 mb-2 text-center text-xl">
                 <span onClick={handleDetail} className="mx-10 text-gray-400 font-bold cursor-pointer">세부 결과</span>
                 <span className="mx-10 text-3xl">|</span>
-                <span className="mx-10 font-bold" style={{color:"#F3704B"}}>피드백 작성</span>
+                <span className="mx-10 font-bold" style={{color:"#F3704B"}}>피드백</span>
             </div>}
 
             {!isDetail && <div style={{ width:"100%", height:"300px"}}>
-              <div className="mb-3">
-              {/* 내 피드백 입력*/}
-              <div align="center" className="text-xl text-center font-bold py-1" style={{backgroundColor:"#343B71", color:"#FFFFFF"}}>나의 피드백</div>
-              <div style={{overflow:"auto"}}>
-                <textarea name="" id="" cols="20" rows="3" className="ps-2 pe-2 bg-gray-100" placeholder="피드백을 남겨보세요." style={{width:"100%", height:"150px", resize:"none"}} onChange={(e)=>setMyFeedback(e.target.value)}></textarea>
-              </div>
-              <div align="right">
-                <button className="mt-3 mb-3 mx-auto p-1" style={{backgroundColor: "#343B71", color: "#FFFFFF", borderRadius: "10%"}} onClick={handleSubmit}>작성</button>
-              </div>
-                {/* <div style={{overflow:"auto"}} className="pl-3 pr-3">
+            <div>
+              <div className="mb-3"  style={{backgroundColor:"#343B71", color:"#FFFFFF"}}>
+              {/* 내 피드백 */}
+                <div align="center" className="text-xl text-center font-bold py-1">나의 피드백</div>
+                <div style={{height: "200px", overflowY:"auto", wordBreak:"break-all"}} className="pl-3 pr-3">
                   {about.comment && `${about.comment}`}
-                </div>  */}
+                </div>
+              </div> 
               {/* 명언 */}
               <div style={{height:"90px", display:"flex", flexDirection:"column"}}>
                 <div className="text-xl text-center font-bold py-1" style={{backgroundColor:"#343B71", color:"#FFFFFF"}}>
                     오늘의 스피치 명언
                 </div>
-                <div style={{overflow:"auto", backgroundColor:"#EBEAFA", flex:"1", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                <div className="mb-2" style={{overflow:"auto", backgroundColor:"#EBEAFA", flex:"1", display: "flex", alignItems: "center", justifyContent: "center"}}>
                     {sentence}
                 </div>
               </div>
-              </div>
+            </div>
             </div>}
         </div>
       </div>

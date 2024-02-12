@@ -23,7 +23,7 @@ const PatchInfoPage = () => {
   const validateNickname = () => /^[A-Za-z0-9가-힣]{2,8}$/.test(newNickname);
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const base64Image = `data:image/png;base64,${profile.profileImg}`
+  const profileImgPath = `${profile.profileImg}`
 
   useEffect(() => {
     const fetchData = () => {
@@ -98,7 +98,10 @@ const PatchInfoPage = () => {
     const formData = new FormData();
 
     if (selectedFile) {
-      formData.append('file', selectedFile);
+      formData.append('image', selectedFile);
+    } else {
+      alert("사진을 선택해주세요!")
+      return;
     }
     try {
       // axios로 POST 요청 보내기
@@ -142,14 +145,15 @@ const PatchInfoPage = () => {
                   <img src={preview} alt="Preview" className="w-44 h-44"/>
                 </div>
               )}
-              {!preview && <img src={`${base64Image}`} />}
+              {!preview && !profile.profileImg && <img src="images/Profile.PNG"/>}
+              {!preview && profile.profileImg && <img src={`${profileImgPath}`} />}
               <br />
-              <input type="file" accept="image/*" onChange={handleFileInput} className="mb-3" />
+              <input type="file" accept="image/*" onChange={handleFileInput} className="mb-3" required />
             </div>
               <button 
                 onClick={handleSubmitImg}
-                className="bg-gray-400 text-white rounded-md p-1 mx-7 mt-16">
-                프로필 사진 변경
+                className="custom-btn btn-1 rounded-md ps-2 pe-2 p-1 mx-7 mt-16">
+                사진 변경
               </button>
           </div>
           {/* 닉네임이랑 수정하기 버튼 */}
@@ -163,13 +167,13 @@ const PatchInfoPage = () => {
                   setNewNickname(e.target.value);
                 }}
                 />
-                <button onClick={handleSubmit} className="bg-gray-400 text-white rounded-md p-1 mx-3 my-5">수정하기</button>
+                <button onClick={handleSubmit} className="custom-btn btn-1  rounded-md ps-2 pe-2 p-1 mx-3 my-5">수정하기</button>
             </form>
             </div>
           {/* 비밀번호, 마이페이지 버튼 */}
           <div className="flex justify-center m-10">
-              <Link to="/resetpw" className="bg-gray-400 text-white rounded-md px-3 py-1 mx-3 my-3">비밀번호 재설정</Link>
-              <Link to="/mypage" className="bg-gray-400 text-white rounded-md px-3 py-1 mx-3 my-3">마이페이지</Link>
+              <Link to="/resetpw" className="mainBlueF rounded-md px-3 py-1 mx-3 my-3">비밀번호 재설정</Link>
+              <Link to="/mypage" className="mainBlueF rounded-md px-3 py-1 mx-3 my-3">마이페이지로 돌아가기</Link>
           </div>
           <span 
             className="checkPatch text-gray-400"

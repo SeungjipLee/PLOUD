@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import Footer from "../../components/Footer";
 import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Modal from "react-modal";
-import { createboard } from "../../services/board";
+import { createboard, getboardDetail, putboard } from "../../services/board";
 import { userVideos } from "../../services/user";
 // import { refreshAccessToken, updateNickname } from "../../features/user/userSlice";
 
@@ -13,10 +13,17 @@ import { userVideos } from "../../services/user";
 const CreateBoard = () => {
   // 로직
   const navigate = useNavigate();
+  const token  = useSelector((state) => state.userReducer.token);
+  const [ isModalOpen, setIsModalOpen ] = useState(false);
   const [ userVideoList, setUserVideoList ] = useState([])
   const [ isSelectedVideo, setIsSelectedVideo ] = useState(false)
   const [ selectedVideoTitle, setSelectedVideoTitle ] = useState("");
   const [ postVideoId, setPostVideoId] = useState(0)
+  const location = useLocation();
+  const isCreate = location.state.isCreate;
+  const boardId = location.state.boardId;
+  const [ pastTitle, setPastTitle ] = useState('')
+  const [ pastContent, setPastContent ] = useState('')
 
   
   const [formData, setFormData] = useState({
@@ -25,27 +32,48 @@ const CreateBoard = () => {
   });
 
   useEffect(() => {
+    console.log(isCreate);
+    console.log(boardId);
     const getData = async () => {
       try {
-        const response = await userVideos(
+        const videosResponse = await userVideos(
           token,
           (res) => {
-            console.log(res.data.data)
-            setUserVideoList(res.data.data)
+            console.log(res)
+            console.log(res.data.data);
+            setUserVideoList(res.data.data);
           },
           (err) => console.log(err)
-        )
+        );
+  
+        if (!isCreate) { // 수정 모드인 경우
+          const boardDetailResponse = await getboardDetail(
+            token,
+            boardId,
+            (res) => {
+              console.log(res);
+              setPastTitle(res.data.data.title)
+              setPastContent(res.data.data.content)              
+            },
+            (err) => console.log(err)
+          );
+        }
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
+    };
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (!isCreate) { // 수정 모드인 경우
+      setFormData({
+        title: pastTitle,
+        content: pastContent,
+      });
     }
-    getData()
-  },[])
-
-  // const dispatch = useDispatch();
-  const token  = useSelector((state) => state.userReducer.token);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
+  }, [pastTitle, pastContent, isCreate]);
+ 
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
@@ -60,6 +88,30 @@ const CreateBoard = () => {
       [e.target.name]: e.target.value,
     });
   };
+
+  const handlePut = (e) => {
+    const inputData = {
+      title: formData.title,
+      content: formData.content,
+      videoId: postVideoId
+    }
+    if (formData.title === "" || formData.content === "" || postVideoId==0) {
+      alert("제목과 내용과 영상을 모두 입력해주세요.");
+    } else {
+      putboard(
+        token,
+        boardId,
+        inputData,
+        (res) => {
+          navigate('/board')
+        },
+        (err) => {
+          console.log(videoId)
+          console.error(err);
+        }
+      );
+    }
+  }
 
 
   const handleSubmit = (e) => {
@@ -115,13 +167,20 @@ const CreateBoard = () => {
           <div className=" border-2 border-black mx-20 px-10 my-5 rounded-xl">
             <div className="mt-5 mb-2 text-xl">제목</div>
             <div>
-              <input
+              {isCreate&&<input
                 type="text"
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
                 className="block w-full rounded-md border-0 py-1 pl-5 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
+                />}
+              {!isCreate&&<input
+                type="text"
+                name="title"
+                defaultValue={pastTitle}
+                onChange={handleChange}
+                className="block w-full rounded-md border-0 py-1 pl-5 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />}
             </div>
             <div className="mt-5 mb-2 text-xl">내용</div>
             <div className=" border rounded-md mb-10">
@@ -141,16 +200,23 @@ const CreateBoard = () => {
                 ))}
               </ul>
             </Modal>
-            <textarea
+            {isCreate&&<textarea
               name="content"
               value={formData.content}
               onChange={handleChange}
               className=" block w-full h-80 border-0 py-1 pl-5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
+            />}
+            {!isCreate&&<textarea
+              name="content"
+              defaultValue={pastContent}
+              onChange={handleChange}
+              className=" block w-full h-80 border-0 py-1 pl-5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            />}
             </div>
           </div>
           <div className="createBtn px-60">
-        <button onClick={handleSubmit} className="border writeBtn rounded-md py-1 px-4 mx-10">등록</button>
+        {isCreate&&<button onClick={handleSubmit} className="border writeBtn rounded-md py-1 px-4 mx-10">등록</button>}
+        {!isCreate&&<button onClick={handlePut} className="border writeBtn rounded-md py-1 px-4 mx-10">수정</button>}
         <button className="border writeBtn1 rounded-md py-1 px-4 mx-10"><Link to={"/board"}>취소</Link></button>
           </div>
           </div>

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Button from "./Button";
 import { useSelector, useDispatch } from "react-redux";
 import { expireToken } from "../features/user/userSlice";
 
@@ -59,7 +58,8 @@ const Navbar = () => {
               justifyContent: "center",
               whiteSpace: "nowrap",
             }}>
-            <Link to="/mypage" style={{ padding:0, paddingRight: 5, color: "#0C134F", position:"absolute", right:"180px", top:"30px"}}>{nickname}님</Link>
+            <Link to="/mypage" style={{ padding:0, paddingRight: 5, color: "#0C134F", position:"absolute", right:"280px", top:"30px"}}>{nickname}님</Link>
+            <Link to="/mypage" style={{ padding:0, paddingRight: 5, color: "#0C134F", position:"absolute", right:"180px", top:"30px"}}>마이페이지</Link>
             <span onClick={onClickHandler} style={{ padding: 0, color: "#0C134F", marginLeft: "10px", cursor: "pointer", position:"absolute", right:"100px", top:"30px"}}>로그아웃</span>
           </div>)}
       </nav>
