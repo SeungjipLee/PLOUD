@@ -77,7 +77,7 @@ const Level1 = () => {
           vRecorder.ondataavailable = (e) => {
             if (e.data.size > 0) {
               // 주석해제하기
-              // videoUpload(e.data); // e.data : videoChunk
+              videoUpload(e.data); // e.data : videoChunk
             }
           };
         })
