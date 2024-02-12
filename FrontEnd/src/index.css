@@ -161,10 +161,17 @@
 }
 
 .study-main {
-  display: inline-block;
-  width: 980px;
-  margin: 120px 25%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 120px;
+  margin-bottom: 30px;
+  /* width: 980px; */
+  /* margin: 120px 25%; */
   height: 80vh;
+  background-color: white;
+  align-items: center;
+}
+.study-main-container {
 }
 
 .pagination {

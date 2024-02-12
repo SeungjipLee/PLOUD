@@ -10,6 +10,7 @@ body {
 }
 main {
   display: block;
+  width: 100%;
 }
 h1 {
   font-size: 2em;
@@ -156,7 +157,7 @@ body,
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #eee;
+  background-color: #ffffff;
   background-color: var(--base-background-color);
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
@@ -322,7 +323,6 @@ code {
 .Page {
   display: flex;
   flex-direction: column;
-  min-width: 320px;
 }
 .Page > header {
   background-color: #fff;
@@ -346,7 +346,6 @@ code {
 }
 .Page > main {
   flex-grow: 1;
-  margin: 8px 0;
 }
 .Page > footer {
   bottom: 0;
@@ -442,3 +441,4 @@ input[type=file]::file-selector-button {
   border-radius: 10px;
   cursor: pointer;
 }
+

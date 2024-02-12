@@ -116,112 +116,115 @@ const StudyPage = () => {
       >
         <Page header={<Navbar />} footer={<Footer />}>
           <div className="study-main">
-            
-            <div className="flex place-content-between">
-              <div className="flex">
-                <Button
-                  onClick={() => {
-                    setCategoryId(0);
-                  }}
-                  styleType={
-                    categoryId === 0
-                      ? "study-category-button study-category-button-activate"
-                      : "study-category-button study-category-button-deactivate"
-                  }
-                >
-                  전체
-                </Button>
-                <Button
-                  onClick={() => {
-                    setCategoryId(1);
-                  }}
-                  styleType={
-                    categoryId === 1
-                      ? "study-category-button study-category-button-activate"
-                      : "study-category-button study-category-button-deactivate"
-                  }
-                >
-                  면접
-                </Button>
-                <Button
-                  onClick={() => {
-                    setCategoryId(2);
-                  }}
-                  styleType={
-                    categoryId === 2
-                      ? "study-category-button study-category-button-activate"
-                      : "study-category-button study-category-button-deactivate"
-                  }
-                >
-                  발표
-                </Button>
-                <Button
-                  onClick={() => {
-                    setCategoryId(3);
-                  }}
-                  styleType={
-                    categoryId === 3
-                      ? "study-category-button study-category-button-activate"
-                      : "study-category-button study-category-button-deactivate"
-                  }
-                >
-                  기타
-                </Button>
-                <div className="study-main-search">
-                {/* {word === "" && <img src="./images/search_icon.PNG" alt="" />} */}
-                <img src="./images/search_icon.PNG" alt="" />
-                <input
-                  className="search-room-input"
-                  type="text"
-                  placeholder="방 이름으로 검색"
-                  value={word}
-                  onChange={(e) => setWord(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                />
-              </div>
-              </div>
-              
-              <div className="create-room-button">
-              <Button onClick={changeModalState}>방 만들기</Button>
-            </div>
-            </div>
-            <div className="grid room-list">
-              {studyList.slice((page - 1) * 9, page * 9).map((data, index) => (
-                <div key={index}>
-                  <RoomCard data={data}>
-                    <div
-                      className="enter-room"
-                      onClick={() => joinStudyRoom(data)}
-                    >
-                      입장
-                    </div>
-                  </RoomCard>
+            <div className="study-main-container">
+              <div className="flex place-content-between">
+                <div className="flex">
+                  <Button
+                    onClick={() => {
+                      setCategoryId(0);
+                    }}
+                    styleType={
+                      categoryId === 0
+                        ? "study-category-button study-category-button-activate"
+                        : "study-category-button study-category-button-deactivate"
+                    }
+                  >
+                    전체
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setCategoryId(1);
+                    }}
+                    styleType={
+                      categoryId === 1
+                        ? "study-category-button study-category-button-activate"
+                        : "study-category-button study-category-button-deactivate"
+                    }
+                  >
+                    면접
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setCategoryId(2);
+                    }}
+                    styleType={
+                      categoryId === 2
+                        ? "study-category-button study-category-button-activate"
+                        : "study-category-button study-category-button-deactivate"
+                    }
+                  >
+                    발표
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setCategoryId(3);
+                    }}
+                    styleType={
+                      categoryId === 3
+                        ? "study-category-button study-category-button-activate"
+                        : "study-category-button study-category-button-deactivate"
+                    }
+                  >
+                    기타
+                  </Button>
+                  <div className="study-main-search">
+                    {/* {word === "" && <img src="./images/search_icon.PNG" alt="" />} */}
+                    <img src="./images/search_icon.PNG" alt="" />
+                    <input
+                      className="search-room-input"
+                      type="text"
+                      placeholder="방 이름으로 검색"
+                      value={word}
+                      onChange={(e) => setWord(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                    />
+                  </div>
                 </div>
-              ))}
-            </div>
-            <div className="pagination">
-              <button onClick={(e) => (page > 1 ? setPage(page - 1) : null)}>
-                &lt;
-              </button>
-              {page > 1 && (
-                <span onClick={(e) => setPage(page - 1)}>{page - 1}</span>
-              )}
-              <span>{page}</span>
-              {maxPage > page && (
-                <span onClick={(e) => setPage(page + 1)}>{page + 1}</span>
-              )}
-              {maxPage > page + 1 && (
-                <span onClick={(e) => setPage(page + 2)}>{page + 2}</span>
-              )}
-              <button
-                onClick={(e) => (page < maxPage ? setPage(page + 1) : null)}
-              >
-                &gt;
-              </button>
-            </div>
-            {/* <div className="create-room-button">
+
+                <div className="create-room-button">
+                  <Button onClick={changeModalState}>방 만들기</Button>
+                </div>
+              </div>
+              <div className="grid room-list">
+                {studyList
+                  .slice((page - 1) * 9, page * 9)
+                  .map((data, index) => (
+                    <div key={index}>
+                      <RoomCard data={data}>
+                        <div
+                          className="enter-room"
+                          onClick={() => joinStudyRoom(data)}
+                        >
+                          입장
+                        </div>
+                      </RoomCard>
+                    </div>
+                  ))}
+              </div>
+              <div className="pagination">
+                <button onClick={(e) => (page > 1 ? setPage(page - 1) : null)}>
+                  &lt;
+                </button>
+                {page > 1 && (
+                  <span onClick={(e) => setPage(page - 1)}>{page - 1}</span>
+                )}
+                <span>{page}</span>
+                {maxPage > page && (
+                  <span onClick={(e) => setPage(page + 1)}>{page + 1}</span>
+                )}
+                {maxPage > page + 1 && (
+                  <span onClick={(e) => setPage(page + 2)}>{page + 2}</span>
+                )}
+                <button
+                  onClick={(e) => (page < maxPage ? setPage(page + 1) : null)}
+                >
+                  &gt;
+                </button>
+              </div>
+              {/* <div className="create-room-button">
               <Button onClick={changeModalState}>방 만들기</Button>
             </div> */}
+            </div>
           </div>
         </Page>
       </div>
