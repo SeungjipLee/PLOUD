@@ -497,6 +497,7 @@ const Level1 = () => {
               flex: "auto",
               overflowY: "auto",
               backgroundColor: "#F8F5F0",
+              whiteSpace: "pre-wrap",
             }}
           >
             {content}
