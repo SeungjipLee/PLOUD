@@ -142,17 +142,17 @@ const ScriptWrite = ({ level }) => {
           className="mt-3"
           style={{ fontWeight: "bold", color: "#0C134F" }}>
           {level == 1 && (
-            <Link to="/practice/Level1" state={{ content: content }}>
+            <Link to="/practice/Level1" state={{ title: title, content: content }}>
               <span className="practice-startText">녹화 시작하기 ▶</span>
             </Link>
           )}
           {level == 2 && (
-            <Link to="/practice/Level2" state={{ content: content }}>
+            <Link to="/practice/Level2" state={{ title: title, content: content }}>
               <span className="practice-startText">녹화 시작하기 ▶</span>
             </Link>
           )}
           {level == 3 && (
-            <Link to="/practice/Level3" state={{ content: content }}>
+            <Link to="/practice/Level3" state={{ title: title, content: content }}>
               <span className="practice-startText">녹화 시작하기 ▶</span>
             </Link>
           )}

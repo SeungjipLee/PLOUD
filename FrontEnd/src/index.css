@@ -1192,7 +1192,7 @@ p {
 .script-box {
   width: 50%;
   /* max-width: 600px; */
-  height: "600px";
+  height: 600px;
 
   /* background-color: #f4e8c1; */
   background-color: #F8F5F0;
@@ -1214,7 +1214,7 @@ p {
   
   /* 줄 추가 */
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
-  background-size: 100% 22px; /* 줄 간격 조정 */
+  background-size: 100% 24px; /* 줄 간격 조정 */
 }
 
 input[type=number]::-webkit-inner-spin-button,
