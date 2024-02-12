@@ -76,8 +76,9 @@ const BoardPage = () => {
         <img src="./images/search_icon.PNG"/>
         <input type="text"
           className="search-room-input"
-          placeholder="게시글 제목으로 검색"/>
-        <button className="border searchBtn p-1 ms-3 rounded-md bg-sky-300 writeBtn">검색</button>
+          placeholder="게시글 제목으로 검색"
+          onChange={(e) => setSearchForm(e.target.value)}/>
+        <button className="border searchBtn p-1 ms-3 rounded-md bg-sky-300 writeBtn" onClick={handleSearch}>검색</button>
       </div>
 
       <table className="table-auto text-center bg-white h-44">
@@ -108,25 +109,12 @@ const BoardPage = () => {
 
       <div className="outline2 mx-auto">
         <div align="right">
-          <Link to={"/createboard"}>
-            <button className="write border writeBtn rounded-md py-1 px-4 mt-4">글쓰기</button>
-          </Link>
+          <button className="write border writeBtn rounded-md py-1 px-4 mt-4"
+          onClick={() => navigate('/createboard', { state: { isCreate: true, boardId:-1} })}>글쓰기</button>
         </div>
         <div align="center" className="mt-3 mb-3">
             1 2 3 4 5(페이지 처리)
         </div>
-      </div>
-      <div className="relative">
-        <div className="searchForm">
-          <input type="text"
-              className="block rounded-md py-1 px-4 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 me-3 my-12"
-              placeholder="검색"
-              onChange={(e) => setSearchForm(e.target.value)}/>
-        </div>
-        <button className="absolute border searchBtn p-1 rounded-md bg-sky-300 writeBtn" onClick={handleSearch}>찾기</button>
-        <button 
-        onClick={() => navigate('/createboard', { state: { isCreate: true, boardId:-1} })}
-        className="absolute top-24 write top-16 border writeBtn rounded-md py-1 px-4">글쓰기</button>
       </div>
       </Page>
     </div>
