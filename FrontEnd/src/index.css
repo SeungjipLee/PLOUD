@@ -1352,6 +1352,7 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: #F3704B;
 }
 
+
 .mic-test-form {
   border: rgb(85, 85, 85) solid 3px;
   box-shadow: 1px 1px 1px rgb(85, 85, 85);
@@ -1384,4 +1385,18 @@ input[type=number]::-webkit-outer-spin-button {
   height: 36px;
   background-color: green;
   border-radius: 50%;
+}
+
+.speechListModal {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 400px;
+  overflow: auto;
+  transform: translate(-50%, -50%);
+  background-color: #D7D5F6;
+  max-height: 90vh; /* viewport height의 90% */
+  padding: 1em;
+  border-radius: 20px;
 }

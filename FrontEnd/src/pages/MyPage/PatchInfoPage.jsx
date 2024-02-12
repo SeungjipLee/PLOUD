@@ -142,11 +142,11 @@ const PatchInfoPage = () => {
             <div className="w-48 h-48 p-2 border rounded-xl">
               {preview && (
                 <div>
-                  <img src={preview} alt="Preview" className="w-44 h-44"/>
+                  <img src={preview} alt="Preview" className="w-44 h-44" style={{objectFit:"cover", weight:"100%", height:"100%"}}/>
                 </div>
               )}
-              {!preview && !profile.profileImg && <img src="images/Profile.PNG"/>}
-              {!preview && profile.profileImg && <img src={`${profileImgPath}`} />}
+              {!preview && !profile.profileImg && <img src="images/Profile.PNG" style={{objectFit:"cover", weight:"100%", height:"100%"}}/>}
+              {!preview && profile.profileImg && <img src={`${profileImgPath}`} style={{objectFit:"cover", weight:"100%", height:"100%"}} />}
               <br />
               <input type="file" accept="image/*" onChange={handleFileInput} className="mb-3" required />
             </div>

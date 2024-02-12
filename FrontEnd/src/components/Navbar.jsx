@@ -27,7 +27,7 @@ const Navbar = () => {
     <div className="Navbar w-screen h-20 fixed top-0 z-20 py-5">
       <Link to="/" >
         <div className="w-40 h-5 ml-20 mr-10">
-          <img src="images/ICON.png" alt="아이콘" className="w-full object-cover"/>
+          <img src="/images/ICON.png" alt="아이콘" className="w-full object-cover"/>
         </div>
       </Link>
       <nav className="relative">
