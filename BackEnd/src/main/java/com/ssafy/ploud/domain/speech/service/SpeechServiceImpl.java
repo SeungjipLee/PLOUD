@@ -240,4 +240,10 @@ public class SpeechServiceImpl implements SpeechService {
         speech.setVideo(video);
         videoRepository.save(video);
     }
+
+    public Map<String, Long> findAllSpeechCount() {
+        Map<String, Long> res = new HashMap<>();
+        res.put("count", speechRepository.countAllSpeeches());
+        return res;
+    }
 }
