@@ -4,6 +4,7 @@ import Page from "../../components/Page";
 import Footer from "../../components/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Slideshow from "./Slideshow";
 
 
 const MainPage = () => {
@@ -68,13 +69,11 @@ const MainPage = () => {
           <video src="/videos/mainvideo.mp4" autoPlay loop muted></video>
         </div>
         <div>
-          <div className='Main2Container'>
-            <div className="mainBlueB text-white card mx-16 me-36 ms-12 text-center pt-5 my-5 animatable">
-              야이야이야
+          <div className='Main2Container me-36'>
+            <div className="mainBlueB text-white card text-center pt-5 my-5" style={{borderRadius:"10%"}}>
+              누적 발표수 또는 누적 영상 시간 수
             </div>
-            <div className="mainBlueB text-white card mx-16 me-36 ms-12 text-center pt-5 my-5 animatable">
-              간지나는 사진carousel
-            </div>
+            <Slideshow className="mainBlueB text-white card text-center pt-5 my-5"></Slideshow>
           </div>
         </div>
       </div>
