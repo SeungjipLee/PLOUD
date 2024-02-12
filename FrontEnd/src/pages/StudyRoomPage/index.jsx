@@ -23,6 +23,7 @@ import {
 import Modal from "../../components/Modal";
 import Button from "../../components/Button";
 import StudyResult from "./component/StudyResult";
+import LoadingScreen from "./component/Loading";
 
 const StudyRoomPage = () => {
   const navigate = useNavigate();
@@ -67,6 +68,9 @@ const StudyRoomPage = () => {
   // 비디오 녹화 관련 함수
   const isVideoRecording = useRef(false);
   const videoChunksRef = useRef([]); // 영상 정보
+
+  // 로딩 상태 관리
+  const [loading, setLoading] = useState(false); 
 
   // 화면 모드
   // 0 대기 1 면접 2 발표 3 대본
@@ -725,6 +729,7 @@ const StudyRoomPage = () => {
   // 녹화 종료 요청
   const speechEnd = () => {
     console.log("녹화 종료");
+    setLoading(true); // 로딩 시작
     isLast.current = true;
     // 녹화 중지 함수 실행
     stopRecording();
@@ -740,9 +745,11 @@ const StudyRoomPage = () => {
       },
       (response) => {
         console.log(response);
+        
       },
       (error) => {
         console.log(error);
+        
       }
     );
 
@@ -750,6 +757,7 @@ const StudyRoomPage = () => {
 
     // 비동기 처리 헷갈리니까 5초 뒤에 하자
     setTimeout(() => {
+      setLoading(false); // 로딩 종료
       recordResult();
     }, 3000);
   };
@@ -952,6 +960,12 @@ const StudyRoomPage = () => {
 
   return (
     <div className="RoomPage">
+       {loading && (
+        <div className="loading-overlay">
+          <LoadingScreen /> {/* Material-UI 로딩 스피너 */}
+          <p>로딩 중...</p>
+        </div>
+      )}
       {/* <div className="RoomPage-top"> */}
       <div className={setClassRoomPageTOP()}>
         <div className="roompage-icon">
