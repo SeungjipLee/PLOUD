@@ -61,16 +61,32 @@ const BoardPage = () => {
     }
   };
 
+  const handlePageClick = (value) => {
+    setPage(value - 1); // 페이지 번호는 0부터 시작하므로 1을 빼줌
+  }
+
+  const renderPageButtons = () => {
+    let buttons = [];
+    for (let i = 1; i <= 5; i++) {
+      buttons.push(
+        <button className="text-lg mx-3" key={i} onClick={() => handlePageClick(i)}>
+          {i}
+        </button>
+      );
+    }
+    return buttons;
+  };
+
   
   return (
     <div className="mypage bg-white w-full">
       <Page header={<Navbar />} footer={<Footer />}>
-      <div className="mt-24 place-self-center flex justify-center">
+      <div className="mt-28 place-self-center flex justify-center">
           <h2 className="font-extrabold text-2xl">발표 게시판</h2>
       </div>
 
       {/* 완전 밖 */}
-      <div className="OutBox rounded-md outline2 mx-auto mt-5">
+      <div className="OutBox rounded-md outline2 mx-auto mt-7">
 
       <div className="study-main-search flex justify-center mb-3">
         <img src="./images/search_icon.PNG"/>
@@ -114,8 +130,8 @@ const BoardPage = () => {
           <button className="write border writeBtn rounded-md py-1 px-4 mt-4"
           onClick={() => navigate('/createboard', { state: { isCreate: true, boardId:-1} })}>글쓰기</button>
         </div> */}
-        <div align="center" className="mt-3 mb-12">
-            1 2 3 4 5(페이지 처리)
+        <div align="center" className="mt-3 mb-24">
+            {renderPageButtons()}
         </div>
       </div>
       </Page>
