@@ -33,8 +33,9 @@ public class RecordController {
     // 결과 상세 조회
     @Operation(summary = "스피치 결과 조회", description = "결과 페이지에 나타낼 정보들을 조회한다.")
     @GetMapping("/{speechId}")
-    public ApiResponse<?> detailSpeech(@PathVariable("speechId") int SpeechId){
-        return ApiResponse.ok("성공", recordService.getSpeechDetail(SpeechId));
+    public ApiResponse<?> detailSpeech(@PathVariable("speechId") int speechId){
+        log.debug("스피치 결과 조회 스피치 아이디 : " + speechId);
+        return ApiResponse.ok("성공", recordService.getSpeechDetail(speechId));
     }
 
     // 결과 목록 조회
