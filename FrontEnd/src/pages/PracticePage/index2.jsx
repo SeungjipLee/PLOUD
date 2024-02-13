@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { getScriptList, getScriptDetail } from "../../services/script";
 import { useSelector } from "react-redux";
 
-const NewsPage = ({ setScriptid }) => {
+const NewsPage = ({ setScriptid, setTitle }) => {
   const token = useSelector((state) => state.userReducer.token);
   const [list, setList] = useState([]);
   //console.log(token);
@@ -39,6 +39,7 @@ const NewsPage = ({ setScriptid }) => {
           <button
             onClick={() => {
               setScriptid(i.scriptId);
+              setTitle(i.scriptTitle);
             }}
             className="mb-2"
             style={{ textAlign: "left" }}
@@ -51,7 +52,7 @@ const NewsPage = ({ setScriptid }) => {
   );
 };
 
-const SpeechPage = ({ setScriptid }) => {
+const SpeechPage = ({ setScriptid, setTitle }) => {
   const token = useSelector((state) => state.userReducer.token);
   const [list, setList] = useState([]);
   //console.log(token);
@@ -82,6 +83,7 @@ const SpeechPage = ({ setScriptid }) => {
           <button
             onClick={() => {
               setScriptid(i.scriptId);
+              setTitle(i.scriptTitle);
             }}
             className="mb-2"
             style={{ textAlign: "left" }}
@@ -134,6 +136,7 @@ const ScriptPage = ({ scriptid, setContent }) => {
 const PracticePage2 = () => {
   const [level, setLevel] = useState("1");
   const [category, setCategory] = useState("News");
+  const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [scriptid, setScriptid] = useState("");
   const token = useSelector((state) => state.userReducer.token);
@@ -159,7 +162,7 @@ const PracticePage2 = () => {
               <div className="text-xl mainBlueF font-bold">1. 대본 :</div>
               <Link
                 to="/practice1"
-                className="ms-3 bg-blue-300 text-gray-200 rounded-xl px-2 py-1"
+                className="ms-5 bg-blue-300 text-gray-200 rounded-xl px-2 py-1"
               >
                 직접 입력
               </Link>
@@ -223,10 +226,13 @@ const PracticePage2 = () => {
                     style={{ overflowY: "auto" }}
                   >
                     {category === "News" && (
-                      <NewsPage setScriptid={setScriptid} />
+                      <NewsPage setScriptid={setScriptid} setTitle={setTitle} />
                     )}
                     {category === "Speech" && (
-                      <SpeechPage setScriptid={setScriptid} />
+                      <SpeechPage
+                        setScriptid={setScriptid}
+                        setTitle={setTitle}
+                      />
                     )}
                   </div>
                 </div>
@@ -246,7 +252,7 @@ const PracticePage2 = () => {
             {scriptid !== "" && (
               <Link
                 to="/practice/Level1"
-                state={{ content: content }}
+                state={{ content: content, title: title }}
                 className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg"
               >
                 <span className="practice-startText">녹화 시작하기</span>
