@@ -7,7 +7,9 @@ import { useNavigate } from "react-router";
 
 const CreateForm = () => {
   const navigate = useNavigate();
+  const { nickname } = useSelector((state) => state.userReducer ) 
   const [formData, setFormData] = useState({
+    managerId: nickname,
     categoryId: "",
     title: "",
     maxPeople: 2,
