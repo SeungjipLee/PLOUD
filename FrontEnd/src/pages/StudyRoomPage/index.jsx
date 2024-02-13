@@ -1418,7 +1418,7 @@ const StudyRoomPage = () => {
       )}
       {chat && (
         <div className="chat bg-grad-y-black">
-          <h1>채팅</h1>
+          <h1>채팅 [방 제목 : {room.title}]</h1>
           <div className="chat-area">
             {chatList &&
               chatList.map((item, index) => {
