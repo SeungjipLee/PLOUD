@@ -2,6 +2,7 @@ package com.ssafy.ploud.domain.speech.util;
 
 import com.ssafy.ploud.domain.speech.dto.ClearityDto;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,14 +17,23 @@ public class SpeechAssessUtil {
     private Map<Integer, List<ClearityDto>> clearness = new ConcurrentHashMap<>();
 
     public int decibels(int[] decibels) {
-        long res = 0;
-        for(int db : decibels){
-            res += 100 - Math.abs(50 - db);
+        double lowStandardDecibel = 55;
+        double highStandardDecibel = 65;
+        double standardDeviation = 20;
+
+        double totalScore = 0;
+
+        for (int db : decibels) {
+            if(db >= lowStandardDecibel && db <= highStandardDecibel){
+                totalScore += 100;
+            }else{
+                double deviation = Math.min(Math.abs(db - lowStandardDecibel), Math.abs(db - highStandardDecibel));
+                totalScore += 20 + 80 * Math.exp(-0.5 * Math.pow(deviation / standardDeviation, 2));
+            }
         }
+        int avarageScore = (int) (totalScore / decibels.length);
 
-
-
-        return (int)(res / decibels.length);
+        return avarageScore;
     }
 
     public void addClearity(int speechId, ClearityDto clearityDto) {
@@ -35,7 +45,7 @@ public class SpeechAssessUtil {
         Map<String, Integer> res = new HashMap<>();
 
         res.put("clearity", calculateScore(speechId));
-        res.put("speed", calculateDecibel(speechId));
+        res.put("speed", calculateSpeed(speechId));
 
         clearness.remove(speechId);
         return res;
@@ -50,7 +60,7 @@ public class SpeechAssessUtil {
             totalTime += clearityDto.getAudioTime();
         }
 
-        int totalScore = (int) (50 + 10 * (scores / totalTime));
+        int totalScore = (int) (30 + 14 * (scores / totalTime));
 
         return Math.min(totalScore, 100);
     }
@@ -71,25 +81,28 @@ public class SpeechAssessUtil {
         }
     }
 
-    public int calculateDecibel(int speechId) {
-        double standardScriptPerMinute = 300; // 평균
-        double standardDeviation = 50;  // 표준 편차
+    public int calculateSpeed (int speechId) {
+        double lowStandardScriptPerMinute = 300;
+        double highStandardScriptPerMinute = 320;
+        double standardDeviation = 50;
 
         double totalScore = 0;
 
         for (ClearityDto clearityDto : clearness.get(speechId)) {
-            double scriptCnt = clearityDto.getCnt(); // 음절수
-            double recordTime = clearityDto.getAudioTime(); // 시간(s)
+            double scriptCnt = clearityDto.getCnt();
+            double recordTime = clearityDto.getAudioTime();
 
             double scriptPerMinute = 0;
             if(recordTime != 0){
                 scriptPerMinute = (scriptCnt / recordTime) * 60;
             }
 
-            double deviation = Math.abs(scriptPerMinute - standardScriptPerMinute);
-            double score = 40 + 60 * Math.exp(-0.5 * Math.pow(deviation / standardDeviation, 2));
-
-            totalScore += score;
+            if(scriptPerMinute >= lowStandardScriptPerMinute && scriptPerMinute <= highStandardScriptPerMinute){
+                totalScore += 100;
+            }else{
+                double deviation = Math.min(Math.abs(scriptPerMinute - lowStandardScriptPerMinute), Math.abs(scriptPerMinute - highStandardScriptPerMinute));
+                totalScore += 40 + 60 * Math.exp(-0.5 * Math.pow(deviation / standardDeviation, 2));
+            }
         }
 
         int avarageScore = (int) totalScore / clearness.size();
