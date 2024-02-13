@@ -1473,3 +1473,13 @@ input[type="number"]::-webkit-outer-spin-button {
 .study-leave-buttons > div:hover{
   cursor: pointer;
 }
+.alert {
+  position:absolute;
+  top: 280px;
+  left: 40%;
+  width: 320px;
+  height: 200px;
+  background-color: #192169;
+  border-radius: 10px;
+  text-align: center;
+}
