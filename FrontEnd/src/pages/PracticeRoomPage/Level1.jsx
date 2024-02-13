@@ -265,7 +265,7 @@ const Level1 = () => {
     // 3초 동안 30데시벨 이하
     const isSilent = decibels.current.slice(-30).every((db) => db < 30);
 
-    console.log("데시벨 : " + newDecibel);
+    // console.log("데시벨 : " + newDecibel);
 
     if (!isFeedback.current && tmpDecibels.current.length >= 30 && isSilent) {
       isFeedback.current = true;
