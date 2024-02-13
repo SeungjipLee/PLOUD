@@ -9,6 +9,10 @@ const PracticePage1 = () => {
   const [content, setContent] = useState("");
   const [level, setLevel] = useState("1");
 
+  const [subject, setSubject] = useState("0");
+  const [object, setObject] = useState("0");
+  const [predicate, setPredicate] = useState("0");
+
   const titleChange = (e) => {
     setTitle(e.target.value);
   };
@@ -19,6 +23,30 @@ const PracticePage1 = () => {
 
   const handleLevel = (e) => {
     setLevel(e.target.value);
+  };
+
+  const handleSubject1 = () => {
+    setSubject("1");
+  };
+
+  const handleSubject2 = () => {
+    setSubject("0");
+  };
+
+  const handleObject1 = () => {
+    setObject("1");
+  };
+
+  const handleObject2 = () => {
+    setObject("0");
+  };
+
+  const handlePredicate1 = () => {
+    setPredicate("1");
+  };
+
+  const handlePredicate2 = () => {
+    setPredicate("0");
   };
 
   return (
@@ -48,17 +76,54 @@ const PracticePage1 = () => {
             </div>
             <div className="flex mb-5">
               <div className="text-xl mainBlueF font-bold">2. 단계 :</div>
-              <select
-                className="ms-5 rounded-xl px-3 py-0.5 border border-black"
-                value={level}
-                onChange={handleLevel}
-              >
-                <option value="1">Level 1</option>
-                <option value="2">Level 2</option>
-                <option value="3">Level 3</option>
-                <option value="4">Level 4</option>
-              </select>
-              <p className="ms-3 text-red-500">🎤단계에 대한 설명이 들어가요</p>
+              {subject === "0" ? (
+                <button
+                  className="ms-5 bg-blue-300 text-gray-200 rounded-xl px-2 py-1"
+                  onClick={handleSubject1}
+                >
+                  주어
+                </button>
+              ) : (
+                <button
+                  className="ms-5 bg-blue-500 text-white rounded-xl px-2 py-1"
+                  onClick={handleSubject2}
+                >
+                  주어
+                </button>
+              )}
+              {object === "0" ? (
+                <button
+                  className="ms-3 bg-blue-300 text-gray-200 rounded-xl px-2 py-1"
+                  onClick={handleObject1}
+                >
+                  목적어
+                </button>
+              ) : (
+                <button
+                  className="ms-3 bg-blue-500 text-white rounded-xl px-2 py-1"
+                  onClick={handleObject2}
+                >
+                  목적어
+                </button>
+              )}
+              {predicate === "0" ? (
+                <button
+                  className="ms-3 bg-blue-300 text-gray-200 rounded-xl px-2 py-1"
+                  onClick={handlePredicate1}
+                >
+                  서술어
+                </button>
+              ) : (
+                <button
+                  className="ms-3 bg-blue-500 text-white rounded-xl px-2 py-1"
+                  onClick={handlePredicate2}
+                >
+                  서술어
+                </button>
+              )}
+              <p className="ms-3 text-red-500">
+                🎤선택된 항목이 대본에서 가려져요!
+              </p>
             </div>
             <div className="flex mb-5">
               <div className="text-xl mainBlueF font-bold py-1">3. 제목 :</div>
@@ -85,42 +150,19 @@ const PracticePage1 = () => {
               ></textarea>
               <img src="/images/check.png" className="ms-3 w-7 h-7 mt-1"></img>
             </div>
-            {level == 1 && (
-              <Link
-                to="/practice/Level1"
-                state={{ content: content, title: title }}
-                className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg"
-              >
-                <span className="practice-startText">녹화 시작하기</span>
-              </Link>
-            )}
-            {level == 2 && (
-              <Link
-                to="/practice/Level2"
-                state={{ content: content }}
-                className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg"
-              >
-                <span className="practice-startText">녹화 시작하기</span>
-              </Link>
-            )}
-            {level == 3 && (
-              <Link
-                to="/practice/Level3"
-                state={{ content: content }}
-                className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg"
-              >
-                <span className="practice-startText">녹화 시작하기</span>
-              </Link>
-            )}
-            {level == 4 && (
-              <Link
-                to="/practice/Level4"
-                state={{ content: content }}
-                className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg"
-              >
-                <span className="practice-startText">녹화 시작하기</span>
-              </Link>
-            )}
+            <Link
+              to="/practice/Level2"
+              state={{
+                content: content,
+                title: title,
+                subject: subject,
+                object: object,
+                predicate: predicate,
+              }}
+              className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg"
+            >
+              <span className="practice-startText">녹화 시작하기</span>
+            </Link>
           </div>
         </div>
       </Page>
