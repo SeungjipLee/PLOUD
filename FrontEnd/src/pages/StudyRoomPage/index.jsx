@@ -673,10 +673,10 @@ const StudyRoomPage = () => {
 
   // 채팅 전송
   const handleMessageSubmit = async (e) => {
-    e.preventDefault()
-    if (e.key !== "Enter") return;
-
-    sendSignal("chat", chatvalue);
+    if (e.key === "Enter"){
+      e.preventDefault()
+      sendSignal("chat", chatvalue); 
+    }
   };
 
   const sendSignal = (type, chatvalue) => {
