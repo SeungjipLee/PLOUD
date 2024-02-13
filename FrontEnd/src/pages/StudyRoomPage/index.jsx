@@ -71,7 +71,7 @@ const StudyRoomPage = () => {
   const videoChunksRef = useRef([]); // 영상 정보
 
   // 로딩 상태 관리
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
   // 화면 모드
   // 0 대기 1 면접 2 발표 3 대본
@@ -228,7 +228,7 @@ const StudyRoomPage = () => {
 
   // 사용법 publisher, mainStreamManager, subscriber 등을 넣으면 닉네임을 파싱해서 반환해줌
   const getUserNickname = (streamObject) => {
-    console.log(streamObject);
+    // console.log(streamObject);
     const nickname = JSON.parse(
       streamObject.stream.connection.data.split("%/%")[0]
     ).clientData;
@@ -636,6 +636,7 @@ const StudyRoomPage = () => {
 
   // 채팅 전송
   const handleMessageSubmit = async (e) => {
+    e.preventDefault()
     if (e.key !== "Enter") return;
 
     sendSignal("chat", chatvalue);
@@ -746,11 +747,9 @@ const StudyRoomPage = () => {
       },
       (response) => {
         console.log(response);
-        
       },
       (error) => {
         console.log(error);
-        
       }
     );
 
@@ -961,7 +960,7 @@ const StudyRoomPage = () => {
 
   return (
     <div className="RoomPage">
-       {loading && (
+      {loading && (
         <div className="loading-overlay">
           <LoadingScreen /> {/* Material-UI 로딩 스피너 */}
           <p>로딩 중...</p>
@@ -975,7 +974,7 @@ const StudyRoomPage = () => {
             {record && (
               <div className="on-air">
                 <div className="on-air-img">
-                <img src="/images/recording.png" />
+                  <img src="/images/recording.png" />
                 </div>
                 <TimerComponent isActive={record} resetTimer={!record} />
               </div>
@@ -1312,7 +1311,6 @@ const StudyRoomPage = () => {
           {feedbackButton && (
             <img
               onClick={(e) => {
-                console.log(e);
                 setFeedbackModal(!feedbackModal);
               }}
               src="/images/feedbackbutton.png"
@@ -1320,21 +1318,18 @@ const StudyRoomPage = () => {
           )}
           <img
             onClick={(e) => {
-              console.log(e);
               setResult(!result);
             }}
             src="/images/resultbutton.png"
           />
           <img
             onClick={(e) => {
-              console.log(e);
               setReport(!report);
             }}
             src="/images/reportbutton.png"
           />
           <img
             onClick={(e) => {
-              console.log(e);
               setChat(!chat);
             }}
             src="/images/chatbutton.png"
@@ -1386,15 +1381,23 @@ const StudyRoomPage = () => {
       )}
       {chat && (
         <div className="chat bg-grad-y-black">
+          <p className="room-title">{room.title}</p>
           <h1>채팅</h1>
           <div className="chat-area">
             {chatList &&
               chatList.map((item, index) => {
                 const { username, content } = item;
                 return (
-                  <p>
-                    {username} : {content}
-                  </p>
+                  <div className="chat-box"
+                  key={index}>
+                      <div className="chat-header">
+                        <span className="chat-username">{username}</span>
+                        <span className="chat-time">오후 5:35</span>{" "}
+                      </div>
+                    <div className="chat-content">
+                      {content}{" "}
+                    </div>
+                  </div>
                 );
               })}
           </div>

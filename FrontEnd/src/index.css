@@ -553,7 +553,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 20px;
+  padding: 10px;
   border-radius: 5px;
   bottom: 10vh;
   right: 30px;
@@ -565,7 +565,7 @@
 .chat h1 {
   font-weight: bold;
   font-size: 20px;
-  padding-bottom: 10px;
+  margin: 10px;
 }
 .chat-area {
   height: 600px;
@@ -1346,7 +1346,7 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 15px 7px 0px;
 
   background-color: #c4c4c4;
-}
+}a
 
 .slideshowDot.active {
   background-color: #F3704B;
@@ -1397,4 +1397,48 @@ input[type=number]::-webkit-outer-spin-button {
   max-height: 90vh; /* viewport height의 90% */
   padding: 1em;
   border-radius: 20px;
+}
+
+.room-title{
+  
+}
+
+.chat-box {
+  color: #fff;
+  padding: 4px 10px 6px 10px;
+  max-width: 400px;
+  border-radius: 8px;
+}
+
+.chat-box:hover{
+  background: linear-gradient(to bottom, #23232a, #050410);
+}
+
+.chat-header {
+  display: flex;
+  align-items: baseline;
+}
+
+.chat-username {
+  font-size: 1em;
+  font-weight: bold;
+  color: #fff;
+  margin-right: 6px;
+}
+
+.chat-time {
+  font-size: 0.7em;
+  color: rgba(204, 204, 204, 0.6);
+  display: none;
+}
+
+.chat-content {
+  font-size: 1em;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.8);
+  /* padding-left: 8px; */
+}
+
+.chat-box:hover .chat-time {
+  display: block; /* 호버 상태에서 시간을 보여줌 */
 }
