@@ -1,5 +1,5 @@
 import Modal from "../../components/Modal";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import BarChart from "../../components/BarChart";
 import { getRecordResult } from "../../services/record";
@@ -16,6 +16,8 @@ const NoSkipResult = ({ onClose, speechId }) => {
   const [ speech, setSpeech ] = useState({})
   const [ resultTextColor, setResultTextColor ] = useState("#000000")
 
+  const videoRef = useRef(null);
+  
   useEffect(() => {
     if (scores.grade < 20) {
       setGrade('E');
@@ -76,6 +78,15 @@ const NoSkipResult = ({ onClose, speechId }) => {
     setIsDetail(!isDetail)
   }
 
+  const moveVideoTime = (timeLog) => {
+    const parts = timeLog.split(':');
+    const totalSeconds = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+    
+    if(videoRef.current){
+      console.log(totalSeconds + "초로 이동");
+      videoRef.current.currentTime = totalSeconds; 
+    }
+  }
 
   return (
     <Modal
@@ -98,7 +109,7 @@ const NoSkipResult = ({ onClose, speechId }) => {
           </div>
           <div>
             <div className="rounded-xl w-68 h-52 m-auto" style={{width:"100%", height:"100%"}}>
-              <video controls src={videoPath} type="video/webm">Your browser does not support the video tag.</video>
+              <video ref={videoRef} controls src={videoPath} type="video/webm">Your browser does not support the video tag.</video>
             </div>
           </div>
           <div className="p-2">
@@ -141,7 +152,7 @@ const NoSkipResult = ({ onClose, speechId }) => {
               <div style={{overflow:"auto", height:"200px"}} className="p-3 bg-gray-100">
                 {feedbacks.map((feedback, index) => (
                   <p key={index} className="py-0.5">
-                    {feedback.timeLog} - {feedback.content}
+                    <span onClick={moveVideoTime(feedback.timeLog)}>{feedback.timeLog}</span> - {feedback.content}
                   </p>
                 ))}
               </div>
