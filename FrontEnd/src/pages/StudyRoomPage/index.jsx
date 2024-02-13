@@ -71,7 +71,7 @@ const StudyRoomPage = () => {
   const videoChunksRef = useRef([]); // 영상 정보
 
   // 로딩 상태 관리
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
   // 화면 모드
   // 0 대기 1 면접 2 발표 3 대본
@@ -156,9 +156,9 @@ const StudyRoomPage = () => {
   // 화면 공유
   const handleScreenShare = async () => {
     if (presenter != nickname) {
-      alert("화면 공유 권한이 없습니다.(발표자만 가능)")
-      return
-    };
+      alert("화면 공유 권한이 없습니다.(발표자만 가능)");
+      return;
+    }
     try {
       let publisherScreen = await OVScreen.current.initPublisherAsync(
         undefined,
@@ -525,7 +525,11 @@ const StudyRoomPage = () => {
     session.current.on("signal:rstart", (event) => {
       var username = JSON.parse(event.data).nickname;
       var content = JSON.parse(event.data).chatvalue;
-      if (presenter != nickname) {
+      if (presenter != nickname) { // 참여자라면
+        setMic(false); // 상태 업데이트
+        if (publisher) {
+          publisher.publishAudio(false); // 마이크 상태 토글
+        }
         if (room.categoryId === 2) {
           setMode("3");
         } else {
@@ -778,11 +782,9 @@ const StudyRoomPage = () => {
       },
       (response) => {
         console.log(response);
-        
       },
       (error) => {
         console.log(error);
-        
       }
     );
 
@@ -993,7 +995,7 @@ const StudyRoomPage = () => {
 
   return (
     <div className="RoomPage">
-       {loading && (
+      {loading && (
         <div className="loading-overlay">
           <LoadingScreen /> {/* Material-UI 로딩 스피너 */}
           <p>로딩 중...</p>
@@ -1007,7 +1009,7 @@ const StudyRoomPage = () => {
             {record && (
               <div className="on-air">
                 <div className="on-air-img">
-                <img src="/images/recording.png" />
+                  <img src="/images/recording.png" />
                 </div>
                 <TimerComponent isActive={record} resetTimer={!record} />
               </div>
@@ -1418,7 +1420,7 @@ const StudyRoomPage = () => {
       )}
       {chat && (
         <div className="chat bg-grad-y-black">
-          <h1>채팅</h1>
+          <h1>채팅 [방 제목 : {room.title}]</h1>
           <div className="chat-area">
             {chatList &&
               chatList.map((item, index) => {
