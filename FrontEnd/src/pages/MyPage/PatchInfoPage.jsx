@@ -106,7 +106,7 @@ const PatchInfoPage = () => {
     try {
       // axios로 POST 요청 보내기
       const response = axios.post(
-        'http://localhost:8000/api/user/img', // 서버 업로드 URL
+        'https://i10e207.p.ssafy.io/api/user/img', // 서버 업로드 URL
         formData, // 요청 본문
         {
           headers: {
