@@ -20,7 +20,10 @@ public class SpeechAssessUtil {
         double lowStandardDecibel = 55;
         double highStandardDecibel = 65;
         double standardDeviation = 20;
+        double silenceDecibel = 30;
 
+        int silenceDuration = 0;
+        int silenceCnt = 0;
         double totalScore = 0;
 
         for (int db : decibels) {
@@ -30,8 +33,23 @@ public class SpeechAssessUtil {
                 double deviation = Math.min(Math.abs(db - lowStandardDecibel), Math.abs(db - highStandardDecibel));
                 totalScore += 20 + 80 * Math.exp(-0.5 * Math.pow(deviation / standardDeviation, 2));
             }
+
+            if(db > 30){
+                silenceDuration = 0;
+            }else{
+                if(++silenceDuration == 30){
+                    silenceCnt++;
+                    silenceDuration = 0;
+                }
+            }
         }
         int avarageScore = (int) (totalScore / decibels.length);
+
+        double perSilenceMinute = silenceCnt / (decibels.length * 0.1 / 60);
+
+        if(perSilenceMinute > 1){
+            avarageScore = (int) (avarageScore * (100 - perSilenceMinute * 10) / 100);
+        }
 
         return avarageScore;
     }
