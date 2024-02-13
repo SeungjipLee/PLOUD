@@ -203,9 +203,7 @@ const StudyRoomPage = () => {
   const [presenter, setPresenter] = useState("");
   const [userList, setUserList] = useState([]);
   // { userId: "test01", presenter: true },
-  // { userId: "test02", presenter: false },
-  // { userId: "test03", presenter: false },
-  // { userId: "test04", presenter: false },
+
 
   // 채팅 정보
   const [chatvalue, setChatvalue] = useState("");
@@ -240,34 +238,6 @@ const StudyRoomPage = () => {
     return nickname.split("//").length > 1 ? "screen" : nickname;
   };
 
-  // // 상태 준비 여부 플래그
-  // const [isReady, setIsReady] = useState(false);
-
-  // // 상태가 모두 준비되었는지 확인
-  // useEffect(() => {
-  //   if (room && userId && nickname) {
-  //     setIsReady(true);
-  //   } else return;
-  // }, [room, userId, nickname]); // 상태 변경을 감지하기 위해 의존성 배열에 포함
-
-  // // 실제 로직을 실행하는 useEffect
-  // useEffect(() => {
-  //   // 상태가 준비되지 않았다면 아무것도 하지 않음
-  //   if (!isReady) return;
-
-  //   // 상태가 모두 준비되었을 때 실행할 로직
-  //   if (room.managerId === userId) {
-  //     setPresenter(nickname);
-  //     setUserList([{ userId: nickname, presenter: true }]);
-  //     console.log(nickname, room.managerId, userId);
-  //     // 여기에 방장인 경우 실행할 코드 작성
-  //   } else {
-  //     setUserList([{ userId: nickname, presenter: false }]);
-  //     // 방장이 아닌 경우 실행할 코드 작성
-  //     joinSession();
-  //   }
-  // }, [isReady]);
-
   // 신고 창 닫기
   const closeModal = () => {
     setReport(false);
@@ -294,7 +264,6 @@ const StudyRoomPage = () => {
   };
 
   useEffect(() => {
-    console.log(nickname, room.managerId);
     if (room.managerId === nickname) {
       setPresenter(nickname);
       setUserList([{ userId: nickname, presenter: true }]);
@@ -424,29 +393,26 @@ const StudyRoomPage = () => {
     session.current.on("streamCreated", (event) => {
       console.log(tag, "누가 접속했어요");
 
-      if (room.managerId === userId) {
+      if (room.managerId === nickname) {
         console.log("[접속 시 시그널 보냄]", presenter);
         sendSignal("WhoIsP", presenter);
       }
 
       console.log(event.stream.connection.data.split("%/%"));
       var tmp = event.stream.connection.data.split("%/%");
-      var nickname = JSON.parse(tmp[0]).clientData;
-      if (nickname.split("//").length == 1) {
-        addUser({ nickname: nickname });
+      var nickname2 = JSON.parse(tmp[0]).clientData;
+      if (nickname2.split("//").length == 1) {
+        addUser({ nickname: nickname2 });
       }
 
       if (
-        (nickname.split("//").length > 1 ? "screen" : nickname) !== "screen"
+        (nickname2.split("//").length > 1 ? "screen" : nickname2) !== "screen"
       ) {
         setUserList((userList) => [
           ...userList,
-          { userId: nickname, presenter: false },
+          { userId: nickname2, presenter: false },
         ]);
       }
-
-      console.log(nickname + "님이 접속");
-
       var subscriber = session.current.subscribe(event.stream, undefined);
 
       setSubscribers((subscribers) => [...subscribers, subscriber]);
@@ -637,7 +603,7 @@ const StudyRoomPage = () => {
     sendSignal("chat", "님이 퇴장하였습니다!");
 
     // managerId랑 내 Id랑 똑같으면
-    if (room.managerId == userId) {
+    if (room.managerId == nickname) {
       sendSignal("exit", "종료");
     }
 
@@ -1392,7 +1358,7 @@ const StudyRoomPage = () => {
                   <span>{data.userId}</span>
                   {/* <span>{captain && "(방장)"}</span> */}
                 </div>
-                {userId === room.managerId &&
+                {nickname === room.managerId &&
                   (data.presenter ? (
                     <div
                       onClick={(e) => changePresenter(data.userId, index)}
@@ -1408,7 +1374,7 @@ const StudyRoomPage = () => {
                       발표자
                     </div>
                   ))}
-                {userId !== room.managerId &&
+                {nickname !== room.managerId &&
                   (data.presenter ? (
                     <div className="presenter presenter-button Button">
                       발표자
