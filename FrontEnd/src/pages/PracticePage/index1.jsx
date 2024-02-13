@@ -37,7 +37,8 @@ const PracticePage1 = () => {
               </button>
               <Link
                 to="/practice2"
-                className="ms-3 bg-blue-300 text-gray-200 rounded-xl px-2 py-1">
+                className="ms-3 bg-blue-300 text-gray-200 rounded-xl px-2 py-1"
+              >
                 제공 대본
               </Link>
 
@@ -50,7 +51,8 @@ const PracticePage1 = () => {
               <select
                 className="ms-5 rounded-xl px-3 py-0.5 border border-black"
                 value={level}
-                onChange={handleLevel}>
+                onChange={handleLevel}
+              >
                 <option value="1">Level 1</option>
                 <option value="2">Level 2</option>
                 <option value="3">Level 3</option>
@@ -79,31 +81,35 @@ const PracticePage1 = () => {
                 className="ms-5 border border-black rounded-2xl px-5 py-2 w-3/4 h-80"
                 onChange={contentChange}
                 placeholder="내용을 입력해주세요. (최대 3000자)"
-                style={{ whiteSpace: "pre-wrap" }}></textarea>
+                style={{ whiteSpace: "pre-wrap" }}
+              ></textarea>
               <img src="/images/check.png" className="ms-3 w-7 h-7 mt-1"></img>
             </div>
             {level == 1 && (
               <Link
                 to="/practice/Level1"
                 state={{ content: content }}
-                className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg">
-                <span className="practice-startText">녹화 시작하기 ▶</span>
+                className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg"
+              >
+                <span className="practice-startText">녹화 시작하기</span>
               </Link>
             )}
             {level == 2 && (
               <Link
                 to="/practice/Level2"
                 state={{ content: content }}
-                className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg">
-                <span className="practice-startText">녹화 시작하기 ▶</span>
+                className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg"
+              >
+                <span className="practice-startText">녹화 시작하기</span>
               </Link>
             )}
             {level == 3 && (
               <Link
                 to="/practice/Level3"
                 state={{ content: content }}
-                className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg">
-                <span className="practice-startText">녹화 시작하기 ▶</span>
+                className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg"
+              >
+                <span className="practice-startText">녹화 시작하기</span>
               </Link>
             )}
           </div>
