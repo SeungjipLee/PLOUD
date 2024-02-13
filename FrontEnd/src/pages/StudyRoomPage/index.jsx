@@ -962,6 +962,13 @@ const StudyRoomPage = () => {
       formData,
       (response) => {
         // console.log(response.data);
+        console.log("음성 평가 결과");
+        console.log(
+          "개수 : " +
+            response.data.scriptCnt +
+            ", 점수 : " +
+            response.data.score
+        );
       },
       (error) => {
         console.log("평가 실패");

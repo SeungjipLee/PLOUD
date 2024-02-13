@@ -73,14 +73,13 @@ public class SecurityConfig {
 //                .permitAll()
                 .requestMatchers("/**")
                 .permitAll()
-//                .anyRequest()
-//                .authenticated()
+                .anyRequest()
+                .authenticated()
         )
         .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
     ;
 
     return http.build();
-
   }
 
   @Bean

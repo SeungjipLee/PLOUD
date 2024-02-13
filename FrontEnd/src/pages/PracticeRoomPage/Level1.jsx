@@ -91,6 +91,7 @@ const Level1 = () => {
           console.log(error);
         });
     }
+
   }, []);
 
   const toggleVideo = () => {
@@ -341,7 +342,6 @@ const Level1 = () => {
       formData,
       (response) => {
         console.log("음성 평가 결과");
-        console.log(response.data);
         console.log(
           "개수 : " +
             response.data.scriptCnt +
