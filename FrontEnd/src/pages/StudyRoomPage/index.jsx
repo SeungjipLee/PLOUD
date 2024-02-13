@@ -1303,6 +1303,9 @@ const StudyRoomPage = () => {
           ) : !recordForm ? (
             <img
               onClick={(e) => {
+                if (nickname !== presenter) {
+                  alert("녹화 권한이 없습니다.(발표자만 가능)")
+                  return;}
                 setRecordForm(!recordForm);
               }}
               src="/images/recordbutton.png"
