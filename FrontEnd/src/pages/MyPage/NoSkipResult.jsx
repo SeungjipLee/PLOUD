@@ -82,7 +82,7 @@ const NoSkipResult = ({ onClose, speechId }) => {
     const parts = timeLog.split(':');
     const totalSeconds = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
     
-    if(videoRef.current){
+    if(videoRef.current && videoRef.current.duration >= totalSeconds){
       console.log(totalSeconds + "초로 이동");
       videoRef.current.currentTime = totalSeconds; 
     }
