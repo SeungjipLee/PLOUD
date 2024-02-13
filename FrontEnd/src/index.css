@@ -1348,8 +1348,6 @@ input[type=number]::-webkit-outer-spin-button {
   top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
-
-
 }
 
 .mic-text-box {
