@@ -59,7 +59,7 @@ public class BoardController {
   }
 
   @GetMapping("/{id}")
-  public ApiResponse<?> getBoardById(@PathVariable int id,
+  public ApiResponse<BoardResponse> getBoardById(@PathVariable int id,
       @AuthenticationPrincipal UserDetails loginUser) {
     return ApiResponse.ok("게시글 조회 성공", boardService.getBoardById(id, loginUser.getUsername()));
   }

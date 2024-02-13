@@ -29,8 +29,10 @@ public class VideoEntity {
 
   private long playTime; // 영상 재생 시간(분)
 
-  public VideoDetail toDto() {
-    return new VideoDetail(videoPath, playTime);
+  public VideoDetail toDto(VideoEntity entity) {
+    long milliseconds = entity.getPlayTime();
+    long minutes = (milliseconds / 1000) / 60;
+    return new VideoDetail(videoPath, minutes);
   }
 
   public static VideoEntity createEntity(String videoPath, long playTimeInSeconds) {

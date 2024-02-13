@@ -8,9 +8,12 @@ import com.ssafy.ploud.domain.board.dto.request.CommentRequest;
 import com.ssafy.ploud.domain.board.dto.response.BoardResponse;
 import com.ssafy.ploud.domain.board.dto.response.CommentResponse;
 import com.ssafy.ploud.domain.board.repository.CommentRepository;
+import com.ssafy.ploud.domain.user.UserEntity;
 import com.ssafy.ploud.domain.user.repository.UserRepository;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -32,7 +35,7 @@ public class CommentServiceImpl implements CommentService {
     List<CommentResponse> commentResponses = new ArrayList<>();
 
     for (CommentEntity commentEntity : commentEntities) {
-      commentResponses.add(CommentResponse.fromEntity(commentEntity, getNickname(commentEntity.getUserId())));
+      commentResponses.add(CommentResponse.fromEntity(commentEntity, getNicknameAndProfileImg(commentEntity.getUserId())));
     }
     return commentResponses;
   }
@@ -43,9 +46,13 @@ public class CommentServiceImpl implements CommentService {
     commentRepository.save(commentEntity);
   }
 
-  private String getNickname(String userId) {
-    return userRepository.findNicknameByUserId(userId).getNickname();
-
+  private Map<String, String> getNicknameAndProfileImg(String userId) {
+    UserEntity user = userRepository.findByUserId(userId)
+        .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
+    Map<String, String> res = new HashMap<>();
+    res.put("nickname", user.getNickname());
+    res.put("profileImg", user.getProfileImg());
+    return res;
   }
 
   @Override

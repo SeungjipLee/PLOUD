@@ -12,6 +12,8 @@ import com.ssafy.ploud.domain.record.repository.VideoRepository;
 import com.ssafy.ploud.domain.user.UserEntity;
 import com.ssafy.ploud.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -33,7 +35,7 @@ public class BoardServiceImpl implements BoardService {
 
     Page<BoardEntity> boardEntities = boardRepository.findAll(pageable);
 
-    return boardEntities.map(boardEntity -> BoardResponse.fromEntity(boardEntity, getNickname(
+    return boardEntities.map(boardEntity -> BoardResponse.fromEntity(boardEntity, getNicknameAndProfileImg(
         boardEntity.getUserId()), false));
   }
 
@@ -43,13 +45,17 @@ public class BoardServiceImpl implements BoardService {
     Page<BoardEntity> boardEntities = boardRepository.findByTitleContainingIgnoreCase(title,
         pageable);
 
-    return boardEntities.map(boardEntity -> BoardResponse.fromEntity(boardEntity, getNickname(
+    return boardEntities.map(boardEntity -> BoardResponse.fromEntity(boardEntity, getNicknameAndProfileImg(
         boardEntity.getUserId()), false));
   }
 
-  private String getNickname(String userId) {
-    return userRepository.findNicknameByUserId(userId).getNickname();
-
+  private Map<String, String> getNicknameAndProfileImg(String userId) {
+    UserEntity user = userRepository.findByUserId(userId)
+        .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
+    Map<String, String> res = new HashMap<>();
+    res.put("nickname", user.getNickname());
+    res.put("profileImg", user.getProfileImg());
+    return res;
   }
 
   @Override
@@ -72,7 +78,7 @@ public class BoardServiceImpl implements BoardService {
 
     UserEntity userEntity = userRepository.findNicknameByUserId(boardEntity.getUserId());
 
-    return BoardResponse.fromEntity(boardEntity, userEntity.getNickname(),
+    return BoardResponse.fromEntity(boardEntity, getNicknameAndProfileImg(userEntity.getUserId()),
         heartRepository.findByUserIdAndBoardId(loginUser, boardEntity.getId())
             .isPresent());
   }
