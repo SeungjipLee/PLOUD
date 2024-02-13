@@ -155,6 +155,10 @@ const StudyRoomPage = () => {
 
   // 화면 공유
   const handleScreenShare = async () => {
+    if (presenter != nickname) {
+      alert("화면 공유 권한이 없습니다.(발표자만 가능)");
+      return;
+    }
     try {
       let publisherScreen = await OVScreen.current.initPublisherAsync(
         undefined,
@@ -235,6 +239,34 @@ const StudyRoomPage = () => {
     return nickname.split("//").length > 1 ? "screen" : nickname;
   };
 
+  // // 상태 준비 여부 플래그
+  // const [isReady, setIsReady] = useState(false);
+
+  // // 상태가 모두 준비되었는지 확인
+  // useEffect(() => {
+  //   if (room && userId && nickname) {
+  //     setIsReady(true);
+  //   } else return;
+  // }, [room, userId, nickname]); // 상태 변경을 감지하기 위해 의존성 배열에 포함
+
+  // // 실제 로직을 실행하는 useEffect
+  // useEffect(() => {
+  //   // 상태가 준비되지 않았다면 아무것도 하지 않음
+  //   if (!isReady) return;
+
+  //   // 상태가 모두 준비되었을 때 실행할 로직
+  //   if (room.managerId === userId) {
+  //     setPresenter(nickname);
+  //     setUserList([{ userId: nickname, presenter: true }]);
+  //     console.log(nickname, room.managerId, userId);
+  //     // 여기에 방장인 경우 실행할 코드 작성
+  //   } else {
+  //     setUserList([{ userId: nickname, presenter: false }]);
+  //     // 방장이 아닌 경우 실행할 코드 작성
+  //     joinSession();
+  //   }
+  // }, [isReady]);
+
   // 신고 창 닫기
   const closeModal = () => {
     setReport(false);
@@ -261,8 +293,8 @@ const StudyRoomPage = () => {
   };
 
   useEffect(() => {
-    if (room.managerId === userId) {
-      console.log(nickname);
+    console.log(nickname, room.managerId);
+    if (room.managerId === nickname) {
       setPresenter(nickname);
       setUserList([{ userId: nickname, presenter: true }]);
     } else {
@@ -493,7 +525,11 @@ const StudyRoomPage = () => {
     session.current.on("signal:rstart", (event) => {
       var username = JSON.parse(event.data).nickname;
       var content = JSON.parse(event.data).chatvalue;
-      if (presenter != nickname) {
+      if (presenter != nickname) { // 참여자라면
+        setMic(false); // 상태 업데이트
+        if (publisher) {
+          publisher.publishAudio(false); // 마이크 상태 토글
+        }
         if (room.categoryId === 2) {
           setMode("3");
         } else {
@@ -1381,8 +1417,7 @@ const StudyRoomPage = () => {
       )}
       {chat && (
         <div className="chat bg-grad-y-black">
-          <p className="room-title">{room.title}</p>
-          <h1>채팅</h1>
+          <h1>채팅 [방 제목 : {room.title}]</h1>
           <div className="chat-area">
             {chatList &&
               chatList.map((item, index) => {

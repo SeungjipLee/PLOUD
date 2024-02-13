@@ -100,7 +100,7 @@ const BoardDetail = () => {
       });
       alert('댓글이 작성되었습니다.');
       // 새 댓글 데이터를 포함하여 상태 업데이트
-      setCommentList([...commentList, response.data]); // 이 부분에서 response.data의 구조를 확인해야 함
+      setCommentList((list) => [...list, response.data]); // 이 부분에서 response.data의 구조를 확인해야 함
       setComment(''); // 댓글 입력창 초기화
     } catch (err) {
       console.log(err);
@@ -192,7 +192,7 @@ const BoardDetail = () => {
               </div>
             </div>
 
-            {commentList.map((s, index) => (
+            {commentList && commentList.map((s, index) => (
               // <div key={index} className="grid grid-cols-12 gap-4 border rounded-2xl p-2 my-3 bg-sky-100">
               <div key={index} className="flex mt-3 mx-2">
                 <img src={s.profileImg ? s.profileImg : '/images/Profile.PNG'} className="w-10 h-10 rounded-2xl col-span-1"/>
@@ -204,7 +204,7 @@ const BoardDetail = () => {
                   <div style={{maxWidth:"100%", wordBreak:"break-all"}}>{s.comment}</div> {/* 댓글 내용 */}
                   <div align="right">
                     {/* 현재 사용자의 닉네임과 댓글 작성자의 닉네임이 일치할 때만 삭제 버튼을 보여줌 */}
-                    {nickname !== s.nickname && (
+                    {nickname === s.nickname && (
                       <button 
                       className="col-span-2 text-red-500 border bg-transparent rounded-md mx-3"
                       onClick={() => handleDeleteComment(s.id)}>삭제</button>

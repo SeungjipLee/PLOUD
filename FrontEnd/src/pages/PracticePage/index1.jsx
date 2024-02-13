@@ -88,7 +88,7 @@ const PracticePage1 = () => {
             {level == 1 && (
               <Link
                 to="/practice/Level1"
-                state={{ content: content }}
+                state={{ content: content, title: title }}
                 className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg"
               >
                 <span className="practice-startText">녹화 시작하기</span>
@@ -106,6 +106,15 @@ const PracticePage1 = () => {
             {level == 3 && (
               <Link
                 to="/practice/Level3"
+                state={{ content: content }}
+                className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg"
+              >
+                <span className="practice-startText">녹화 시작하기</span>
+              </Link>
+            )}
+            {level == 4 && (
+              <Link
+                to="/practice/Level4"
                 state={{ content: content }}
                 className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg"
               >

@@ -9,6 +9,7 @@
     transform: rotate(360deg);
   }
 }
+
 .Main2 {
   display: flex;
   align-items: center;
@@ -198,7 +199,7 @@
 .pagination > button {
   padding: 0px 30px;
 }
-.pagination img{
+.pagination img {
   width: 10px;
 }
 
@@ -1225,33 +1226,37 @@ p {
 .script-box {
   width: 50%;
   /* max-width: 600px; */
-  height: 600px;
+  height: 500px;
 
   /* background-color: #f4e8c1; */
-  background-color: #F8F5F0;
+  background-color: #f8f5f0;
 
   border: 1px solid #e2d5b8;
-  box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
 
-  margin: -30px 80px 0 20px;
+  margin: 0px 80px 0 20px;
   padding: 22px;
-  
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 16px; 
+
+  font-family: "Courier New", Courier, monospace;
+  font-size: 16px;
   white-space: pre-wrap;
   word-wrap: break-word;
 
   overflow-wrap: break-word;
   flex: auto;
-  overflow-y: auto; 
-  
+  overflow-y: auto;
+
   /* 줄 추가 */
-  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.1) 1px,
+    transparent 1px
+  );
   background-size: 100% 24px; /* 줄 간격 조정 */
 }
 
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -1260,21 +1265,20 @@ input[type=number]::-webkit-outer-spin-button {
   display: none; /* Chrome, Safari, Edge */
 }
 .mainOrangeF {
-  color: #F3704B
+  color: #f3704b;
 }
 
 .mainPageFont {
   font-family: "Notable";
 }
 
-.fadein{
+.fadein {
   font-size: medium;
   overflow: hidden;
   animation: fadein 1.5s ease-in-out;
 }
 
-
-@keyframes fadein{
+@keyframes fadein {
   0% {
     opacity: 0.3;
   }
@@ -1285,28 +1289,28 @@ input[type=number]::-webkit-outer-spin-button {
 
 /*화면에 표출되기 전*/
 .animatable {
-	visibility: hidden; 
-	animation-play-state: paused;
+  visibility: hidden;
+  animation-play-state: paused;
 }
 
 /*화면에 표출된 후*/
 .animated {
-	animation-name: fadeInUp; 
-	visibility: visible; 
-	animation-fill-mode: both; 
-	animation-duration: 2s; 
-	animation-play-state:running;
+  animation-name: fadeInUp;
+  visibility: visible;
+  animation-fill-mode: both;
+  animation-duration: 2s;
+  animation-play-state: running;
 }
 
 @keyframes fadeInUp {
-	0% {
-	    opacity: 0;
-	    transform: translateY(20px);
-	}
-	100% {
-	    opacity: 1;
-	    transform: translateY(0);
-	}
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Carousel - Slideshow */
@@ -1324,8 +1328,8 @@ input[type=number]::-webkit-outer-spin-button {
 
 .slide {
   display: inline-block;
-  width:200px;
-  height:200px;
+  width: 200px;
+  height: 200px;
   /* height: 400px;
   width: 100%; */
   border-radius: 10%;
@@ -1349,9 +1353,8 @@ input[type=number]::-webkit-outer-spin-button {
 }a
 
 .slideshowDot.active {
-  background-color: #F3704B;
+  background-color: #f3704b;
 }
-
 
 .mic-test-form {
   border: rgb(85, 85, 85) solid 3px;
@@ -1378,7 +1381,7 @@ input[type=number]::-webkit-outer-spin-button {
   margin-bottom: 20px;
 }
 
-.mic-color-box{
+.mic-color-box {
   width: 36px;
   height: 36px;
   background-color: green;
@@ -1393,7 +1396,7 @@ input[type=number]::-webkit-outer-spin-button {
   height: 400px;
   overflow: auto;
   transform: translate(-50%, -50%);
-  background-color: #D7D5F6;
+  background-color: #d7d5f6;
   max-height: 90vh; /* viewport height의 90% */
   padding: 1em;
   border-radius: 20px;

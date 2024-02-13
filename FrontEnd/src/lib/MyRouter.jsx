@@ -17,6 +17,7 @@ import StudyResult from "../pages/StudyRoomPage/component/StudyResult";
 import Level1 from "../pages/PracticeRoomPage/Level1";
 import Level2 from "../pages/PracticeRoomPage/Level2";
 import Level3 from "../pages/PracticeRoomPage/Level3";
+import Level4 from "../pages/PracticeRoomPage/Level4";
 import PracticePage1 from "../pages/PracticePage/index1";
 import PracticePage2 from "../pages/PracticePage/index2";
 import ScrollToTop from "../components/ScrollToTop";
@@ -38,6 +39,7 @@ const Router = () => {
         <Route path="/practice/Level1" element={<Level1 />} />
         <Route path="/practice/Level2" element={<Level2 />} />
         <Route path="/practice/Level3" element={<Level3 />} />
+        <Route path="/practice/Level4" element={<Level4 />} />
         <Route path="/findpw" element={<FindPwPage />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/patchinfo" element={<PatchInfoPage />} />

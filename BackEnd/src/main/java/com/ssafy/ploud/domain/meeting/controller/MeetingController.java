@@ -36,9 +36,8 @@ public class MeetingController {
     }
 
     @PostMapping("/create")
-    public ApiResponse<?> createMeeting(@AuthenticationPrincipal UserDetails loginUser,
+    public ApiResponse<?> createMeeting(
         @RequestBody MeetingCreateRequest request) {
-        request.setManagerId(loginUser.getUsername());
         return ApiResponse.ok("방 생성 성공", meetingService.create(request));
     }
 

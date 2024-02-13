@@ -6,6 +6,7 @@ import { debounce } from "lodash";
 import Modal from "../../components/Modal";
 import Button from "../../components/Button";
 import StudyResult from "../StudyRoomPage/component/StudyResult";
+import PracticeResult from "../PracticePage/PracticeResult";
 import {
   startSpeech,
   endSpeech,
@@ -465,24 +466,24 @@ const Level1 = () => {
             if (!mic) {
               return;
             }
-  
+
             const micStoredData = new Uint8Array(micAnalyzer.frequencyBinCount);
             micAnalyzer.getByteFrequencyData(micStoredData);
-  
+
             let micSum = 0;
             for (let i = 0; i < micStoredData.length; i++) {
               micSum += micStoredData[i];
             }
-  
+
             const micAverage = micSum / micStoredData.length;
-  
+
             const micDecibel = calcDecibel(micAverage);
 
             console.log(micDecibel);
-            
+
             // mic-color-box
 
-            if(micDecibel < 25){
+            if (micDecibel < 25) {
               setMicTestContent("목소리가 거의 들리지 않아요!");
               setMicColor("red");
             } else if (micDecibel < 40) {
@@ -498,10 +499,10 @@ const Level1 = () => {
               setMicTestContent("목소리가 너무 커요!");
               setMicColor("red");
             }
-  
+
             setTimeout(analyzeMicAudio, 100);
           }
-  
+
           analyzeMicAudio();
         })
         .catch((error) => {
@@ -544,12 +545,11 @@ const Level1 = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center",
           }}
         >
           <div>
             <video
-              style={{ width: "100%", height: "500px" }}
+              style={{ width: "530px", height: "500px" }}
               ref={videoRef}
               autoPlay
               muted
@@ -559,7 +559,7 @@ const Level1 = () => {
             style={{
               width: "500px",
               margin: "30px",
-              height: "200px",
+              height: "100px",
               lineHeight: "100px",
               borderRadius: "10px",
               backgroundColor: "#444A78",
@@ -657,10 +657,12 @@ const Level1 = () => {
             }}
           >
             <p className="mic-text-box">{micTestContent}</p>
-            <div className="mic-color-box"
-            style={{
-              backgroundColor: micColor
-            }}></div>
+            <div
+              className="mic-color-box"
+              style={{
+                backgroundColor: micColor,
+              }}
+            ></div>
           </div>
         </Modal>
       )}
@@ -693,7 +695,11 @@ const Level1 = () => {
       )}
       {/* 녹화 결과 폼 */}
       {resultScreen && (
-        <StudyResult onClose={handleResultClose} speechId={speechId.current} />
+        // <StudyResult onClose={handleResultClose} speechId={speechId.current} />
+        <PracticeResult
+          onClose={handleResultClose}
+          speechId={speechId.current}
+        />
       )}
     </div>
   );
