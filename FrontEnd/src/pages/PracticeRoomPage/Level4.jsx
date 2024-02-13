@@ -16,7 +16,7 @@ import {
   uploadVideo,
 } from "../../services/speech";
 
-const Level1 = () => {
+const Level4 = () => {
   const { token } = useSelector((state) => state.userReducer);
   const navigate = useNavigate();
 
@@ -592,9 +592,8 @@ const Level1 = () => {
                 marginBottom: "23px",
               }}
             >
-              {scriptTitle}
+              4단게는 대본을 볼 수 없습니다.
             </p>
-            {content}
           </div>
         )}
       </div>
@@ -705,4 +704,4 @@ const Level1 = () => {
   );
 };
 
-export default Level1;
+export default Level4;
