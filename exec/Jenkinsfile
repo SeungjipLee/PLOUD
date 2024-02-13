@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+
+    options {
+        gitLabConnection('xw2nana')
+    }
+
+    stages {
+
+        stage('Build BE') {
+            steps {
+                echo 'Building BE...'
+                dir('BackEnd'){
+                    script {
+                        sh 'docker build -t ploud-spring-app:test .'
+                    }
+                }
+            }
+        }
+
+        stage('Build FE') {
+            steps {
+                echo 'Building FE...'
+                dir('FrontEnd'){
+                    script {
+                        sh 'docker build -t ploud-react-app:test .'
+                    }
+                }
+            }
+        }
+
+        stage('Deploy BE') {
+            steps {
+            echo 'Deploying BE...'
+                script {
+                    sh 'docker stop ploud-spring-app || true'
+                    sh 'docker rm ploud-spring-app || true'
+                    sh 'docker run -d -p 9000:8000 --name ploud-spring-app --network ploudnet -v /usr/local/bin/ffmpeg/ffmpeg:/usr/local/bin/ffmpeg/ffmpeg ploud-spring-app:test'
+                }
+            }
+        }
+
+        stage('Deploy FE') {
+            steps {
+            echo 'Deploying FE...'
+                script {
+                    sh 'docker stop ploud-react-app || true'
+                    sh 'docker rm ploud-react-app || true'
+                    sh 'docker run -d -p 4000:3000 --name ploud-react-app --network ploudnet ploud-react-app:test'
+                }
+            }
+        }
+
+    }
+}

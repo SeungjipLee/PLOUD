@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class MeetingJoinRequest {
-    String sessionId;
-    String userId;
-    String password;
+    private String sessionId;
+    private String userId;
+    private String password;
 }
