@@ -123,7 +123,7 @@ public class SpeechAssessUtil {
             }
         }
 
-        int avarageScore = (int) totalScore / clearness.size();
+        int avarageScore = (int) totalScore / clearness.get(speechId).size();
 
         return avarageScore;
     }

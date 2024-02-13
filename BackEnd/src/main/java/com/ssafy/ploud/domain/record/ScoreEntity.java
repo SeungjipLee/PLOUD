@@ -31,11 +31,11 @@ public class ScoreEntity {
 //    private SpeechEntity speech; // 발표 번호
 
 
-    private int volume = 29; // 목소리 크기
+    private int volume; // 목소리 크기
 
-    private int speed = 29; // 발화 속도
+    private int speed; // 발화 속도
 
-    private int clarity = 29; // 명료도
+    private int clarity; // 명료도
 
   public ScoreDetail toDto() {
     return ScoreDetail.builder()

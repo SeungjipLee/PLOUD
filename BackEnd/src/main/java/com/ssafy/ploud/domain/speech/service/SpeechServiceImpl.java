@@ -216,6 +216,7 @@ public class SpeechServiceImpl implements SpeechService {
                 score.updateClearity(scores.get("clearity"));
                 score.updateSpeed(scores.get("speed"));
                 scoreRepository.save(score);
+                log.debug("스피치 평가 등록 완료, 스피치 아이디 : " + speechId);
             }
             if (clearityDto == null) {
                 throw new CustomException(ResponseCode.ETRI_ERROR);
