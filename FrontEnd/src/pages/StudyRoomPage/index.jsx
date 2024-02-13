@@ -210,6 +210,7 @@ const StudyRoomPage = () => {
   // 채팅 정보
   const [chatvalue, setChatvalue] = useState("");
   const [chatList, setChatList] = useState([]);
+  const [confirmLeave, setConfirmLeave] = useState(false)
 
   // ---------- Variables During Speech ----------
   const [feedbackModal, setFeedbackModal] = useState(false);
@@ -1348,7 +1349,7 @@ const StudyRoomPage = () => {
               src="/images/recordbutton_disabled.png"
             />
           )}
-          <img onClick={leaveSession} src="/images/exitbutton.png" alt="" />
+          <img onClick={() => setConfirmLeave(!confirmLeave)} src="/images/exitbutton.png" alt="" />
         </div>
         <div className="flex items-center space-x-4">
           {feedbackButton && (
@@ -1509,6 +1510,15 @@ const StudyRoomPage = () => {
           </p>
         </div>
       )}
+      {confirmLeave && <>
+        <div className="study-leave">
+          정말 나가시겠습니까?
+          <div className="study-leave-buttons">
+          <div onClick={() => setConfirmLeave(false)}>아니요</div>
+          <div onClick={leaveSession}>예</div>
+          </div>
+        </div>
+      </>}
     </div>
   );
 };
