@@ -55,7 +55,8 @@ const NewsPage = ({ setId }) => {
               setId(i.scriptId);
             }}
             className="mb-2"
-            style={{ textAlign: "left" }}>
+            style={{ textAlign: "left" }}
+          >
             {i.scriptTitle}
           </button>
         </div>
@@ -98,7 +99,8 @@ const SpeechPage = ({ setId }) => {
               setId(i.scriptId);
             }}
             className="mb-2"
-            style={{ textAlign: "left" }}>
+            style={{ textAlign: "left" }}
+          >
             {i.scriptTitle}
           </button>
         </div>
@@ -193,7 +195,8 @@ const Sidebar = ({ level }) => {
       <div className="pb-1 mb-3" style={{ borderBottom: "1px solid #0C134F" }}>
         <span
           className="text-sky-950 font-bold text-2xl"
-          style={{ paddingBottom: "20px", marginRight: "20px" }}>
+          style={{ paddingBottom: "20px", marginRight: "20px" }}
+        >
           분류
         </span>
         {["뉴스", "연설"].map((menu, index) => (
@@ -206,7 +209,8 @@ const Sidebar = ({ level }) => {
               cursor: "pointer",
               fontWeight: selectedMenu === menu ? "bold" : "normal",
             }}
-            onClick={() => handleMenuClick(menu)}>
+            onClick={() => handleMenuClick(menu)}
+          >
             {menu}
           </span>
         ))}
@@ -227,7 +231,8 @@ const Sidebar = ({ level }) => {
       <div
         align="right"
         className="mt-6"
-        style={{ fontWeight: "bold", color: "#0C134F" }}>
+        style={{ fontWeight: "bold", color: "#0C134F" }}
+      >
         {id != "" && (
           <Link to="/practice/Level1" state={{ title: title, content: content }}>
             <span className="practice-startText">녹화 시작하기 ▶</span>

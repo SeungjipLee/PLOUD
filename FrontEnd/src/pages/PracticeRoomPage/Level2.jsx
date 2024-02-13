@@ -436,7 +436,7 @@ const Level2 = () => {
   };
 
   const leaveSession = () => {
-    navigate("/practice");
+    navigate("/practice1");
   };
 
   const wrapWords = (text) => {

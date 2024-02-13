@@ -441,7 +441,7 @@ const Level1 = () => {
   };
 
   const leaveSession = () => {
-    navigate("/practice");
+    navigate("/practice1");
   };
 
   const [micColor, setMicColor] = useState("green");
