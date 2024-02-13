@@ -1399,3 +1399,14 @@ input[type=number]::-webkit-outer-spin-button {
   padding: 1em;
   border-radius: 20px;
 }
+
+.alert {
+  position:absolute;
+  top: 280px;
+  left: 40%;
+  width: 320px;
+  height: 200px;
+  background-color: #192169;
+  border-radius: 10px;
+  text-align: center;
+}
