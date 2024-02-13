@@ -82,7 +82,11 @@ const NoSkipResult = ({ onClose, speechId }) => {
     const parts = timeLog.split(':');
     const totalSeconds = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
     
-    if(videoRef.current && videoRef.current.duration >= totalSeconds){
+    if(videoRef.current){
+      if(videoRef.current.duration < totalSeconds){
+        return;
+      }
+      
       console.log(totalSeconds + "초로 이동");
       videoRef.current.currentTime = totalSeconds; 
     }
@@ -152,7 +156,9 @@ const NoSkipResult = ({ onClose, speechId }) => {
               <div style={{overflow:"auto", height:"200px"}} className="p-3 bg-gray-100">
                 {feedbacks.map((feedback, index) => (
                   <p key={index} className="py-0.5">
-                    <span onClick={moveVideoTime(feedback.timeLog)}>{feedback.timeLog}</span> - {feedback.content}
+                    <span 
+                    className="feedback-time"
+                    onClick={() => moveVideoTime(feedback.timeLog)}>{feedback.timeLog}</span> - {feedback.content}
                   </p>
                 ))}
               </div>

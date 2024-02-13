@@ -23,6 +23,9 @@ const Level2 = () => {
   const location = useLocation();
   const scriptTitle = location.state.title;
   const content = location.state.content;
+  const subject = location.state.subject;
+  const object = location.state.object;
+  const predicate = location.state.predicate;
 
   const [feedback, setFeedback] = useState("");
 
@@ -532,12 +535,22 @@ const Level2 = () => {
     setMic(!mic); // 상태 업데이트
   };
 
+  // 서술어를 가린다 (. 포함하는 word 가림)
   const wrapWords = (text) => {
     const words = text.split(" ");
     return words.map((word, index) => (
       <span key={index} className="word">
-        {(index + 1) % 8 === 0 && <span className="blur-text">{word}</span>}
-        {(index + 1) % 8 !== 0 && (
+        {(predicate === "1" && word.includes(".")) ||
+        (object === "1" && (word.endsWith("을") || word.endsWith("를"))) ||
+        (subject === "1" &&
+          (word.endsWith("은") ||
+            word.endsWith("는") ||
+            word.endsWith("이") ||
+            word.endsWith("에서") ||
+            word.endsWith("께서") ||
+            word.endsWith("가"))) ? (
+          <span className="blur-text">{word}</span>
+        ) : (
           <>
             {word} <></>
           </>
