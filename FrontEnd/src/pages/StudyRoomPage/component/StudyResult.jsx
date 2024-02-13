@@ -49,7 +49,6 @@ const StudyResult = ({ onClose, speechId }) => {
     return `${minutes} : ${seconds}`;
   };
 
-
   useEffect(() => {
     const getData = () => {
       try {

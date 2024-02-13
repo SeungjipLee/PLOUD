@@ -152,7 +152,9 @@ const NoSkipResult = ({ onClose, speechId }) => {
               <div style={{overflow:"auto", height:"200px"}} className="p-3 bg-gray-100">
                 {feedbacks.map((feedback, index) => (
                   <p key={index} className="py-0.5">
-                    <span onClick={moveVideoTime(feedback.timeLog)}>{feedback.timeLog}</span> - {feedback.content}
+                    <span 
+                    className="feedback-time"
+                    onClick={moveVideoTime(feedback.timeLog)}>{feedback.timeLog}</span> - {feedback.content}
                   </p>
                 ))}
               </div>
