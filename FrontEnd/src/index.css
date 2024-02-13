@@ -1,7 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 .Main2 {
   display: flex;
   align-items: center;
@@ -76,6 +83,8 @@
 .footer {
   background: #0c134f;
   color: white;
+  bottom: 0; /* 하단에 위치 */
+  height: 170px; /* 푸터 높이 */
 }
 
 .footerLogo {
@@ -188,6 +197,9 @@
 
 .pagination > button {
   padding: 0px 30px;
+}
+.pagination img{
+  width: 10px;
 }
 
 .create-room-button {
@@ -411,7 +423,7 @@
 
 .room-list {
   height: 70vh;
-  width: 60vw;
+  width: 960px;
   padding: 5vh 0;
 }
 
@@ -807,7 +819,7 @@ p {
   /* background-color: #B0B0B0; */
   width: 241px;
   height: 100px;
-  background: linear-gradient(to bottom, #435380, #2f2468);
+  background: linear-gradient(to bottom, #3a3758, #100e2c);
   border-radius: 5px;
 }
 
@@ -1036,9 +1048,17 @@ p {
   border-radius: 10px;
 }
 .on-air {
+  display: flex;
   z-index: 100;
-  /* position: absolute; */
-  width:80px;
+  color: white;
+  width: 150px;
+  justify-content: space-between;
+}
+.on-air-img {
+  width: 80px;
+}
+.timer {
+  font-size: 20px;
 }
 .mode-select {
   display: flex;
@@ -1332,6 +1352,7 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: #F3704B;
 }
 
+
 .mic-test-form {
   border: rgb(85, 85, 85) solid 3px;
   box-shadow: 1px 1px 1px rgb(85, 85, 85);
@@ -1362,4 +1383,18 @@ input[type=number]::-webkit-outer-spin-button {
   height: 36px;
   background-color: green;
   border-radius: 50%;
+}
+
+.speechListModal {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  width: 500px;
+  height: 400px;
+  overflow: auto;
+  transform: translate(-50%, -50%);
+  background-color: #D7D5F6;
+  max-height: 90vh; /* viewport height의 90% */
+  padding: 1em;
+  border-radius: 20px;
 }

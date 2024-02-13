@@ -24,9 +24,9 @@ public class VideoInfoResponseDto {
         .build();
   }
 
-  private static String convertToString(long totalSecs) {
-    long minutes = (totalSecs % 3600) / 60;
-    long seconds = totalSecs % 60;
+  private static String convertToString(long milliseconds) {
+    long minutes = (milliseconds / 1000) / 60;
+    long seconds = (milliseconds / 1000) % 60;
 
     return String.format("%02d:%02d", minutes, seconds);
   }

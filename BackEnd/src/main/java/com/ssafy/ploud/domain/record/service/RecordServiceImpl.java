@@ -48,7 +48,7 @@ public class RecordServiceImpl implements RecordService{
 
         // video 조회(없어도 ok)
         VideoEntity video = speechEntity.getSpeechVideo();
-        VideoDetail videoDetail = (video == null) ? null : video.toDto();
+        VideoDetail videoDetail = (video == null) ? null : video.toDto(video);
 
         // feedback list 조회
         List<FeedbackDetail> feedbackDetailList = new ArrayList<>();
