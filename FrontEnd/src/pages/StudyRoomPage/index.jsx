@@ -1418,8 +1418,9 @@ const StudyRoomPage = () => {
         )}
         {chat && (
           <div className="chat bg-grad-y-black">
-            <h1 style={{textAlign: "center", marginBottom: "-10px"}}>방 제목 : {room.title}</h1>
+            <h1 style={{textAlign: "center", marginTop: "-4px",marginBottom: "-8px"}}>방 제목 : {room.title}</h1>
             <h1>채팅</h1>
+            <hr style={{}}/>
             {/* ref={chatAreaRef} */}
             <div className="chat-area">
               {chatList &&
