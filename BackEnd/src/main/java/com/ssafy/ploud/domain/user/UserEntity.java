@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.ArrayList;
@@ -85,14 +86,6 @@ public class UserEntity {
     this.password = password;
   }
 
-  public void updateSoloDuration(long practiceTimeInMinute) {
-    this.soloDurationInMinute += practiceTimeInMinute;
-  }
-
-  public void updateStudyDuration(long practiceTimeinMinute) {
-    this.studyDurationInMinute += practiceTimeinMinute;
-  }
-
   public void updateComplainCount() {
     complainCount++;
     if(complainCount>=5) {
@@ -105,4 +98,15 @@ public class UserEntity {
     complainCount = 0;
     restrictDate = null;
   }
+
+  public void updateUserPracticeTime(SpeechEntity speech) {
+    Duration duration = Duration.between(speech.getRecordTime(), speech.getSpeechEndTime());
+    long practiceTimeInSeconds = duration.toSeconds();
+    if (speech.isPersonal()) {
+      soloDurationInMinute += practiceTimeInSeconds;
+    } else {
+      studyDurationInMinute += practiceTimeInSeconds;
+    }
+  }
+
 }
