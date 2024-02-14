@@ -239,9 +239,7 @@ const PracticeRoomPage = () => {
           const average = sum / storedData.length;
 
           // 배열의 뒤에 추가
-          const tdecibel = calcDecibel(average);
-
-          addDecibel(tdecibel);
+          addDecibel(calcDecibel(average));
 
           setTimeout(analyzeAudio, 100);
         }
@@ -263,7 +261,7 @@ const PracticeRoomPage = () => {
   // 데시벨 계산 후 추가하기
   const calcDecibel = async (average) => {
     var decibel = await Math.max(Math.round(38 * Math.log10(average)), 0);
-    return decibel;
+    return await decibel;
   };
 
   const addDecibel = (newDecibel) => {
