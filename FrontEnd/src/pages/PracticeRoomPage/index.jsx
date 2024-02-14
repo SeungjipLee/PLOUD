@@ -496,9 +496,7 @@ const PracticeRoomPage = () => {
 
             const micDecibel = calcDecibel(micAverage);
 
-            // console.log(micDecibel);
-
-            // mic-color-box
+            console.log("테스트 데시벨 : " + micDecibel);
 
             if (micDecibel < 30) {
               setMicTestContent("목소리가 거의 들리지 않아요!");
@@ -534,8 +532,10 @@ const PracticeRoomPage = () => {
     };
 
     if (mic) {
+      console.log("마이크 테스트 시작");
       startMicTest();
     } else {
+      console.log("마이크 테스트 종료");
       stopMicTest();
     }
 
