@@ -168,7 +168,7 @@ const StudyRoomPage = () => {
           audioSource: undefined,
           videoSource:
             navigator.userAgent.indexOf("Firefox") !== -1 ? "window" : "screen",
-          publishAudio: true,
+          publishAudio: false,
           publishVideo: true,
           resolution: "640x480",
           frameRate: 30,
