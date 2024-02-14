@@ -585,7 +585,7 @@ const StudyRoomPage = () => {
         setFeedbackModal(false);
         setFeedbackButton(false);
       }
-
+      setMode("0")
       // 녹화 종료의 경우 여기서 한 번에 처리해도 가능할 듯?
 
       // 레이아웃 전환
@@ -805,7 +805,7 @@ const StudyRoomPage = () => {
     );
 
     dispatch(addRecordList({ speechId: speechId.current, title: title }));
-
+    setMode("0")
     // 비동기 처리 헷갈리니까 5초 뒤에 하자
     recordResult();
   };
