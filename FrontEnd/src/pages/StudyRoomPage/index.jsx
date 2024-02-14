@@ -726,7 +726,7 @@ const StudyRoomPage = () => {
 
     leaveMeeting(
       token,
-      { sessionId: room.sessionId, token: ovToken },
+      { sessionId: room.sessionId, token: ovToken, userId: nickname },
       (response) => {
         console.log(tag, response);
       },
