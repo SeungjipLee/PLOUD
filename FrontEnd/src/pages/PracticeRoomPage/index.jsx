@@ -463,25 +463,26 @@ const PracticeRoomPage = () => {
   };
 
   const [micColor, setMicColor] = useState("green");
+  const [micStream, setMicStream] = useState(null);
+  const micTestRef = useRef(false);
 
   useEffect(() => {
-    let micStream;
-    let micAudioContext;
-    let micSource;
-
     const startMicTest = async () => {
+      micTestRef.current = true;
+
       navigator.mediaDevices
         .getUserMedia({ audio: true })
         .then((mStream) => {
-          micStream = mStream;
-          micAudioContext = new AudioContext();
-          micSource = micAudioContext.createMediaStreamSource(micStream);
+          const micAudioContext = new AudioContext();
+          const micSource = micAudioContext.createMediaStreamSource(mStream);
           const micAnalyzer = micAudioContext.createAnalyser();
           micAnalyzer.fftSize = 2048;
           micSource.connect(micAnalyzer);
 
+          setMicStream(mStream);
+
           function analyzeMicAudio() {
-            if (!mic) {
+            if (!micTestRef.current) {
               return;
             }
 
@@ -527,7 +528,9 @@ const PracticeRoomPage = () => {
     };
 
     const stopMicTest = () => {
-      if (micAudioContext) micAudioContext.close();
+      micTestRef.current = false;
+
+      // if (micAudioContext) micAudioContext.close();
       if (micStream) micStream.getTracks().forEach((track) => track.stop());
       setMicTestContent("");
     };
@@ -586,7 +589,8 @@ const PracticeRoomPage = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-          }}>
+          }}
+        >
           <div>
             <video
               style={{ width: "530px", height: "500px" }}
@@ -606,7 +610,10 @@ const PracticeRoomPage = () => {
               fontSize: "24px",
               fontWeight: "bold",
               color: "white",
-            }}>
+              marginTop: "-20px",
+              paddingTop: "26px",
+            }}
+          >
             {feedback}
           </div>
         </div>
@@ -616,7 +623,8 @@ const PracticeRoomPage = () => {
               width: "50%",
               height: "600px",
               display: "flex",
-            }}>
+            }}
+          >
             <div>
               <video
                 ref={screenShareVideoRef}
@@ -627,10 +635,11 @@ const PracticeRoomPage = () => {
                   maxHeight: "600px",
                   padding: "22px",
                 }}
-                autoPlay></video>
+                autoPlay
+              ></video>
             </div>
           </div>
-        ) : (
+        ) : content != "" ? (
           <div className="script-box">
             <p
               style={{
@@ -638,12 +647,13 @@ const PracticeRoomPage = () => {
                 fontWeight: "bold",
                 textAlign: "center",
                 marginBottom: "23px",
-              }}>
+              }}
+            >
               {scriptTitle}
             </p>
             {wrapWords(content)}
           </div>
-        )}
+        ) : null}
       </div>
 
       {/* Bottom - 버튼 */}
@@ -693,20 +703,23 @@ const PracticeRoomPage = () => {
         <Modal
           title="마이크테스트"
           onClose={(e) => setMic(false)}
-          className={"mic-test-form"}>
+          className={"mic-test-form"}
+        >
           <div
             style={{
               display: "flex",
               justifyContent: "center",
               flexDirection: "column",
               alignItems: "center",
-            }}>
+            }}
+          >
             <p className="mic-text-box">{micTestContent}</p>
             <div
               className="mic-color-box"
               style={{
                 backgroundColor: micColor,
-              }}></div>
+              }}
+            ></div>
           </div>
         </Modal>
       )}
@@ -716,7 +729,8 @@ const PracticeRoomPage = () => {
         <Modal
           title="녹화 정보 입력"
           onClose={(e) => setRecordForm(false)}
-          className={"record-form"}>
+          className={"record-form"}
+        >
           <form onSubmit={speechStart}>
             <div>
               <p>
@@ -725,7 +739,8 @@ const PracticeRoomPage = () => {
                   placeholder="제목 입력..."
                   value={title}
                   style={{ color: "white" }}
-                  onChange={(e) => setTitle(e.target.value)}></input>
+                  onChange={(e) => setTitle(e.target.value)}
+                ></input>
               </p>
               <p>카테고리 : 전체</p>
               <p>분류 : 개인</p>
