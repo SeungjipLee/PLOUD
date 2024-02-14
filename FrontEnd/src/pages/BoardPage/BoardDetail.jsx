@@ -67,6 +67,8 @@ const BoardDetail = () => {
   const handleDelete = (e) => {
     e.preventDefault()
 
+    console.log(boardId);
+
     deleteboard(
       token,
       boardId,

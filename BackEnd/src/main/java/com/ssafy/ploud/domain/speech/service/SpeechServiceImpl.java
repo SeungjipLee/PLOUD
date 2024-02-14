@@ -204,7 +204,9 @@ public class SpeechServiceImpl implements SpeechService {
 
             ClearityDto clearityDto = etriUtil.getScore(audioInfo);
 
-            speechAssessUtil.addClearity(speechId, clearityDto);
+            if(clearityDto != null){
+                speechAssessUtil.addClearity(speechId, clearityDto);
+            }
 
             if (isLast) {
                 Map<String, Integer> scores = speechAssessUtil.assess(speechId);

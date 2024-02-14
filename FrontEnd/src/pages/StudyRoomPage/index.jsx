@@ -17,7 +17,6 @@ import {
   endSpeech,
   assessSpeech,
   postFeedback,
-  postComment,
   uploadVideo,
 } from "../../services/speech";
 import Modal from "../../components/Modal";
@@ -767,25 +766,6 @@ const StudyRoomPage = () => {
 
   const recordResult = () => {
     setResultScreen(true);
-  };
-
-  // 코멘트 등록 요청
-  const commentPost = () => {
-    postComment(
-      token,
-      {
-        speechId: speechId.current,
-        comment: comment,
-      },
-      (response) => {
-        // console.log(response);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-
-    setShowComment(false);
   };
 
   // 피드백 등록 요청

@@ -35,22 +35,27 @@ const NewsPage = ({ setScriptid, setTitle }) => {
   return (
     <>
       {list.map((i, index) => (
-        <div key={index}>
+        <div key={index} className="rounded-md px-1 pt-1 my-2 text-center bg-white text-sm">
+          <hr />
           <button
             onClick={() => {
               setScriptid(i.scriptId);
               setTitle(i.scriptTitle);
             }}
-            className="mb-2"
+            className="mt-2"
             style={{ textAlign: "left" }}
+            title={i.scriptTitle}
           >
-            {i.scriptTitle}
+            {i.scriptTitle.length > 32 ? `${i.scriptTitle.substring(0, 32)}...` : i.scriptTitle}
           </button>
         </div>
       ))}
     </>
   );
 };
+
+
+
 
 const SpeechPage = ({ setScriptid, setTitle }) => {
   const token = useSelector((state) => state.userReducer.token);
@@ -79,16 +84,18 @@ const SpeechPage = ({ setScriptid, setTitle }) => {
   return (
     <>
       {list.map((i, index) => (
-        <div key={index}>
+        <div key={index} className="rounded-md px-1 pt-1 my-2 text-center bg-white text-sm">
+          <hr />
           <button
             onClick={() => {
               setScriptid(i.scriptId);
               setTitle(i.scriptTitle);
             }}
-            className="mb-2"
+            className="mt-2"
             style={{ textAlign: "left" }}
+            title={i.scriptTitle}
           >
-            {i.scriptTitle}
+            {i.scriptTitle.length > 32 ? `${i.scriptTitle.substring(0, 32)}...` : i.scriptTitle}
           </button>
         </div>
       ))}
@@ -135,18 +142,18 @@ const ScriptPage = ({ scriptid, setContent }) => {
 
 const PracticePage2 = () => {
   const [level, setLevel] = useState("1");
-  const [category, setCategory] = useState("News");
+  const [category, setCategory] = useState(1);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [scriptid, setScriptid] = useState("");
   const token = useSelector((state) => state.userReducer.token);
 
   const handleCategoty1 = () => {
-    setCategory("Speech");
+    setCategory(2);
   };
 
   const handleCategoty2 = () => {
-    setCategory("News");
+    setCategory(1);
   };
 
   return (
@@ -157,7 +164,7 @@ const PracticePage2 = () => {
             혼자연습
           </div>
 
-          <div className="flex flex-col mx-60 bg-sky-100 ps-10 py-10 border border-black rounded-2xl mb-24">
+          <div className="flex flex-col mx-60 bg-sky-50 ps-10 py-10 rounded-2xl mb-24">
             <div className="flex mb-5">
               <div className="text-xl mainBlueF font-bold">1. 대본 :</div>
               <Link
@@ -188,7 +195,7 @@ const PracticePage2 = () => {
             </div> */}
             <div className="flex mb-5">
               <div className="text-xl mainBlueF font-bold py-1">2. 분류 :</div>
-              {category == "News" && (
+              {category == 1 && (
                 <>
                   <button className="ms-5 bg-blue-500 text-white rounded-xl px-2 ">
                     뉴스
@@ -201,7 +208,7 @@ const PracticePage2 = () => {
                   </button>
                 </>
               )}
-              {category == "Speech" && (
+              {category == 2 && (
                 <>
                   <button
                     className="ms-5 bg-blue-300 text-gray-200 rounded-xl px-2 "
@@ -209,7 +216,7 @@ const PracticePage2 = () => {
                   >
                     뉴스
                   </button>
-                  <button className="ms-3 bg-blue-500 text-white rounded-xl px-2 ">
+                  <button className="ms-3 bg-sky-500 text-white rounded-xl px-2 ">
                     연설
                   </button>
                 </>
@@ -218,17 +225,17 @@ const PracticePage2 = () => {
             <div className="flex mb-10 w-full">
               <div className="text-xl mainBlueF font-bold pt-1">3. 내용 :</div>
 
-              <div className="ms-5 border border-black rounded-2xl px-5 py-2 w-3/4 h-80 flex">
-                <div className="w-1/3 border-r border-black flex flex-col pe-4">
-                  <div className="text-xl font-bold">목록</div>
+              <div className="ms-5 border border-gray-300 rounded-2xl py-2 w-3/4 h-80 flex bg-white">
+                <div className="w-1/3 border-r border-gray-300 flex flex-col pe-4">
+                  <div className="text-xl font-bold ms-5">대본 목록</div>
                   <div
-                    className="m-2 bg-white h-64 rounded-xl p-4 text-xs"
+                    className="m-2 h-64 rounded-xl p-1 text-xs"
                     style={{ overflowY: "auto" }}
                   >
-                    {category === "News" && (
+                    {category === 1 && (
                       <NewsPage setScriptid={setScriptid} setTitle={setTitle} />
                     )}
-                    {category === "Speech" && (
+                    {category === 2 && (
                       <SpeechPage
                         setScriptid={setScriptid}
                         setTitle={setTitle}
@@ -239,7 +246,7 @@ const PracticePage2 = () => {
                 <div className="w-2/3 ms-5 pb-5">
                   <div className="text-xl font-bold">미리보기</div>
                   <div
-                    className="m-2 bg-white h-64 rounded-xl p-4"
+                    className="my-2 me-5 practiceScript h-64 rounded-xl p-4"
                     style={{ overflowY: "auto" }}
                   >
                     {scriptid !== "" && (
@@ -252,8 +259,8 @@ const PracticePage2 = () => {
             {scriptid !== "" && (
               <Link
                 to="/practice/Level1"
-                state={{ content: content, title: title }}
-                className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg"
+                state={{ content: content, title: title, category: category }}
+                className="self-center mb-2 rounded-xl px-2 py-1 bg-blue-500 text-gray-200 text-lg"
               >
                 <span className="practice-startText">녹화 시작하기</span>
               </Link>
