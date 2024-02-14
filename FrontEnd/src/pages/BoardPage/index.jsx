@@ -106,30 +106,6 @@ const BoardPage = () => {
             </button>
           </div>
 
-          <div className="study-main-search flex justify-center mb-3">
-            <img src="/images/search_icon.png" />
-            <input
-              type="text"
-              className="search-room-input"
-              placeholder="게시글 제목으로 검색"
-              onChange={(e) => setSearchForm(e.target.value)}
-            />
-            <button
-              className="border searchBtn p-1 ms-3 rounded-md bg-sky-300 writeBtn"
-              onClick={handleSearch}>
-              검색
-            </button>
-            <button
-              className="write border writeBtn rounded-md py-1 px-4 ml-6"
-              onClick={() =>
-                navigate("/createboard", {
-                  state: { isCreate: true, boardId: -1 },
-                })
-              }>
-              글쓰기
-            </button>
-          </div>
-
           <table className="table-auto text-center bg-white h-44">
             <thead className="underLine">
               <tr>
