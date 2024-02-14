@@ -1086,8 +1086,9 @@ p {
   height: 15vh;
   /* height: 150px; */
 }
-.mode2-top video {
-  /* height: 140px; */
+
+.mode2-top video,
+.mode2-top img {
   height: 15vh;
   width: auto;
 }
@@ -1176,6 +1177,7 @@ p {
 .mode3-each video {
   width: 40vw;
 }
+
 .mode3-each {
   position: relative;
   padding: 0px 10px;

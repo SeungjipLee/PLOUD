@@ -7,11 +7,21 @@ const UserVideoComponent = ({ streamManager, isTyping }) => {
     <div>
       {streamManager !== undefined ? (
         <div className="relative">
-          {isTyping && <div className="typing"><img src="/images/typing.png"/></div>}
-          {streamManager.stream.videoActive ?(
+          {isTyping && (
+            <div className="typing">
+              <img src="/images/typing.png" />
+            </div>
+          )}
+          {streamManager.stream.videoActive ? (
             <OpenViduVideoComponent streamManager={streamManager} />
           ) : (
-            <img src="/images/videoimage_disabled.png"/>
+            <img
+              style={{
+                height: "140px",
+                width: "auto",
+              }}
+              src="/images/videoimage_disabled.png"
+            />
           )}
         </div>
       ) : null}
