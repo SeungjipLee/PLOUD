@@ -127,32 +127,22 @@ public class SpeechServiceImpl implements SpeechService {
     @Override
     @Transactional
     public void endAndDecibel(SpeechEndRequest speechEndRequest) {
-        String sessionId = speechEndRequest.getSessionId();
-        if (!sessionId.isEmpty()) {
-            MeetingInfo meetingInfo = openViduUtil.findBySessionId(sessionId);
-            meetingInfo.setSpeechId(-1);
-        }
+//        String sessionId = speechEndRequest.getSessionId();
+//        if (!sessionId.isEmpty()) {
+//            MeetingInfo meetingInfo = openViduUtil.findBySessionId(sessionId);
+//            meetingInfo.setSpeechId(-1);
+//        }
 
         // 데시벨 평가
-        int volume = speechAssessUtil.decibels(speechEndRequest.getDecibels());
+        int volume = 65;//speechAssessUtil.decibels(speechEndRequest.getDecibels());
         SpeechEntity speech = speechRepository.findById(speechEndRequest.getSpeechId())
             .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
         speech.updateSpeechEndTime();
         speech.getScore().updateVolume(volume);
 
         // 사용자 연습 시간 업데이트
-        updateUserPracticeTime(speech);
-    }
-
-    private void updateUserPracticeTime(SpeechEntity speech) {
         UserEntity user = speech.getUser();
-        Duration duration = Duration.between(speech.getRecordTime(), speech.getSpeechEndTime());
-        long practiceTimeInMinute = duration.toMinutes();
-        if (speech.isPersonal()) {
-            user.updateSoloDuration(practiceTimeInMinute);
-        } else {
-            user.updateStudyDuration(practiceTimeInMinute);
-        }
+        user.updateUserPracticeTime(speech);
     }
 
     @Override
