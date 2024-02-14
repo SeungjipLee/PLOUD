@@ -1239,7 +1239,7 @@ p {
   padding: 22px;
 
   font-family: Times, "Times New Roman", Georgia, serif;
-  font-size: 30px;
+  font-size: 28px;
   white-space: pre-wrap;
   word-wrap: break-word;
 
@@ -1501,4 +1501,8 @@ a .slideshowDot.active {
 
 .practiceScript {
   background: #fffaf1;
+}
+
+.tier-info :hover {
+  cursor: pointer;
 }

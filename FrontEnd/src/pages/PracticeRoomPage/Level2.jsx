@@ -553,7 +553,7 @@ const Level2 = () => {
             word.endsWith("에서") ||
             word.endsWith("께서") ||
             word.endsWith("가"))) ? (
-          <span className="blur-text">{word}</span>
+          <span className="blur-text">{word + " "}</span>
         ) : (
           <>
             {word} <></>

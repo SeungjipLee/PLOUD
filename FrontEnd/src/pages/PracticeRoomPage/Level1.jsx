@@ -592,7 +592,7 @@ const Level1 = () => {
           <div className="script-box">
             <p
               style={{
-                fontSize: "20px",
+                fontSize: "32px",
                 fontWeight: "bold",
                 textAlign: "center",
                 marginBottom: "23px",
