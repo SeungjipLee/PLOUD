@@ -21,8 +21,8 @@ public class SpeechAssessUtil {
             return 0;
         }
 
-        double lowStandardDecibel = 55;
-        double highStandardDecibel = 65;
+        double lowStandardDecibel = 60;
+        double highStandardDecibel = 70;
         double standardDeviation = 20;
         double silenceDecibel = 30;
 
@@ -54,6 +54,8 @@ public class SpeechAssessUtil {
         if(perSilenceMinute > 1){
             avarageScore = (int) (avarageScore * (100 - perSilenceMinute * 10) / 100);
         }
+
+        System.out.println("분당 침묵 횟수 : " + perSilenceMinute + ", 평가 점수 : " + avarageScore);
 
         return avarageScore;
     }

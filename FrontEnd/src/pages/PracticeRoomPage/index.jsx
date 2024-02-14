@@ -491,20 +491,20 @@ const PracticeRoomPage = () => {
 
             // mic-color-box
 
-            if (micDecibel < 25) {
+            if (micDecibel < 30) {
               setMicTestContent("목소리가 거의 들리지 않아요!");
               setMicColor("red");
-            } else if (micDecibel < 40) {
+            } else if (micDecibel <= 55) {
               setMicTestContent("조금만 크게 말해주세요!");
               setMicColor("orange");
-            } else if (micDecibel < 70) {
+            } else if (micDecibel <= 70) {
               setMicTestContent("목소리의 크기가 적당해요!");
               setMicColor("green");
             } else if (micDecibel < 80) {
               setMicTestContent("조금만 작게 말해주세요!");
               setMicColor("orange");
             } else {
-              setMicTestContent("목소리가 너무 커요!");
+              setMicTestContent("목소리가 너무 크게 들려요!");
               setMicColor("red");
             }
 
