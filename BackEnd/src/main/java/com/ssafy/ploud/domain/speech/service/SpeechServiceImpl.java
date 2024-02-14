@@ -206,6 +206,7 @@ public class SpeechServiceImpl implements SpeechService {
 
             if(clearityDto != null){
                 speechAssessUtil.addClearity(speechId, clearityDto);
+                log.debug("스크립트 개수 확인 : " + clearityDto.getCnt() + ", 점수 확인 : " + clearityDto.getFloatScore());
             }
 
             if (isLast) {
