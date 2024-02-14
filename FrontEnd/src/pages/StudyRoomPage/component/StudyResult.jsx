@@ -166,7 +166,7 @@ const StudyResult = ({ onClose, speechId }) => {
                     style={{ backgroundColor: "#EBEAFA" }}
                   >
                     <div className="text-2xl mt-5 ps-5 pb-4 ms-5">결과:</div>
-                    <div className="text-5xl me-5 pt-2 me-5" style={gradeStyle}>
+                    <div className="text-5xl me-5 pt-2 me-5">
                       {grade}
                     </div>
                   </div>
