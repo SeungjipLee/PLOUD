@@ -861,7 +861,7 @@ const StudyRoomPage = () => {
           if (recorder.state === "recording") {
             recorder.stop();
           }
-        }, 5000);
+        }, 10000);
       })
       .catch((error) => {
         console.error("오디오 스트림을 가져오는 중 오류 발생:", error);
