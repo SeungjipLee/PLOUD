@@ -86,11 +86,10 @@ const ResetPwPage = () => {
               <div className="flex fetImg ">
                 <div
                   className="w-48 h-48"
-                  style={{ overflow: "hidden", borderRadius: "5%" }}
-                >
+                  style={{ overflow: "hidden", borderRadius: "5%" }}>
                   {!profile.profileImg && (
                     <img
-                      src="images/Profile.PNG"
+                      src="images/Profile.png"
                       style={{
                         width: "100%",
                         height: "100%",
@@ -144,8 +143,7 @@ const ResetPwPage = () => {
               <div className="flex justify-center m-10">
                 <button
                   onClick={handleSubmit}
-                  className="custom-btn btn-1 rounded-md px-3 py-1 mx-3 my-3"
-                >
+                  className="custom-btn btn-1 rounded-md px-3 py-1 mx-3 my-3">
                   비밀번호 변경하기
                 </button>
               </div>

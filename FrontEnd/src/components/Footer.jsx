@@ -2,7 +2,7 @@ const Footer = () => {
     return (
         <div className="footer p-7 px-36">
             <div className="w-32">
-                <img src="images/ICON_reverse.png"/>
+                <img src="/images/ICON_reverse.png"/>
             </div>
             <br />
             <hr />

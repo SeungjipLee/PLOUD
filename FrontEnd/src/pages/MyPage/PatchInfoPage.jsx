@@ -175,7 +175,7 @@ const PatchInfoPage = () => {
                   )}
                   {!preview && !profile.profileImg && (
                     <img
-                      src="images/Profile.PNG"
+                      src="images/Profile.png"
                       style={{
                         objectFit: "cover",
                         weight: "100%",
@@ -204,8 +204,7 @@ const PatchInfoPage = () => {
                 </div>
                 <button
                   onClick={handleSubmitImg}
-                  className="custom-btn btn-1 rounded-md ps-2 pe-2 p-1 mx-7 mt-16"
-                >
+                  className="custom-btn btn-1 rounded-md ps-2 pe-2 p-1 mx-7 mt-16">
                   사진 변경
                 </button>
               </div>
@@ -222,8 +221,7 @@ const PatchInfoPage = () => {
                   />
                   <button
                     onClick={handleSubmit}
-                    className="custom-btn btn-1  rounded-md ps-2 pe-2 p-1 mx-3 my-5"
-                  >
+                    className="custom-btn btn-1  rounded-md ps-2 pe-2 p-1 mx-3 my-5">
                     수정하기
                   </button>
                 </form>
@@ -232,21 +230,18 @@ const PatchInfoPage = () => {
               <div className="flex justify-center m-10">
                 <Link
                   to="/resetpw"
-                  className="mainBlueF rounded-md px-3 py-1 mx-3 my-3"
-                >
+                  className="mainBlueF rounded-md px-3 py-1 mx-3 my-3">
                   비밀번호 재설정
                 </Link>
                 <Link
                   to="/mypage"
-                  className="mainBlueF rounded-md px-3 py-1 mx-3 my-3"
-                >
+                  className="mainBlueF rounded-md px-3 py-1 mx-3 my-3">
                   마이페이지로 돌아가기
                 </Link>
               </div>
               <span
                 className="checkPatch text-gray-400"
-                onClick={CheckNickname}
-              >
+                onClick={CheckNickname}>
                 중복확인
               </span>
             </div>
