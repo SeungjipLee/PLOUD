@@ -1083,7 +1083,6 @@ p {
 
 .mode2-top {
   display: flex;
-
   height: 150px;
 }
 .mode2-top video {
@@ -1171,9 +1170,10 @@ p {
   width: 400px;
 }
 
-.mode3-each video {
+.mode3-each video, image {
   width: 40vw;
 }
+
 .mode3-each {
   position: relative;
   padding: 0px 10px;

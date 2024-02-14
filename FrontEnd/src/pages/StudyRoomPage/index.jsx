@@ -172,20 +172,20 @@ const StudyRoomPage = () => {
       // 여기에서 세션 종료 로직을 실행합니다.
       // 예: session.disconnect();
       leaveSession();
-  
+
       // 이벤트를 취소할 수 없지만, 대부분의 브라우저에서는 사용자에게 페이지를 떠나겠냐는 확인 창을 표시합니다.
       event.preventDefault();
     };
-  
+
     // 이벤트 리스너를 등록합니다.
-    window.addEventListener('beforeunload', handleBeforeUnload);
-  
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
     // 컴포넌트가 언마운트될 때 이벤트 리스너를 정리합니다.
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []); // 의존성 배열이 빈 배열이므로 컴포넌트 마운트 시 한 번만 실행됩니다.
-  
+
   // 화면 공유
   const handleScreenShare = async () => {
     if (presenter != nickname) {
@@ -218,7 +218,7 @@ const StudyRoomPage = () => {
       setPublisherScreen(publisherScreen);
       setScreenShare(true);
       setMode("3");
-      sendSignal("screenOn", "공유시작")
+      sendSignal("screenOn", "공유시작");
     } catch {
       (err) => console.log(err);
     }
@@ -230,7 +230,7 @@ const StudyRoomPage = () => {
 
       setPublisherScreen(null);
       setScreenShare(false);
-      sendSignal("screenOff", "공유종료")
+      sendSignal("screenOff", "공유종료");
     }
   };
 
@@ -273,11 +273,11 @@ const StudyRoomPage = () => {
     return nickname.split("//").length > 1 ? "screen" : nickname;
   };
 
-  useEffect(()=>{
-    if(chatAreaRef.current){
-      chatAreaRef.current.scrollTop=chatAreaRef.current.scrollHeight;
+  useEffect(() => {
+    if (chatAreaRef.current) {
+      chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
     }
-  }, [chatList])
+  }, [chatList]);
 
   // 신고 창 닫기
   const closeModal = () => {
@@ -317,7 +317,7 @@ const StudyRoomPage = () => {
 
   useEffect(() => {
     return () => {
-        leaveSession();
+      leaveSession();
     };
   }, []);
 
@@ -430,6 +430,10 @@ const StudyRoomPage = () => {
         startRecording();
         videoRecordingStart();
         sendSignal("rstart", "님이 발표를 시작하였습니다.");
+
+        setChat(false);
+        setReport(false);
+        setRecord(false);
       },
       (err) => console.log(err)
     );
@@ -481,7 +485,6 @@ const StudyRoomPage = () => {
 
     // On every Stream destroyed...
     session.current.on("streamDestroyed", (event) => {
-
       userSize.current -= 1;
 
       console.log(tag, "누가 떠났어요");
@@ -514,7 +517,7 @@ const StudyRoomPage = () => {
             content: username + content,
           },
         ]);
-      }else if(content == "님이 퇴장하였습니다!"){
+      } else if (content == "님이 퇴장하였습니다!") {
         setChatList((chatList) => [
           ...chatList,
           {
@@ -523,7 +526,7 @@ const StudyRoomPage = () => {
             content: username + content,
           },
         ]);
-      }else {
+      } else {
         setChatList((chatList) => [
           ...chatList,
           {
@@ -554,10 +557,15 @@ const StudyRoomPage = () => {
       var p = JSON.parse(event.data).chatvalue;
       console.log("[코멘트 입력중 수신함]");
 
-      const allIndexes = Array.from({ length: userSize.current }, (_, index) => index);
+      const allIndexes = Array.from(
+        { length: userSize.current },
+        (_, index) => index
+      );
       allIndexes.push(-1);
 
-      const availableIndexes = allIndexes.filter(index => !typingList.includes(index));
+      const availableIndexes = allIndexes.filter(
+        (index) => !typingList.includes(index)
+      );
 
       // console.log("전부 : " + allIndexes);
       // console.log("유저 수 : " + userSize.current);
@@ -568,28 +576,28 @@ const StudyRoomPage = () => {
         const randomIndex =
           availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
 
-          setTypingList([...typingList, randomIndex]);
-          // console.log("피드백 추가 : " + randomIndex);
-    
-          setTimeout(() => {
-            setTypingList((typingList) =>
-              typingList.filter((idx) => idx !== randomIndex)
-            );
-            // console.log("피드백 삭제 : " + randomIndex);
-          }, 5000);
+        setTypingList([...typingList, randomIndex]);
+        // console.log("피드백 추가 : " + randomIndex);
+
+        setTimeout(() => {
+          setTypingList((typingList) =>
+            typingList.filter((idx) => idx !== randomIndex)
+          );
+          // console.log("피드백 삭제 : " + randomIndex);
+        }, 5000);
       }
     });
 
     // 화면 공유 수신
     session.current.on("signal:screenOn", (event) => {
-      setScreenShare(true)
-      setMode("3")
-    })
+      setScreenShare(true);
+      setMode("3");
+    });
     // 화면 공유 종료 수신
     session.current.on("signal:screenOff", (event) => {
-      setScreenShare(false)
-      setMode("0")
-    })
+      setScreenShare(false);
+      setMode("0");
+    });
 
     // 방장이 떠남
     session.current.on("signal:exit", (event) => {
@@ -627,12 +635,11 @@ const StudyRoomPage = () => {
     session.current.on("signal:rstart", (event) => {
       var username = JSON.parse(event.data).nickname;
       var content = JSON.parse(event.data).chatvalue;
-      console.log("[녹화 시작 신호 받음]")
+      console.log("[녹화 시작 신호 받음]");
       // 참여자라면
-      denyMics()
-      console.log(publisher)
+      denyMics();
+      console.log(publisher);
       if (presenter != nickname) {
-        
         // 녹화 시작 신호를 받았을 때 모드가 3이 아니라면 청자는 모드 2번으로 이동
         if (mode !== "3") {
           setMode("2");
@@ -715,8 +722,8 @@ const StudyRoomPage = () => {
         );
 
         setMainStreamManager(tmpPublisher);
-        setPublisher(tmpPublisher)
-        publisherRef.current = tmpPublisher
+        setPublisher(tmpPublisher);
+        publisherRef.current = tmpPublisher;
 
         sendSignal("chat", "님이 접속하였습니다!");
 
@@ -779,7 +786,7 @@ const StudyRoomPage = () => {
   const handleMessageSubmit = async (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      if(chatvalue !== "") sendSignal("chat", chatvalue);
+      if (chatvalue !== "") sendSignal("chat", chatvalue);
     }
   };
 
@@ -1088,7 +1095,7 @@ const StudyRoomPage = () => {
     if (publisher) {
       publisher.publishAudio(newMic); // 마이크 상태 토글
     }
-    console.log(publisher)
+    console.log(publisher);
   };
 
   // const toggleMicTest = () => {
@@ -1097,52 +1104,52 @@ const StudyRoomPage = () => {
 
   const toggleChats = () => {
     setChat(!chat);
-    if(report){
+    if (report) {
       toggleReprot();
     }
-    if(result){
+    if (result) {
       setResult(!result);
     }
-    if(feedbackModal){
+    if (feedbackModal) {
       setFeedbackModal(!feedbackModal);
     }
   };
 
   const toggleReprot = () => {
     setReport(!report);
-    if(chat){
+    if (chat) {
       setChat(!chat);
     }
-    if(result){
+    if (result) {
       setResult(!result);
     }
-    if(feedbackModal){
+    if (feedbackModal) {
       setFeedbackModal(!feedbackModal);
     }
   };
 
   const toggleResult = () => {
     setResult(!result);
-    if(report){
+    if (report) {
       setReport(!report);
     }
-    if(chat){
+    if (chat) {
       setChat(!chat);
     }
-    if(feedbackModal){
+    if (feedbackModal) {
       setFeedbackModal(!feedbackModal);
     }
   };
 
   const toggleFeedback = () => {
     setFeedbackModal(!feedbackModal);
-    if(report){
+    if (report) {
       setReport(!report);
     }
-    if(result){
+    if (result) {
       setResult(!result);
     }
-    if(chat){
+    if (chat) {
       setChat(!chat);
     }
   };
@@ -1155,10 +1162,10 @@ const StudyRoomPage = () => {
       setMic(false); // 상태 업데이트
       if (publisherRef.current) {
         publisherRef.current.publishAudio(false); // 마이크 상태 토글
-        console.log(publisherRef)
+        console.log(publisherRef);
       }
     }
-  }
+  };
   return (
     <>
       <div className="RoomPage">
@@ -1486,7 +1493,10 @@ const StudyRoomPage = () => {
             {mic ? (
               <img onClick={() => toggleMic()} src="/images/micbutton.png" />
             ) : (
-              <img onClick={() => toggleMic()} src="/images/micbutton_disabled.png" />
+              <img
+                onClick={() => toggleMic()}
+                src="/images/micbutton_disabled.png"
+              />
             )}
             {video ? (
               <img onClick={toggleVideo} src="/images/videobutton.png" />
