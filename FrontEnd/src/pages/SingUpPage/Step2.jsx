@@ -3,8 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { checkEmail, checkId, signup, verifyEmail } from "../../services/user";
 import { useDispatch } from "react-redux";
 import { getEmail, updateStep } from "../../features/user/signUpSlice";
+import MyAlert from "../../components/MyAlert";
 
 const Step2 = () => {
+  // 알림 창 상태
+  const [message, setMessage] = useState("");
+  const [alert1, setAlert1] = useState(false);
   const dispatch = useDispatch();
   // 입력 받는 변수
   const [formData, setFormData] = useState({
@@ -27,16 +31,19 @@ const Step2 = () => {
     await checkEmail(
       { email: formData.email },
       (res) => {
-        if(res.data.status == 200){
-          alert("가입 가능한 이메일입니다. 메일로 인증번호를 보냈습니다.");
-          setIsEmailPass(true);                  
+        if (res.data.status == 200) {
+          setIsEmailPass(true);
+          setMessage("가입 가능한 이메일입니다.\n 메일로 인증번호를 보냈습니다.");
+          setAlert1(true);
         }
       },
       (err) => {
-        if(err.response.status == 409){
-          alert("이미 가입된 이메일입니다.");
-        }else{
-          alert("이메일을 다시 확인해 주세요.");
+        if (err.response.status == 409) {
+          setMessage("이미 가입된 이메일입니다.");
+          setAlert1(true);
+        } else {
+          setMessage("이메일을 다시 확인해 주세요.");
+          setAlert1(true);
         }
       }
     );
@@ -54,14 +61,17 @@ const Step2 = () => {
       console.log(response);
       // 추가적인 성공 처리 로직
       if (response.data.status == "200") {
-        alert("이메일 인증이 완료되었습니다.");
         setIsEmailValid(true);
+        setMessage("이메일 인증이 완료되었습니다.");
+        setAlert1(true);
       } else {
-        alert("코드를 다시 확인해주세요.");
+        setMessage("코드를 다시 확인해주세요.");
+        setAlert1(true);
       }
     } catch (error) {
       console.error("Error sending data", error);
-      alert("코드가 발송되지 않았습니다. 잠시후 다시 시도해주세요.");
+      setMessage("코드가 발송되지 않았습니다.\n 잠시후 다시 시도해주세요.");
+      setAlert1(true);
       // 에러 처리 로직
     }
   };
@@ -73,7 +83,8 @@ const Step2 = () => {
       dispatch(getEmail(formData.email));
       dispatch(updateStep(3));
     } else {
-      alert("이메일 인증을 완료 후 눌러주세요.");
+      setMessage("이메일 인증을 완료 후 눌러주세요.");
+      setAlert1(true);
     }
   };
 
@@ -122,6 +133,14 @@ const Step2 = () => {
           </button>
         </div>
       </div>
+      {alert1 && (
+        <MyAlert
+          content={message}
+          onClose={() => {
+            setAlert1(false);
+          }}
+        />
+      )}
     </>
   );
 };
