@@ -1137,8 +1137,9 @@ p {
 }
 
 .mode2-main-screen video {
-  padding-top: 20px;
-  height: 600px;
+  padding-top: 70px;
+  height: 500px;
+  width: 100%;
 }
 
 .mode1-each {

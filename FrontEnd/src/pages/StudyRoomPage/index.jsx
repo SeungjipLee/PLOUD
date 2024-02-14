@@ -1151,7 +1151,11 @@ const StudyRoomPage = () => {
               {subscribers
                 .filter((sub) => getUserNickname(sub) !== "screen")
                 .map((sub, i) => (
-                  <div key={i} className="relative">
+                  <div
+                    key={i}
+                    className="relative"
+                    style={{ justifyContent: "center" }}
+                  >
                     <div className="mode1-each">
                       <span className="nickname-overlay">
                         {getUserNickname(sub)}
@@ -1218,7 +1222,7 @@ const StudyRoomPage = () => {
               if (getUserNickname(sub) === "screen") {
                 console.log(sub);
                 return (
-                  <div key={i} className="mode2-main-screen">
+                  <div key={i} className="mode2-main-screen video">
                     <UserVideoComponent
                       isTyping={
                         getUserNickname(sub) !== presenter ? typing : false
