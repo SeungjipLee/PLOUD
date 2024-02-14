@@ -10,10 +10,14 @@ import { getToken, getUserId } from "../../features/user/userSlice";
 import { useState } from "react";
 // import AuthService from "../LoginPage/Service/AuthService";
 import { login } from "../../services/user";
+import MyAlert from "../../components/MyAlert";
 
 const LoginPage = () => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
+  // 알림 창 상태
+  const [ message, setMessage ] = useState("")
+  const [ alert, setAlert ] = useState(false)
 
   const [Id, setId] = useState(""); // 입력받은 Id
   const [Pw, setPw] = useState(""); // 입력받은 Pw
@@ -29,11 +33,15 @@ const LoginPage = () => {
         dispatch(getUserId(Id));
         navigate("/");
       },
-      (err) => alert("아이디 혹은 비밀번호가 일치하지 않습니다.")
+      async (err) => {
+        await setMessage("아이디 혹은 비밀번호가 일치하지 않습니다.")
+        setAlert(true)
+      }
     );
   };
 
   return (
+    <>
     <Page footer={<Footer />}>
       <div className="flex justify-center">
         <a href="/">
@@ -79,11 +87,14 @@ const LoginPage = () => {
             </Link>
           </span>
         </div>
-        <div className="mx-auto w-1/2 mb-5" style={{width: "200px"}}>
+        <div className="mx-auto w-1/2 mb-5" style={{width: "202px"}}>
           <SocialLogin />
         </div>
       </div>
     </Page>
+    
+    {alert && <MyAlert content={message} onClose={() => {setAlert(false)}}/>}
+    </>
   );
 };
 

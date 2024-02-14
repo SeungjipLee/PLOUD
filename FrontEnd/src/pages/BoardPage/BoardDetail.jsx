@@ -5,9 +5,14 @@ import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { deleteComment, deleteboard, getComment, getboardDetail, likeboard, postComment } from "../../services/board";
+import MyAlert from "../../components/MyAlert";
 
 
 const BoardDetail = () => {
+  // 알림 창 상태
+  const [ message, setMessage ] = useState("")
+  const [ alert, setAlert ] = useState(false)
+  const [ alert2, setAlert2 ] = useState(false)
   
   const { token }  = useSelector((state) => state.userReducer);
   const { boardId } = useParams();
@@ -31,7 +36,6 @@ const BoardDetail = () => {
           token,
           boardId,
           (res) => {
-            console.log(res.data.data)
             setTitle(res.data.data.title)
             setNickname(res.data.data.nickname)
             setProfileImg(res.data.data.profileImg)
@@ -48,7 +52,6 @@ const BoardDetail = () => {
           token,
           boardId,
           (res) => {
-            console.log(res.data.data)
             setCommentList(res.data.data)
           },
           (err) => console.log(err)
@@ -67,9 +70,9 @@ const BoardDetail = () => {
     deleteboard(
       token,
       boardId,
-      (res) => {
-        navigate('/board')
-        alert('글이 성공적으로 삭제되었습니다.')
+      async (res) => {
+        await setMessage('글이 성공적으로 삭제되었습니다.')
+        setAlert(true)
       },
       (err) => console.log(err)
     )
@@ -98,7 +101,6 @@ const BoardDetail = () => {
         boardId: boardId,
         comment: comment
       });
-      alert('댓글이 작성되었습니다.');
       // 새 댓글 데이터를 포함하여 상태 업데이트
       setCommentList((list) => [...list, response.data]); // 이 부분에서 response.data의 구조를 확인해야 함
       setComment(''); // 댓글 입력창 초기화
@@ -120,6 +122,7 @@ const BoardDetail = () => {
   };
 
   return (
+    <>
       <div className="bg-white w-full min-h-screen">
       <Page header={<Navbar />} footer={<Footer />}>
         <div className="mt-28">
@@ -219,6 +222,9 @@ const BoardDetail = () => {
         </div>
       </Page>
     </div>
+    {alert && <MyAlert content={message} onClose={() => {setAlert(false)}}/>}
+    {alert2 && <MyAlert content={message} onClose={() => {setAlert2(false); navigate('/board')}}/>}
+    </>
   );
 };
 

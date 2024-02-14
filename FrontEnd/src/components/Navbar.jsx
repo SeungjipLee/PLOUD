@@ -2,18 +2,23 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { expireToken } from "../features/user/userSlice";
+import MyAlert from "./MyAlert";
 
 const Navbar = () => {
-  const { isLogined, nickname } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { isLogined, nickname } = useSelector((state) => state.userReducer);
 
-  const handleLink = (path) => {
+  // 알림 창 상태
+  const [ message, setMessage ] = useState("")
+  const [ alert, setAlert ] = useState(false)
+
+  const handleLink = async (path) => {
     if (isLogined) {
       navigate(path);
     } else {
-      alert("로그인이 필요합니다");
-      navigate("/login");
+      await setMessage("로그인이 필요합니다.")
+      setAlert(true)
     }
   };
 
@@ -23,6 +28,7 @@ const Navbar = () => {
     navigate("/");
   };
   return (
+    <>
     <div className="Navbar w-screen h-20 fixed top-0 z-20 py-5">
       <Link to="/">
         <div className="w-40 h-5 ml-20 mr-10">
@@ -145,6 +151,8 @@ const Navbar = () => {
         )}
       </nav>
     </div>
+    {alert && <MyAlert content={message} onClose={() => {setAlert(false); navigate('/login')}}/>}
+    </>
   );
 };
 

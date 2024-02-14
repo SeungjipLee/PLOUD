@@ -6,18 +6,22 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Slideshow from "./Slideshow";
 import { getSpeechCount } from "../../services/speech"
+import MyAlert from "../../components/MyAlert";
 
 const MainPage = () => {
   const { isLogined } = useSelector((state) => state.userReducer);
   const navigate = useNavigate()
   const [ speechCount, setSpeechCount ] = useState(0);
-  
-  const handleLink = (path) => {
+  const [ message, setMessage ] = useState("")
+  const [ alert, setAlert ] = useState(false)
+  const handleLink = async (path) =>  {
     if (isLogined) {
       navigate(path)
     } else {
-      alert('로그인이 필요합니다.')
-      navigate('/login')
+      // alert('로그인이 필요합니다.')
+      await setMessage("로그인이 필요합니다.")
+      setAlert(true)
+      // navigate('/login')
     }
   }
   const [modal, setModal] = useState(true)
@@ -30,7 +34,7 @@ const MainPage = () => {
     // get speech count
     getSpeechCount(
       (res) => {
-        console.log(res.data.data)
+        // console.log(res.data.data)
         setSpeechCount(res.data.data.count)
       },
       (err) => console.log("스피치 개수 불러오는 중 오류 발생")
@@ -65,6 +69,7 @@ const MainPage = () => {
   // end scroll animation
 
   return (
+    <>
     <div>
       <Page header={<Navbar />} footer={<Footer />}>
       {/* main1 */}
@@ -109,6 +114,8 @@ const MainPage = () => {
       </div>
       </Page>
     </div>
+    {alert && <MyAlert content={message} onClose={() => {setAlert(false); navigate('/login')}}/>}
+    </>
   );
 };
 
