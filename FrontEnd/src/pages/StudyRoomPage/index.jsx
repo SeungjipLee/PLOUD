@@ -142,6 +142,7 @@ const StudyRoomPage = () => {
 
   // 화면공유 여부 파악
   const [screenShare, setScreenShare] = useState(false);
+  const screenShareRef = useRef(false)
 
   // 녹화 Form
   const [title, setTitle] = useState("");
@@ -590,14 +591,16 @@ const StudyRoomPage = () => {
 
     // 화면 공유 수신
     session.current.on("signal:screenOn", (event) => {
-      setScreenShare(true);
-      setMode("3");
-    });
+      setScreenShare(true)
+      screenShareRef.current = true
+      setMode("3")
+    })
     // 화면 공유 종료 수신
     session.current.on("signal:screenOff", (event) => {
-      setScreenShare(false);
-      setMode("0");
-    });
+      setScreenShare(false)
+      screenShareRef.current = false
+      setMode("0")
+    })
 
     // 방장이 떠남
     session.current.on("signal:exit", (event) => {
@@ -641,7 +644,7 @@ const StudyRoomPage = () => {
       console.log(publisher);
       if (presenter != nickname) {
         // 녹화 시작 신호를 받았을 때 모드가 3이 아니라면 청자는 모드 2번으로 이동
-        if (mode !== "3") {
+        if (!screenShareRef) { // 이거 mode 안찍힐수도 있다.
           setMode("2");
         }
       }
@@ -1201,7 +1204,7 @@ const StudyRoomPage = () => {
             <div className="mode2-top">
               <div className="mode2-top-left"></div>
               {/* 참가자 일렬로 작은 화면으로 나열 // 순서 : 발표자, 참여자... */}
-              <div className="flex flex-row justify-center items-center space-x-2 w-full py-2">
+              <div className="flex flex-row justify-center items-center space-x-2 w-full">
                 {/* sub 돌면서 발표자 닉네임과 같으면 첫화면으로 송출 */}
                 {subscribers.map((sub, i) => {
                   if (getUserNickname(sub) === presenter) {
