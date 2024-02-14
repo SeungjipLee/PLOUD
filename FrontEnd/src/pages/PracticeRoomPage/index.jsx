@@ -16,7 +16,7 @@ import {
   uploadVideo,
 } from "../../services/speech";
 
-const Level2 = () => {
+const PracticeRoomPage = () => {
   const { token } = useSelector((state) => state.userReducer);
   const navigate = useNavigate();
 
@@ -26,6 +26,7 @@ const Level2 = () => {
   const subject = location.state.subject;
   const object = location.state.object;
   const predicate = location.state.predicate;
+  const category = location.state.category;
 
   const [feedback, setFeedback] = useState("");
 
@@ -116,7 +117,7 @@ const Level2 = () => {
     const params = {
       title: title,
       personal: true,
-      categoryId: 0,
+      categoryId: category,
       sessionId: "",
     };
 
@@ -735,4 +736,4 @@ const Level2 = () => {
   );
 };
 
-export default Level2;
+export default PracticeRoomPage;

@@ -121,11 +121,10 @@ const PracticePage1 = () => {
                   서술어
                 </button>
               )}
-              
+
               <p className="ms-3 text-red-500 pt-1">
                 🎤선택된 항목을 일부 가려 난이도 높은 연습을 할 수 있어요!
               </p>
-
             </div>
             <div className="flex mb-5">
               <div className="text-xl mainBlueF font-bold py-1">3. 제목 :</div>
@@ -151,13 +150,14 @@ const PracticePage1 = () => {
               ></textarea>
             </div>
             <Link
-              to="/practice/Level2"
+              to="/practice/room"
               state={{
                 content: content,
                 title: title,
                 subject: subject,
                 object: object,
                 predicate: predicate,
+                category: 0,
               }}
               className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg"
             >

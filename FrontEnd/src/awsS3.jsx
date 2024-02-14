@@ -1,9 +1,9 @@
 import AWS from "aws-sdk";
 
 const config = {
-  aws_reg: "",	// aws 지역 ex ) ap-northeast-2
-  aws_key: "",	// aws 키
-  aws_sec: "",	// aws 시크릿 키
+  aws_reg: "", // aws 지역 ex ) ap-northeast-2
+  aws_key: "", // aws 키
+  aws_sec: "", // aws 시크릿 키
 };
 
 AWS.config.update({
@@ -19,7 +19,7 @@ const getImg = async (company, store) => {
     const data = await s3
       .getObject({
         Key: filename,
-        Bucket: "",	// 버킷 이름
+        Bucket: "", // 버킷 이름
       })
       .promise();
 
@@ -54,7 +54,7 @@ const getVideo = async (company, store) => {
     const data = await s3
       .getObject({
         Key: filename,
-        Bucket: "",	// 버킷 이름
+        Bucket: "", // 버킷 이름
       })
       .promise();
 

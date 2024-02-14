@@ -35,7 +35,10 @@ const NewsPage = ({ setScriptid, setTitle }) => {
   return (
     <>
       {list.map((i, index) => (
-        <div key={index} className="rounded-md px-1 pt-1 my-2 text-center bg-white text-sm">
+        <div
+          key={index}
+          className="rounded-md px-1 pt-1 my-2 text-center bg-white text-sm"
+        >
           <hr />
           <button
             onClick={() => {
@@ -46,16 +49,15 @@ const NewsPage = ({ setScriptid, setTitle }) => {
             style={{ textAlign: "left" }}
             title={i.scriptTitle}
           >
-            {i.scriptTitle.length > 32 ? `${i.scriptTitle.substring(0, 32)}...` : i.scriptTitle}
+            {i.scriptTitle.length > 32
+              ? `${i.scriptTitle.substring(0, 32)}...`
+              : i.scriptTitle}
           </button>
         </div>
       ))}
     </>
   );
 };
-
-
-
 
 const SpeechPage = ({ setScriptid, setTitle }) => {
   const token = useSelector((state) => state.userReducer.token);
@@ -84,7 +86,10 @@ const SpeechPage = ({ setScriptid, setTitle }) => {
   return (
     <>
       {list.map((i, index) => (
-        <div key={index} className="rounded-md px-1 pt-1 my-2 text-center bg-white text-sm">
+        <div
+          key={index}
+          className="rounded-md px-1 pt-1 my-2 text-center bg-white text-sm"
+        >
           <hr />
           <button
             onClick={() => {
@@ -95,7 +100,9 @@ const SpeechPage = ({ setScriptid, setTitle }) => {
             style={{ textAlign: "left" }}
             title={i.scriptTitle}
           >
-            {i.scriptTitle.length > 32 ? `${i.scriptTitle.substring(0, 32)}...` : i.scriptTitle}
+            {i.scriptTitle.length > 32
+              ? `${i.scriptTitle.substring(0, 32)}...`
+              : i.scriptTitle}
           </button>
         </div>
       ))}
@@ -258,8 +265,15 @@ const PracticePage2 = () => {
             </div>
             {scriptid !== "" && (
               <Link
-                to="/practice/Level1"
-                state={{ content: content, title: title, category: category }}
+                to="/practice/room"
+                state={{
+                  content: content,
+                  title: title,
+                  subject: "0",
+                  object: "0",
+                  predicate: "0",
+                  category: category,
+                }}
                 className="self-center mb-2 rounded-xl px-2 py-1 bg-blue-500 text-gray-200 text-lg"
               >
                 <span className="practice-startText">녹화 시작하기</span>
