@@ -167,29 +167,6 @@ const StudyRoomPage = () => {
 
   const [publisherScreen, setPublisherScreen] = useState(undefined);
 
-  // useEffect(()=>{
-  //   if(chat === true){
-  //     if(report === true) setReport(false);
-  //     if(result === true) setResult(false);
-  //     if(feedbackModal === true) setFeedback(false);
-  //   }
-  //   else if(report === true){
-  //     if(chat === true) setChat(false);
-  //     if(result === true) setResult(false);
-  //     if(feedbackModal === true) setFeedback(false);
-  //   }
-  //   else if(result === true){
-  //     if(chat === true) setChat(false);
-  //     if(report === true) setReport(false);
-  //     if(feedbackModal === true) setFeedback(false);
-  //   }
-  //   else if(feedbackModal === true){
-  //     if(chat === true) setChat(false);
-  //     if(report === true) setReport(false);
-  //     if(result === true) setResult(false);
-  //   }
-
-  // }, [chat, report, result, feedbackModal])
 
   // 화면 공유
   const handleScreenShare = async () => {
