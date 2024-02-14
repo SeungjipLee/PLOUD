@@ -150,6 +150,7 @@ const StudyRoomPage = () => {
   // 결과 관련
   const [currentResult, setCurrentResult] = useState(null);
   const recordList = useSelector((state) => state.recordReducer.recordList);
+  const [videoResponse, setVideoResponse] = useState(null);
 
   const categoryName = () => {
     switch (room.categoryId) {
@@ -646,7 +647,9 @@ const StudyRoomPage = () => {
       // 녹화 시작 신호를 받을 경우 처리할 것
       if (username != nickname) {
         // 녹화시작 버튼을 누르지 않은 사람은 피드백 모달이 열리게 됨
-        setFeedbackModal(true);
+
+        toggleFeedback();
+        // setFeedbackModal(true);
         setFeedbackButton(true);
         // 내가 아닌 경우의 레이아웃 전환
       }
@@ -859,9 +862,11 @@ const StudyRoomPage = () => {
       vFormData,
       (response) => {
         console.log("영상 업로드 성공");
+        setVideoResponse(true);
       },
       (error) => {
         console.log("영상 업로드 실패");
+        setVideoResponse(false);
       }
     );
   };
@@ -933,6 +938,7 @@ const StudyRoomPage = () => {
   const startRecording = () => {
     isLast.current = false;
     isRecording.current = true;
+    setVideoResponse(null);
     setRecordingTime(0);
 
     // recordTime 측정
@@ -1666,6 +1672,7 @@ const StudyRoomPage = () => {
           <StudyResult
             onClose={handleResultClose}
             speechId={speechId.current}
+            videoResponse={videoResponse}
           />
         )}
         {result && <ResultList />}

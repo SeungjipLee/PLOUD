@@ -7,7 +7,7 @@ import { postComment } from "../../../services/speech";
 import LoadingScreen from "./Loading";
 import MyAlert from "../../../components/MyAlert";
 
-const StudyResult = ({ onClose, speechId }) => {
+const StudyResult = ({ onClose, speechId, videoResponse }) => {
   const [isDetail, setIsDetail] = useState(true);
   const { token } = useSelector((state) => state.userReducer);
   const resultId = speechId;
@@ -34,8 +34,21 @@ const StudyResult = ({ onClose, speechId }) => {
     }, 5000);
   }, []);
 
+  useEffect(() => {
+    if (videoResponse === true) {
+      // -> 다시 요청
+      recordResultGet();
+      console.log("결과 페이지 비디오 다시 요청");
+    } else if (videoResponse === false) {
+      // 비디오를 올리지 못함.
+      setVideoPath("False");
+      console.log("결과 페이지 비디오 올리지 못함");
+    }
+  }, [videoResponse]);
+
   const recordResultGet = () => {
     console.log("결과 가쟈와~");
+
     getRecordResult(
       token,
       resultId,
@@ -44,11 +57,14 @@ const StudyResult = ({ onClose, speechId }) => {
         setSpeech(res.data.data.speech);
         setScores(res.data.data.score);
         setFeedbacks(res.data.data.feedbacks);
-        setVideoPath(res.data.data.video.videoPath);
-        setLoading(false); // 로딩 종료
+        if (res.data.data.video.videoPath) {
+          setVideoPath(res.data.data.video.videoPath);
+        }
       },
       (err) => console.log(err)
     );
+
+    setLoading(false); // 로딩 종료
   };
 
   useEffect(() => {
@@ -159,9 +175,15 @@ const StudyResult = ({ onClose, speechId }) => {
                     className="rounded-xl w-68 h-52 m-auto"
                     style={{ width: "100%", height: "100%" }}
                   >
-                    <video controls src={videoPath} type="video/webm">
-                      Your browser does not support the video tag.
-                    </video>
+                    {videoPath == "" ? (
+                      <div>영상을 가져오고 있습니다.</div>
+                    ) : videoPath == "False" ? (
+                      <div>영상 업로드에 실패헀습니다.</div>
+                    ) : (
+                      <video controls src={videoPath} type="video/webm">
+                        Your browser does not support the video tag.
+                      </video>
+                    )}
                   </div>
                 </div>
                 <div className="p-2">
@@ -170,9 +192,7 @@ const StudyResult = ({ onClose, speechId }) => {
                     style={{ backgroundColor: "#EBEAFA" }}
                   >
                     <div className="text-2xl mt-5 ps-5 pb-4 ms-5">결과:</div>
-                    <div className="text-5xl me-5 pt-2 me-5">
-                      {grade}
-                    </div>
+                    <div className="text-5xl me-5 pt-2 me-5">{grade}</div>
                   </div>
                 </div>
               </div>
