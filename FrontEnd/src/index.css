@@ -313,6 +313,9 @@
   width: 70px;
   height: 30px;
 }
+.presenter-button :hover {
+  cursor: pointer;
+}
 
 .private-icon {
   width: 20px;
@@ -1534,4 +1537,8 @@ a .slideshowDot.active {
 
 .tier-info:hover {
   cursor: pointer;
+}
+
+.admin-chat{
+  text-align: center;
 }
