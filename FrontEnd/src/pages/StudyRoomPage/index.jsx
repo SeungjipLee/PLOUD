@@ -495,7 +495,16 @@ const StudyRoomPage = () => {
             content: username + content,
           },
         ]);
-      }else{
+      }else if(content == "님이 퇴장하였습니다!"){
+        setChatList((chatList) => [
+          ...chatList,
+          {
+            username: "ADMIN",
+            time: getChatTime(),
+            content: username + content,
+          },
+        ]);
+      }else {
         setChatList((chatList) => [
           ...chatList,
           {
