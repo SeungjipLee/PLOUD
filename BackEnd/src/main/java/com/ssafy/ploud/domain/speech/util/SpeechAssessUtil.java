@@ -50,7 +50,7 @@ public class SpeechAssessUtil {
                 }
             }
 
-            System.out.println(db + " ");
+            System.out.print(db + " ");
         }
         int avarageScore = (int) (totalScore / decibels.length);
 
