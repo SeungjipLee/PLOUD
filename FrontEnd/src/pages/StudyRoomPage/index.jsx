@@ -115,6 +115,7 @@ const StudyRoomPage = () => {
     }
   };
   // 비디오 구성 버튼 활성/비활성화 상태
+  const [micTest, setMicTest] = useState(true);
   const [mic, setMic] = useState(true);
   const [video, setVideo] = useState(true);
   const [screen, setScreen] = useState(false);
@@ -945,6 +946,10 @@ const StudyRoomPage = () => {
     }
   };
 
+  const toggleMicTest = () => {
+    setMicTest(!micTest);
+  }
+
   return (
     <>
       <div className="RoomPage">
@@ -1133,81 +1138,6 @@ const StudyRoomPage = () => {
                       key={sub.id}
                       className={`${videoDivClass} mode0-each col-md-6 col-xs-6`}
                     >
-                      <span className="nickname-overlay">
-                        {getUserNickname(sub)}
-                      </span>
-                      <UserVideoComponent
-                        isTyping={
-                          getUserNickname(sub) !== presenter ? typing : false
-                        }
-                        streamManager={sub}
-                      />
-                    </div>
-                  );
-                }
-              })}
-            </div>
-          )}
-
-          {/* ---------------------------------------면접 화면 구성(발표자) -----------------------------------------------*/}
-          {/* subscriber - 발표자 이외 */}
-          {/* p - 발표자, s - 청자 */}
-          {mode == "1" && mainStreamManager == publisher && (
-            <div className="mode-1">
-              <div
-                className={`mode1-top ${
-                  subscribers.filter((sub) => getUserNickname(sub) !== "screen")
-                    .length <= 3
-                    ? "single-row"
-                    : "multi-row"
-                }`}
-              >
-                {subscribers
-                  .filter((sub) => getUserNickname(sub) !== "screen")
-                  .map((sub, i) => (
-                    <div key={i} className="relative">
-                      <div className="mode1-each">
-                        <span className="nickname-overlay">
-                          {getUserNickname(sub)}
-                        </span>
-                        <UserVideoComponent
-                          isTyping={
-                            getUserNickname(sub) !== presenter ? typing : false
-                          }
-                          streamManager={sub}
-                        />
-                      </div>
-                    </div>
-                  ))}
-              </div>
-              <div className="mode1-bottom">
-                <div className="mode1-each">
-                  <span className="nickname-overlay">
-                    {getUserNickname(publisher)}
-                  </span>
-                  {publisher !== undefined ? (
-                    <UserVideoComponent
-                      isTyping={
-                        getUserNickname(publisher) !== presenter
-                          ? typing
-                          : false
-                      }
-                      streamManager={publisher}
-                    />
-                  ) : null}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ---------------------------------------면접 화면 구성(청자) -----------------------------------------------*/}
-          {/* Main - 발표자, sub - 참가자, pub - 참가자 */}
-          {mode == "2" && (
-            <div>
-              {subscribers.map((sub, i) => {
-                if (getUserNickname(sub) == presenter) {
-                  return (
-                    <div key={sub.id} className="mode3-each">
                       <span className="nickname-overlay">
                         {getUserNickname(sub)}
                       </span>
