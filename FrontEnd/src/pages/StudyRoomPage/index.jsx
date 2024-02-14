@@ -73,6 +73,15 @@ const StudyRoomPage = () => {
   const isVideoRecording = useRef(false);
   const videoChunksRef = useRef([]); // 영상 정보
 
+  // 채팅
+  const chatAreaRef = useRef(null);
+
+  useEffect(()=>{
+    if(chatAreaRef.current){
+      chatAreaRef.current.scrollTop=chatAreaRef.current.scrollHeight;
+    }
+  }, [chatList])
+
   // 화면 모드
   // 0 대기 1 면접 2 발표 3 대본
   const [mode, setMode] = useState("0");
@@ -1429,7 +1438,7 @@ const StudyRoomPage = () => {
           <div className="chat bg-grad-y-black">
             <h1 style={{textAlign: "center"}}>방 제목 : {room.title}</h1>
             <h1>채팅</h1>
-            <div className="chat-area">
+            <div className="chat-area" ref={chatAreaRef}>
               {chatList &&
                 chatList.map((item, index) => {
                   const { username, content } = item;
