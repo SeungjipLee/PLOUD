@@ -62,6 +62,9 @@ const StudyRoomPage = () => {
     setRoomUsers((prevUsers) =>
       prevUsers.filter((user) => user.nickname !== userNickname)
     );
+    setUserList((users) =>
+      users.filter((user) => user.userId !== userNickname)  
+    )
   };
 
   // 비디오 정보
