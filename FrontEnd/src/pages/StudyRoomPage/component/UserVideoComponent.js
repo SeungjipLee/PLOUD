@@ -15,13 +15,7 @@ const UserVideoComponent = ({ streamManager, isTyping }) => {
           {streamManager.stream.videoActive ? (
             <OpenViduVideoComponent streamManager={streamManager} />
           ) : (
-            <img
-              style={{
-                height: "140px",
-                width: "auto",
-              }}
-              src="/images/videoimage_disabled.png"
-            />
+            <img src="/images/videoimage_disabled.png" />
           )}
         </div>
       ) : null}
