@@ -135,18 +135,18 @@ const ScriptPage = ({ scriptid, setContent }) => {
 
 const PracticePage2 = () => {
   const [level, setLevel] = useState("1");
-  const [category, setCategory] = useState("News");
+  const [category, setCategory] = useState(1);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [scriptid, setScriptid] = useState("");
   const token = useSelector((state) => state.userReducer.token);
 
   const handleCategoty1 = () => {
-    setCategory("Speech");
+    setCategory(2);
   };
 
   const handleCategoty2 = () => {
-    setCategory("News");
+    setCategory(1);
   };
 
   return (
@@ -188,7 +188,7 @@ const PracticePage2 = () => {
             </div> */}
             <div className="flex mb-5">
               <div className="text-xl mainBlueF font-bold py-1">2. 분류 :</div>
-              {category == "News" && (
+              {category == 1 && (
                 <>
                   <button className="ms-5 bg-blue-500 text-white rounded-xl px-2 ">
                     뉴스
@@ -201,7 +201,7 @@ const PracticePage2 = () => {
                   </button>
                 </>
               )}
-              {category == "Speech" && (
+              {category == 2 && (
                 <>
                   <button
                     className="ms-5 bg-blue-300 text-gray-200 rounded-xl px-2 "
@@ -225,10 +225,10 @@ const PracticePage2 = () => {
                     className="m-2 bg-white h-64 rounded-xl p-4 text-xs"
                     style={{ overflowY: "auto" }}
                   >
-                    {category === "News" && (
+                    {category === 1 && (
                       <NewsPage setScriptid={setScriptid} setTitle={setTitle} />
                     )}
-                    {category === "Speech" && (
+                    {category === 2 && (
                       <SpeechPage
                         setScriptid={setScriptid}
                         setTitle={setTitle}
@@ -252,7 +252,7 @@ const PracticePage2 = () => {
             {scriptid !== "" && (
               <Link
                 to="/practice/Level1"
-                state={{ content: content, title: title }}
+                state={{ content: content, title: title, category: category }}
                 className="self-center mb-2 rounded-xl border border-black px-2 py-1 bg-blue-500 text-gray-200 text-lg"
               >
                 <span className="practice-startText">녹화 시작하기</span>
