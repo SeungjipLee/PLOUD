@@ -1351,9 +1351,8 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 15px 7px 0px;
 
   background-color: #c4c4c4;
-}a
-
-.slideshowDot.active {
+}
+a .slideshowDot.active {
   background-color: #f3704b;
 }
 
@@ -1403,8 +1402,7 @@ input[type="number"]::-webkit-outer-spin-button {
   border-radius: 20px;
 }
 
-.room-title{
-  
+.room-title {
 }
 
 .chat-box {
@@ -1414,7 +1412,7 @@ input[type="number"]::-webkit-outer-spin-button {
   border-radius: 8px;
 }
 
-.chat-box:hover{
+.chat-box:hover {
   background: linear-gradient(to bottom, #23232a, #050410);
 }
 
@@ -1468,24 +1466,35 @@ input[type="number"]::-webkit-outer-spin-button {
   justify-content: flex-end;
 }
 
-.study-leave-buttons > div{
+.study-leave-buttons > div {
   padding: 10px 10px;
 }
-.study-leave-buttons > div:hover{
+.study-leave-buttons > div:hover {
   cursor: pointer;
 }
 .alert {
-  position:absolute;
-  top: 280px;
+  position: fixed;
+  top: 100px;
   left: 40%;
-  width: 320px;
-  height: 200px;
-  background-color: #192169;
+  min-width: 370px;
+  /* height: 160px; */
+  color: #010318;
+  font-weight: bold;
+  background-color: #fdf9f9;
   border-radius: 10px;
-  text-align: center;
+  padding: 20px;
+  z-index: 1000;
+  border: 1px solid rgb(255, 255, 255);
 }
-
-
+.alert-button {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 17px;
+  color: #ee9611;
+}
+.alert button {
+  /* border: 1px solid rgb(170, 168, 168); */
+}
 .feedback-time:hover {
   cursor: pointer;
 }

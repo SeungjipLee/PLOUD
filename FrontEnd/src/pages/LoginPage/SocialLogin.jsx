@@ -3,11 +3,17 @@ import { googleLogin } from "../../services/user";
 import { useDispatch } from "react-redux";
 import { getToken } from "../../features/user/userSlice";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import MyAlert from "../../components/MyAlert";
 
 // 구글 로그인
 // 서버로부터 응답을 받아서 성공응답시 => 로그인
 // 실패 시 => 회원가입
 const SocialLogin = () => {
+  // 알림 창 상태
+  const [message, setMessage] = useState("");
+  const [alert, setAlert] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   return (
@@ -28,9 +34,9 @@ const SocialLogin = () => {
                 dispatch(getToken(res.data));
                 navigate("/");
               },
-              (err) => {
-                alert("회원가입이 필요합니다.");
-                navigate("/signup");
+              async (err) => {
+                await setMessage("회원가입이 필요합니다.");
+                setAlert(true);
               }
             );
           }}
@@ -39,7 +45,8 @@ const SocialLogin = () => {
           }}
         />
       </GoogleOAuthProvider>
-      </>
+      {alert && <MyAlert content={message} onClose={() => {setAlert(false); navigate('/signup')}}/>}
+    </>
   );
 };
 
