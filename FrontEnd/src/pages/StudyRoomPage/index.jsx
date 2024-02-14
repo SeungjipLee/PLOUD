@@ -948,7 +948,7 @@ const StudyRoomPage = () => {
 
   const toggleMicTest = () => {
     setMicTest(!micTest);
-  }
+  };
 
   return (
     <>
@@ -1164,7 +1164,7 @@ const StudyRoomPage = () => {
                 if (getUserNickname(sub) === "screen") {
                   console.log(sub);
                   return (
-                    <div key={i} className="mode2-main-screen">
+                    <div key={i} className="mode2-main-screen video">
                       <UserVideoComponent
                         isTyping={
                           getUserNickname(sub) !== presenter ? typing : false
