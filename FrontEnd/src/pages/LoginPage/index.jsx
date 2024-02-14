@@ -79,7 +79,7 @@ const LoginPage = () => {
             </Link>
           </span>
         </div>
-        <div className="mx-auto w-1/2 mb-5" style={{width: "200px"}}>
+        <div className="mx-auto w-1/2 mb-5" style={{width: "202px"}}>
           <SocialLogin />
         </div>
       </div>
