@@ -119,18 +119,19 @@ public class OpenViduUtil {
             if (this.mapSessions.get(sessionId) != null
                 && this.mapSessionIdsTokens.get(sessionId) != null) {
                 if(this.mapSessionIdsTokens.get(sessionId).remove(token) != null){
-                    if(isManager){
+                    MeetingInfo meetingInfo = findBySessionId(sessionId);
+                    meetingInfo.setCurrentPeople(meetingInfo.getCurrentPeople() - 1);
+
+                    if(isManager && (meetingInfo.getCurrentPeople() == 0 && findBySessionId(sessionId) != null)) {
                         this.mapSessionIdsTokens.remove(sessionId);
                         this.mapSessions.remove(sessionId);
 
-                        for(int i = 0; i < meetingList.size(); ++i){
-                            if(meetingList.get(i).getSessionId().equals(sessionId)){
+                        for (int i = 0; i < meetingList.size(); ++i) {
+                            if (meetingList.get(i).getSessionId().equals(sessionId)) {
                                 meetingList.remove(i);
                             }
                         }
                     }
-                    MeetingInfo meetingInfo = findBySessionId(sessionId);
-                    meetingInfo.setCurrentPeople(meetingInfo.getCurrentPeople() - 1);
                 } else{
                     throw new CustomException(ResponseCode.OPENBVIDU_TOKEN_ERROR);
                 }

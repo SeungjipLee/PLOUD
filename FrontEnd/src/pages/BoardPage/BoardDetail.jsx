@@ -110,6 +110,9 @@ const BoardDetail = () => {
         boardId: boardId,
         comment: comment,
       });
+
+      console.log(response);
+      
       // await setMessage("댓글이 작성되었습니다.")
       // setAlert(true)
       // 새 댓글 데이터를 포함하여 상태 업데이트
