@@ -57,7 +57,7 @@ public class SpeechAssessUtil {
         double perSilenceMinute = silenceCnt / (decibels.length * 0.1 / 60);
 
         if(perSilenceMinute > 1){
-            avarageScore = (int) (avarageScore * (100 - perSilenceMinute * 10) / 100);
+            avarageScore = (int) (avarageScore * (100 - perSilenceMinute) / 100);
         }
 
         log.debug("분당 침묵 횟수 : " + perSilenceMinute + ", 평균 데시벨 : " + totalDb / decibels.length + ", 평가 점수 : " + avarageScore);

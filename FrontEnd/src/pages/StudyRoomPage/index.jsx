@@ -1040,7 +1040,7 @@ const StudyRoomPage = () => {
                 {/* sub 돌면서 발표자 닉네임과 같으면 첫화면으로 송출 */}
                 {subscribers.map((sub, i) => {
                   if (getUserNickname(sub) === presenter) {
-                    console.log(sub);
+                    // console.log(sub);
                     return (
                       <div key={i} className="relative">
                         <div className="mode2-top-each">
@@ -1057,7 +1057,7 @@ const StudyRoomPage = () => {
                           />
                         </div>
                       </div>
-                    );
+                    );s
                   }
                 })}
                 {/* {publisher !== mainStreamManager && ( */}
@@ -1443,7 +1443,7 @@ const StudyRoomPage = () => {
           <div className="chat bg-grad-y-black">
             <h1 style={{textAlign: "center", marginTop: "-4px",marginBottom: "-8px"}}>방 제목 : {room.title}</h1>
             <h1>채팅</h1>
-            <hr style={{}}/>
+            <hr style={{marginTop: "-4px", marginBottom: "4px"}}/>
             {/* ref={chatAreaRef} */}
             <div className="chat-area">
               {chatList &&
