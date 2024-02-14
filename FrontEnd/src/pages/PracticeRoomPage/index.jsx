@@ -69,6 +69,36 @@ const PracticeRoomPage = () => {
   // 마이크 테스트 관련
   const [micTestContent, setMicTestContent] = useState("");
 
+  // 데시벨 계산 후 추가하기
+  const calcDecibel = (average) => {
+    var decibel = Math.max(Math.round(38 * Math.log10(average)), 0);
+    return decibel;
+  };
+
+  const addDecibel = (newDecibel) => {
+    if(newDecibel !== 0){
+      decibels.current.push(newDecibel);
+    }
+
+    if (tmpDecibels.current.length >= 30) {
+      tmpDecibels.current.shift();
+    }
+    tmpDecibels.current.push(newDecibel);
+
+    // 3초 동안 30데시벨 이하
+    const isSilent = tmpDecibels.current.every((db) => db < 30);
+
+    console.log("데시벨 : " + newDecibel);
+
+    if (!isFeedback.current && tmpDecibels.current.length >= 30 && isSilent) {
+      isFeedback.current = true;
+      changeFeedback("침묵이 길어지고 있어요!");
+    } else if (!isFeedback.current && tmpDecibels.current.slice(-1)[0] >= 70) {
+      isFeedback.current = true;
+      changeFeedback("목소리가 너무 크게 들려요!");
+    }
+  };
+
   useEffect(() => {
     // 로직 작성
     // 평가 요청을 받았을 떄 속도가 빠르다, 발음 점수가 낮다.
@@ -256,36 +286,6 @@ const PracticeRoomPage = () => {
       .catch((error) => {
         console.error("오디오 스트림을 가져오는 중 오류 발생:", error);
       });
-  };
-
-  // 데시벨 계산 후 추가하기
-  const calcDecibel = async (average) => {
-    var decibel = await Math.max(Math.round(38 * Math.log10(average)), 0);
-    return await decibel;
-  };
-
-  const addDecibel = (newDecibel) => {
-    if(newDecibel !== 0){
-      decibels.current.push(newDecibel);
-    }
-
-    if (tmpDecibels.current.length >= 30) {
-      tmpDecibels.current.shift();
-    }
-    tmpDecibels.current.push(newDecibel);
-
-    // 3초 동안 30데시벨 이하
-    const isSilent = tmpDecibels.current.every((db) => db < 30);
-
-    console.log("데시벨 : " + newDecibel);
-
-    if (!isFeedback.current && tmpDecibels.current.length >= 30 && isSilent) {
-      isFeedback.current = true;
-      changeFeedback("침묵이 길어지고 있어요!");
-    } else if (!isFeedback.current && tmpDecibels.current.slice(-1)[0] >= 70) {
-      isFeedback.current = true;
-      changeFeedback("목소리가 너무 크게 들려요!");
-    }
   };
 
   const changeFeedback = (fb) => {
