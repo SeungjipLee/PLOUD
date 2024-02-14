@@ -30,7 +30,10 @@ public class SpeechAssessUtil {
         int silenceCnt = 0;
         double totalScore = 0;
 
+        int totalDb = 0;
+
         for (int db : decibels) {
+            totalDb += db;
             if(db >= lowStandardDecibel && db <= highStandardDecibel){
                 totalScore += 100;
             }else{
@@ -55,7 +58,7 @@ public class SpeechAssessUtil {
             avarageScore = (int) (avarageScore * (100 - perSilenceMinute * 10) / 100);
         }
 
-        System.out.println("분당 침묵 횟수 : " + perSilenceMinute + ", 평가 점수 : " + avarageScore);
+        log.debug("분당 침묵 횟수 : " + perSilenceMinute + ", 평균 데시벨 : " + totalDb / decibels.length + ", 평가 점수 : " + avarageScore);
 
         return avarageScore;
     }
