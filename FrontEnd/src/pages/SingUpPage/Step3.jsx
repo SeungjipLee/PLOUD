@@ -1,15 +1,28 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { checkEmail, checkId, checkNickname, signup, verifyEmail } from "../../services/user";
+import {
+  checkEmail,
+  checkId,
+  checkNickname,
+  signup,
+  verifyEmail,
+} from "../../services/user";
 import { getUserData, updateStep } from "../../features/user/signUpSlice";
 import { input } from "@material-tailwind/react";
-
+import MyAlert from "../../components/MyAlert";
 
 const Step3 = () => {
-  const { userId, password, email } = useSelector((state) => state.signUpReducer)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  // 알림 창 상태
+  const [message, setMessage] = useState("");
+  const [alert1, setAlert1] = useState(false);
+  const [alert2, setAlert2] = useState(false);
+
+  const { userId, password, email } = useSelector(
+    (state) => state.signUpReducer
+  );
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   // 입력 받는 변수
   const [formData, setFormData] = useState({
     userId: userId,
@@ -18,10 +31,11 @@ const Step3 = () => {
     nickname: undefined,
     name: undefined,
     birthYear: undefined,
-  })
+  });
   // 보여주는 처리할 변수
   const [isNicknameValid, setIsNicknameValid] = useState(false);
-  const validateNickname = () => /^[A-Za-z0-9가-힣]{2,8}$/.test(formData.nickname);
+  const validateNickname = () =>
+    /^[A-Za-z0-9가-힣]{2,8}$/.test(formData.nickname);
   const validateName = () => /^[A-Za-z가-힣]{2,10}$/.test(formData.name);
 
   // form과 소통하는 함수
@@ -32,8 +46,6 @@ const Step3 = () => {
   // Nickname 중복여부 함수
   const handleCheckNickname = async (e) => {
     e.preventDefault();
-    console.log("[step3]", formData.nickname)
-    console.log(validateNickname())
     if (validateNickname()) {
       // 닉네임 중복검사 로직
       try {
@@ -45,35 +57,50 @@ const Step3 = () => {
         console.log(response);
         // 추가적인 성공 처리 로직
         if (response.data.status == "200") {
-          alert("사용 가능한 닉네임입니다.");
           setIsNicknameValid(true);
+          setMessage("사용 가능한 닉네임입니다.");
+          setAlert1(true);
         } else {
-          alert("이미 사용 중인 닉네임입니다.");
+          setMessage("이미 사용 중인 닉네임입니다.");
+          setAlert1(true);
         }
       } catch (error) {
         console.error("Error sending data", error);
-        alert("이미 사용 중인 닉네임입니다.");
+        setMessage("이미 사용 중인 닉네임입니다.");
+        setAlert1(true);
       }
     } else {
-      alert("닉네임 형식을 확인해주세요. 닉네임은 특수문자 제외 2~8자 이내입니다.");
+      setMessage(
+        "닉네임 형식을 확인해주세요.\n 닉네임은 특수문자 제외 2~8자 이내입니다."
+      );
+      setAlert1(true);
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (validateName() && isNicknameValid && validateNickname()) {
-      dispatch(getUserData({ nickname: formData.nickname, name: formData.name, birthYear: formData.birthYear }))
+      dispatch(
+        getUserData({
+          nickname: formData.nickname,
+          name: formData.name,
+          birthYear: formData.birthYear,
+        })
+      );
       // 여기서 완전 회원가입 요청 ㄱㄱ
-      const response = await signup(formData,
-        res => res,
-        err => err)
-      console.log(response)
-      alert('회원가입이 성공적으로 완료되었습니다.')
-      navigate("/login")
+      const response = await signup(
+        formData,
+        (res) => res,
+        (err) => err
+      );
+      console.log(response);
+      setMessage("회원가입이 성공적으로 완료되었습니다.");
+      setAlert2(true);
     } else {
-      alert("이름을 다시 확인해주세요. 이름은 특수문자 제외 2~10자 이내입니다.")
+      setMessage("이름을 다시 확인해주세요.\n 이름은 특수문자 제외 2~10자 이내입니다.");
+      setAlert1(true);
     }
-  }
+  };
 
   // 시간 관련 변수
   const years = Array.from(
@@ -84,7 +111,9 @@ const Step3 = () => {
   return (
     <>
       <div className="flex justify-center">
-        <a href="/"><img src="images/ICON_similar_white.png" className="w-36 mt-24" /></a>
+        <a href="/">
+          <img src="images/ICON_similar_white.png" className="w-36 mt-24" />
+        </a>
       </div>
       <div className="LoginBox mb-36 py-4 rounded-xl mx-auto relative">
         <h2 className="text-white text-3xl text-center py-5">회원가입</h2>
@@ -124,14 +153,40 @@ const Step3 = () => {
             ))}
           </select>
         </div>
-        <button className="moveButton" onClick={handleCheckNickname}>중복확인</button>
-        <div className="w-80 mx-auto mt-5 mb-10"><img src="images/Step3.png" /></div>
-        <div className="flex justify-center-10">
-          <button type="submit" onClick={handleSubmit} className="bg-sky-400 block mb-10 text-white w-2/3 mx-auto rounded-md p-2 text-center hover:bg-sky-500">가입 완료</button>
+        <button className="moveButton" onClick={handleCheckNickname}>
+          중복확인
+        </button>
+        <div className="w-80 mx-auto mt-5 mb-10">
+          <img src="images/Step3.png" />
         </div>
-
+        <div className="flex justify-center-10">
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="bg-sky-400 block mb-10 text-white w-2/3 mx-auto rounded-md p-2 text-center hover:bg-sky-500"
+          >
+            가입 완료
+          </button>
+        </div>
       </div>
+      {alert1 && (
+        <MyAlert
+          content={message}
+          onClose={() => {
+            setAlert1(false);
+          }}
+        />
+      )}
+      {alert2 && (
+        <MyAlert
+          content={message}
+          onClose={() => {
+            setAlert2(false);
+            navigate("/login");
+          }}
+        />
+      )}
     </>
-  )
-}
+  );
+};
 export default Step3;

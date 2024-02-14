@@ -1475,7 +1475,8 @@ a .slideshowDot.active {
 .alert {
   position: fixed;
   top: 100px;
-  left: 40%;
+  left: 50%; /* 좌우 중앙에 위치 */
+  transform: translateX(-50%); /* 좌우 중앙 정렬을 위한 트랜스폼 */
   min-width: 370px;
   /* height: 160px; */
   color: #010318;
@@ -1484,7 +1485,11 @@ a .slideshowDot.active {
   border-radius: 10px;
   padding: 20px;
   z-index: 1000;
-  border: 1px solid rgb(255, 255, 255);
+  /* border: 1px solid rgb(255, 255, 255); */
+}
+.alert-text {
+  /* word-wrap: break-word; */
+  white-space: pre-wrap;
 }
 .alert-button {
   display: flex;
@@ -1501,4 +1506,26 @@ a .slideshowDot.active {
 
 .practiceScript {
   background: #fffaf1;
+}
+
+.signup-info{
+  color: #F3704B;
+  font-size: 12px;
+}
+
+.signup-info1{
+  position: absolute;
+  left: 80px;
+}
+
+.signup-info2{
+  position: absolute;
+  left: 80px;
+  top: 145px;
+}
+
+.signup-info3{
+  position: absolute;
+  left: 80px;
+  top: 195px;
 }

@@ -21,7 +21,6 @@ const NewsPage = ({ setScriptid, setTitle }) => {
       },
       (err) => {
         console.log(err);
-        alert("ScriptList 로딩 에러");
       }
     );
   };
@@ -74,7 +73,6 @@ const SpeechPage = ({ setScriptid, setTitle }) => {
       },
       (err) => {
         console.log(err);
-        alert("ScriptList 로딩 에러");
       }
     );
   };
@@ -125,7 +123,6 @@ const ScriptPage = ({ scriptid, setContent }) => {
       },
       (err) => {
         console.log(err);
-        alert("getScriptDetail 에러");
       }
     );
   };
