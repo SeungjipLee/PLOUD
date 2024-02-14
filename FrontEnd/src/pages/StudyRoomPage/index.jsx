@@ -111,6 +111,7 @@ const StudyRoomPage = () => {
     }
   };
   // 비디오 구성 버튼 활성/비활성화 상태
+  const [micTest, setMicTest] = useState(true);
   const [mic, setMic] = useState(true);
   const [video, setVideo] = useState(true);
   const [screen, setScreen] = useState(false);
@@ -940,6 +941,10 @@ const StudyRoomPage = () => {
     }
   };
 
+  const toggleMicTest = () => {
+    setMicTest(!micTest);
+  }
+
   return (
     <div className="RoomPage">
       {/* <div className="RoomPage-top"> */}
@@ -1244,6 +1249,11 @@ const StudyRoomPage = () => {
           />
         </div>
         <div className="flex items-center space-x-6">
+        {mictest ? (
+            <img onClick={toggleMicTest} src="/images/mictestbutton.png" />
+          ) : (
+            <img onClick={toggleMicTest} src="/images/mictestbutton_disabled.png" />
+          )}
           {mic ? (
             <img onClick={toggleMic} src="/images/micbutton.png" />
           ) : (

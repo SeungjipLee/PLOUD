@@ -634,9 +634,9 @@ const PracticeRoomPage = () => {
       <div className="RoomPage-bottom" style={{ justifyContent: "center" }}>
         <div className="flex items-center space-x-16">
           {mic ? (
-            <img onClick={toggleMic} src="/images/micbutton.png" />
+            <img onClick={toggleMic} src="/images/mictestbutton.png" />
           ) : (
-            <img onClick={toggleMic} src="/images/micbutton_disabled.png" />
+            <img onClick={toggleMic} src="/images/mictestbutton_disabled.png" />
           )}
           {!isLast.current ? (
             <img onClick={speechEnd} src="/images/recordbutton_activated.png" />
