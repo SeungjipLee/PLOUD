@@ -36,6 +36,7 @@ const StudyRoomPage = () => {
 
   const OV = useRef(null);
   const session = useRef(null);
+  const publisherRef = useRef(undefined);
 
   const OVScreen = useRef(null);
   const sessionScreen = useRef(null);
@@ -200,6 +201,7 @@ const StudyRoomPage = () => {
       setPublisherScreen(publisherScreen);
       setScreenShare(true);
       setMode("3");
+      sendSignal("screenOn", "공유시작")
     } catch {
       (err) => console.log(err);
     }
@@ -211,6 +213,7 @@ const StudyRoomPage = () => {
 
       setPublisherScreen(null);
       setScreenShare(false);
+      sendSignal("screenOff", "공유종료")
     }
   };
 
@@ -369,12 +372,12 @@ const StudyRoomPage = () => {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    if (room.categoryId === 2) {
-      setMode("3");
-    } else {
+    // 녹화시작은 발표자가 함
+    // 따라서 발표자의 모드가 3번이 아니라면
+    // mode 1로 이동
+    if (mode !== "3") {
       setMode("1");
     }
-
     console.log("녹음 시작");
 
     const params = {
@@ -501,6 +504,17 @@ const StudyRoomPage = () => {
       }, 5000);
     });
 
+    // 화면 공유 수신
+    session.current.on("signal:screenOn", (event) => {
+      setScreenShare(true)
+      setMode("3")
+    })
+    // 화면 공유 종료 수신
+    session.current.on("signal:screenOff", (event) => {
+      setScreenShare(false)
+      setMode("0")
+    })
+
     // 방장이 떠남
     session.current.on("signal:exit", (event) => {
       // setChatList((chatList) => [
@@ -513,19 +527,30 @@ const StudyRoomPage = () => {
       }, 3000);
     });
 
+    // const denyMics = () => {
+    //   console.log(publisher)
+    //   if (presenter != nickname) {
+    //     // 마이크 off
+    //     setMic(false); // 상태 업데이트
+    //     if (publisher) {
+    //       publisher.publishAudio(false); // 마이크 상태 토글
+    //       console.log(publisher)
+    //     }
+    //   }
+    // }
+
     // 녹화 시작 신호
     session.current.on("signal:rstart", (event) => {
       var username = JSON.parse(event.data).nickname;
       var content = JSON.parse(event.data).chatvalue;
+      console.log("[녹화 시작 신호 받음]")
+      // 참여자라면
+      denyMics()
+      console.log(publisher)
       if (presenter != nickname) {
-        // 참여자라면
-        setMic(false); // 상태 업데이트
-        if (publisher) {
-          publisher.publishAudio(false); // 마이크 상태 토글
-        }
-        if (room.categoryId === 2) {
-          setMode("3");
-        } else {
+        
+        // 녹화 시작 신호를 받았을 때 모드가 3이 아니라면 청자는 모드 2번으로 이동
+        if (mode !== "3") {
           setMode("2");
         }
       }
@@ -604,7 +629,8 @@ const StudyRoomPage = () => {
         );
 
         setMainStreamManager(tmpPublisher);
-        setPublisher(tmpPublisher);
+        setPublisher(tmpPublisher)
+        publisherRef.current = tmpPublisher
 
         sendSignal("chat", "님이 접속하였습니다!");
 
@@ -972,12 +998,25 @@ const StudyRoomPage = () => {
     if (publisher) {
       publisher.publishAudio(newMic); // 마이크 상태 토글
     }
+    console.log(publisher)
   };
 
   const toggleMicTest = () => {
     setMicTest(!micTest);
   };
 
+  const denyMics = () => {
+    // const pub = publisher
+    // console.log(pub)
+    if (presenter != nickname) {
+      // 마이크 off
+      setMic(false); // 상태 업데이트
+      if (publisherRef.current) {
+        publisherRef.current.publishAudio(false); // 마이크 상태 토글
+        console.log(publisherRef)
+      }
+    }
+  }
   return (
     <>
       <div className="RoomPage">
@@ -1291,9 +1330,9 @@ const StudyRoomPage = () => {
           </div>
           <div className="flex items-center space-x-6">
             {mic ? (
-              <img onClick={toggleMic} src="/images/micbutton.png" />
+              <img onClick={() => toggleMic()} src="/images/micbutton.png" />
             ) : (
-              <img onClick={toggleMic} src="/images/micbutton_disabled.png" />
+              <img onClick={() => toggleMic()} src="/images/micbutton_disabled.png" />
             )}
             {video ? (
               <img onClick={toggleVideo} src="/images/videobutton.png" />
