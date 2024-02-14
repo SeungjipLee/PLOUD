@@ -39,6 +39,7 @@ const StudyRoomPage = () => {
 
   const OVScreen = useRef(null);
   const sessionScreen = useRef(null);
+  const [endSession, setEndSession] = useState(false)
 
   // 기본 정보
   const { userId, token, nickname } = useSelector((state) => state.userReducer);
@@ -488,11 +489,11 @@ const StudyRoomPage = () => {
 
     // 방장이 떠남
     session.current.on("signal:exit", (event) => {
-      setChatList((chatList) => [
-        ...chatList,
-        { username: "관리자", content: "3초 후 스터디룸이 종료됩니다." },
-      ]);
-
+      // setChatList((chatList) => [
+      //   ...chatList,
+      //   { username: "관리자", content: "3초 후 스터디룸이 종료됩니다." },
+      // ]);
+      setEndSession(true)
       setTimeout(() => {
         leaveSession();
       }, 3000);
