@@ -1238,7 +1238,8 @@ p {
   margin: 0px 80px 0 20px;
   padding: 22px;
 
-  font-size: 30px;
+  font-family: Times, "Times New Roman", Georgia, serif;
+  font-size: 28px;
   white-space: pre-wrap;
   word-wrap: break-word;
   line-height: 200%;
@@ -1528,4 +1529,8 @@ a .slideshowDot.active {
   position: absolute;
   left: 80px;
   top: 195px;
+}
+
+.tier-info:hover {
+  cursor: pointer;
 }

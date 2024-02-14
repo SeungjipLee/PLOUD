@@ -48,7 +48,8 @@ const Tier = () => {
       }, []);
     
       const Modal = () => (
-        <div style={{
+        <div className="tier-info"
+        style={{
           position: 'absolute', top: '30px', left:'120px',
           background: 'white', padding: '20px', borderRadius: '5px',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', width: '300px', height:'100px', zIndex:'1000',
