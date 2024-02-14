@@ -59,35 +59,35 @@ const InterviewScreenPresenter = () => {
 
       <div className="flex justify-between video-room-button">
         <div className="button-empty items-center space-x-4">
-          <img onClick={(e) => setUser(!user)} src="../images/user_icon.PNG" />
+          <img onClick={(e) => setUser(!user)} src="/images/user_icon.PNG" />
         </div>
         <div className="flex items-center space-x-6">
           {mic ? (
-            <img onClick={(e) => setMic(!mic)} src="../images/micbutton.PNG" />
+            <img onClick={(e) => setMic(!mic)} src="/images/micbutton.PNG" />
           ) : (
             <img
               onClick={(e) => setMic(!mic)}
-              src="../images/micbutton_disabled.PNG"
+              src="/images/micbutton_disabled.PNG"
             />
           )}
           {video ? (
             <img
               onClick={(e) => setVideo(!video)}
-              src="../images/videobutton.PNG"
+              src="/images/videobutton.PNG"
             />
           ) : (
             <img
               onClick={(e) => setVideo(!video)}
-              src="../images/videobutton_disabled.PNG"
+              src="/images/videobutton_disabled.PNG"
             />
           )}
           <img
             onClick={(e) => setScreen(!screen)}
-            src="../images/sharebutton.PNG"
+            src="/images/sharebutton.PNG"
           />
           <img
             onClick={(e) => setRecord(!record)}
-            src="../images/recordbutton.PNG"
+            src="/images/recordbutton.PNG"
           />
         </div>
         <div className="flex items-center space-x-4">
@@ -96,21 +96,21 @@ const InterviewScreenPresenter = () => {
               console.log(e);
               setResult(!result);
             }}
-            src="../images/resultbutton.PNG"
+            src="/images/resultbutton.PNG"
           />
           <img
             onClick={(e) => {
               console.log(e);
               setReport(!report);
             }}
-            src="../images/reportbutton.PNG"
+            src="/images/reportbutton.PNG"
           />
           <img
             onClick={(e) => {
               console.log(e);
               setChat(!chat);
             }}
-            src="../images/chatbutton.PNG"
+            src="/images/chatbutton.PNG"
           />
         </div>
       </div>

@@ -170,8 +170,8 @@ const StudyPage = () => {
                     기타
                   </Button>
                   <div className="study-main-search">
-                    {/* {word === "" && <img src="./images/search_icon.PNG" alt="" />} */}
-                    <img src="./images/search_icon.PNG" alt="" />
+                    {/* {word === "" && <img src="/images/search_icon.PNG" alt="" />} */}
+                    <img src="/images/search_icon.PNG" alt="" />
                     <input
                       className="search-room-input"
                       type="text"
