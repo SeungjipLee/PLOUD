@@ -24,6 +24,9 @@ const Level1 = () => {
   const scriptTitle = location.state.title;
   const content = location.state.content;
 
+  // 선택한 카테고리 값 받음(param에 보내는 용도)
+  const category = location.state.category;
+
   const [feedback, setFeedback] = useState("");
 
   const videoRef = useRef(null);
@@ -112,8 +115,8 @@ const Level1 = () => {
 
     const params = {
       title: title,
-      personal: true,
-      categoryId: 0,
+      personal: false,
+      categoryId: category,
       sessionId: "",
     };
 
