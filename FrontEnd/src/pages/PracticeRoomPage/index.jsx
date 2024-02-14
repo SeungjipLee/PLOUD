@@ -258,7 +258,9 @@ const PracticeRoomPage = () => {
   };
 
   const addDecibel = (newDecibel) => {
-    decibels.current.push(newDecibel);
+    if(newDecibel !== 0){
+      decibels.current.push(newDecibel);
+    }
 
     if (tmpDecibels.current.length >= 30) {
       tmpDecibels.current.shift();
@@ -266,7 +268,7 @@ const PracticeRoomPage = () => {
     tmpDecibels.current.push(newDecibel);
 
     // 3초 동안 30데시벨 이하
-    const isSilent = decibels.current.slice(-30).every((db) => db < 30);
+    const isSilent = tmpDecibels.current.every((db) => db < 30);
 
     console.log("데시벨 : " + newDecibel);
 
