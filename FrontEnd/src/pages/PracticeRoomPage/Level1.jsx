@@ -115,7 +115,7 @@ const Level1 = () => {
 
     const params = {
       title: title,
-      personal: false,
+      personal: true,
       categoryId: category,
       sessionId: "",
     };
