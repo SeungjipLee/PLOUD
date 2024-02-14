@@ -49,6 +49,8 @@ public class SpeechAssessUtil {
                     silenceDuration = 0;
                 }
             }
+
+            System.out.println(db + " ");
         }
         int avarageScore = (int) (totalScore / decibels.length);
 
