@@ -125,7 +125,7 @@ const StudyRoomPage = () => {
   const [result, setResult] = useState(false);
   const [resultScreen, setResultScreen] = useState(false);
   const [report, setReport] = useState(false);
-  const [chat, setChat] = useState(false);
+  const [chat, setChat] = useState(true);
   const [user, setUser] = useState(false);
 
   // 화면공유 여부 파악
@@ -153,6 +153,30 @@ const StudyRoomPage = () => {
   };
 
   const [publisherScreen, setPublisherScreen] = useState(undefined);
+
+  useEffect(()=>{
+    if(chat === true){
+      setReport(false);
+      setResult(false);
+      setFeedback(false);
+    }
+    else if(report === true){
+      setChat(false);
+      setResult(false);
+      setFeedback(false);
+    }
+    else if(result === true){
+      setChat(false);
+      setReport(false);
+      setFeedback(false);
+    }
+    else if(feedbackModal === true){
+      setChat(false);
+      setReport(false);
+      setResult(false);
+    }
+
+  }, [chat, report, result, feedbackModal])
 
   // 화면 공유
   const handleScreenShare = async () => {
@@ -1426,6 +1450,10 @@ const StudyRoomPage = () => {
                 onChange={(e) => setChatvalue(e.target.value)}
                 onKeyDown={handleMessageSubmit}
                 placeholder="댓글을 입력하세요."
+                style={{
+                  marginTop: "12px",
+                  width: "100%"
+                }}
               />
             </div>
           </div>
