@@ -21,8 +21,7 @@ const API = (token) => {
       return response;
     },
     async (error) => {
-      console.log(error);
-
+      // console.log(error);
       if (error.response.data.message === "JWT token expired") {
         alert("로그아웃 후 다시 로그인해 주세요!");
 
