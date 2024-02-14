@@ -91,7 +91,6 @@ const Level1 = () => {
           console.log(error);
         });
     }
-
   }, []);
 
   const toggleVideo = () => {
@@ -442,6 +441,10 @@ const Level1 = () => {
   };
 
   const leaveSession = () => {
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      videoRef.current.srcObject = null;
+    }
     navigate("/practice1");
   };
 
