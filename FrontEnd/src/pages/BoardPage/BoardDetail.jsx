@@ -63,7 +63,6 @@ const BoardDetail = () => {
     getBoard();
   }, [boardId, token]);
 
- 
   const handleDelete = (e) => {
     e.preventDefault()
 
@@ -106,7 +105,7 @@ const BoardDetail = () => {
       await setMessage("댓글이 작성되었습니다.")
       setAlert(true)
       // 새 댓글 데이터를 포함하여 상태 업데이트
-      setCommentList((list) => [...list, response.data]); // 이 부분에서 response.data의 구조를 확인해야 함
+      setCommentList((list) => [...list, { boardId: boardId, comment: comment }]); // 이 부분에서 response.data의 구조를 확인해야 함
       setComment(''); // 댓글 입력창 초기화
     } catch (err) {
       console.log(err);
