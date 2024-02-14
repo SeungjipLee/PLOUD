@@ -89,7 +89,7 @@ const BoardPage = () => {
       <div className="OutBox rounded-md outline2 mx-auto mt-7">
 
       <div className="study-main-search flex justify-center mb-3">
-        <img src="/images/search_icon.PNG"/>
+        <img src="/images/search_icon.png"/>
         <input type="text"
           className="search-room-input"
           placeholder="게시글 제목으로 검색"
