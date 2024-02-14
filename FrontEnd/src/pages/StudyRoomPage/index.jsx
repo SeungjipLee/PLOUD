@@ -169,24 +169,24 @@ const StudyRoomPage = () => {
 
   useEffect(()=>{
     if(chat === true){
-      setReport(false);
-      setResult(false);
-      setFeedback(false);
+      if(report === true) setReport(false);
+      if(result === true) setResult(false);
+      if(feedbackModal === true) setFeedback(false);
     }
     else if(report === true){
-      setChat(false);
-      setResult(false);
-      setFeedback(false);
+      if(chat === true) setChat(false);
+      if(result === true) setResult(false);
+      if(feedbackModal === true) setFeedback(false);
     }
     else if(result === true){
-      setChat(false);
-      setReport(false);
-      setFeedback(false);
+      if(chat === true) setChat(false);
+      if(report === true) setReport(false);
+      if(feedbackModal === true) setFeedback(false);
     }
     else if(feedbackModal === true){
-      setChat(false);
-      setReport(false);
-      setResult(false);
+      if(chat === true) setChat(false);
+      if(report === true) setReport(false);
+      if(result === true) setResult(false);
     }
 
   }, [chat, report, result, feedbackModal])
