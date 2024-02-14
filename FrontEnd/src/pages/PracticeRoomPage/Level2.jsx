@@ -172,7 +172,7 @@ const Level2 = () => {
     console.log("5초 뒤 실행");
     setResultScreen(true);
   };
-
+  stream;
   // 평가 시작
   const startRecording = () => {
     isLast.current = false;
@@ -445,6 +445,10 @@ const Level2 = () => {
   };
 
   const leaveSession = () => {
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      videoRef.current.srcObject = null;
+    }
     navigate("/practice1");
   };
 
@@ -587,7 +591,6 @@ const Level2 = () => {
               width: "500px",
               margin: "30px",
               height: "100px",
-              lineHeight: "100px",
               borderRadius: "10px",
               backgroundColor: "#444A78",
               textAlign: "center",

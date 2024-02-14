@@ -31,7 +31,7 @@ public class SpeechAssessUtil {
                 totalScore += 100;
             }else{
                 double deviation = Math.min(Math.abs(db - lowStandardDecibel), Math.abs(db - highStandardDecibel));
-                totalScore += 20 + 80 * Math.exp(-0.5 * Math.pow(deviation / standardDeviation, 2));
+                totalScore += 100 * Math.exp(-0.5 * Math.pow(deviation / standardDeviation, 2));
             }
 
             if(db > 30){
@@ -78,7 +78,7 @@ public class SpeechAssessUtil {
             totalTime += clearityDto.getAudioTime();
         }
 
-        int totalScore = (int) (30 + 14 * (scores / totalTime));
+        int totalScore = (int) (20 * (scores / totalTime));
 
         return Math.min(totalScore, 100);
     }
@@ -89,13 +89,13 @@ public class SpeechAssessUtil {
         }else if(score >= 4.0){
             return score;
         }else if(score >= 3.5){
-            return score * 0.95;
-        }else if(score >= 3.0){
             return score * 0.9;
-        }else if(score >= 2.0){
+        }else if(score >= 3.0){
             return score * 0.8;
-        }else{
+        }else if(score >= 2.0){
             return score * 0.7;
+        }else{
+            return score * 0.6;
         }
     }
 
@@ -119,7 +119,7 @@ public class SpeechAssessUtil {
                 totalScore += 100;
             }else{
                 double deviation = Math.min(Math.abs(scriptPerMinute - lowStandardScriptPerMinute), Math.abs(scriptPerMinute - highStandardScriptPerMinute));
-                totalScore += 40 + 60 * Math.exp(-0.5 * Math.pow(deviation / standardDeviation, 2));
+                totalScore += 100 * Math.exp(-0.5 * Math.pow(deviation / standardDeviation, 2));
             }
         }
 
