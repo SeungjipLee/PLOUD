@@ -111,12 +111,10 @@ const BoardDetail = () => {
         comment: comment,
       });
 
-      console.log(response);
-      
       // await setMessage("댓글이 작성되었습니다.")
       // setAlert(true)
       // 새 댓글 데이터를 포함하여 상태 업데이트
-      setCommentList((list) => [...list, response.data]); // 이 부분에서 response.data의 구조를 확인해야 함
+      setCommentList((list) => [...list, response.data.data]);
 
       setComment(""); // 댓글 입력창 초기화
     } catch (err) {

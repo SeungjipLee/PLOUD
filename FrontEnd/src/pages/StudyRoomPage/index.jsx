@@ -1031,13 +1031,21 @@ const StudyRoomPage = () => {
   //   setMicTest(!micTest);
   // };
 
-  const toggleChats = () => {};
+  const toggleChats = () => {
+    setChat(!chat);
+  };
 
-  const toggleReprot = () => {};
+  const toggleReprot = () => {
+    setReport(!report);
+  };
 
-  const toggleResult = () => {};
+  const toggleResult = () => {
+    setResult(!result);
+  };
 
-  const toggleFeedback = () => {};
+  const toggleFeedback = () => {
+    setFeedbackModal(!feedbackModal);
+  };
 
   return (
     <>
@@ -1421,26 +1429,26 @@ const StudyRoomPage = () => {
             {feedbackButton && (
               <img
                 onClick={(e) => {
-                  setFeedbackModal(!feedbackModal);
+                  toggleFeedback();
                 }}
                 src="/images/feedbackbutton.png"
               />
             )}
             <img
               onClick={(e) => {
-                setResult(!result);
+                toggleResult();
               }}
               src="/images/resultbutton.png"
             />
             <img
               onClick={(e) => {
-                setReport(!report);
+                toggleReprot();
               }}
               src="/images/reportbutton.png"
             />
             <img
               onClick={(e) => {
-                setChat(!chat);
+                toggleChats();
               }}
               src="/images/chatbutton.png"
             />
