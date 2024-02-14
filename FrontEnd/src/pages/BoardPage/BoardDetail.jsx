@@ -106,7 +106,8 @@ const BoardDetail = () => {
       setAlert(true)
       // 새 댓글 데이터를 포함하여 상태 업데이트
       setCommentList((list) => [...list, { boardId: boardId, comment: comment }]); // 이 부분에서 response.data의 구조를 확인해야 함
-      setComment(''); // 댓글 입력창 초기화
+
+      setComment(""); // 댓글 입력창 초기화
     } catch (err) {
       console.log(err);
       await setMessage("댓글 작성에 실패했습니다.")
@@ -211,6 +212,7 @@ const BoardDetail = () => {
                   
                   {/* <div className="flex" style={{flexWrap:'wrap'}}> */}
                   <div style={{maxWidth:"100%", wordBreak:"break-all"}}>{s.comment}</div> {/* 댓글 내용 */}
+                  <div>{nickname}  zz {s.nickname}</div>
                   <div align="right">
                     {/* 현재 사용자의 닉네임과 댓글 작성자의 닉네임이 일치할 때만 삭제 버튼을 보여줌 */}
                     {nickname === s.nickname && (
