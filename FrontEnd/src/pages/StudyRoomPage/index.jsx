@@ -276,7 +276,7 @@ const StudyRoomPage = () => {
 
   useEffect(() => {
     return () => {
-      if(audioContext.close() != null){
+      if(audioContext){
         audioContext.close();
       }
       
