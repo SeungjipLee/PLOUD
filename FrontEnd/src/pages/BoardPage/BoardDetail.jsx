@@ -243,7 +243,8 @@ const BoardDetail = () => {
                     cols="30"
                     rows="5"
                     placeholder="댓글을 입력해주세요"
-                    onChange={(e) => setComment(e.target.value)}></textarea>
+                    onChange={(e) => setComment(e.target.value)}
+                    value={comment}></textarea>
                   <div className="flex item-center">
                     <button
                       className="ms-3  px-3 text-white border bg-blue-500 rounded-md"
