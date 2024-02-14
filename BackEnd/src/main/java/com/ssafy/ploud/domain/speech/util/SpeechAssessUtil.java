@@ -17,6 +17,10 @@ public class SpeechAssessUtil {
     private Map<Integer, List<ClearityDto>> clearness = new ConcurrentHashMap<>();
 
     public int decibels(int[] decibels) {
+        if(decibels.length == 0){
+            return 0;
+        }
+
         double lowStandardDecibel = 55;
         double highStandardDecibel = 65;
         double standardDeviation = 20;
@@ -34,7 +38,7 @@ public class SpeechAssessUtil {
                 totalScore += 100 * Math.exp(-0.5 * Math.pow(deviation / standardDeviation, 2));
             }
 
-            if(db > 30){
+            if(db > silenceDecibel){
                 silenceDuration = 0;
             }else{
                 if(++silenceDuration == 30){
@@ -73,7 +77,13 @@ public class SpeechAssessUtil {
         double scores = 0;
         double totalTime = 0;
 
-        for(ClearityDto clearityDto : clearness.get(speechId)){
+        List<ClearityDto> clearityList = clearness.get(speechId);
+
+        if(clearityList.isEmpty()){
+            return 0;
+        }
+
+        for(ClearityDto clearityDto : clearityList){
             scores += adjustScore(clearityDto.getFloatScore()) * clearityDto.getAudioTime();
             totalTime += clearityDto.getAudioTime();
         }
@@ -100,13 +110,19 @@ public class SpeechAssessUtil {
     }
 
     public int calculateSpeed (int speechId) {
-        double lowStandardScriptPerMinute = 300;
-        double highStandardScriptPerMinute = 320;
+        double lowStandardScriptPerMinute = 280;
+        double highStandardScriptPerMinute = 300;
         double standardDeviation = 50;
 
         double totalScore = 0;
 
-        for (ClearityDto clearityDto : clearness.get(speechId)) {
+        List<ClearityDto> clearityList = clearness.get(speechId);
+
+        if(clearityList.isEmpty()){
+            return 0;
+        }
+
+        for (ClearityDto clearityDto : clearityList) {
             double scriptCnt = clearityDto.getCnt();
             double recordTime = clearityDto.getAudioTime();
 

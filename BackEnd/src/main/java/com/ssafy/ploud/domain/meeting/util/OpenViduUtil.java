@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
+import org.aspectj.apache.bcel.classfile.Module.Open;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Transactional
 public class OpenViduUtil {
-    private int num = 0;
     private OpenVidu openVidu;
     private Map<String, Session> mapSessions = new ConcurrentHashMap<>();
 
@@ -98,7 +98,7 @@ public class OpenViduUtil {
             String token = session.createConnection(connectionProperties).getToken();
             String token2 = session.createConnection(connectionProperties).getToken();
 
-            String sessionId = "session" + (num++);
+            String sessionId = session.getSessionId();
 
             // Data 관리
             this.mapSessions.put(sessionId, session);

@@ -204,7 +204,12 @@ public class SpeechServiceImpl implements SpeechService {
 
             ClearityDto clearityDto = etriUtil.getScore(audioInfo);
 
-            speechAssessUtil.addClearity(speechId, clearityDto);
+            if(clearityDto != null){
+                speechAssessUtil.addClearity(speechId, clearityDto);
+                log.debug("스크립트 개수 확인 : " + clearityDto.getCnt() + ", 점수 확인 : " + clearityDto.getFloatScore());
+            }else{
+                log.debug("평가 점수 없음.");
+            }
 
             if (isLast) {
                 Map<String, Integer> scores = speechAssessUtil.assess(speechId);

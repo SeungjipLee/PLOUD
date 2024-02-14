@@ -98,6 +98,9 @@ public class EtriUtil {
                     doubleScore = 0;
                 }
 
+                if(doubleScore == 0 ){
+                    return null;
+                }
                 return new ClearityDto(recognized, scriptCnt, doubleScore, (double) audioInfo.get("audioTime"));
             }else{
                 return null;
