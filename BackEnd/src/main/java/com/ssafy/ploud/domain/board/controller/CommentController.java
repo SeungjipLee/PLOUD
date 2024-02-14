@@ -37,9 +37,8 @@ public class CommentController {
 
   @PostMapping()
   @Operation(summary = "댓글 작성", description = "boardId번 게시글 댓글 작성")
-  public ApiResponse<?> createComment(@RequestBody CommentRequest commentRequest, @AuthenticationPrincipal UserDetails loginUser) {
-    commentService.createComment(commentRequest, loginUser.getUsername());
-    return ApiResponse.ok("댓글 작성 성공");
+  public ApiResponse<CommentResponse> createComment(@RequestBody CommentRequest commentRequest, @AuthenticationPrincipal UserDetails loginUser) {
+    return ApiResponse.ok("댓글 작성 성공", commentService.createComment(commentRequest, loginUser.getUsername()));
   }
 
   @DeleteMapping("/{id}")

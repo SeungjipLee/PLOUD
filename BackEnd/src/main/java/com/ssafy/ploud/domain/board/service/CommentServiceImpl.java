@@ -41,9 +41,10 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public void createComment(CommentRequest commentRequest, String userId) {
+  public CommentResponse createComment(CommentRequest commentRequest, String userId) {
     CommentEntity commentEntity = CommentEntity.createComment(commentRequest, userId);
     commentRepository.save(commentEntity);
+    return CommentResponse.fromEntity(commentEntity, getNicknameAndProfileImg(commentEntity.getUserId()));
   }
 
   private Map<String, String> getNicknameAndProfileImg(String userId) {
