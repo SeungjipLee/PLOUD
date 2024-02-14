@@ -74,6 +74,15 @@ const StudyRoomPage = () => {
   const isVideoRecording = useRef(false);
   const videoChunksRef = useRef([]); // 영상 정보
 
+  // 채팅
+  const chatAreaRef = useRef(null);
+
+  useEffect(()=>{
+    if(chatAreaRef.current){
+      chatAreaRef.current.scrollTop=chatAreaRef.current.scrollHeight;
+    }
+  }, [chatList])
+
   // 화면 모드
   // 0 대기 1 면접 2 발표 3 대본
   const [mode, setMode] = useState("0");
@@ -126,7 +135,7 @@ const StudyRoomPage = () => {
   const [result, setResult] = useState(false);
   const [resultScreen, setResultScreen] = useState(false);
   const [report, setReport] = useState(false);
-  const [chat, setChat] = useState(false);
+  const [chat, setChat] = useState(true);
   const [user, setUser] = useState(false);
 
   // 화면공유 여부 파악
@@ -154,6 +163,30 @@ const StudyRoomPage = () => {
   };
 
   const [publisherScreen, setPublisherScreen] = useState(undefined);
+
+  useEffect(()=>{
+    if(chat === true){
+      setReport(false);
+      setResult(false);
+      setFeedback(false);
+    }
+    else if(report === true){
+      setChat(false);
+      setResult(false);
+      setFeedback(false);
+    }
+    else if(result === true){
+      setChat(false);
+      setReport(false);
+      setFeedback(false);
+    }
+    else if(feedbackModal === true){
+      setChat(false);
+      setReport(false);
+      setResult(false);
+    }
+
+  }, [chat, report, result, feedbackModal])
 
   // 화면 공유
   const handleScreenShare = async () => {
@@ -1404,8 +1437,9 @@ const StudyRoomPage = () => {
         )}
         {chat && (
           <div className="chat bg-grad-y-black">
-            <h1>채팅 [방 제목 : {room.title}]</h1>
-            <div className="chat-area">
+            <h1 style={{textAlign: "center"}}>방 제목 : {room.title}</h1>
+            <h1>채팅</h1>
+            <div className="chat-area" ref={chatAreaRef}>
               {chatList &&
                 chatList.map((item, index) => {
                   const { username, content } = item;
@@ -1427,6 +1461,10 @@ const StudyRoomPage = () => {
                 onChange={(e) => setChatvalue(e.target.value)}
                 onKeyDown={handleMessageSubmit}
                 placeholder="댓글을 입력하세요."
+                style={{
+                  marginTop: "12px",
+                  width: "100%"
+                }}
               />
             </div>
           </div>
