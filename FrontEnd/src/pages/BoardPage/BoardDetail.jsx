@@ -110,10 +110,11 @@ const BoardDetail = () => {
         boardId: boardId,
         comment: comment,
       });
+
       // await setMessage("댓글이 작성되었습니다.")
       // setAlert(true)
       // 새 댓글 데이터를 포함하여 상태 업데이트
-      setCommentList((list) => [...list, response.data]); // 이 부분에서 response.data의 구조를 확인해야 함
+      setCommentList((list) => [...list, response.data.data]);
 
       setComment(""); // 댓글 입력창 초기화
     } catch (err) {
@@ -151,14 +152,13 @@ const BoardDetail = () => {
                 {/* info */}
                 <div
                   className="flex text-sm mb-3"
-                  style={{ justifyContent: "space-between" }}
-                >
+                  style={{ justifyContent: "space-between" }}>
                   <div className="flex">
                     작성자:
                     <div className="mx-2">{nickname}</div>
                     <div className="me-1">
                       <img
-                        src={profileImg ? profileImg : "/images/Profile.png"}
+                        src={profileImg ? profileImg : "/images/Profile.PNG"}
                         className="w-5 h-5"
                       />
                     </div>
@@ -188,22 +188,19 @@ const BoardDetail = () => {
                   </div>
                   <div
                     className="flex mt-3 my-2"
-                    style={{ justifyContent: "center" }}
-                  >
+                    style={{ justifyContent: "center" }}>
                     <button
                       className="mx-2 text-white border bg-sky-400 rounded-md py-1 px-2"
                       onClick={() =>
                         navigate("/createboard", {
                           state: { isCreate: false, boardId: boardId },
                         })
-                      }
-                    >
+                      }>
                       수정
                     </button>
                     <button
                       className="mx-2 text-white border bg-red-500 rounded-md py-1 px-2"
-                      onClick={handleDelete}
-                    >
+                      onClick={handleDelete}>
                       삭제
                     </button>
                     <Link to={"/board"}>
@@ -219,14 +216,12 @@ const BoardDetail = () => {
               <div>
                 <div
                   className="flex"
-                  style={{ justifyContent: "space-between" }}
-                >
+                  style={{ justifyContent: "space-between" }}>
                   <div className="flex">
                     <div className="px-3 text-2xl font-bold">댓글</div>
                     <span
                       className="text-2xl"
-                      style={{ verticalAlign: "middle" }}
-                    >
+                      style={{ verticalAlign: "middle" }}>
                       {commentList.length}
                     </span>
                   </div>
@@ -249,12 +244,11 @@ const BoardDetail = () => {
                     rows="5"
                     placeholder="댓글을 입력해주세요"
                     onChange={(e) => setComment(e.target.value)}
-                  ></textarea>
+                    value={comment}></textarea>
                   <div className="flex item-center">
                     <button
                       className="ms-3  px-3 text-white border bg-blue-500 rounded-md"
-                      onClick={handleComment}
-                    >
+                      onClick={handleComment}>
                       작성
                       <br />
                       완료
@@ -268,7 +262,7 @@ const BoardDetail = () => {
                     <div key={index} className="flex mt-3 mx-2">
                       <img
                         src={
-                          s.profileImg ? s.profileImg : "/images/Profile.png"
+                          s.profileImg ? s.profileImg : "/images/Profile.PNG"
                         }
                         className="w-10 h-10 rounded-2xl col-span-1"
                       />
@@ -287,16 +281,14 @@ const BoardDetail = () => {
                             <button
                               className="col-span-2 text-red-500 border bg-transparent rounded-md mx-3"
                               onClick={() => handleDeleteComment(s.id)}
-                              style={{align: "right"}}
-                            >
+                              style={{ align: "right" }}>
                               삭제
                             </button>
                           )}
                         </span>
                         {/* <div className="flex" style={{flexWrap:'wrap'}}> */}
                         <div
-                          style={{ maxWidth: "100%", wordBreak: "break-all" }}
-                        >
+                          style={{ maxWidth: "100%", wordBreak: "break-all" }}>
                           {s.comment}
                         </div>{" "}
                         {/* 댓글 내용 */}
