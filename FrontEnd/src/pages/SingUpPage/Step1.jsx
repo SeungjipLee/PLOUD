@@ -27,7 +27,6 @@ const Step1 = () => {
     e.preventDefault();
     if (validateUserId()) {
       // 아이디 중복 검사 로직
-      try {
         const response = await checkId(
           { userId: formData.userId },
           (res) => res,
@@ -41,10 +40,6 @@ const Step1 = () => {
         } else {
           alert("이미 사용 중인 아이디입니다.");
         }
-      } catch (error) {
-        console.error("Error sending data", error);
-        alert("이미 사용 중인 아이디입니다.");
-      }
     } else {
       alert("아이디 형식을 확인해주세요. 아이디는 4~15자 이내입니다.");
     }
