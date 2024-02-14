@@ -1083,11 +1083,12 @@ p {
 
 .mode2-top {
   display: flex;
-
-  height: 150px;
+  height: 15vh;
+  /* height: 150px; */
 }
 .mode2-top video {
-  height: 140px;
+  /* height: 140px; */
+  height: 15vh;
   width: auto;
 }
 
@@ -1142,7 +1143,8 @@ p {
 
 .mode2-main-screen video {
   padding: 10px 0px;
-  max-height: 660px;
+  /* max-height: 660px; */
+  max-height: 70vh;
   width: 100%;
 }
 
