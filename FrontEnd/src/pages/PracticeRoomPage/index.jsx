@@ -95,6 +95,13 @@ const PracticeRoomPage = () => {
           console.log(error);
         });
     }
+
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+        videoRef.current.srcObject = null;
+      }
+    }
   }, []);
 
   const toggleVideo = () => {
@@ -232,7 +239,9 @@ const PracticeRoomPage = () => {
           const average = sum / storedData.length;
 
           // 배열의 뒤에 추가
-          addDecibel(calcDecibel(average));
+          const tdecibel = calcDecibel(average);
+
+          addDecibel(tdecibel);
 
           setTimeout(analyzeAudio, 100);
         }
@@ -252,8 +261,8 @@ const PracticeRoomPage = () => {
   };
 
   // 데시벨 계산 후 추가하기
-  const calcDecibel = (average) => {
-    var decibel = Math.max(Math.round(38 * Math.log10(average)), 0);
+  const calcDecibel = async (average) => {
+    var decibel = await Math.max(Math.round(38 * Math.log10(average)), 0);
     return decibel;
   };
 
@@ -424,7 +433,7 @@ const PracticeRoomPage = () => {
         screenShareVideoRef.current.srcObject = screenStream;
         setScreenStream(screenStream);
 
-        console.log(screenStream.getVideoTracks()[0]);
+        // console.log(screenStream.getVideoTracks()[0]);
         screenStream.getVideoTracks()[0].onended = () => {
           stopScreenShare();
         };
@@ -489,7 +498,7 @@ const PracticeRoomPage = () => {
 
             const micDecibel = calcDecibel(micAverage);
 
-            console.log(micDecibel);
+            // console.log(micDecibel);
 
             // mic-color-box
 
@@ -532,7 +541,6 @@ const PracticeRoomPage = () => {
       stopMicTest();
     }
 
-    // Cleanup function
     return () => {
       stopMicTest();
     };

@@ -275,6 +275,18 @@ const StudyRoomPage = () => {
   }, []);
 
   useEffect(() => {
+    return () => {
+      if(audioContext.close() != null){
+        audioContext.close();
+      }
+      
+      if(session.current != null){
+        leaveSession();
+      }
+    }
+  }, [])
+
+  useEffect(() => {
     if (!presenter) return;
     console.log("[presenter]", presenter);
     if (OV.current == null) joinSession();
