@@ -297,6 +297,7 @@ const StudyRoomPage = () => {
     });
     console.log(users);
     setUserList(users);
+    setPresenter(userId)
     console.log("[발표자 권한 버튼 클릭 시 시그널 보냄]");
     sendSignal("WhoIsP", userId);
   };
