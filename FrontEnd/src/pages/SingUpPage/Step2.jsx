@@ -42,7 +42,7 @@ const Step2 = () => {
         alert("(코드 전송되지 않음) 잠시 후 시도해 주세요.");
       }
     } catch (error) {
-      if(error.response.data.status === 409){
+      if(error.response.data.status == "409"){
         alert("이미 사용중인 이메일입니다!");
       }else{
         alert("이메일을 다시 확인해 주세요!");
