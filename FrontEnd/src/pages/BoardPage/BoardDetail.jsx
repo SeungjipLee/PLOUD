@@ -72,7 +72,7 @@ const BoardDetail = () => {
       boardId,
       async (res) => {
         await setMessage('글이 성공적으로 삭제되었습니다.')
-        setAlert(true)
+        setAlert2(true)
       },
       (err) => console.log(err)
     )
@@ -101,23 +101,28 @@ const BoardDetail = () => {
         boardId: boardId,
         comment: comment
       });
+      await setMessage("댓글이 작성되었습니다.")
+      setAlert(true)
       // 새 댓글 데이터를 포함하여 상태 업데이트
       setCommentList((list) => [...list, response.data]); // 이 부분에서 response.data의 구조를 확인해야 함
       setComment(''); // 댓글 입력창 초기화
     } catch (err) {
       console.log(err);
-      alert('댓글 작성에 실패했습니다.');
+      await setMessage("댓글 작성에 실패했습니다.")
+      setAlert(true)
     }
   };
 
   const handleDeleteComment = async (commentId) => {
     try {
       await deleteComment(token, commentId); // await 사용 확인
-      alert('댓글이 성공적으로 삭제되었습니다.');
+      await setMessage("댓글이 성공적으로 삭제되었습니다.")
+      setAlert(true)
       setCommentList(commentList.filter(c => c.id !== commentId)); // 댓글 목록 업데이트
     } catch (error) {
       console.error(error);
-      alert('댓글 삭제에 실패했습니다.');
+      await setMessage("댓글 삭제에 실패했습니다.")
+      setAlert(true)
     }
   };
 
