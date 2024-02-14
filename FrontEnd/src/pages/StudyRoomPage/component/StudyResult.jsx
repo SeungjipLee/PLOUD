@@ -18,6 +18,9 @@ const StudyResult = ({ onClose, speechId }) => {
   const [grade, setGrade] = useState("");
   const [speech, setSpeech] = useState({});
   const [resultTextColor, setResultTextColor] = useState("#000000");
+  // 알림 창 상태
+  const [message, setMessage] = useState("");
+  const [alert1, setAlert1] = useState(false);
 
   // 로딩 상태 관리
   const [loading, setLoading] = useState(true);
@@ -115,8 +118,8 @@ const StudyResult = ({ onClose, speechId }) => {
           comment: myFeedback,
         },
         (res) => {
-          console.log(res);
-          alert("내 피드백이 등록되었습니다");
+          setMessage("내 피드백이 등록되었습니다");
+          setAlert1(true);
         },
         (err) => console.log(err)
       );
@@ -324,6 +327,14 @@ const StudyResult = ({ onClose, speechId }) => {
           )}
         </div>
       </Modal>
+      {alert1 && (
+        <MyAlert
+          content={message}
+          onClose={() => {
+            setAlert1(false);
+          }}
+        />
+      )}
     </>
   );
 };

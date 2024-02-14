@@ -18,6 +18,10 @@ import JoinConfirmModal from "./JoinConfirmModal";
 const tag = "[StudyPage]";
 
 const StudyPage = () => {
+  // 알림 창 상태
+  const [message, setMessage] = useState("");
+  const [alert1, setAlert1] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -53,7 +57,7 @@ const StudyPage = () => {
       data,
       (response) => {
         dispatch(getStudyList(response.data.data));
-        setMaxPage(Math.floor((response.data.data.length-1) / 9) + 1 );
+        setMaxPage(Math.floor((response.data.data.length - 1) / 9) + 1);
       },
       (error) => console.log(error)
     );
@@ -71,7 +75,8 @@ const StudyPage = () => {
     setSessionId(data.sessionId);
 
     if (data.currentPeople === data.maxPeople) {
-      alert("입장 인원 초과");
+      setMessage("입장 인원이 초과되었습니다.");
+      setAlert1(true);
       return;
     }
     console.log(data.isPrivate);
@@ -199,7 +204,7 @@ const StudyPage = () => {
               </div>
               <div className="pagination">
                 <button onClick={(e) => (page > 1 ? setPage(page - 1) : null)}>
-                  <img src="/images/leftbutton.png"/>
+                  <img src="/images/leftbutton.png" />
                 </button>
                 {page > 1 && (
                   <span onClick={(e) => setPage(page - 1)}>{page - 1}</span>
@@ -214,7 +219,7 @@ const StudyPage = () => {
                 <button
                   onClick={(e) => (page < maxPage ? setPage(page + 1) : null)}
                 >
-                  <img src="/images/rightbutton.png"/>
+                  <img src="/images/rightbutton.png" />
                 </button>
               </div>
               {/* <div className="create-room-button">
@@ -261,6 +266,14 @@ const StudyPage = () => {
             <button onClick={handleJoin}>예</button>
           </div>
         </JoinConfirmModal>
+      )}
+      {alert1 && (
+        <MyAlert
+          content={message}
+          onClose={() => {
+            setAlert1(false);
+          }}
+        />
       )}
     </>
   );
