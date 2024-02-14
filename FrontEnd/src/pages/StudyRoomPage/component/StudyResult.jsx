@@ -5,6 +5,7 @@ import BarChart from "../../../components/BarChart";
 import { getRecordResult } from "../../../services/record";
 import { postComment } from "../../../services/speech";
 import LoadingScreen from "./Loading";
+import MyAlert from "../../../components/MyAlert";
 
 const StudyResult = ({ onClose, speechId }) => {
   const [isDetail, setIsDetail] = useState(true);
