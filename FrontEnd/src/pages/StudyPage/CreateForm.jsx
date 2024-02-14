@@ -4,6 +4,7 @@ import { createMeeting } from "../../services/meeting";
 import { useDispatch } from "react-redux";
 import { getStudy } from "../../features/study/studySlice";
 import { useNavigate } from "react-router";
+import MyAlert from "../../components/MyAlert";
 
 const CreateForm = () => {
   const [message, setMessage] = useState("");

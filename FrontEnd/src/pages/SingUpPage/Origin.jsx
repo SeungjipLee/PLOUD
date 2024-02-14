@@ -277,6 +277,14 @@ const DataSubmitForm = () => {
         <br />
         <button type="submit">회원가입</button>
       </form>
+      {alert1 && (
+        <MyAlert
+          content={message}
+          onClose={() => {
+            setAlert1(false);
+          }}
+        />
+      )}
     </>
   );
 };

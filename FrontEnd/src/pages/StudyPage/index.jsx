@@ -11,6 +11,7 @@ import RoomCard from "./roomCard";
 import { useNavigate } from "react-router-dom";
 import CreateModal from "./CreateModal";
 import JoinConfirmModal from "./JoinConfirmModal";
+import MyAlert from "../../components/MyAlert";
 
 // 방 목록이 리렌더링 되야하는 시점
 // 방을 클릭했을 때 - 방에 사람이 다 들어가서 들어갈 수 없을 때 다시 렌더링되서 보여줘야함

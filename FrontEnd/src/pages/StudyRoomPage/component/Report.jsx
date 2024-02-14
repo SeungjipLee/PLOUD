@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { reportUser } from "../../../services/user";
 import { useState } from "react";
+import MyAlert from "../../../components/MyAlert";
 
 const Report = ({ users, closeModal }) => {
   console.log(users);

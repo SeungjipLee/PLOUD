@@ -23,6 +23,7 @@ import Modal from "../../components/Modal";
 import Button from "../../components/Button";
 import StudyResult from "./component/StudyResult";
 import TimerComponent from "../../components/Timer";
+import MyAlert from "../../components/MyAlert";
 
 const StudyRoomPage = () => {
   // 알림 창 상태
