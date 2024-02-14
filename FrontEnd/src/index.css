@@ -1085,7 +1085,9 @@ p {
   display: flex;
   height: 150px;
 }
-.mode2-top video {
+
+.mode2-top video,
+.mode2-top img {
   height: 140px;
   width: auto;
 }
