@@ -57,9 +57,9 @@ const PracticePage1 = () => {
             혼자연습
           </div>
 
-          <div className="flex flex-col mx-60 bg-sky-100 p-10 border border-black rounded-2xl mb-24">
+          <div className="flex flex-col mx-60 bg-sky-50 p-10 rounded-md mb-24">
             <div className="flex mb-5">
-              <div className="text-xl mainBlueF font-bold">1. 대본 :</div>
+              <div className="text-xl font-bold mainBlueF">1. 대본 :</div>
               <button className="ms-5 bg-blue-500 text-white rounded-xl px-2 py-1">
                 직접 입력
               </button>
@@ -70,7 +70,7 @@ const PracticePage1 = () => {
                 제공 대본
               </Link>
 
-              <p className="ms-3 text-red-500">
+              <p className="ms-3 text-red-500 pt-1">
                 🎤원하는 발표의 대본을 직접 입력해보세요!
               </p>
             </div>
@@ -121,20 +121,21 @@ const PracticePage1 = () => {
                   서술어
                 </button>
               )}
-              <p className="ms-3 text-red-500">
-                🎤선택된 항목이 대본에서 가려져요!
+              
+              <p className="ms-3 text-red-500 pt-1">
+                🎤선택된 항목을 일부 가려 난이도 높은 연습을 할 수 있어요!
               </p>
+
             </div>
             <div className="flex mb-5">
               <div className="text-xl mainBlueF font-bold py-1">3. 제목 :</div>
               <input
                 type="text"
-                className="ms-5 border border-black rounded-2xl px-5 py-1.5 w-1/2"
+                className="ms-5 border border-gray-300 mt-0.5 rounded-2xl px-5 py-1.5 w-1/2"
                 placeholder="제목을 입력해주세요."
                 onChange={titleChange}
                 style={{ whiteSpace: "pre-wrap" }}
               />
-              <img src="/images/check.png" className="ms-3 w-7 h-7 mt-1"></img>
             </div>
             <div className="flex mb-10">
               <div className="text-xl mainBlueF font-bold pt-1">4. 내용 :</div>
@@ -143,12 +144,11 @@ const PracticePage1 = () => {
                 id=""
                 cols="30"
                 rows="10"
-                className="ms-5 border border-black rounded-2xl px-5 py-2 w-3/4 h-80"
+                className="ms-5 border border-gray-300 mt-0.5 rounded-2xl px-5 py-2 w-3/4 h-80"
                 onChange={contentChange}
                 placeholder="내용을 입력해주세요. (최대 3000자)"
                 style={{ whiteSpace: "pre-wrap" }}
               ></textarea>
-              <img src="/images/check.png" className="ms-3 w-7 h-7 mt-1"></img>
             </div>
             <Link
               to="/practice/Level2"
