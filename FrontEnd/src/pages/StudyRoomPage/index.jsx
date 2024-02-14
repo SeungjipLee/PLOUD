@@ -1110,36 +1110,68 @@ const StudyRoomPage = () => {
           )}
         </div>
 
-        {/* <div className="RoomPage-mid"> */}
-        <div className={setClassRoomPageMID()}>
-          {/* ---------------------------------------대기 화면 구성 -----------------------------------------------*/}
-          {/* publisher - 나, subscriber - 그 외 */}
-          {mode == "0" && (
-            <div className={setClassName(subscribers)}>
-              <div id="video-container" className={videoDivClass}>
-                {publisher !== undefined ? (
-                  <div className="mode0-each col-md-6 col-xs-6">
+      {/* <div className="RoomPage-mid"> */}
+      <div className={setClassRoomPageMID()}>
+        {/* ---------------------------------------대기 화면 구성 -----------------------------------------------*/}
+        {/* publisher - 나, subscriber - 그 외 */}
+        {mode == "0" && (
+          <div className={setClassName(subscribers)}>
+            <div id="video-container" className={videoDivClass}>
+              {publisher !== undefined ? (
+                <div className="mode0-each col-md-6 col-xs-6">
+                  <span className="nickname-overlay">
+                    {getUserNickname(publisher)}
+                  </span>
+                  <UserVideoComponent
+                    isTyping={
+                      getUserNickname(publisher) !== presenter ? typing : false
+                    }
+                    streamManager={publisher}
+                  />
+                </div>
+              ) : null}
+            </div>
+            {subscribers.map((sub, i) => {
+              if (sub !== publisher && getUserNickname(sub) != "screen") {
+                return (
+                  <div
+                    key={sub.id}
+                    className={`${videoDivClass} mode0-each col-md-6 col-xs-6`}
+                  >
                     <span className="nickname-overlay">
-                      {getUserNickname(publisher)}
+                      {getUserNickname(sub)}
                     </span>
                     <UserVideoComponent
                       isTyping={
-                        getUserNickname(publisher) !== presenter
-                          ? typing
-                          : false
+                        getUserNickname(sub) !== presenter ? typing : false
                       }
-                      streamManager={publisher}
+                      streamManager={sub}
                     />
                   </div>
-                ) : null}
-              </div>
-              {subscribers.map((sub, i) => {
-                if (sub !== publisher && getUserNickname(sub) != "screen") {
-                  return (
-                    <div
-                      key={sub.id}
-                      className={`${videoDivClass} mode0-each col-md-6 col-xs-6`}
-                    >
+                );
+              }
+            })}
+          </div>
+        )}
+
+        {/* ---------------------------------------면접 화면 구성(발표자) -----------------------------------------------*/}
+        {/* subscriber - 발표자 이외 */}
+        {/* p - 발표자, s - 청자 */}
+        {mode == "1" && mainStreamManager == publisher && (
+          <div className="mode-1">
+            <div
+              className={`mode1-top ${
+                subscribers.filter((sub) => getUserNickname(sub) !== "screen")
+                  .length <= 3
+                  ? "single-row"
+                  : "multi-row"
+              }`}
+            >
+              {subscribers
+                .filter((sub) => getUserNickname(sub) !== "screen")
+                .map((sub, i) => (
+                  <div key={i} className="relative">
+                    <div className="mode1-each">
                       <span className="nickname-overlay">
                         {getUserNickname(sub)}
                       </span>
@@ -1150,36 +1182,76 @@ const StudyRoomPage = () => {
                         streamManager={sub}
                       />
                     </div>
-                  );
-                }
-              })}
+                  </div>
+                ))}
             </div>
-          )}
+            <div className="mode1-bottom">
+              <div className="mode1-each">
+                <span className="nickname-overlay">
+                  {getUserNickname(publisher)}
+                </span>
+                {publisher !== undefined ? (
+                  <UserVideoComponent
+                    isTyping={
+                      getUserNickname(publisher) !== presenter ? typing : false
+                    }
+                    streamManager={publisher}
+                  />
+                ) : null}
+              </div>
+            </div>
+          </div>
+        )}
 
-          {/* ---------------------------------------발표 화면 구성 -----------------------------------------------*/}
-          {/* mainStreamManager - 발표자, publisherScreen - 공유화면, p - 참가자, subscribers - 참가자 */}
-          {/* 발표 화면 구성 */}
-          {mode == "3" && (
-            <div className="mode2-main">
-              {/* 메인 - 공유화면 크게 */}
-              {subscribers.map((sub, i) => {
-                if (getUserNickname(sub) === "screen") {
-                  console.log(sub);
-                  return (
-                    <div key={i} className="mode2-main-screen video">
-                      <UserVideoComponent
-                        isTyping={
-                          getUserNickname(sub) !== presenter ? typing : false
-                        }
-                        streamManager={sub}
-                      />
-                    </div>
-                  );
-                }
-              })}
-            </div>
-          )}
-        </div>
+        {/* ---------------------------------------면접 화면 구성(청자) -----------------------------------------------*/}
+        {/* Main - 발표자, sub - 참가자, pub - 참가자 */}
+        {mode == "2" && (
+          <div>
+            {subscribers.map((sub, i) => {
+              if (getUserNickname(sub) == presenter) {
+                return (
+                  <div key={sub.id} className="mode3-each">
+                    <span className="nickname-overlay">
+                      {getUserNickname(sub)}
+                    </span>
+                    <UserVideoComponent
+                      isTyping={
+                        getUserNickname(sub) !== presenter ? typing : false
+                      }
+                      streamManager={sub}
+                    />
+                  </div>
+                );
+              }
+            })}
+          </div>
+        )}
+
+        {/* ---------------------------------------발표 화면 구성 -----------------------------------------------*/}
+        {/* mainStreamManager - 발표자, publisherScreen - 공유화면, p - 참가자, subscribers - 참가자 */}
+        {/* 발표 화면 구성 */}
+        {mode == "3" && (
+          <div className="mode2-main">
+            {/* 메인 - 공유화면 크게 */}
+            {subscribers.map((sub, i) => {
+              if (getUserNickname(sub) === "screen") {
+                console.log(sub);
+                return (
+                  <div key={i} className="mode2-main-screen">
+                    <UserVideoComponent
+                      isTyping={
+                        getUserNickname(sub) !== presenter ? typing : false
+                      }
+                      streamManager={sub}
+                    />
+                  </div>
+                );
+              }
+            })}
+          </div>
+        )}
+      </div>
+
 
         <div className="RoomPage-bottom">
           <div className="button-empty items-center space-x-4">
