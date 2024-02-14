@@ -1085,7 +1085,8 @@ p {
   display: flex;
   height: 150px;
 }
-.mode2-top video {
+
+.mode2-top video, img {
   height: 140px;
   width: auto;
 }
@@ -1170,7 +1171,7 @@ p {
   width: 400px;
 }
 
-.mode3-each video, image {
+.mode3-each video {
   width: 40vw;
 }
 
