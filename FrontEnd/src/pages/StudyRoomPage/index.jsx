@@ -276,10 +276,7 @@ const StudyRoomPage = () => {
 
   useEffect(() => {
     return () => {
-      if(audioContext){
-        audioContext.close();
-      }
-      
+
       if(session.current != null){
         leaveSession();
       }
