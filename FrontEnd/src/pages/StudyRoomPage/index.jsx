@@ -78,13 +78,13 @@ const StudyRoomPage = () => {
   const videoChunksRef = useRef([]); // 영상 정보
 
   // 채팅
-  const chatAreaRef = useRef(null);
+  // const chatAreaRef = useRef(null);
 
-  useEffect(()=>{
-    if(chatAreaRef.current){
-      chatAreaRef.current.scrollTop=chatAreaRef.current.scrollHeight;
-    }
-  }, [chatList])
+  // useEffect(()=>{
+  //   if(chatAreaRef.current){
+  //     chatAreaRef.current.scrollTop=chatAreaRef.current.scrollHeight;
+  //   }
+  // }, [chatList])
 
   // 화면 모드
   // 0 대기 1 면접 2 발표 3 대본
@@ -167,29 +167,29 @@ const StudyRoomPage = () => {
 
   const [publisherScreen, setPublisherScreen] = useState(undefined);
 
-  useEffect(()=>{
-    if(chat === true){
-      setReport(false);
-      setResult(false);
-      setFeedback(false);
-    }
-    else if(report === true){
-      setChat(false);
-      setResult(false);
-      setFeedback(false);
-    }
-    else if(result === true){
-      setChat(false);
-      setReport(false);
-      setFeedback(false);
-    }
-    else if(feedbackModal === true){
-      setChat(false);
-      setReport(false);
-      setResult(false);
-    }
+  // useEffect(()=>{
+  //   if(chat === true){
+  //     if(report === true) setReport(false);
+  //     if(result === true) setResult(false);
+  //     if(feedbackModal === true) setFeedback(false);
+  //   }
+  //   else if(report === true){
+  //     if(chat === true) setChat(false);
+  //     if(result === true) setResult(false);
+  //     if(feedbackModal === true) setFeedback(false);
+  //   }
+  //   else if(result === true){
+  //     if(chat === true) setChat(false);
+  //     if(report === true) setReport(false);
+  //     if(feedbackModal === true) setFeedback(false);
+  //   }
+  //   else if(feedbackModal === true){
+  //     if(chat === true) setChat(false);
+  //     if(report === true) setReport(false);
+  //     if(result === true) setResult(false);
+  //   }
 
-  }, [chat, report, result, feedbackModal])
+  // }, [chat, report, result, feedbackModal])
 
   // 화면 공유
   const handleScreenShare = async () => {
@@ -1443,7 +1443,8 @@ const StudyRoomPage = () => {
           <div className="chat bg-grad-y-black">
             <h1 style={{textAlign: "center"}}>방 제목 : {room.title}</h1>
             <h1>채팅</h1>
-            <div className="chat-area" ref={chatAreaRef}>
+            {/* ref={chatAreaRef} */}
+            <div className="chat-area">
               {chatList &&
                 chatList.map((item, index) => {
                   const { username, content } = item;

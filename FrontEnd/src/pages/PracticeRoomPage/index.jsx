@@ -472,7 +472,8 @@ const PracticeRoomPage = () => {
     const startMicTest = async () => {
       navigator.mediaDevices
         .getUserMedia({ audio: true })
-        .then((micStream) => {
+        .then((mStream) => {
+          micStream = mStream;
           micAudioContext = new AudioContext();
           micSource = micAudioContext.createMediaStreamSource(micStream);
           const micAnalyzer = micAudioContext.createAnalyser();
