@@ -115,26 +115,32 @@ public class OpenViduUtil {
     }
 
     public void leave(String sessionId, String token, Boolean isManager) {
-        if (this.mapSessions.get(sessionId) != null
-            && this.mapSessionIdsTokens.get(sessionId) != null) {
-            if(this.mapSessionIdsTokens.get(sessionId).remove(token) != null){
-                if(isManager){
-                    this.mapSessionIdsTokens.remove(sessionId);
-                    this.mapSessions.remove(sessionId);
+        try{
+            if (this.mapSessions.get(sessionId) != null
+                && this.mapSessionIdsTokens.get(sessionId) != null) {
+                if(this.mapSessionIdsTokens.get(sessionId).remove(token) != null){
+                    if(isManager){
+                        this.mapSessionIdsTokens.remove(sessionId);
+                        this.mapSessions.remove(sessionId);
 
-                    for(int i = 0; i < meetingList.size(); ++i){
-                        if(meetingList.get(i).getSessionId().equals(sessionId)){
-                            meetingList.remove(i);
+                        for(int i = 0; i < meetingList.size(); ++i){
+                            if(meetingList.get(i).getSessionId().equals(sessionId)){
+                                meetingList.remove(i);
+                            }
                         }
                     }
+                    MeetingInfo meetingInfo = findBySessionId(sessionId);
+                    meetingInfo.setCurrentPeople(meetingInfo.getCurrentPeople() - 1);
+                } else{
+                    throw new CustomException(ResponseCode.OPENBVIDU_TOKEN_ERROR);
                 }
-                MeetingInfo meetingInfo = findBySessionId(sessionId);
-                meetingInfo.setCurrentPeople(meetingInfo.getCurrentPeople() - 1);
-            } else{
-                throw new CustomException(ResponseCode.OPENBVIDU_TOKEN_ERROR);
+
+                // this.mapSessions.get(sessionId).close();
+            }else{
+                throw new CustomException(ResponseCode.SESSION_NOT_FOUND);
             }
-        }else{
-            throw new CustomException(ResponseCode.SESSION_NOT_FOUND);
+        }catch (Exception e){
+            throw new CustomException(ResponseCode.OPENVIDU_ERROR);
         }
     }
 

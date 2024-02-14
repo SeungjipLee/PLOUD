@@ -15,6 +15,9 @@ const BoardDetail = () => {
   const [ alert2, setAlert2 ] = useState(false)
   
   const { token }  = useSelector((state) => state.userReducer);
+
+  const username = useSelector((state) => state.userReducer.nickname);
+
   const { boardId } = useParams();
   const [ nickname, setNickname ] = useState("")
   const [ profileImg, setProfileImg ] = useState("")
@@ -209,18 +212,16 @@ const BoardDetail = () => {
                 <div className="flex-1 pl-3">
                   <span className="text-xl col-span-2 font-bold">{s.nickname}</span> {/* 작성자 닉네임 */}
                   <span className="ml-3" style={{color:"#808080"}}>{registerTime ? registerTime.split(" ")[0] : ''}</span> {/* 등록 날짜 */}
-                  
-                  {/* <div className="flex" style={{flexWrap:'wrap'}}> */}
-                  <div style={{maxWidth:"100%", wordBreak:"break-all"}}>{s.comment}</div> {/* 댓글 내용 */}
-                  <div>{nickname}  zz {s.nickname}</div>
-                  <div align="right">
+                  <span align="right">
                     {/* 현재 사용자의 닉네임과 댓글 작성자의 닉네임이 일치할 때만 삭제 버튼을 보여줌 */}
-                    {nickname === s.nickname && (
+                    {username === s.nickname && (
                       <button 
                       className="col-span-2 text-red-500 border bg-transparent rounded-md mx-3"
                       onClick={() => handleDeleteComment(s.id)}>삭제</button>
                     )}
-                  </div>
+                  </span>
+                  {/* <div className="flex" style={{flexWrap:'wrap'}}> */}
+                  <div style={{maxWidth:"100%", wordBreak:"break-all"}}>{s.comment}</div> {/* 댓글 내용 */}
                   {/* </div> */}
                 </div>
               </div>
