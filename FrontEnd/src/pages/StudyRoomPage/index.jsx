@@ -169,7 +169,7 @@ const StudyRoomPage = () => {
           audioSource: undefined,
           videoSource:
             navigator.userAgent.indexOf("Firefox") !== -1 ? "window" : "screen",
-          publishAudio: true,
+          publishAudio: false,
           publishVideo: true,
           resolution: "640x480",
           frameRate: 30,
@@ -799,8 +799,10 @@ const StudyRoomPage = () => {
 
   // ---------- Speech Method ----------
   const addDecibel = (newDecibel) => {
-    console.log("데시벨 : " + newDecibel);
-    decibels.current.push(newDecibel);
+    if(newDecibel != 0){
+      console.log("데시벨 : " + newDecibel);
+      decibels.current.push(newDecibel);      
+    }
   };
 
   // 녹화 시작
