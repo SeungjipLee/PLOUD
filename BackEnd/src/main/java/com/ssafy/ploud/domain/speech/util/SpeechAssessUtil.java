@@ -110,8 +110,8 @@ public class SpeechAssessUtil {
     }
 
     public int calculateSpeed (int speechId) {
-        double lowStandardScriptPerMinute = 300;
-        double highStandardScriptPerMinute = 320;
+        double lowStandardScriptPerMinute = 280;
+        double highStandardScriptPerMinute = 300;
         double standardDeviation = 50;
 
         double totalScore = 0;
