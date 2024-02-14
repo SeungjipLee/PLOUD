@@ -203,11 +203,10 @@ const StudyRoomPage = () => {
   const [userList, setUserList] = useState([]);
   // { userId: "test01", presenter: true },
 
-
   // 채팅 정보
   const [chatvalue, setChatvalue] = useState("");
   const [chatList, setChatList] = useState([]);
-  const [confirmLeave, setConfirmLeave] = useState(false)
+  const [confirmLeave, setConfirmLeave] = useState(false);
 
   // ---------- Variables During Speech ----------
   const [feedbackModal, setFeedbackModal] = useState(false);
@@ -491,7 +490,8 @@ const StudyRoomPage = () => {
     session.current.on("signal:rstart", (event) => {
       var username = JSON.parse(event.data).nickname;
       var content = JSON.parse(event.data).chatvalue;
-      if (presenter != nickname) { // 참여자라면
+      if (presenter != nickname) {
+        // 참여자라면
         setMic(false); // 상태 업데이트
         if (publisher) {
           publisher.publishAudio(false); // 마이크 상태 토글
@@ -638,9 +638,9 @@ const StudyRoomPage = () => {
 
   // 채팅 전송
   const handleMessageSubmit = async (e) => {
-    if (e.key === "Enter"){
-      e.preventDefault()
-      sendSignal("chat", chatvalue); 
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendSignal("chat", chatvalue);
     }
   };
 
@@ -1284,8 +1284,9 @@ const StudyRoomPage = () => {
             <img
               onClick={(e) => {
                 if (nickname !== presenter) {
-                  alert("녹화 권한이 없습니다.(발표자만 가능)")
-                  return;}
+                  alert("녹화 권한이 없습니다.(발표자만 가능)");
+                  return;
+                }
                 setRecordForm(!recordForm);
               }}
               src="/images/recordbutton.png"
@@ -1298,7 +1299,11 @@ const StudyRoomPage = () => {
               src="/images/recordbutton_disabled.png"
             />
           )}
-          <img onClick={() => setConfirmLeave(!confirmLeave)} src="/images/exitbutton.png" alt="" />
+          <img
+            onClick={() => setConfirmLeave(!confirmLeave)}
+            src="/images/exitbutton.png"
+            alt=""
+          />
         </div>
         <div className="flex items-center space-x-4">
           {feedbackButton && (
@@ -1380,15 +1385,12 @@ const StudyRoomPage = () => {
               chatList.map((item, index) => {
                 const { username, content } = item;
                 return (
-                  <div className="chat-box"
-                  key={index}>
-                      <div className="chat-header">
-                        <span className="chat-username">{username}</span>
-                        <span className="chat-time">오후 5:35</span>{" "}
-                      </div>
-                    <div className="chat-content">
-                      {content}{" "}
+                  <div className="chat-box" key={index}>
+                    <div className="chat-header">
+                      <span className="chat-username">{username}</span>
+                      <span className="chat-time">오후 5:35</span>{" "}
                     </div>
+                    <div className="chat-content">{content} </div>
                   </div>
                 );
               })}
@@ -1459,15 +1461,17 @@ const StudyRoomPage = () => {
           </p>
         </div>
       )}
-      {confirmLeave && <>
-        <div className="study-leave">
-          정말 나가시겠습니까?
-          <div className="study-leave-buttons">
-          <div onClick={() => setConfirmLeave(false)}>아니요</div>
-          <div onClick={leaveSession}>예</div>
+      {confirmLeave && (
+        <>
+          <div className="study-leave">
+            정말 나가시겠습니까?
+            <div className="study-leave-buttons">
+              <div onClick={() => setConfirmLeave(false)}>아니요</div>
+              <div onClick={leaveSession}>예</div>
+            </div>
           </div>
-        </div>
-      </>}
+        </>
+      )}
     </div>
   );
 };
