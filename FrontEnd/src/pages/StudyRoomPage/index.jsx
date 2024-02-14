@@ -559,10 +559,14 @@ const StudyRoomPage = () => {
           content: "3초 후 스터디룸이 종료됩니다.",
         },
       ]);
+
+      setMessage("3초 후 방을 종료합니다.");
+      setAlert1(true);
       setEndSession(true);
+
       setTimeout(() => {
         navigate("/study");
-      }, 3000);
+      }, 4000);
     });
 
     // 녹화 시작 신호
@@ -1033,18 +1037,54 @@ const StudyRoomPage = () => {
 
   const toggleChats = () => {
     setChat(!chat);
+    if(report){
+      toggleReprot();
+    }
+    if(result){
+      setResult(!result);
+    }
+    if(feedbackModal){
+      setFeedbackModal(!feedbackModal);
+    }
   };
 
   const toggleReprot = () => {
     setReport(!report);
+    if(chat){
+      setChat(!chat);
+    }
+    if(result){
+      setResult(!result);
+    }
+    if(feedbackModal){
+      setFeedbackModal(!feedbackModal);
+    }
   };
 
   const toggleResult = () => {
     setResult(!result);
+    if(report){
+      setReport(!report);
+    }
+    if(chat){
+      setChat(!chat);
+    }
+    if(feedbackModal){
+      setFeedbackModal(!feedbackModal);
+    }
   };
 
   const toggleFeedback = () => {
     setFeedbackModal(!feedbackModal);
+    if(report){
+      setReport(!report);
+    }
+    if(result){
+      setResult(!result);
+    }
+    if(chat){
+      setChat(!chat);
+    }
   };
 
   return (
