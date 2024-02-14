@@ -497,10 +497,10 @@ const PracticeRoomPage = () => {
             } else if (micDecibel <= 55) {
               setMicTestContent("조금만 크게 말해주세요!");
               setMicColor("orange");
-            } else if (micDecibel <= 70) {
+            } else if (micDecibel <= 65) {
               setMicTestContent("목소리의 크기가 적당해요!");
               setMicColor("green");
-            } else if (micDecibel < 80) {
+            } else if (micDecibel < 75) {
               setMicTestContent("조금만 작게 말해주세요!");
               setMicColor("orange");
             } else {

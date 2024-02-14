@@ -21,8 +21,8 @@ public class SpeechAssessUtil {
             return 0;
         }
 
-        double lowStandardDecibel = 60;
-        double highStandardDecibel = 70;
+        double lowStandardDecibel = 55;
+        double highStandardDecibel = 65;
         double standardDeviation = 20;
         double silenceDecibel = 30;
 

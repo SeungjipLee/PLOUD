@@ -788,6 +788,7 @@ const StudyRoomPage = () => {
 
   // ---------- Speech Method ----------
   const addDecibel = (newDecibel) => {
+    console.log("데시벨 : " + newDecibel);
     decibels.current.push(newDecibel);
   };
 
