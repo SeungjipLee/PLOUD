@@ -798,8 +798,10 @@ const StudyRoomPage = () => {
 
   // ---------- Speech Method ----------
   const addDecibel = (newDecibel) => {
-    console.log("데시벨 : " + newDecibel);
-    decibels.current.push(newDecibel);
+    if(newDecibel != 0){
+      console.log("데시벨 : " + newDecibel);
+      decibels.current.push(newDecibel);      
+    }
   };
 
   // 녹화 시작
