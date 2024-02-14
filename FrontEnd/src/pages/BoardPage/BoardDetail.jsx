@@ -158,7 +158,7 @@ const BoardDetail = () => {
                     <div className="mx-2">{nickname}</div>
                     <div className="me-1">
                       <img
-                        src={profileImg ? profileImg : "/images/Profile.PNG"}
+                        src={profileImg ? profileImg : "/images/Profile.png"}
                         className="w-5 h-5"
                       />
                     </div>
@@ -268,7 +268,7 @@ const BoardDetail = () => {
                     <div key={index} className="flex mt-3 mx-2">
                       <img
                         src={
-                          s.profileImg ? s.profileImg : "/images/Profile.PNG"
+                          s.profileImg ? s.profileImg : "/images/Profile.png"
                         }
                         className="w-10 h-10 rounded-2xl col-span-1"
                       />
