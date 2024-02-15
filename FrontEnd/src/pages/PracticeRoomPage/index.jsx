@@ -152,14 +152,13 @@ const PracticeRoomPage = () => {
 
   const toggleVideo = () => {
     const newVideo = !video;
-    setVideo(newVideo);
 
     if (stream) {
       stream.getVideoTracks().forEach((track) => {
         track.enabled = !track.enabled;
       });
-      setState(!state);
     }
+    setVideo(newVideo);
   };
 
   // 시작 버튼 누르면
@@ -478,7 +477,9 @@ const PracticeRoomPage = () => {
   const leaveSession = () => {
     if (stream) {
       stream.getTracks().forEach((track) => track.stop());
-      videoRef.current.srcObject = null;
+      if(videoRef.current){
+        videoRef.current.srcObject = null;
+      }
     }
     navigate("/practice1");
   };
