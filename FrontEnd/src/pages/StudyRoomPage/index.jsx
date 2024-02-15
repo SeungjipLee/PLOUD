@@ -94,6 +94,8 @@ const StudyRoomPage = () => {
   // 0 대기 1 면접 2 발표 3 대본
   const [mode, setMode] = useState("0");
 
+  const realExit = useRef(false);
+
   // 공유화면도 subs 이기때문에 실질적인 subs수를 체크하기 위함
   const setClassName = (subs) => {
     const subscribersWithOutScreen = subs.filter(
@@ -668,7 +670,9 @@ const StudyRoomPage = () => {
       setEndSession(true);
 
       setTimeout(() => {
-        navigate("/study");
+        if(!realExit.current){
+          navigate("/study");
+        }
       }, 4000);
     });
 
@@ -808,6 +812,8 @@ const StudyRoomPage = () => {
   const leaveSession = () => {
     console.log("leaveSession");
     sendSignal("chat", "님이 퇴장하였습니다!");
+
+    realExit.current = true;
 
     if (room.managerId == nickname) {
       sendSignal("exit", "종료");

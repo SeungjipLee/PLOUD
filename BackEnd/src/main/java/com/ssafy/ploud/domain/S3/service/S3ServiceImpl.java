@@ -51,7 +51,6 @@ public class S3ServiceImpl implements S3Service {
       throw new CustomException(ResponseCode.CANNOT_UPLOAD_FILE);
     }
   }
-
   private String getFilename(String type, String userId, MultipartFile multipartFile) {
 
     StringBuilder filePath = new StringBuilder();
