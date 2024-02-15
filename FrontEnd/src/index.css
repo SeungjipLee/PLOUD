@@ -110,6 +110,10 @@
   text-decoration: none;
 }
 
+.Button :hover{
+  cursor: pointer;
+}
+
 .study-category-button {
   min-width: 60px;
   height: 35px;
@@ -307,6 +311,7 @@
   background-color: #b0b0b0;
   color: white;
 }
+
 .presenter-button {
   border-radius: 5px;
   color: white;
@@ -314,6 +319,7 @@
   width: 70px;
   height: 30px;
 }
+
 .presenter-button :hover {
   cursor: pointer;
 }
@@ -425,6 +431,10 @@
   position: absolute;
   right: 20px;
   bottom: 20px;
+}
+
+.enter-room :hover{
+  cursor: pointer;
 }
 
 .room-list {
@@ -1527,7 +1537,7 @@ a .slideshowDot.active {
 
 .feedback-time:hover {
   cursor: pointer;
-  text-decoration: underline;
+  text-decoration: under;
 }
 
 .practiceScript {
