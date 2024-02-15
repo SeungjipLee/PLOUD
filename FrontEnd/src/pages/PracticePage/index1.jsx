@@ -143,7 +143,7 @@ const PracticePage1 = () => {
                 id=""
                 cols="30"
                 rows="10"
-                className="ms-5 border border-gray-300 mt-0.5 rounded-2xl px-5 py-2 w-3/4 h-80"
+                className="resize-none ms-5 border border-gray-300 mt-0.5 rounded-2xl px-5 py-2 w-3/4 h-80"
                 onChange={contentChange}
                 placeholder="내용을 입력해주세요. (최대 3000자)"
                 style={{ whiteSpace: "pre-wrap" }}

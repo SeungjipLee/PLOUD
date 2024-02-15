@@ -830,7 +830,7 @@ p {
 }
 
 .record-form {
-  /* border: rgb(85, 85, 85) solid 1px; */
+  border: rgb(85, 85, 85) solid 1px;
   /* position: absolute; */
   position: fixed;
   display: flex;
@@ -838,20 +838,26 @@ p {
   padding: 20px;
   border-radius: 10px;
   width: 400px;
-  height: 330px;
-  background-color: #ffffff;
-  color: #0c134f;
+  background-color: #060515;
+  color: white;
   top: 40%; /* 상단 위치를 부모 요소의 중간으로 조정 */
   left: 50%; /* 왼쪽 위치를 부모 요소의 중간으로 조정 */
   transform: translate(-50%, -50%); /* 요소를 정확한 중앙으로 이동 */
 }
 
 .record-form input {
-  background-color: #272541;
+  background: none;
+  color: white;
 }
 
-.record-form p {
-  padding: 10px 0px;
+.record-form-top {
+}
+.record-form-each {
+  padding: 7px 0px;
+  display: flex;
+}
+.record-form-each > div{
+  min-width: 90px;
 }
 
 .record-form button {
@@ -1217,7 +1223,8 @@ p {
   left: 5px;
 }
 .typing img {
-  width: 30px;
+  width: 80px;
+  height: auto;
 }
 
 .practice-startText:hover {
@@ -1554,4 +1561,14 @@ a .slideshowDot.active {
 .practice-main {
   min-width: 900px;
   max-width: 1100px;
+}
+
+.mic-off img {
+  width: 50px;
+  height: auto;
+}
+.mic-off {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
 }

@@ -295,7 +295,7 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
                     <div>
                       <div
                         align="center"
-                        className="text-xl text-center font-bold py-2 px-4 "
+                        className="text-xl text-center font-bold py-1"
                         style={{ backgroundColor: "#343B71", color: "#FFFFFF" }}
                       >
                         시간별 피드백
@@ -320,7 +320,7 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
                     <div>
                       <div
                         align="center"
-                        className="text-xl text-center font-bold py-2 px-4"
+                        className="text-xl text-center font-bold py-1"
                         style={{ backgroundColor: "#343B71", color: "#FFFFFF" }}
                       >
                         나의 피드백
@@ -334,7 +334,7 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
                           id=""
                           cols="20"
                           rows="3"
-                          className="bg-gray-100"
+                          className="bg-gray-100 py-2 px-4 "
                           placeholder="피드백을 남겨보세요."
                           style={{ width: "100%" }}
                           onChange={(e) => setMyFeedback(e.target.value)}
