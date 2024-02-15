@@ -44,6 +44,8 @@ const StudyRoomPage = () => {
 
   const userSize = useRef(0);
 
+  const [videoChange, setVideoChange] = useState(false);
+
   // 기본 정보
   const { userId, token, nickname } = useSelector((state) => state.userReducer);
   const room = useSelector((state) => state.studyReducer.studyInfo.meetingInfo);
@@ -142,7 +144,7 @@ const StudyRoomPage = () => {
 
   // 화면공유 여부 파악
   const [screenShare, setScreenShare] = useState(false);
-  const screenShareRef = useRef(false)
+  const screenShareRef = useRef(false);
 
   // 녹화 Form
   const [title, setTitle] = useState("");
@@ -598,12 +600,17 @@ const StudyRoomPage = () => {
       setScreenShare(true);
       screenShareRef.current = true;
       setMode("3");
-    })
+    });
     // 화면 공유 종료 수신
     session.current.on("signal:screenOff", (event) => {
       setScreenShare(false);
       screenShareRef.current = false;
       setMode("0");
+    });
+
+    // 비디오 상태 전환
+    session.current.on("signal:videoChange", (event) => {
+      setVideoChange(!videoChange);
     })
 
     // 방장이 떠남
@@ -643,7 +650,7 @@ const StudyRoomPage = () => {
       var username = JSON.parse(event.data).nickname;
       var content = JSON.parse(event.data).chatvalue;
       console.log("[녹화 시작 신호 받음]");
-      console.log(username, nickname)
+      console.log(username, nickname);
       // 참여자라면
       denyMics();
 
@@ -651,11 +658,12 @@ const StudyRoomPage = () => {
 
       if (username !== nickname) {
         // 녹화 시작 신호를 받았을 때 모드가 3이 아니라면 청자는 모드 2번으로 이동
-        
-        if (!screenShareRef.current) { // 이거 mode 안찍힐수도 있다.
+
+        if (!screenShareRef.current) {
+          // 이거 mode 안찍힐수도 있다.
           setMode("2");
         } else {
-          setMode("3")
+          setMode("3");
         }
       }
 
@@ -1097,6 +1105,7 @@ const StudyRoomPage = () => {
     if (publisher) {
       publisher.publishVideo(newVideo); // 비디오 상태 토글
     }
+    sendSignal("videoChange", "누군가의 비디오 상태 변경");    
   };
 
   // 마이크 핸들러

@@ -354,16 +354,14 @@ const PracticeRoomPage = () => {
       formData,
       (response) => {
         console.log("음성 평가 결과");
-        console.log(response.data);
         console.log(
           "개수 : " +
-            response.data.scriptCnt +
+            response.data.data.scriptCnt +
             ", 점수 : " +
-            response.data.score
+            response.data.data.score
         );
         // 실시간 피드백
-
-        if (response.data.scriptCnt > 15) {
+        if (response.data.scriptCnt > 28) {
           changeFeedback("조금만 천천히 말해주세요!");
         } else if (response.data.score < 3) {
           changeFeedback("발음을 정확하게 해주세요!");
