@@ -4,7 +4,6 @@ const DOMAIN = "https://i10e207.p.ssafy.io";
 // const DOMAIN = "http://localhost:8000";
 
 const API = (token) => {
-
   const instance = axios.create({
     baseURL: DOMAIN + "/api",
     headers: {
