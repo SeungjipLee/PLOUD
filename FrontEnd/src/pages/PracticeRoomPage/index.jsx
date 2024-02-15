@@ -148,7 +148,7 @@ const PracticeRoomPage = () => {
         speechEnd();
       }
     };
-  }, []);
+  }, [video]);
 
   const toggleVideo = () => {
     const newVideo = !video;
