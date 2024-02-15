@@ -621,9 +621,10 @@ const PracticeRoomPage = () => {
                 muted
               />
             ) : (
-              <div className="practice-video-off">
-                <img src="/images/videoimage_disabled.png" />
-              </div>
+              <img
+                style={{ width: "530px", height: "500px" }}
+                src="/images/videoimage_disabled.png"
+              />
             )}
           </div>
           <div
