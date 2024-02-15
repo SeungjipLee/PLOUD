@@ -636,7 +636,7 @@ const PracticeRoomPage = () => {
               />
             ) : (
               <img
-                style={{ width: "530px", height: "500px" }}
+                style={{ width: "530px", height: "400px" }}
                 src="/images/videoimage_disabled.png"
               />
             )}
