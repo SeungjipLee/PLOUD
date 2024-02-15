@@ -85,7 +85,6 @@ const PracticeResult = ({ onClose, speechId }) => {
           token,
           resultId,
           (res) => {
-            console.log(res.data.data);
             setScores(res.data.data.score);
             setVideoPath(res.data.data.video.videoPath);
             setAbout(res.data.data.speech);
@@ -96,7 +95,6 @@ const PracticeResult = ({ onClose, speechId }) => {
         const randomSentenceResponse = getSentence(
           token,
           (res) => {
-            console.log(res.data.data);
             setSentence(res.data.data.sentence);
           },
           (err) => console.log(err)

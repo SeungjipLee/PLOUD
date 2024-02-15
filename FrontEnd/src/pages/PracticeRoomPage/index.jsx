@@ -88,8 +88,6 @@ const PracticeRoomPage = () => {
     // 3초 동안 30데시벨 이하
     const isSilent = tmpDecibels.current.every((db) => db < 30);
 
-    console.log("데시벨 : " + newDecibel);
-
     if (!isFeedback.current && tmpDecibels.current.length >= 30 && isSilent) {
       isFeedback.current = true;
       changeFeedback("침묵이 길어지고 있어요!");
@@ -149,8 +147,6 @@ const PracticeRoomPage = () => {
   const speechStart = (e) => {
     e.preventDefault();
 
-    console.log("녹음 시작");
-
     const params = {
       title: title,
       personal: true,
@@ -164,8 +160,6 @@ const PracticeRoomPage = () => {
       (res) => {
         speechId.current = res.data.data.speechId;
 
-        console.log("발표 시작 : " + speechId.current);
-
         startRecording();
         videoRecordingStart();
       },
@@ -178,7 +172,6 @@ const PracticeRoomPage = () => {
 
   // 녹화 종료 버튼 누르면
   const speechEnd = () => {
-    console.log("녹화 종료");
     isLast.current = true;
     // 녹화 중지 함수 실행
     stopRecording();
@@ -198,7 +191,6 @@ const PracticeRoomPage = () => {
         console.log(error);
       }
     );
-    console.log("평가 끝");
 
     // 비동기 처리 헷갈리니까 5초 뒤에 하자
     setTimeout(() => {
@@ -207,7 +199,6 @@ const PracticeRoomPage = () => {
   };
 
   const recordResult = () => {
-    console.log("5초 뒤 실행");
     setResultScreen(true);
   };
   stream;
@@ -289,7 +280,6 @@ const PracticeRoomPage = () => {
   };
 
   const changeFeedback = (fb) => {
-    console.log("피드백 수락");
     setFeedback(fb);
     feedbackPost(fb);
 
@@ -323,7 +313,6 @@ const PracticeRoomPage = () => {
 
   // 녹화 종료
   const stopRecording = () => {
-    // console.log("녹음 중지");
     isRecording.current = false;
     if (mediaRecorder && mediaRecorder.state === "recording") {
       mediaRecorder.stop();
@@ -337,11 +326,8 @@ const PracticeRoomPage = () => {
 
   // 10초 평가 요청
   const uploadAudio = async (data) => {
-    // console.log("평가 요청");
     var tmp = [];
     tmp.push(data);
-
-    console.log("평가요청 : " + speechId.current);
 
     const audioFile = new Blob(tmp, { type: "audio/wav" });
     const formData = new FormData();
@@ -368,7 +354,6 @@ const PracticeRoomPage = () => {
         }
       },
       (error) => {
-        console.log("평가 실패");
         // console.log(error);
       }
     );
@@ -400,7 +385,6 @@ const PracticeRoomPage = () => {
     tmp.push(data);
 
     var videoPlayTime = new Date().getTime() - videoStartTime.current;
-    console.log("영상 길이 : " + videoPlayTime / 1000 + "(초)");
 
     const videoFile = new Blob(tmp, { type: "video/webm" });
     const vFormData = new FormData();
@@ -412,10 +396,10 @@ const PracticeRoomPage = () => {
       token,
       vFormData,
       (response) => {
-        console.log("영상 업로드 성공");
+        // console.log("영상 업로드 성공");
       },
       (error) => {
-        console.log("영상 업로드 실패");
+        // console.log("영상 업로드 실패");
       }
     );
   };
@@ -429,7 +413,6 @@ const PracticeRoomPage = () => {
         screenShareVideoRef.current.srcObject = screenStream;
         setScreenStream(screenStream);
 
-        // console.log(screenStream.getVideoTracks()[0]);
         screenStream.getVideoTracks()[0].onended = () => {
           stopScreenShare();
         };
@@ -496,8 +479,6 @@ const PracticeRoomPage = () => {
 
             const micDecibel = calcDecibel(micAverage);
 
-            console.log("테스트 데시벨 : " + micDecibel);
-
             if (micDecibel < 30) {
               setMicTestContent("목소리가 거의 들리지 않아요!");
               setMicColor("red");
@@ -521,7 +502,7 @@ const PracticeRoomPage = () => {
           analyzeMicAudio();
         })
         .catch((error) => {
-          console.log("마이크 테스트 에러");
+          // console.log("마이크 테스트 에러");
         });
     };
 
@@ -534,10 +515,10 @@ const PracticeRoomPage = () => {
     };
 
     if (mic) {
-      console.log("마이크 테스트 시작");
+      // console.log("마이크 테스트 시작");
       startMicTest();
     } else {
-      console.log("마이크 테스트 종료");
+      // console.log("마이크 테스트 종료");
       stopMicTest();
     }
 

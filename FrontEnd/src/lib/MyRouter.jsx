@@ -11,7 +11,6 @@ import ResetPwPage from "../pages/MyPage/ResetPwPage";
 import StudyRoomPage from "../pages/StudyRoomPage";
 import CreateBoard from "../pages/BoardPage/CreateBoard";
 import BoardDetail from "../pages/BoardPage/BoardDetail";
-import InterviewScreenPresenter from "../pages/StudyRoomPage/component/InterviewScreenPresenter";
 import StudyResult from "../pages/StudyRoomPage/component/StudyResult";
 import PracticeRoomPage from "../pages/PracticeRoomPage";
 import PracticePage1 from "../pages/PracticePage/index1";
@@ -39,7 +38,6 @@ const Router = () => {
         <Route path="/createpw" element={<ResetPwPage />} />
         <Route path="/createboard" element={<CreateBoard />} />
         <Route path="/board/:boardId" element={<BoardDetail />} />
-        <Route path="/interview" element={<InterviewScreenPresenter />} />
       </Routes>
     </BrowserRouter>
   );

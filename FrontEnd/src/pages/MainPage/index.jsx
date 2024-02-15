@@ -34,10 +34,9 @@ const MainPage = () => {
     // get speech count
     getSpeechCount(
       (res) => {
-        // console.log(res.data.data)
         setSpeechCount(res.data.data.count);
       },
-      (err) => console.log("스피치 개수 불러오는 중 오류 발생")
+      (err) => console.log(err)
     );
     // end get speech count
 

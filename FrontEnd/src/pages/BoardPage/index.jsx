@@ -25,7 +25,6 @@ const BoardPage = () => {
           sort: ["id", "desc"],
         },
         (res) => {
-          console.log(res.data.data);
           setShowList(res.data.data);
         },
         (err) => console.log(err)
@@ -46,7 +45,6 @@ const BoardPage = () => {
           size: 10,
           sort: "title",
         });
-        console.log(response);
         setShowList(response.data.data);
       } catch (err) {
         console.log(err);

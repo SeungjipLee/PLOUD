@@ -33,7 +33,6 @@ const PatchInfoPage = () => {
         const response = getProfile(
           token,
           (res) => {
-            console.log(res.data.data);
             setProfile(res.data.data);
           },
           (err) => console.log(err)

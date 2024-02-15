@@ -20,8 +20,8 @@ const SocialLogin = () => {
     <>
       <GoogleOAuthProvider
         clientId="392523178125-21b3u9bb52injjfa9kjdb3a0vbijcidg.apps.googleusercontent.com"
-        onScriptLoadError={() => console.log("실패")}
-        onScriptLoadSuccess={() => console.log("성공")}
+        // onScriptLoadError={() => console.log("실패")}
+        // onScriptLoadSuccess={() => console.log("성공")}
       >
         <GoogleLogin
           onSuccess={async (credentialResponse) => {
@@ -40,8 +40,9 @@ const SocialLogin = () => {
               }
             );
           }}
-          onError={() => {
-            console.log("Login Failed");
+          onError={async () => {
+            await setMessage("소셜로그인에 실패했습니다.\n 다시 시도해 주세요.");
+            setAlert(true);
           }}
         />
       </GoogleOAuthProvider>

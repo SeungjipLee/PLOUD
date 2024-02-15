@@ -74,8 +74,6 @@ const BoardDetail = () => {
   const handleDelete = (e) => {
     e.preventDefault();
 
-    console.log(boardId);
-
     deleteboard(
       token,
       boardId,
@@ -92,7 +90,6 @@ const BoardDetail = () => {
 
     try {
       const response = await likeboard(token, { boardId: boardId });
-      console.log(response);
       // 좋아요 상태를 토글합니다.
       setIsLiked(!isLiked);
       // 좋아요 상태에 따라 좋아요 수를 조정합니다.
@@ -131,7 +128,6 @@ const BoardDetail = () => {
       setAlert(true);
       setCommentList(commentList.filter((c) => c.id !== commentId)); // 댓글 목록 업데이트
     } catch (error) {
-      console.error(error);
       await setMessage("댓글 삭제에 실패했습니다.");
       setAlert(true);
     }

@@ -43,8 +43,6 @@ const CreateForm = () => {
       setAlert1(true)
       return;
     }
-    console.log("전송 ");
-    console.log(formData);
 
     createMeeting(
       token,
