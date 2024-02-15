@@ -87,7 +87,7 @@
 <summary><b>FrontEnd</b></summary>
 
 ```
-📦FrontEnd
+📦src
  ┣ 📂app
  ┃ ┣ 📜persistor.jsx
  ┃ ┗ 📜store.jsx
@@ -97,11 +97,14 @@
  ┃ ┣ 📜Card.jsx
  ┃ ┣ 📜Footer.jsx
  ┃ ┣ 📜Modal.jsx
+ ┃ ┣ 📜MyAlert.jsx
  ┃ ┣ 📜MyChart.jsx
  ┃ ┣ 📜Navbar.jsx
  ┃ ┣ 📜Page.jsx
  ┃ ┣ 📜ResultCard.jsx
- ┃ ┗ 📜Tier.jsx
+ ┃ ┣ 📜ScrollToTop.jsx
+ ┃ ┣ 📜Tier.jsx
+ ┃ ┗ 📜Timer.jsx
  ┣ 📂features
  ┃ ┣ 📂record
  ┃ ┃ ┗ 📜recordSlice.jsx
@@ -121,28 +124,27 @@
  ┃ ┃ ┗ 📜PostItem.jsx
  ┃ ┣ 📂LoginPage
  ┃ ┃ ┣ 📂Service
- ┃ ┃ ┃ ┣ 📜AuthHeader.jsx
- ┃ ┃ ┃ ┗ 📜AuthService.jsx
+ ┃ ┃ ┃ ┗ 📜AuthHeader.jsx
  ┃ ┃ ┣ 📜Findpw.jsx
  ┃ ┃ ┣ 📜index.jsx
  ┃ ┃ ┗ 📜SocialLogin.jsx
  ┃ ┣ 📂MainPage
- ┃ ┃ ┗ 📜index.jsx
+ ┃ ┃ ┣ 📜index.jsx
+ ┃ ┃ ┗ 📜Slideshow.js
  ┃ ┣ 📂MyPage
  ┃ ┃ ┣ 📜index.jsx
+ ┃ ┃ ┣ 📜NoSkipResult.jsx
  ┃ ┃ ┣ 📜PatchInfoPage.jsx
+ ┃ ┃ ┣ 📜PracticeResult.jsx
  ┃ ┃ ┗ 📜ResetPwPage.jsx
  ┃ ┣ 📂PracticePage
- ┃ ┃ ┣ 📂sidebar
- ┃ ┃ ┃ ┗ 📜Sidebar.jsx
- ┃ ┃ ┣ 📜index.jsx
+ ┃ ┃ ┣ 📜index1.jsx
+ ┃ ┃ ┣ 📜index2.jsx
  ┃ ┃ ┗ 📜PracticeResult.jsx
  ┃ ┣ 📂PracticeRoomPage
- ┃ ┃ ┣ 📜Level1.jsx
- ┃ ┃ ┗ 📜Level2.jsx
+ ┃ ┃ ┗ 📜index.jsx
  ┃ ┣ 📂SingUpPage
  ┃ ┃ ┣ 📜index.jsx
- ┃ ┃ ┣ 📜Origin.jsx
  ┃ ┃ ┣ 📜Step1.jsx
  ┃ ┃ ┣ 📜Step2.jsx
  ┃ ┃ ┗ 📜Step3.jsx
@@ -153,26 +155,18 @@
  ┃ ┃ ┣ 📜JoinConfirmModal.jsx
  ┃ ┃ ┣ 📜roomCard.jsx
  ┃ ┃ ┗ 📜RoomJoinModal.jsx
- ┃ ┣ 📂StudyRoomPage
+ ┃ ┗ 📂StudyRoomPage
  ┃ ┃ ┣ 📂component
  ┃ ┃ ┃ ┣ 📜Chat.jsx
- ┃ ┃ ┃ ┣ 📜InterviewScreenListener.jsx
- ┃ ┃ ┃ ┣ 📜InterviewScreenPresenter.jsx
+ ┃ ┃ ┃ ┣ 📜Loading.jsx
+ ┃ ┃ ┃ ┣ 📜Loading2.jsx
  ┃ ┃ ┃ ┣ 📜OvVideo.js
  ┃ ┃ ┃ ┣ 📜Report.jsx
  ┃ ┃ ┃ ┣ 📜ResultList.jsx
  ┃ ┃ ┃ ┣ 📜StudyResult.jsx
  ┃ ┃ ┃ ┣ 📜UserVideo.css
  ┃ ┃ ┃ ┗ 📜UserVideoComponent.js
- ┃ ┃ ┣ 📂videocomponents
- ┃ ┃ ┃ ┣ 📜PresentationLayout.jsx
- ┃ ┃ ┃ ┣ 📜ScreenShareLayout.jsx
- ┃ ┃ ┃ ┗ 📜VideoGrid.jsx
  ┃ ┃ ┗ 📜index.jsx
- ┃ ┗ 📂TestPage
- ┃ ┃ ┣ 📜index.jsx
- ┃ ┃ ┣ 📜Record.jsx
- ┃ ┃ ┗ 📜SpeechResult.jsx
  ┣ 📂services
  ┃ ┣ 📜board.jsx
  ┃ ┣ 📜meeting.jsx
