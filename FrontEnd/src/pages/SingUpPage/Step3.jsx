@@ -54,7 +54,6 @@ const Step3 = () => {
           (res) => res,
           (err) => err
         );
-        console.log(response);
         // 추가적인 성공 처리 로직
         if (response.data.status == "200") {
           setIsNicknameValid(true);
@@ -65,7 +64,6 @@ const Step3 = () => {
           setAlert1(true);
         }
       } catch (error) {
-        console.error("Error sending data", error);
         setMessage("이미 사용 중인 닉네임입니다.");
         setAlert1(true);
       }
@@ -93,7 +91,6 @@ const Step3 = () => {
         (res) => res,
         (err) => err
       );
-      console.log(response);
       setMessage("회원가입이 성공적으로 완료되었습니다.");
       setAlert2(true);
     } else {

@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 const NewsPage = ({ setScriptid, setTitle }) => {
   const token = useSelector((state) => state.userReducer.token);
   const [list, setList] = useState([]);
-  //console.log(token);
 
   const getNewsList = async () => {
     getScriptList(
@@ -17,10 +16,9 @@ const NewsPage = ({ setScriptid, setTitle }) => {
       1,
       (res) => {
         setList(res.data.data.scripts);
-        //console.log(res);
       },
       (err) => {
-        console.log(err);
+        // console.log(err);
       }
     );
   };
@@ -28,8 +26,6 @@ const NewsPage = ({ setScriptid, setTitle }) => {
   useEffect(() => {
     getNewsList();
   }, []);
-
-  //console.log(list);
 
   return (
     <>
@@ -61,7 +57,6 @@ const NewsPage = ({ setScriptid, setTitle }) => {
 const SpeechPage = ({ setScriptid, setTitle }) => {
   const token = useSelector((state) => state.userReducer.token);
   const [list, setList] = useState([]);
-  //console.log(token);
 
   const getSpeechList = async () => {
     getScriptList(
@@ -69,10 +64,9 @@ const SpeechPage = ({ setScriptid, setTitle }) => {
       2,
       (res) => {
         setList(res.data.data.scripts);
-        //console.log(res);
       },
       (err) => {
-        console.log(err);
+        // console.log(err);
       }
     );
   };
@@ -122,7 +116,7 @@ const ScriptPage = ({ scriptid, setContent }) => {
         setContent(res.data.data.content);
       },
       (err) => {
-        console.log(err);
+        // console.log(err);
       }
     );
   };

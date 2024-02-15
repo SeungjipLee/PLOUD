@@ -57,14 +57,13 @@ const NoSkipResult = ({ onClose, speechId }) => {
           token,
           resultId,
           (res) => {
-            console.log(res.data.data)
             setSpeech(res.data.data.speech)
             setScores(res.data.data.score)
             setFeedbacks(res.data.data.feedbacks)
             setVideoPath(res.data.data.video.videoPath)
             setMyFeedback(res.data.data.speech.comment)
           },
-          (err) => console.log(err)
+          (err) => err
         );
       } catch (error) {
         console.error("Profile fetch failed:", error);
@@ -83,7 +82,6 @@ const NoSkipResult = ({ onClose, speechId }) => {
     const totalSeconds = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
     
     if(videoRef.current){
-      console.log(totalSeconds + "초로 이동");
       videoRef.current.currentTime = totalSeconds; 
     }
   }

@@ -20,7 +20,6 @@ const Tier = () => {
             const response = await getScoreList(
               token,
               (res) => {
-                console.log(res.data.data.totalTime)
                 setTier(res.data.data.totalTime)
                 const tier = res.data.data.totalTime
                 if (tier < 60) {
@@ -38,10 +37,10 @@ const Tier = () => {
                 }
 
             },
-              (err) => console.log('여기')
+              (err) => err
             );       
           } catch (error) {
-            console.error(error);
+            error
           }
         };
         fetchData();

@@ -4,7 +4,6 @@ import { useState } from "react";
 import MyAlert from "../../../components/MyAlert";
 
 const Report = ({ users, closeModal }) => {
-  console.log(users);
   const token = useSelector((state) => state.userReducer.token);
   const [nickname, setNickname] = useState("");
   const [content1, setContent1] = useState("");
@@ -15,7 +14,6 @@ const Report = ({ users, closeModal }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault;
-    console.log(nickname);
     // 신고 제출 api
     const data = {
       userNickname: nickname,
@@ -48,14 +46,12 @@ const Report = ({ users, closeModal }) => {
             <select
               className="report-user"
               onChange={(e) => {
-                console.log(e, nickname);
                 setNickname(e.target.value);
               }}
               value={nickname}
             >
               <option value="">없음</option>
               {users.map((user, index) => {
-                console.log(user.nickname);
                 return (
                   <option key={index} value={user.nickname}>
                     {user.nickname}

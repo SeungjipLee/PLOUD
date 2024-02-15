@@ -60,7 +60,9 @@ const StudyPage = () => {
         dispatch(getStudyList(response.data.data));
         setMaxPage(Math.floor((response.data.data.length - 1) / 9) + 1);
       },
-      (error) => console.log(error)
+      (error) => {
+        // console.log(error)
+      }
     );
   };
 
@@ -72,7 +74,6 @@ const StudyPage = () => {
   // 방 클릭시 인원, 잠금여부 판단
   const joinStudyRoom = async (data) => {
     setPassword("");
-    console.log(data);
     setSessionId(data.sessionId);
 
     if (data.currentPeople === data.maxPeople) {
@@ -80,7 +81,6 @@ const StudyPage = () => {
       setAlert1(true);
       return;
     }
-    console.log(data.isPrivate);
     if (data.isPrivate) {
       setIsSecret(true);
     }
@@ -103,7 +103,7 @@ const StudyPage = () => {
         navigate("/study/room");
       },
       (error) => {
-        console.log(error);
+        // console.log(error);
       }
     );
   };
@@ -251,7 +251,6 @@ const StudyPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                console.log(e);
                 handleJoin();
               }
             }}

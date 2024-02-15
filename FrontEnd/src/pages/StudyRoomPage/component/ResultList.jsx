@@ -23,7 +23,6 @@ const ResultList = (data) => {
   // 결과 클릭 시 결과 모달창 띄우기
   const handleClick = (e, index) => {
     setSpeechId(recordList[index].speechId)
-    console.log(e)
     // index 에 해당하는 데이터 들고와서 결과창 만들어서 보여주기
     setModal(true);
   };

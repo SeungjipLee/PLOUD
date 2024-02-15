@@ -58,7 +58,6 @@ const Step2 = () => {
         (res) => res,
         (err) => err
       );
-      console.log(response);
       // 추가적인 성공 처리 로직
       if (response.data.status == "200") {
         setIsEmailValid(true);
@@ -69,7 +68,6 @@ const Step2 = () => {
         setAlert1(true);
       }
     } catch (error) {
-      console.error("Error sending data", error);
       setMessage("코드가 발송되지 않았습니다.\n 잠시후 다시 시도해주세요.");
       setAlert1(true);
       // 에러 처리 로직

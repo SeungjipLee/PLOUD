@@ -34,18 +34,14 @@ const CreateBoard = () => {
   });
 
   useEffect(() => {
-    console.log(isCreate);
-    console.log(boardId);
     const getData = async () => {
       try {
         const videosResponse = await userVideos(
           token,
           (res) => {
-            console.log(res);
-            console.log(res.data.data);
             setUserVideoList(res.data.data);
           },
-          (err) => console.log(err)
+          (err) => err
         );
 
         if (!isCreate) {
@@ -54,15 +50,14 @@ const CreateBoard = () => {
             token,
             boardId,
             (res) => {
-              console.log(res);
               setPastTitle(res.data.data.title);
               setPastContent(res.data.data.content);
             },
-            (err) => console.log(err)
+            (err) => err
           );
         }
       } catch (error) {
-        console.log(error);
+        error
       }
     };
     getData();
@@ -111,7 +106,6 @@ const CreateBoard = () => {
           navigate("/board");
         },
         (err) => {
-          console.log(videoId);
           console.error(err);
         }
       );
@@ -138,7 +132,7 @@ const CreateBoard = () => {
           navigate("/board");
         },
         (error) => {
-          console.log(error);
+          error
         }
       );
     }

@@ -27,17 +27,14 @@ const MyPage = () => {
         const response = await getProfile(
           token,
           (res) => {
-            console.log(token.accessToken);
-            console.log(res.data.data);
             setProfile(res.data.data);
           },
-          (err) => console.log("여기")
+          (err) => err
         );
 
         const response2 = await getSpeechList(
           token,
           (res) => {
-            console.log(res.data.data);
             const results = res.data.data.slice(0, 5);
             setResults(results);
             const initialModalOpen = results.reduce(
@@ -46,10 +43,10 @@ const MyPage = () => {
             );
             setModalOpen(initialModalOpen);
           },
-          (err) => console.log("저기")
+          (err) => err
         );
       } catch (error) {
-        console.error("쩌어기");
+        error
       }
     };
     getData();

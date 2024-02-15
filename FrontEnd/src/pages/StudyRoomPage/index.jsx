@@ -96,11 +96,9 @@ const StudyRoomPage = () => {
 
   // 공유화면도 subs 이기때문에 실질적인 subs수를 체크하기 위함
   const setClassName = (subs) => {
-    // console.log(subs);
     const subscribersWithOutScreen = subs.filter(
       (sub, i) => getUserNickname(sub) !== "screen"
     );
-    // console.log(subscribersWithOutScreen);
     const selected =
       subscribersWithOutScreen.length > 3 ? "video-flex-big" : "video-flex";
     return selected;
@@ -267,7 +265,6 @@ const StudyRoomPage = () => {
 
   // 사용법 publisher, mainStreamManager, subscriber 등을 넣으면 닉네임을 파싱해서 반환해줌
   const getUserNickname = (streamObject) => {
-    // console.log(streamObject);
     const nickname = JSON.parse(
       streamObject.stream.connection.data.split("%/%")[0]
     ).clientData;

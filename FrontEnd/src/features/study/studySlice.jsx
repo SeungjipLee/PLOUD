@@ -13,7 +13,6 @@ export const studySlice = createSlice({
       state.studyList = [...action.payload];
     },
     getStudy: (state, action) => {
-      // console.log(action.payload.data);
       state.studyInfo = action.payload.data;
     },
   },

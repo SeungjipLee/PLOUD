@@ -7,7 +7,6 @@ const Chat = ({ chatData }) => {
 
   const handleSubmit = async (e) => {
     if (e.key !== "Enter") return;
-    console.log(e);
     await setChatList([
       ...chatList,
       { username: "사용자0", content: chatvalue },

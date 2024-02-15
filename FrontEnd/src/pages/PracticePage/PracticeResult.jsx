@@ -48,10 +48,10 @@ const PracticeResult = ({ onClose, speechId, videoResponse }) => {
           await setMessage("내 피드백이 등록되었습니다");
           setAlert(true);
         },
-        (err) => console.log(err)
+        (err) => err
       );
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
@@ -59,11 +59,9 @@ const PracticeResult = ({ onClose, speechId, videoResponse }) => {
     if (videoResponse === true) {
       // -> 다시 요청
       recordResultGet();
-      console.log("결과 페이지 비디오 다시 요청");
     } else if (videoResponse === false) {
       // 비디오를 올리지 못함.
       setVideoPath("False");
-      console.log("결과 페이지 비디오 올리지 못함");
     }
   }, [videoResponse]);
 
@@ -91,7 +89,6 @@ const PracticeResult = ({ onClose, speechId, videoResponse }) => {
   };
 
   useEffect(() => {
-    console.log("유즈 이펙트~");
 
     setTimeout(() => {
       recordResultGet();
@@ -99,20 +96,18 @@ const PracticeResult = ({ onClose, speechId, videoResponse }) => {
   }, []);
 
   const recordResultGet = () => {
-    console.log("결과 가쟈와~");
 
     getRecordResult(
       token,
       resultId,
       (res) => {
-        console.log(res.data.data);
         setScores(res.data.data.score);
         if (res.data.data.video.videoPath) {
           setVideoPath(res.data.data.video.videoPath);
         }
         setAbout(res.data.data.speech);
       },
-      (err) => console.log(err)
+      (err) => err
     );
 
     getSentence(
@@ -125,7 +120,7 @@ const PracticeResult = ({ onClose, speechId, videoResponse }) => {
       }
     )
 
-    setLoading(false); // 로딩 종료
+    // setLoading(false); // 로딩 종료
   };
 
   return (

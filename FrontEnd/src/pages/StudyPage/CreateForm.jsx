@@ -43,8 +43,6 @@ const CreateForm = () => {
       setAlert1(true)
       return;
     }
-    console.log("전송 ");
-    console.log(formData);
 
     createMeeting(
       token,
@@ -54,7 +52,7 @@ const CreateForm = () => {
         navigate("/study/room");
       },
       (error) => {
-        console.log(error);
+        // console.log(error);
       }
     );
   };
