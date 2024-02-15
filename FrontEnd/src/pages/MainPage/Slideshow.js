@@ -46,8 +46,6 @@ function Slideshow() {
             style={{
               backgroundImage: `url(${image})`,
               backgroundSize: "cover",
-              width: "300px",
-              height: "300px",
             }}
           ></div>
         ))}
