@@ -104,6 +104,8 @@ const StudyPage = () => {
         navigate("/study/room");
       },
       (error) => {
+        setMessage("방에 입장할 수 없습니다.");
+        setAlert1(true);
         // console.log(error);
       }
     );
