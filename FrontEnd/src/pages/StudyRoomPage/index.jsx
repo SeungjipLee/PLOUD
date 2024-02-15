@@ -159,6 +159,8 @@ const StudyRoomPage = () => {
   const [resultResponse, setResultResponse] = useState(false);
   const [videoResponse, setVideoResponse] = useState(null);
 
+  const videoStateRef = useRef(true);
+
   const categoryName = () => {
     switch (room.categoryId) {
       case 0:
@@ -888,8 +890,6 @@ const StudyRoomPage = () => {
 
   const [videoRecorder, setVideoRecorder] = useState(null);
   const videoStartTime = useRef(null);
-  const videoRef = useRef(null);
-  const [videoStream, setVideoStream] = useState(null);
 
   // 비디오 녹화 시작 함수
   const videoRecordingStart = () => {
@@ -898,12 +898,10 @@ const StudyRoomPage = () => {
 
     videoStartTime.current = new Date().getTime();
 
+    const videoState = videoStateRef.current;
     navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
+      .getUserMedia({ video: videoState, audio: true })
       .then((stream) => {
-        videoRef.current.srcObject = stream;
-        setVideoStream(stream);
-
         const vRecorder = new MediaRecorder(stream);
         setVideoRecorder(vRecorder);
 
@@ -1165,18 +1163,12 @@ const StudyRoomPage = () => {
     // console.log("비디오 상태 수정");
 
     const newVideo = !video;
+    videoStateRef.current = newVideo;
 
     setVideo(newVideo); // 상태 업데이트
     if (publisher) {
       publisher.publishVideo(newVideo); // 비디오 상태 토글
     }
-
-    if (videoStream) {
-      videoStream.getVideoTracks().forEach((track) => {
-        track.enabled = !track.enabled;
-      });
-    }
-
     sendSignal("videoChange", "누군가의 비디오 상태 변경");
   };
 
