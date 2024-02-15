@@ -836,7 +836,9 @@ const StudyRoomPage = () => {
       }
     );
 
-    session.current.disconnect();
+    if(session.current != null){
+      session.current.disconnect();
+    }
     session.current = null;
     OV.current = null;
   };
