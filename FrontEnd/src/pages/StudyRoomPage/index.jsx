@@ -141,7 +141,7 @@ const StudyRoomPage = () => {
   const [resultScreen, setResultScreen] = useState(false);
   const [report, setReport] = useState(false);
   const [chat, setChat] = useState(true);
-  const [user, setUser] = useState(false);
+  const [user, setUser] = useState(true);
 
   // 화면공유 여부 파악
   const [screenShare, setScreenShare] = useState(false);
@@ -688,6 +688,7 @@ const StudyRoomPage = () => {
         }
       }
 
+      setUser(false);
       setRecord(true);
       setChatList((chatList) => [
         ...chatList,
