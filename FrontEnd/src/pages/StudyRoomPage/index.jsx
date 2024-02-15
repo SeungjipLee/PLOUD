@@ -665,6 +665,13 @@ const StudyRoomPage = () => {
       ]);
 
       setMessage("3초 후 방을 종료합니다.");
+      setTimeout(()=>{
+        setMessage("2초 후 방을 종료합니다.");
+      }, 1000);
+      setTimeout(()=>{
+        setMessage("1초 후 방을 종료합니다.");
+      }, 2000);
+      
       setAlert1(true);
       setEndSession(true);
 
