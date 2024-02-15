@@ -622,7 +622,7 @@ const PracticeRoomPage = () => {
               />
             ) : (
               <div className="mic-off">
-                <img src="/images/mic_off.png" />
+                <img src="/images/videoimage_disabled.png" />
               </div>
             )}
           </div>
