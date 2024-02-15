@@ -1,5 +1,5 @@
 import Modal from "../../../components/Modal";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import BarChart from "../../../components/BarChart";
 import { getRecordResult } from "../../../services/record";
