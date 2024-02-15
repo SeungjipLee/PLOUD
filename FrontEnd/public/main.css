@@ -152,6 +152,7 @@ template {
   --border-color: #ced4da;
   --base-background-color: #eee;
   --danger-color: #bb2d3b;
+  min-width: 1100px
 }
 body,
 html {
@@ -189,7 +190,7 @@ code {
   box-shadow: 0 -1px 10px #999;
   display: flex;
   justify-content: start;
-  width: 100%;
+  min-width: 1100px;
 }
 .Navbar a {
   /* position: absolute; */

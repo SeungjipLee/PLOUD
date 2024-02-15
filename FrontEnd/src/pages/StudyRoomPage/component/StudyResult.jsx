@@ -152,7 +152,7 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
           {loading === true ? (
             <div className="loading-overlay">
               <LoadingScreen /> {/* Material-UI 로딩 스피너 */}
-              <p>로딩 중...</p>
+              <p style={{ textAlign: "center" }}>로딩 중...</p>
             </div>
           ) : (
             <div
