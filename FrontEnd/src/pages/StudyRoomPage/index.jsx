@@ -656,7 +656,6 @@ const StudyRoomPage = () => {
         }
       }
 
-
       setRecord(true);
       setChatList((chatList) => [
         ...chatList,
