@@ -69,9 +69,9 @@ public class S3ServiceImpl implements S3Service {
     }
 
     if(type.equals("speech")){
-      filePath.append(".").append(extension);
-    }else{
       filePath.append(".").append("webm");
+    }else{
+      filePath.append(".").append(extension);
     }
     return filePath.toString();
   }
