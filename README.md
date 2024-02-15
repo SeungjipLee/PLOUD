@@ -1,5 +1,5 @@
 # 👩‍🏫 PLOUD - 스피치 능력을 향상시키는 가장 빠른 방법
-![PLOUD](./docs/main.png)
+![PLOUD](./document/main_ploud.png)
 
 ## 🕞 프로젝트 진행 기간
 **2024.01.08 ~ 2024.02.16** (6주)
@@ -79,7 +79,7 @@
 <br>
 
 ## 🏢 아키텍처
-![alt text](./docs/architecture.png)
+![alt text](./document/architecture_ploud.png)
 
 ## 📂 프로젝트 파일 구조
 
@@ -389,16 +389,15 @@
 
 ## 📑 프로젝트 산출물
 - [기능 명세서](./document/기능명세서.pdf)
-- [API 명세서](./docs/API명세서.pdf)
-- [와이어프레임](./docs/와이어프레임.pdf)
-- [ER Diagram](./docs/erd.png)
-- [UCC](./docs/ploud_ucc.mp4)
-- [포팅메뉴얼](./PortingManual.md)
+- [API 명세서](./document/API명세서.pdf)
+- [와이어프레임](./document/와이어프레임.png)
+- [ER Diagram](./document/erd.png)
+- [포팅메뉴얼](./exec/PortingManual.md)
 
 
 ## 👨‍👨‍👧 팀원 👨‍👨‍👧
 |Name|박나린|배준형|김가영|김영대|이승집|박민호|
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Profile**  | <img src="./docs/member/rin.jpg" style="height: 100px"> | <img src="./docs/member/bjh.jpg" style="height: 100px"> | <img src="./docs/member/kky.jpg" style="height: 100px"> | <img src="./docs/member/kyd.jpg" style="height: 100px"> | <img src="./docs/member/lsj.jpg" style="height: 100px"> | <img src="./docs/member/pmh.png" style="height: 100px"> |
+| **Profile**  | <img src="./document/member/rin.jpg" style="height: 100px"> | <img src="./document/member/bjh.jpg" style="height: 100px"> | <img src="./document/member/kky.jpg" style="height: 100px"> | <img src="./document/member/kyd.jpg" style="height: 100px"> | <img src="./document/member/lsj.jpg" style="height: 100px"> | <img src="./document/member/pmh.png" style="height: 100px"> |
 | **Position** | PM <br/> Backend <br/> CI/CD | FrontEnd <br/> OpenVidu | Backend <br/> Design | Backend <br/> 음성분석 | Frontend <br/> UI/UX | Frontend <br/> OpenVidu |
 | **Git**      | [GitHub](https://github.com/xw2nana) | [GitHub](https://github.com/junhyung96) | [GitHub](https://github.com/kayoung0) | [GitHub](https://github.com/0dyk) | [GitHub](https://github.com/SeungjipLee) | [GitHub](https://github.com/pmhmist) |
