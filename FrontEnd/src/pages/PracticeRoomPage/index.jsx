@@ -657,6 +657,7 @@ const PracticeRoomPage = () => {
             <img
               onClick={(e) => {
                 setRecordForm(!recordForm);
+                setMic(false);
               }}
               src="/images/recordbutton.png"
             />
