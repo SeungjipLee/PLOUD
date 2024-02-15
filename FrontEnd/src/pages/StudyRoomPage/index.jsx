@@ -408,6 +408,12 @@ const StudyRoomPage = () => {
     // 녹화시작은 발표자가 함
     // 따라서 발표자의 모드가 3번이 아니라면
     // mode 1로 이동
+
+    console.log("여기서 확인");
+    console.log(mode);
+    console.log(mode !== "3");
+
+
     if (mode !== "3") {
       setMode("1");
     }
