@@ -282,7 +282,7 @@ const StudyRoomPage = () => {
     if (chatAreaRef.current) {
       chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
     }
-  }, [chatList]);
+  }, [chatList, chat]);
 
   useEffect(() => {
     if (publisher) {
