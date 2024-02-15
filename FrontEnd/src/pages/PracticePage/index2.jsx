@@ -162,7 +162,7 @@ const PracticePage2 = () => {
             혼자연습
           </div>
 
-          <div className="practice-main flex flex-col mx-60 bg-sky-50 ps-10 py-10 rounded-2xl mb-24">
+          <div className="practice-main">
             <div className="flex mb-5">
               <div className="text-xl mainBlueF font-bold">1. 대본 :</div>
               <Link
