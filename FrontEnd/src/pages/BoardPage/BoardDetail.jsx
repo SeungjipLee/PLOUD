@@ -53,7 +53,7 @@ const BoardDetail = () => {
             setContent(res.data.data.content);
             setIsLiked(res.data.data.liked);
           },
-          (err) => console.log(err)
+          (err) => err
         );
 
         const response2 = await getComment(
@@ -62,10 +62,10 @@ const BoardDetail = () => {
           (res) => {
             setCommentList(res.data.data);
           },
-          (err) => console.log(err)
+          (err) => err
         );
       } catch (error) {
-        console.log(error);
+        error
       }
     };
     getBoard();
@@ -81,7 +81,7 @@ const BoardDetail = () => {
         await setMessage("글이 성공적으로 삭제되었습니다.");
         setAlert2(true);
       },
-      (err) => console.log(err)
+      (err) => err
     );
   };
 
@@ -95,7 +95,7 @@ const BoardDetail = () => {
       // 좋아요 상태에 따라 좋아요 수를 조정합니다.
       setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
     } catch (error) {
-      console.log(error);
+      error
     }
   };
 
@@ -115,7 +115,7 @@ const BoardDetail = () => {
 
       setComment(""); // 댓글 입력창 초기화
     } catch (err) {
-      console.log(err);
+      err
       // await setMessage("댓글 작성에 실패했습니다.")
       // setAlert(true)
     }

@@ -63,7 +63,7 @@ const NoSkipResult = ({ onClose, speechId }) => {
             setVideoPath(res.data.data.video.videoPath)
             setMyFeedback(res.data.data.speech.comment)
           },
-          (err) => console.log(err)
+          (err) => err
         );
       } catch (error) {
         console.error("Profile fetch failed:", error);

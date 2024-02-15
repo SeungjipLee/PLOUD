@@ -52,7 +52,7 @@ const CreateForm = () => {
         navigate("/study/room");
       },
       (error) => {
-        console.log(error);
+        // console.log(error);
       }
     );
   };

@@ -60,7 +60,9 @@ const StudyPage = () => {
         dispatch(getStudyList(response.data.data));
         setMaxPage(Math.floor((response.data.data.length - 1) / 9) + 1);
       },
-      (error) => console.log(error)
+      (error) => {
+        // console.log(error)
+      }
     );
   };
 
@@ -101,7 +103,7 @@ const StudyPage = () => {
         navigate("/study/room");
       },
       (error) => {
-        console.log(error);
+        // console.log(error);
       }
     );
   };

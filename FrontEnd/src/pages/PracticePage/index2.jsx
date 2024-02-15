@@ -18,7 +18,7 @@ const NewsPage = ({ setScriptid, setTitle }) => {
         setList(res.data.data.scripts);
       },
       (err) => {
-        console.log(err);
+        // console.log(err);
       }
     );
   };
@@ -66,7 +66,7 @@ const SpeechPage = ({ setScriptid, setTitle }) => {
         setList(res.data.data.scripts);
       },
       (err) => {
-        console.log(err);
+        // console.log(err);
       }
     );
   };
@@ -116,7 +116,7 @@ const ScriptPage = ({ scriptid, setContent }) => {
         setContent(res.data.data.content);
       },
       (err) => {
-        console.log(err);
+        // console.log(err);
       }
     );
   };

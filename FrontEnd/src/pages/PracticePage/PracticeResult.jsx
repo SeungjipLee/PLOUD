@@ -7,7 +7,7 @@ import { getSentence } from "../../services/sentence";
 import { postComment } from "../../services/speech";
 import MyAlert from "../../components/MyAlert";
 
-const PracticeResult = ({ onClose, speechId }) => {
+const PracticeResult = ({ onClose, speechId, videoResponse }) => {
   // 알림 창 상태
   const [message, setMessage] = useState("");
   const [alert, setAlert] = useState(false);
@@ -48,12 +48,22 @@ const PracticeResult = ({ onClose, speechId }) => {
           await setMessage("내 피드백이 등록되었습니다");
           setAlert(true);
         },
-        (err) => console.log(err)
+        (err) => err
       );
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
+
+  useEffect(() => {
+    if (videoResponse === true) {
+      // -> 다시 요청
+      recordResultGet();
+    } else if (videoResponse === false) {
+      // 비디오를 올리지 못함.
+      setVideoPath("False");
+    }
+  }, [videoResponse]);
 
   useEffect(() => {
     if (scores.grade < 20) {
@@ -79,32 +89,39 @@ const PracticeResult = ({ onClose, speechId }) => {
   };
 
   useEffect(() => {
-    const getData = () => {
-      try {
-        const response = getRecordResult(
-          token,
-          resultId,
-          (res) => {
-            setScores(res.data.data.score);
-            setVideoPath(res.data.data.video.videoPath);
-            setAbout(res.data.data.speech);
-          },
-          (err) => console.log(err)
-        );
 
-        const randomSentenceResponse = getSentence(
-          token,
-          (res) => {
-            setSentence(res.data.data.sentence);
-          },
-          (err) => console.log(err)
-        );
-      } catch (error) {
-        console.error("Profile fetch failed:", error);
-      }
-    };
-    getData();
+    setTimeout(() => {
+      recordResultGet();
+    }, 5000);
   }, []);
+
+  const recordResultGet = () => {
+
+    getRecordResult(
+      token,
+      resultId,
+      (res) => {
+        setScores(res.data.data.score);
+        if (res.data.data.video.videoPath) {
+          setVideoPath(res.data.data.video.videoPath);
+        }
+        setAbout(res.data.data.speech);
+      },
+      (err) => err
+    );
+
+    getSentence(
+      token,
+      (res) => {
+        setSentence(res.data.data.sentence);
+      },
+      (err) => {
+        // console.log(err);
+      }
+    )
+
+    setLoading(false); // 로딩 종료
+  };
 
   return (
     <>
@@ -139,9 +156,15 @@ const PracticeResult = ({ onClose, speechId }) => {
                   className="rounded-xl w-68 h-52 m-auto"
                   style={{ width: "100%", height: "100%" }}
                 >
-                  <video controls src={videoPath} type="video/webm">
-                    Your browser does not support the video tag.
-                  </video>
+                  {videoPath == "" ? (
+                    <div>영상을 가져오고 있습니다.</div>
+                  ) : videoPath == "False" ? (
+                    <div>영상 업로드에 실패헀습니다.</div>
+                  ) : (
+                    <video controls src={videoPath} type="video/webm">
+                      Your browser does not support the video tag.
+                    </video>
+                  )}
                 </div>
               </div>
               <div className="p-2">
@@ -150,9 +173,7 @@ const PracticeResult = ({ onClose, speechId }) => {
                   style={{ backgroundColor: "#EBEAFA" }}
                 >
                   <div className="text-2xl mt-5 ps-5 pb-4 ms-5">결과:</div>
-                  <div className="text-5xl me-5 pt-2">
-                    {grade}
-                  </div>
+                  <div className="text-5xl me-5 pt-2">{grade}</div>
                 </div>
               </div>
             </div>

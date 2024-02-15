@@ -62,6 +62,8 @@ const PracticeRoomPage = () => {
   const [video, setVideo] = useState(true);
   const [mic, setMic] = useState(false);
 
+  const [videoResponse, setVideoResponse] = useState(null);
+
   // 피드백 관련
   const tmpDecibels = useRef([]); // 임시 데시벨 데이터 저장(3초)
   const isFeedback = useRef(false);
@@ -120,7 +122,7 @@ const PracticeRoomPage = () => {
           };
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
         });
     }
 
@@ -163,7 +165,9 @@ const PracticeRoomPage = () => {
         startRecording();
         videoRecordingStart();
       },
-      (err) => console.log(err)
+      (err) => {
+        // console.log(err)
+      } 
     );
 
     // 폼 변경
@@ -185,10 +189,10 @@ const PracticeRoomPage = () => {
         decibels: decibels.current,
       },
       (response) => {
-        console.log(response);
+        // console.log(response);
       },
       (error) => {
-        console.log(error);
+        // console.log(error);
       }
     );
 
@@ -303,10 +307,10 @@ const PracticeRoomPage = () => {
         content: tmpFb,
       },
       (response) => {
-        console.log("피드백 등록 성공");
+        // console.log("피드백 등록 성공");
       },
       (error) => {
-        console.log("피드백 등록 실패");
+        // console.log("피드백 등록 실패");
       }
     );
   };
@@ -339,7 +343,7 @@ const PracticeRoomPage = () => {
       token,
       formData,
       (response) => {
-        console.log("음성 평가 결과");
+        // console.log("음성 평가 결과");
         console.log(
           "개수 : " +
             response.data.data.scriptCnt +
@@ -397,9 +401,11 @@ const PracticeRoomPage = () => {
       vFormData,
       (response) => {
         // console.log("영상 업로드 성공");
+        setVideoResponse(true);
       },
       (error) => {
         // console.log("영상 업로드 실패");
+        setVideoResponse(false);
       }
     );
   };
@@ -735,6 +741,7 @@ const PracticeRoomPage = () => {
         <PracticeResult
           onClose={handleResultClose}
           speechId={speechId.current}
+          videoResponse={videoResponse}
         />
       )}
     </div>

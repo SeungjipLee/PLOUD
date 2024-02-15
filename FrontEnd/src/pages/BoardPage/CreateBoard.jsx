@@ -41,7 +41,7 @@ const CreateBoard = () => {
           (res) => {
             setUserVideoList(res.data.data);
           },
-          (err) => console.log(err)
+          (err) => err
         );
 
         if (!isCreate) {
@@ -53,11 +53,11 @@ const CreateBoard = () => {
               setPastTitle(res.data.data.title);
               setPastContent(res.data.data.content);
             },
-            (err) => console.log(err)
+            (err) => err
           );
         }
       } catch (error) {
-        console.log(error);
+        error
       }
     };
     getData();
@@ -132,7 +132,7 @@ const CreateBoard = () => {
           navigate("/board");
         },
         (error) => {
-          console.log(error);
+          error
         }
       );
     }

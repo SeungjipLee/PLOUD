@@ -36,7 +36,7 @@ const MainPage = () => {
       (res) => {
         setSpeechCount(res.data.data.count);
       },
-      (err) => console.log(err)
+      (err) => err
     );
     // end get speech count
 
@@ -108,7 +108,7 @@ const MainPage = () => {
             <div>
               <div className="Main2Container me-36">
                 <div
-                  className="mainBlueB text-white card text-center pt-5 my-5 mb-28"
+                  className="mainBlueB text-white card text-center pt-5 my-5"
                   style={{
                     borderRadius: "10%",
                     display: "flex",

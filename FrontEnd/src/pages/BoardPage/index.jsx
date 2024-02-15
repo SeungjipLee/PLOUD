@@ -27,7 +27,7 @@ const BoardPage = () => {
         (res) => {
           setShowList(res.data.data);
         },
-        (err) => console.log(err)
+        (err) => err
       );
     }
   }, [token, page, isSearchMode]);
@@ -47,7 +47,7 @@ const BoardPage = () => {
         });
         setShowList(response.data.data);
       } catch (err) {
-        console.log(err);
+        err
       }
     }
   };

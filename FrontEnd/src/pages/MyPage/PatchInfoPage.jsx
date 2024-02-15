@@ -35,7 +35,7 @@ const PatchInfoPage = () => {
           (res) => {
             setProfile(res.data.data);
           },
-          (err) => console.log(err)
+          (err) => err
         );
       } catch (error) {
         console.error("Profile fetch failed:", error);
