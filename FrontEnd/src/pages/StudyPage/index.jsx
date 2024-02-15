@@ -58,7 +58,7 @@ const StudyPage = () => {
       token,
       data,
       (response) => {
-        dispatch(getStudyList(response.data.data));
+        dispatch(getStudyList(response.data.data.filter(item => item.currentPeople !== 0)));
         setMaxPage(Math.floor((response.data.data.length - 1) / 9) + 1);
       },
       (error) => {
@@ -194,7 +194,6 @@ const StudyPage = () => {
                     .slice((page - 1) * 9, page * 9)
                     .map((data, index) => (
                       <div key={index}>
-                        {data.currentPeople != 0 && (
                           <RoomCard data={data}>
                             <div
                               className="enter-room"
@@ -203,7 +202,6 @@ const StudyPage = () => {
                               입장
                             </div>
                           </RoomCard>
-                        )}
                       </div>
                     ))}
                 </div>
