@@ -110,10 +110,6 @@
   text-decoration: none;
 }
 
-.Button :hover{
-  cursor: pointer;
-}
-
 .study-category-button {
   min-width: 60px;
   height: 35px;
@@ -281,6 +277,11 @@
   display: inline-block;
 }
 
+.card-study-room-info:hover{
+  transform: translateY(-2px); /* 위로 조금 이동 */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* 그림자 효과 추가 */
+}
+
 .card-study-room-div1 {
   display: flex;
   justify-content: space-between;
@@ -320,8 +321,8 @@
   height: 30px;
 }
 
-.presenter-button :hover {
-  cursor: pointer;
+.presenter-button:hover {
+  cursor: pointer !important;
 }
 
 .private-icon {
@@ -433,7 +434,7 @@
   bottom: 20px;
 }
 
-.enter-room :hover{
+.enter-room:hover{
   cursor: pointer;
 }
 
@@ -829,15 +830,15 @@ p {
 }
 
 .overflow-ellipsis:hover {
-  position: absolute;
-  white-space: normal; /* 호버링 시 텍스트 줄 바꿈 활성화 */
-  overflow: visible; /* 호버링 시 텍스트 내용 표시 */
-  text-overflow: unset; /* 줄임표 제거 */
+  /* position: absolute;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset; */
   /* background-color: #B0B0B0; */
-  width: 241px;
+  /* width: 241px;
   height: 100px;
   background: linear-gradient(to bottom, #3a3758, #100e2c);
-  border-radius: 5px;
+  border-radius: 5px; */
 }
 
 .record-form {
@@ -901,7 +902,8 @@ p {
 .video-div-size-4 {
 }
 
-.video-div-size-4 video {
+.video-div-size-4 video,
+.video-div-size-4 img {
   /* padding: 10px; */
   width: 400px;
   height: auto;
@@ -911,7 +913,8 @@ p {
 .video-div-size-6 {
 }
 
-.video-div-size-6 video {
+.video-div-size-6 video,
+.video-div-size-6 img {
   /* padding: 10px; */
   width: 400px;
   height: auto;
@@ -1382,6 +1385,11 @@ input[type="number"]::-webkit-outer-spin-button {
 
   background-color: #c4c4c4;
 }
+
+.slideshowDot.active {
+  background-color: #f3704b;
+}
+
 a .slideshowDot.active {
   background-color: #f3704b;
 }
@@ -1576,7 +1584,14 @@ a .slideshowDot.active {
 
 .practice-main {
   min-width: 900px;
-  max-width: 1100px;
+  max-width: 900px;
+  min-height: 600px;
+  display: flex; 
+  flex-direction: column; 
+  background-color: rgb(240 249 255/var(--tw-bg-opacity));
+  margin: 0px 240px;
+  padding: 40px;
+  border-radius: 1rem;
 }
 
 .mic-off img {
@@ -1587,4 +1602,8 @@ a .slideshowDot.active {
   position: absolute;
   right: 10px;
   bottom: 10px;
+}
+.no-room {
+  padding-top: 300px;
+  text-align: center;
 }

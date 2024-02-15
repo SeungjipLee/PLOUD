@@ -43,6 +43,9 @@ public class S3ServiceImpl implements S3Service {
       // S3에 파일 저장하는 경로
       String path = getFilename(type, userId, multipartFile);
 
+      log.debug("S3 파일 타입 : " + type);
+      log.debug("S3 파일 저장 이름 : " + path);
+
       amazonS3.putObject(bucket, path, multipartFile.getInputStream(), metadata);
 
       return amazonS3.getUrl(bucket, path).toString();
@@ -50,9 +53,7 @@ public class S3ServiceImpl implements S3Service {
     } catch (IOException e) {
       throw new CustomException(ResponseCode.CANNOT_UPLOAD_FILE);
     }
-
   }
-
   private String getFilename(String type, String userId, MultipartFile multipartFile) {
 
     StringBuilder filePath = new StringBuilder();
@@ -67,7 +68,11 @@ public class S3ServiceImpl implements S3Service {
       filePath.append("speech/").append(userId).append("/").append(now.format(formatter));
     }
 
-    filePath.append(".").append(extension);
+    if(type.equals("speech")){
+      filePath.append(".").append("webm");
+    }else{
+      filePath.append(".").append(extension);
+    }
     return filePath.toString();
   }
 }

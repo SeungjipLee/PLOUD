@@ -19,7 +19,7 @@ const PatchInfoPage = () => {
   const token = useSelector((state) => state.userReducer.token);
   const [selectedFile, setSelectedFile] = useState();
   const [profile, setProfile] = useState({});
-  const [preview, setPreview] = useState();
+  const [preview, setPreview] = useState(null);
   const [isNicknameValid, setIsNicknameValid] = useState(false);
   const [newNickname, setNewNickname] = useState("");
   const validateNickname = () => /^[A-Za-z0-9가-힣]{2,8}$/.test(newNickname);
@@ -174,7 +174,7 @@ const PatchInfoPage = () => {
                   )}
                   {!preview && !profile.profileImg && (
                     <img
-                      src="images/Profile.png"
+                    src="/images/Profile.PNG"
                       style={{
                         objectFit: "cover",
                         weight: "100%",

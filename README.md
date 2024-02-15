@@ -55,7 +55,7 @@
 <br>
 
 
-#### IDE
+#### IDE
 
 ![VSCode](https://img.shields.io/badge/VisualStudioCode-007ACC?style=for-the-badge&logo=VisualStudioCode&logoColor=white) ![IntelliJ](https://img.shields.io/badge/intellijidea-000000?style=for-the-badge&logo=intellijidea&logoColor=white)
 
@@ -70,7 +70,7 @@
 <br>
 
 
-#### Backend
+#### Backend
 
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)  
 ![SpringBoot](https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white) ![SpringSecurity](https://img.shields.io/badge/springsecurity-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white) ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)  
@@ -93,7 +93,7 @@
 <summary><b>FrontEnd</b></summary>
 
 ```
-📦FrontEnd
+📦src
  ┣ 📂app
  ┃ ┣ 📜persistor.jsx
  ┃ ┗ 📜store.jsx
@@ -103,11 +103,14 @@
  ┃ ┣ 📜Card.jsx
  ┃ ┣ 📜Footer.jsx
  ┃ ┣ 📜Modal.jsx
+ ┃ ┣ 📜MyAlert.jsx
  ┃ ┣ 📜MyChart.jsx
  ┃ ┣ 📜Navbar.jsx
  ┃ ┣ 📜Page.jsx
  ┃ ┣ 📜ResultCard.jsx
- ┃ ┗ 📜Tier.jsx
+ ┃ ┣ 📜ScrollToTop.jsx
+ ┃ ┣ 📜Tier.jsx
+ ┃ ┗ 📜Timer.jsx
  ┣ 📂features
  ┃ ┣ 📂record
  ┃ ┃ ┗ 📜recordSlice.jsx
@@ -127,28 +130,27 @@
  ┃ ┃ ┗ 📜PostItem.jsx
  ┃ ┣ 📂LoginPage
  ┃ ┃ ┣ 📂Service
- ┃ ┃ ┃ ┣ 📜AuthHeader.jsx
- ┃ ┃ ┃ ┗ 📜AuthService.jsx
+ ┃ ┃ ┃ ┗ 📜AuthHeader.jsx
  ┃ ┃ ┣ 📜Findpw.jsx
  ┃ ┃ ┣ 📜index.jsx
  ┃ ┃ ┗ 📜SocialLogin.jsx
  ┃ ┣ 📂MainPage
- ┃ ┃ ┗ 📜index.jsx
+ ┃ ┃ ┣ 📜index.jsx
+ ┃ ┃ ┗ 📜Slideshow.js
  ┃ ┣ 📂MyPage
  ┃ ┃ ┣ 📜index.jsx
+ ┃ ┃ ┣ 📜NoSkipResult.jsx
  ┃ ┃ ┣ 📜PatchInfoPage.jsx
+ ┃ ┃ ┣ 📜PracticeResult.jsx
  ┃ ┃ ┗ 📜ResetPwPage.jsx
  ┃ ┣ 📂PracticePage
- ┃ ┃ ┣ 📂sidebar
- ┃ ┃ ┃ ┗ 📜Sidebar.jsx
- ┃ ┃ ┣ 📜index.jsx
+ ┃ ┃ ┣ 📜index1.jsx
+ ┃ ┃ ┣ 📜index2.jsx
  ┃ ┃ ┗ 📜PracticeResult.jsx
  ┃ ┣ 📂PracticeRoomPage
- ┃ ┃ ┣ 📜Level1.jsx
- ┃ ┃ ┗ 📜Level2.jsx
+ ┃ ┃ ┗ 📜index.jsx
  ┃ ┣ 📂SingUpPage
  ┃ ┃ ┣ 📜index.jsx
- ┃ ┃ ┣ 📜Origin.jsx
  ┃ ┃ ┣ 📜Step1.jsx
  ┃ ┃ ┣ 📜Step2.jsx
  ┃ ┃ ┗ 📜Step3.jsx
@@ -159,26 +161,18 @@
  ┃ ┃ ┣ 📜JoinConfirmModal.jsx
  ┃ ┃ ┣ 📜roomCard.jsx
  ┃ ┃ ┗ 📜RoomJoinModal.jsx
- ┃ ┣ 📂StudyRoomPage
+ ┃ ┗ 📂StudyRoomPage
  ┃ ┃ ┣ 📂component
  ┃ ┃ ┃ ┣ 📜Chat.jsx
- ┃ ┃ ┃ ┣ 📜InterviewScreenListener.jsx
- ┃ ┃ ┃ ┣ 📜InterviewScreenPresenter.jsx
+ ┃ ┃ ┃ ┣ 📜Loading.jsx
+ ┃ ┃ ┃ ┣ 📜Loading2.jsx
  ┃ ┃ ┃ ┣ 📜OvVideo.js
  ┃ ┃ ┃ ┣ 📜Report.jsx
  ┃ ┃ ┃ ┣ 📜ResultList.jsx
  ┃ ┃ ┃ ┣ 📜StudyResult.jsx
  ┃ ┃ ┃ ┣ 📜UserVideo.css
  ┃ ┃ ┃ ┗ 📜UserVideoComponent.js
- ┃ ┃ ┣ 📂videocomponents
- ┃ ┃ ┃ ┣ 📜PresentationLayout.jsx
- ┃ ┃ ┃ ┣ 📜ScreenShareLayout.jsx
- ┃ ┃ ┃ ┗ 📜VideoGrid.jsx
  ┃ ┃ ┗ 📜index.jsx
- ┃ ┗ 📂TestPage
- ┃ ┃ ┣ 📜index.jsx
- ┃ ┃ ┣ 📜Record.jsx
- ┃ ┃ ┗ 📜SpeechResult.jsx
  ┣ 📂services
  ┃ ┣ 📜board.jsx
  ┃ ┣ 📜meeting.jsx
@@ -398,12 +392,13 @@
 - [API 명세서](./document/API명세서.pdf)
 - [와이어프레임](./document/와이어프레임.png)
 - [ER Diagram](./document/erd.png)
-- [포팅메뉴얼](./exec/PortingManual.md)
+- [포팅메뉴얼](./exec/PortingManual.md)  
+- [점수 산출 과정 시퀀스 다이어그림](./document/점수산출과정.png)  
 
 
 ## 👨‍👨‍👧 팀원 👨‍👨‍👧
 |Name|박나린|배준형|김가영|김영대|이승집|박민호|
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Profile**  | <img src="./document/member/rin.jpg" style="height: 100px"> | <img src="./document/member/bjh.jpg" style="height: 100px"> | <img src="./document/member/kky.jpg" style="height: 100px"> | <img src="./document/member/kyd.jpg" style="height: 100px"> | <img src="./document/member/lsj.jpg" style="height: 100px"> | <img src="./document/member/pmh.png" style="height: 100px"> |
+| **Profile**  | <img src="document/member/rin.jpg" style="height: 100px"> | <img src="document/member/bjh.jpg" style="height: 100px"> | <img src="document/member/kky.jpg" style="height: 100px"> | <img src="document/member/kyd.jpg" style="height: 100px"> | <img src="document/member/lsj.jpg" style="height: 100px"> | <img src="document/member/pmh.png" style="height: 100px"> |
 | **Position** | PM <br/> Backend <br/> CI/CD | FrontEnd <br/> OpenVidu | Backend <br/> Design | Backend <br/> 음성분석 | Frontend <br/> UI/UX | Frontend <br/> OpenVidu |
 | **Git**      | [GitHub](https://github.com/xw2nana) | [GitHub](https://github.com/junhyung96) | [GitHub](https://github.com/kayoung0) | [GitHub](https://github.com/0dyk) | [GitHub](https://github.com/SeungjipLee) | [GitHub](https://github.com/pmhmist) |

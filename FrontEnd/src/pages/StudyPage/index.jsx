@@ -52,12 +52,13 @@ const StudyPage = () => {
 
   // 스터디 리스트 요청
   const searchStudyList = () => {
+    // console.log(studyList);
     const data = { categoryId: categoryId, word: word };
     getMeetingList(
       token,
       data,
       (response) => {
-        dispatch(getStudyList(response.data.data));
+        dispatch(getStudyList(response.data.data.filter(item => item.currentPeople !== 0)));
         setMaxPage(Math.floor((response.data.data.length - 1) / 9) + 1);
       },
       (error) => {
@@ -103,6 +104,8 @@ const StudyPage = () => {
         navigate("/study/room");
       },
       (error) => {
+        setMessage("방에 입장할 수 없습니다.");
+        setAlert1(true);
         // console.log(error);
       }
     );
@@ -171,7 +174,7 @@ const StudyPage = () => {
                   </Button>
                   <div className="study-main-search">
                     {/* {word === "" && <img src="/images/search_icon.PNG" alt="" />} */}
-                    <img src="/images/search_icon.PNG" alt="" />
+                    <img src="/images/search_icon.png" alt="" />
                     <input
                       className="search-room-input"
                       type="text"
@@ -187,22 +190,27 @@ const StudyPage = () => {
                   <Button onClick={changeModalState}>방 만들기</Button>
                 </div>
               </div>
-              <div className="grid room-list">
-                {studyList
-                  .slice((page - 1) * 9, page * 9)
-                  .map((data, index) => (
-                    <div key={index}>
-                      <RoomCard data={data}>
-                        <div
-                          className="enter-room"
-                          onClick={() => joinStudyRoom(data)}
-                        >
-                          입장
-                        </div>
-                      </RoomCard>
-                    </div>
-                  ))}
-              </div>
+              {studyList.length > 0 && (
+                <div className="grid room-list">
+                  {studyList
+                    .slice((page - 1) * 9, page * 9)
+                    .map((data, index) => (
+                      <div key={index}>
+                          <RoomCard data={data}>
+                            <div
+                              className="enter-room"
+                              onClick={() => joinStudyRoom(data)}
+                            >
+                              입장
+                            </div>
+                          </RoomCard>
+                      </div>
+                    ))}
+                </div>
+              )}
+              {studyList.length === 0 && (
+                <div className="no-room room-list">생성된 방이 없습니다.</div>
+              )}
               <div className="pagination">
                 <button onClick={(e) => (page > 1 ? setPage(page - 1) : null)}>
                   <img src="/images/leftbutton.png" />

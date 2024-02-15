@@ -67,7 +67,7 @@ const FindPwPage = () => {
     <>
     <Page footer={<Footer />}>
       <div className="flex justify-center">
-        <a href="/"><img src="images/ICON_similar_white.png" className="w-36 mt-24"/></a>
+        <a href="/"><img src="/images/ICON_similar_white.png" className="w-36 mt-24"/></a>
       </div>
       <div className="LoginBox mb-36 py-4 rounded-xl mx-auto">
         <h2 className="text-white text-2xl text-center py-5">

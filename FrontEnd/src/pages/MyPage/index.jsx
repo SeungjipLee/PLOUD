@@ -79,7 +79,7 @@ const MyPage = () => {
                   }}>
                   {!profile.profileImg && (
                     <img
-                      src="images/Profile.PNG"
+                      src="/images/Profile.PNG"
                       style={{
                         width: "100%",
                         height: "100%",

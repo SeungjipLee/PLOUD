@@ -1,5 +1,5 @@
 import Modal from "../../components/Modal";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import BarChart from "../../components/BarChart";
 import { getRecordResult } from "../../services/record";
@@ -31,6 +31,9 @@ const PracticeResult = ({
   const [myFeedback, setMyFeedback] = useState("");
 
   const [loading, setLoading] = useState(true);
+  const [countdown, setCountdown] = useState(20);
+
+  const isClosed = useRef(false);
 
   const handleDetail = () => {
     setIsDetail(!isDetail);
@@ -57,6 +60,12 @@ const PracticeResult = ({
   };
 
   useEffect(() => {
+    if (resultResponse) {
+      recordResultGet();
+    }
+  }, [resultResponse]);
+
+  useEffect(() => {
     if (videoResponse === true) {
       // -> 다시 요청
       recordResultGet();
@@ -67,16 +76,16 @@ const PracticeResult = ({
   }, [videoResponse]);
 
   useEffect(() => {
-    if (scores.grade < 20) {
+    if (scores.grade < 40) {
       setGrade("E");
       setResultTextColor("#393939");
-    } else if (scores.grade < 40) {
+    } else if (scores.grade < 60) {
       setGrade("D");
       setResultTextColor("#0C134F");
-    } else if (scores.grade < 60) {
+    } else if (scores.grade < 75) {
       setGrade("C");
       setResultTextColor("#624637");
-    } else if (scores.grade < 80) {
+    } else if (scores.grade < 90) {
       setGrade("B");
       setResultTextColor("#c0c0c0");
     } else {
@@ -89,26 +98,7 @@ const PracticeResult = ({
     background: `linear-gradient(to top, ${resultTextColor} 40%, transparent 40%)`,
   };
 
-  useEffect(() => {
-    if (resultResponse) {
-      recordResultGet();
-    }
-  }, [resultResponse]);
-
   const recordResultGet = () => {
-    getRecordResult(
-      token,
-      resultId,
-      (res) => {
-        setScores(res.data.data.score);
-        if (res.data.data.video.videoPath) {
-          setVideoPath(res.data.data.video.videoPath);
-        }
-        setAbout(res.data.data.speech);
-      },
-      (err) => err
-    );
-
     getSentence(
       token,
       (res) => {
@@ -119,17 +109,55 @@ const PracticeResult = ({
       }
     );
 
-    setLoading(false); // 로딩 종료
+    getRecordResult(
+      token,
+      resultId,
+      (res) => {
+        setScores(res.data.data.score);
+        if (res.data.data.video.videoPath) {
+          setVideoPath(res.data.data.video.videoPath);
+        }
+        setAbout(res.data.data.speech);
+        setLoading(false); // 로딩 종료
+      },
+      (err) => err
+    );
   };
+
+  const handleSkip = () => {
+    if (typeof onClose === "function") {
+      isClosed.current = true;
+      onClose(); // "skip" 버튼 클릭 시 모달 닫기
+    }
+  };
+
+  useEffect(() => {
+    // 카운트다운 시작
+    const timerId = setInterval(() => {
+      setCountdown((prevCountdown) => prevCountdown - 1);
+    }, 1000);
+
+    // 20초 후 모달 자동 닫기
+    const timeoutId = setTimeout(() => {
+      if(!isClosed.current){
+        onClose(); // 모달 닫는 함수 호출
+      }
+    }, 20000);
+
+    return () => {
+      if (resultResponse) {
+        clearInterval(timerId); // 컴포넌트 언마운트 시 타이머 제거
+        clearTimeout(timeoutId); // 타임아웃 제거
+      }
+    };
+  }, [resultResponse]);
 
   return (
     <>
       <Modal
         title="연습 결과 발표"
         className="study-result"
-        style={{ position: "fixed", top: "100px", left: "100px", zIndex: 999 }}
-        onClick={onClose}
-      >
+        style={{ position: "fixed", top: "100px", left: "100px", zIndex: 999 }}>
         {/* <div className="result-section" onClick={(e) => e.stopPropagation()}>
         <div className="result-section-1 mx-5">
           <div className="p-2">
@@ -146,25 +174,21 @@ const PracticeResult = ({
           <>
             <div
               className="p-5 ps-10 pe-10"
-              onClick={(e) => e.stopPropagation()}
-            >
+              onClick={(e) => e.stopPropagation()}>
               <div
                 className="result-section"
-                style={{ justifyContent: "space-between" }}
-              >
+                style={{ justifyContent: "space-between" }}>
                 <div
                   className="result-section-1"
                   style={{
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-around",
-                  }}
-                >
+                  }}>
                   <div>
                     <div
                       className="rounded-xl w-68 h-52 m-auto"
-                      style={{ width: "100%", height: "100%" }}
-                    >
+                      style={{ width: "100%", height: "100%" }}>
                       {videoPath == "" ? (
                         //  로딩 필요함
                         <div className="loading-overlay">
@@ -187,8 +211,7 @@ const PracticeResult = ({
                         backgroundColor: "#EBEAFA",
                         marginTop: "16px",
                         marginBottom: "16px",
-                      }}
-                    >
+                      }}>
                       <div className="text-2xl mt-5 ps-5 pb-4 ms-5">결과:</div>
                       <div className="text-5xl me-5 pt-2">{grade}</div>
                     </div>
@@ -200,15 +223,13 @@ const PracticeResult = ({
                     <div className="h-12 mb-2 text-center text-xl">
                       <span
                         className="mx-10 font-bold"
-                        style={{ color: "#F3704B" }}
-                      >
+                        style={{ color: "#F3704B" }}>
                         세부 결과
                       </span>
                       <span className="mx-10 text-3xl">|</span>
                       <span
                         onClick={handleDetail}
-                        className="mx-10 text-gray-400 font-bold cursor-pointer"
-                      >
+                        className="mx-10 text-gray-400 font-bold cursor-pointer">
                         피드백 작성
                       </span>
                     </div>
@@ -234,15 +255,13 @@ const PracticeResult = ({
                     <div className="h-12 mb-2 text-center text-xl">
                       <span
                         onClick={handleDetail}
-                        className="mx-10 text-gray-400 font-bold cursor-pointer"
-                      >
+                        className="mx-10 text-gray-400 font-bold cursor-pointer">
                         세부 결과
                       </span>
                       <span className="mx-10 text-3xl">|</span>
                       <span
                         className="mx-10 font-bold"
-                        style={{ color: "#F3704B" }}
-                      >
+                        style={{ color: "#F3704B" }}>
                         피드백 작성
                       </span>
                     </div>
@@ -258,8 +277,7 @@ const PracticeResult = ({
                           style={{
                             backgroundColor: "#343B71",
                             color: "#FFFFFF",
-                          }}
-                        >
+                          }}>
                           나의 피드백
                         </div>
                         <div style={{ overflow: "auto" }}>
@@ -275,8 +293,9 @@ const PracticeResult = ({
                               height: "150px",
                               resize: "none",
                             }}
-                            onChange={(e) => setMyFeedback(e.target.value)}
-                          ></textarea>
+                            onChange={(e) =>
+                              setMyFeedback(e.target.value)
+                            }></textarea>
                         </div>
                         <div align="right">
                           <button
@@ -286,8 +305,7 @@ const PracticeResult = ({
                               color: "#FFFFFF",
                               borderRadius: "10%",
                             }}
-                            onClick={handleSubmit}
-                          >
+                            onClick={handleSubmit}>
                             작성
                           </button>
                         </div>
@@ -300,15 +318,13 @@ const PracticeResult = ({
                             height: "90px",
                             display: "flex",
                             flexDirection: "column",
-                          }}
-                        >
+                          }}>
                           <div
                             className="text-xl text-center font-bold py-1"
                             style={{
                               backgroundColor: "#343B71",
                               color: "#FFFFFF",
-                            }}
-                          >
+                            }}>
                             오늘의 스피치 명언
                           </div>
                           <div
@@ -319,8 +335,7 @@ const PracticeResult = ({
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
-                            }}
-                          >
+                            }}>
                             {sentence}
                           </div>
                         </div>
@@ -330,9 +345,11 @@ const PracticeResult = ({
                 </div>
               </div>
               <div align="right">
-                <button onClick={onClose} style={{ color: "#F3704B" }}>
-                  닫기
-                </button>
+                <div className="h-10 text-end">
+                  <button onClick={handleSkip} className="ms-3">
+                    skip
+                  </button>
+                </div>
               </div>
             </div>
           </>

@@ -90,7 +90,7 @@ const Step2 = () => {
     <>
       <div className="flex justify-center">
         <a href="/">
-          <img src="images/ICON_similar_white.png" className="w-36 mt-24" />
+          <img src="/images/ICON_similar_white.png" className="w-36 mt-24" />
         </a>
       </div>
       <div className="LoginBox mb-36 py-4 rounded-xl mx-auto relative">
@@ -119,7 +119,7 @@ const Step2 = () => {
           인증하기
         </button>
         <div className="w-80 mx-auto mt-5 mb-10">
-          <img src="images/Step2.png" />
+          <img src="/images/Step2.png" />
         </div>
         <div className="flex justify-center-10">
           <button

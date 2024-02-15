@@ -89,7 +89,7 @@ const ResetPwPage = () => {
                   style={{ overflow: "hidden", borderRadius: "5%" }}>
                   {!profile.profileImg && (
                     <img
-                      src="images/Profile.png"
+                      src="/images/Profile.png"
                       style={{
                         width: "100%",
                         height: "100%",

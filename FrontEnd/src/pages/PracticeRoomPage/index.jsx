@@ -80,6 +80,8 @@ const PracticeRoomPage = () => {
   const addDecibel = (newDecibel) => {
     if (newDecibel !== 0) {
       decibels.current.push(newDecibel);
+      // 아침주석
+      console.log("데시벨(점수 측정) : " + newDecibel);
     }
 
     if (tmpDecibels.current.length >= 30) {
@@ -97,22 +99,20 @@ const PracticeRoomPage = () => {
       isSilent
     ) {
       isFeedback.current = true;
-      changeFeedback("침묵이 길어지고 있어요!");
+      changeFeedback1("침묵이 길어지고 있어요!");
     } else if (
       !isFeedback.current &&
       !isFeedback2.current &&
       tmpDecibels.current.slice(-1)[0] >= 70
     ) {
       isFeedback.current = true;
-      changeFeedback("목소리가 너무 크게 들려요!");
+      changeFeedback1("목소리가 너무 크게 들려요!");
     }
   };
 
-  useEffect(() => {
-    // 로직 작성
-    // 평가 요청을 받았을 떄 속도가 빠르다, 발음 점수가 낮다.
-    // 실시간 데시벨 측정으로 목소리 크기
+  const [state, setState] = useState(true);
 
+  useEffect(() => {
     if (navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: true })
@@ -138,11 +138,13 @@ const PracticeRoomPage = () => {
     return () => {
       if (stream) {
         stream.getTracks().forEach((track) => track.stop());
-        videoRef.current.srcObject = null;
+        if (videoRef.current) {
+          videoRef.current.srcObject = null;
+        }
       }
 
       if (!isLast.current) {
-        console.log("녹화 중 종료");
+        // console.log("녹화 중 종료");
         speechEnd();
       }
     };
@@ -158,6 +160,10 @@ const PracticeRoomPage = () => {
       });
     }
   };
+
+  useEffect(() => {
+    setState(!state);
+  }, [video]);
 
   // 시작 버튼 누르면
   const speechStart = (e) => {
@@ -219,10 +225,7 @@ const PracticeRoomPage = () => {
       }
     );
 
-    // 비동기 처리 헷갈리니까 5초 뒤에 하자
-    setTimeout(() => {
-      recordResult();
-    }, 5000);
+    recordResult();
   };
 
   const recordResult = () => {
@@ -302,28 +305,36 @@ const PracticeRoomPage = () => {
         }, 5000);
       })
       .catch((error) => {
-        console.error("오디오 스트림을 가져오는 중 오류 발생:", error);
+        // console.error("오디오 스트림을 가져오는 중 오류 발생:", error);
       });
   };
 
-  const changeFeedback = (fb) => {
+  // 데시벨 관련
+  const changeFeedback1 = (fb) => {
+    // 설정된 피드백이 없는 경우만 수정
     setFeedback(fb);
 
     setTimeout(() => {
-      if (
-        isFeedback2.current == true ||
-        (isFeedback.current == true && isFeedback2.current == false)
-      ) {
+      // 피드백2가 없으면 초기화
+      if (isFeedback2.current == false) {
         setFeedback("잘하고 있어요!");
       }
 
       setTimeout(() => {
-        if (isFeedback.current == true) {
-          isFeedback.current = false;
-        } else if (isFeedback2.current == true) {
-          isFeedback2.current = false;
-        }
+        // 피드백1 다시 실행 가능 하도록
+        isFeedback.current = false;
       }, 2500);
+    }, 2500);
+  };
+
+  // 점수 관련
+  const changeFeedback2 = (fb) => {
+    isFeedback2.current = true;
+    setFeedback(fb);
+
+    setTimeout(() => {
+      isFeedback2.current = false;
+      setFeedback("잘하고 있어요!");
     }, 2500);
   };
 
@@ -355,7 +366,8 @@ const PracticeRoomPage = () => {
       token,
       formData,
       (response) => {
-        // console.log("음성 평가 결과");
+        // 아침주석
+        console.log("음성 평가 결과");
         console.log(
           "개수 : " +
             response.data.data.scriptCnt +
@@ -364,19 +376,19 @@ const PracticeRoomPage = () => {
         );
 
         // 실시간 피드백
-        if (response.data.scriptCnt > 28) {
-          changeFeedback("조금만 천천히 말해주세요!");
-        } else if (response.data.score < 3) {
-          changeFeedback("발음을 정확하게 해주세요!");
+        if (response.data.data.scriptCnt > 28) {
+          changeFeedback2("조금만 천천히 말해주세요!");
+        } else if (response.data.data.score < 3) {
+          changeFeedback2("발음을 정확하게 해주세요!");
         }
 
-        if(isLast.current){
+        if (isLast.current) {
           setResultResponse(true);
         }
       },
       (error) => {
         // console.log(error);
-        if(isLast.current){
+        if (isLast.current) {
           setResultResponse(true);
         }
       }
@@ -469,7 +481,9 @@ const PracticeRoomPage = () => {
   const leaveSession = () => {
     if (stream) {
       stream.getTracks().forEach((track) => track.stop());
-      videoRef.current.srcObject = null;
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
     }
     navigate("/practice1");
   };
@@ -510,6 +524,9 @@ const PracticeRoomPage = () => {
 
             const micDecibel = calcDecibel(micAverage);
 
+            // 아침주석
+            console.log("데시벨(테스트) : " + micDecibel);
+
             if (micDecibel < 30) {
               setMicTestContent("목소리가 거의 들리지 않아요!");
               setMicColor("red");
@@ -519,7 +536,7 @@ const PracticeRoomPage = () => {
             } else if (micDecibel <= 65) {
               setMicTestContent("목소리의 크기가 적당해요!");
               setMicColor("green");
-            } else if (micDecibel < 75) {
+            } else if (micDecibel < 80) {
               setMicTestContent("조금만 작게 말해주세요!");
               setMicColor("orange");
             } else {
@@ -603,10 +620,24 @@ const PracticeRoomPage = () => {
         >
           <div>
             <video
-              style={{ width: "530px", height: "500px" }}
+              style={{
+                display: video ? "block" : "none",
+                width: "530px",
+                height: "500px",
+              }}
               ref={videoRef}
               autoPlay
               muted
+            />
+            <img
+              style={{
+                display: video ? "none" : "block",
+                width: "530px",
+                height: "400px",
+                marginTop: "50px",
+                marginBottom: "50px",
+              }}
+              src="/images/videoimage_disabled.png"
             />
           </div>
           <div

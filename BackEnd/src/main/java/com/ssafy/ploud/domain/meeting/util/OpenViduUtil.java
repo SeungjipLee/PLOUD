@@ -138,14 +138,14 @@ public class OpenViduUtil {
                                 break;
                             }
                         }
-
-                        this.mapSessions.get(sessionId).close();
                     }
                 } else{
                     throw new CustomException(ResponseCode.OPENBVIDU_TOKEN_ERROR);
                 }
             }else{
-                throw new CustomException(ResponseCode.SESSION_NOT_FOUND);
+                log.debug("OPENVIDU LEAVE SESSION - 세션을 찾을 수 없음.");
+                // 방장이 종료하여 강제로 나가지는 경우 방장은 먼저 leavesSession하기 때문에 에러로 판단한다.
+//                throw new CustomException(ResponseCode.SESSION_NOT_FOUND);
             }
         }catch (Exception e){
             throw new CustomException(ResponseCode.OPENVIDU_ERROR);

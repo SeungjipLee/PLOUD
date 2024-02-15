@@ -30,20 +30,20 @@ const PracticeResult = ({ onClose, speechId }) => {
   }
 
   useEffect(() => {
-    if (scores.grade < 20) {
-      setGrade('E');
+    if (scores.grade < 40) {
+      setGrade("E");
       setResultTextColor("#393939");
-    } else if (scores.grade < 40) {
-      setGrade('D');
-      setResultTextColor("#0C134F");
     } else if (scores.grade < 60) {
-      setGrade('C');
+      setGrade("D");
+      setResultTextColor("#0C134F");
+    } else if (scores.grade < 75) {
+      setGrade("C");
       setResultTextColor("#624637");
-    } else if (scores.grade < 80) {
-      setGrade('B');
+    } else if (scores.grade < 90) {
+      setGrade("B");
       setResultTextColor("#c0c0c0");
     } else {
-      setGrade('A');
+      setGrade("A");
       setResultTextColor("#ffd700");
     }
   }, [scores.grade]); 
