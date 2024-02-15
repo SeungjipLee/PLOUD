@@ -142,7 +142,7 @@ const PracticeRoomPage = () => {
       }
 
       if (!isLast.current) {
-        console.log("녹화 중 종료");
+        // console.log("녹화 중 종료");
         speechEnd();
       }
     };
@@ -302,7 +302,7 @@ const PracticeRoomPage = () => {
         }, 5000);
       })
       .catch((error) => {
-        console.error("오디오 스트림을 가져오는 중 오류 발생:", error);
+        // console.error("오디오 스트림을 가져오는 중 오류 발생:", error);
       });
   };
 
@@ -356,12 +356,12 @@ const PracticeRoomPage = () => {
       formData,
       (response) => {
         // console.log("음성 평가 결과");
-        console.log(
-          "개수 : " +
-            response.data.data.scriptCnt +
-            ", 점수 : " +
-            response.data.data.score
-        );
+        // console.log(
+        //   "개수 : " +
+        //     response.data.data.scriptCnt +
+        //     ", 점수 : " +
+        //     response.data.data.score
+        // );
 
         // 실시간 피드백
         if (response.data.scriptCnt > 28) {

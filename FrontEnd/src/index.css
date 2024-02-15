@@ -110,10 +110,6 @@
   text-decoration: none;
 }
 
-.Button :hover{
-  cursor: pointer;
-}
-
 .study-category-button {
   min-width: 60px;
   height: 35px;
@@ -320,8 +316,8 @@
   height: 30px;
 }
 
-.presenter-button :hover {
-  cursor: pointer;
+.presenter-button:hover {
+  cursor: pointer !important;
 }
 
 .private-icon {

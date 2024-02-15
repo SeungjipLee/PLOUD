@@ -38,26 +38,26 @@ const StudyResult = ({ onClose, speechId, videoResponse, resultResponse }) => {
     if (videoResponse === true) {
       // -> 다시 요청
       recordResultGet();
-      console.log("결과 페이지 비디오 다시 요청");
+      // console.log("결과 페이지 비디오 다시 요청");
 
       // 스피너 종료
     } else if (videoResponse === false) {
       // 비디오를 올리지 못함.
       setVideoPath("False");
-      console.log("결과 페이지 비디오 올리지 못함");
+      // console.log("결과 페이지 비디오 올리지 못함");
 
       // 스피너 종료
     }
   }, [videoResponse]);
 
   const recordResultGet = () => {
-    console.log("결과 가쟈와~");
+    // console.log("결과 가쟈와~");
 
     getRecordResult(
       token,
       resultId,
       (res) => {
-        console.log(res.data.data);
+        // console.log(res.data.data);
         setSpeech(res.data.data.speech);
         setScores(res.data.data.score);
         setFeedbacks(res.data.data.feedbacks);
@@ -65,23 +65,25 @@ const StudyResult = ({ onClose, speechId, videoResponse, resultResponse }) => {
           setVideoPath(res.data.data.video.videoPath);
         }
       },
-      (err) => console.log(err)
+      (err) => {
+        // console.log(err)
+      }
     );
 
     setLoading(false); // 로딩 종료
   };
 
   useEffect(() => {
-    if (scores.grade < 20) {
+    if (scores.grade < 40) {
       setGrade("E");
       setResultTextColor("#393939");
-    } else if (scores.grade < 40) {
+    } else if (scores.grade < 60) {
       setGrade("D");
       setResultTextColor("#0C134F");
-    } else if (scores.grade < 60) {
+    } else if (scores.grade < 75) {
       setGrade("C");
       setResultTextColor("#624637");
-    } else if (scores.grade < 80) {
+    } else if (scores.grade < 90) {
       setGrade("B");
       setResultTextColor("#c0c0c0");
     } else {
@@ -142,10 +144,12 @@ const StudyResult = ({ onClose, speechId, videoResponse, resultResponse }) => {
           setMessage("내 피드백이 등록되었습니다");
           setAlert1(true);
         },
-        (err) => console.log(err)
+        (err) => {
+          // console.log(err)
+        }
       );
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
