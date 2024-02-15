@@ -650,8 +650,9 @@ const StudyRoomPage = () => {
       denyMics();
 
       console.log("여기서 찍혀야 함");
-      console.log(publisher);
+      // console.log(publisher);
 
+      console.log("나 : " + nickname);
       console.log("신호 보낸 사람 : " + username);
       console.log("발표자 : " + presenter);
       console.log("일치 여부 : " + presenter !== nickname);
