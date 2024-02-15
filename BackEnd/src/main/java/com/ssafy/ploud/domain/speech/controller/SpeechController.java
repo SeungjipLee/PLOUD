@@ -55,10 +55,9 @@ public class SpeechController {
     @Operation(summary = "녹화 종료", description = "녹화를 종료하고, 데시벨 평가를 진행한다.")
     @PostMapping("/end")
     public ApiResponse<?> endSpeech(@RequestBody SpeechEndRequest speechEndRequest) {
-        speechService.endAndDecibel(speechEndRequest);
         log.debug("---------- 녹화 종료 요청 ----------");
         log.debug("SessionId : " + speechEndRequest.getSessionId() +", SpeechID : " + speechEndRequest.getSpeechId());
-
+        speechService.endAndDecibel(speechEndRequest);
         return ApiResponse.ok("성공");
     }
 

@@ -871,7 +871,7 @@ p {
 .video-div-size-2 {
 }
 
-.video-div-size-2 video {
+.video-div-size-2 video, .video-div-size-2 img {
   /* padding-top: 150px;
   padding-left: 20px;
   padding-right: 20px; */
