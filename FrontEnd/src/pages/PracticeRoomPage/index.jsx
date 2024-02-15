@@ -621,7 +621,7 @@ const PracticeRoomPage = () => {
                 muted
               />
             ) : (
-              <div className="mic-off">
+              <div className="practice-video-off">
                 <img src="/images/videoimage_disabled.png" />
               </div>
             )}
