@@ -564,7 +564,8 @@
   bottom: 10vh;
   right: 30px;
   width: 350px;
-  height: 730px;
+  max-height: 80vh;
+  min-height: 40vh;
   /* background-color: #060515; */
   color: white;
 }
