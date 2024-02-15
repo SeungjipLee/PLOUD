@@ -1172,10 +1172,9 @@ const StudyRoomPage = () => {
     }
 
     if (videoStream) {
-      videoStream.getTracks().forEach((track) => track.stop());
-      if (videoRef.current) {
-        videoRef.current.srcObject = null;
-      }
+      videoStream.getVideoTracks().forEach((track) => {
+        track.enabled = !track.enabled;
+      });
     }
 
     sendSignal("videoChange", "누군가의 비디오 상태 변경");
