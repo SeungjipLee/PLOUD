@@ -27,6 +27,8 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("유즈 이펙트~");
+
     setTimeout(() => {
       recordResultGet();
     }, 5000);
@@ -45,11 +47,13 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
   }, [videoResponse]);
 
   const recordResultGet = () => {
+    console.log("결과 가쟈와~");
 
     getRecordResult(
       token,
       resultId,
       (res) => {
+        console.log(res.data.data);
         setSpeech(res.data.data.speech);
         setScores(res.data.data.score);
         setFeedbacks(res.data.data.feedbacks);
@@ -57,9 +61,7 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
           setVideoPath(res.data.data.video.videoPath);
         }
       },
-      (err) => {
-        // console.log(err)
-      }
+      (err) => console.log(err)
     );
 
     setLoading(false); // 로딩 종료
@@ -136,12 +138,10 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
           setMessage("내 피드백이 등록되었습니다");
           setAlert1(true);
         },
-        (err) => {
-          // console.log(err)
-        }
+        (err) => console.log(err)
       );
     } catch (err) {
-      // console.log(err);
+      console.log(err);
     }
   };
 
@@ -279,7 +279,7 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
                     <div>
                       <div
                         align="center"
-                        className="text-xl text-center font-bold py-1"
+                        className="text-xl text-center font-bold py-2 px-4 "
                         style={{ backgroundColor: "#343B71", color: "#FFFFFF" }}
                       >
                         시간별 피드백
@@ -298,7 +298,7 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
                     <div>
                       <div
                         align="center"
-                        className="text-xl text-center font-bold py-1"
+                        className="text-xl text-center font-bold py-2 px-4"
                         style={{ backgroundColor: "#343B71", color: "#FFFFFF" }}
                       >
                         나의 피드백
