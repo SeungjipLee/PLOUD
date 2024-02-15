@@ -134,7 +134,7 @@ public class SpeechServiceImpl implements SpeechService {
         }
 
         // 데시벨 평가
-        int volume = 65;//speechAssessUtil.decibels(speechEndRequest.getDecibels());
+        int volume = speechAssessUtil.decibels(speechEndRequest.getDecibels());
         SpeechEntity speech = speechRepository.findById(speechEndRequest.getSpeechId())
             .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
         speech.updateSpeechEndTime();
