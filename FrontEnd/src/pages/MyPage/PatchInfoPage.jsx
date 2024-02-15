@@ -174,7 +174,7 @@ const PatchInfoPage = () => {
                   )}
                   {!preview && !profile.profileImg && (
                     <img
-                      src="/images/Profile.PNG"
+                    src="/images/Profile.PNG"
                       style={{
                         objectFit: "cover",
                         weight: "100%",

@@ -187,7 +187,7 @@ const CreateBoard = () => {
               <div className="rounded-md border border-black rounded-2xl rounded-md mt-3 bg-white">
                 <div className="flex">
                   <button className="bg-white h-7" onClick={handleOpenModal}>
-                    <img src="images/createBoard.png" className="h-full ml-2" />{" "}
+                    <img src="/images/createBoard.png" className="h-full ml-2" />{" "}
                   </button>
                   {isSelectedVideo && (
                     <div className="pt-0.5">

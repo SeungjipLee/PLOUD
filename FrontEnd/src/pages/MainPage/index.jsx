@@ -133,7 +133,7 @@ const MainPage = () => {
                 className="subtitleImg me-12 mb-24 animatable"
                 onClick={() => handleLink("/practice1")}
               >
-                <img src="images/solo.png" />
+                <img src="/images/solo.png" />
                 <div className="text cursor-pointer font-bold ">
                   연습모드 바로가기
                 </div>
@@ -142,7 +142,7 @@ const MainPage = () => {
                 className="subtitleImg mb-24 animatable"
                 onClick={() => handleLink("/study")}
               >
-                <img src="images/study.png" />
+                <img src="/images/study.png" />
                 <div className="text cursor-pointer font-bold">
                   스터디룸 바로가기
                 </div>
@@ -155,7 +155,7 @@ const MainPage = () => {
             className="bg-white animatable"
           >
             <img
-              src="images/AboutUs.png"
+              src="/images/AboutUs.png"
               alt="about us"
               style={{
                 position: "absolute",

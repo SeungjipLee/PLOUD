@@ -33,7 +33,7 @@ const RoomCard = ({ data, children }) => {
           <p>{managerId}</p>
           <div>{categoryName()}</div>
           <div className="pt-2" style={{"display":"flex", alignItems: "center"}}>
-            <img src="images/person_emoji.png" alt="" align="left" style={{position: "static", "width":"20px", "height":"20px"}}/>        
+            <img src="/images/person_emoji.png" alt="" align="left" style={{position: "static", "width":"20px", "height":"20px"}}/>        
             <span className="pl-3">  {currentPeople} / {maxPeople}</span>
           </div>
           {children}
