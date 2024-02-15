@@ -224,7 +224,9 @@ const StudyRoomPage = () => {
       setMode("3");
       sendSignal("screenOn", "공유시작");
     } catch {
-      (err) => console.log(err);
+      (err) => {
+        // console.log(err);
+      }
     }
   };
 
@@ -280,7 +282,19 @@ const StudyRoomPage = () => {
     if (chatAreaRef.current) {
       chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
     }
-  }, [chatList]);
+  }, [chatList, chat]);
+
+  useEffect(() => {
+    if (publisher) {
+      publisher.publishAudio(mic); // 마이크 상태 토글
+
+      if (mic) {
+        sendSignal("micChange", "on");
+      } else {
+        sendSignal("micChange", "off");
+      }
+    }
+  }, [mic])
 
   // 신고 창 닫기
   const closeModal = () => {
@@ -296,16 +310,16 @@ const StudyRoomPage = () => {
 
   // 발표자 권한 변경
   const changePresenter = (userId, index) => {
-    console.log("clicked");
+    // console.log("clicked");
     const users = userList.map((u, i) => {
       if (u.presenter) return { ...u, presenter: false };
       else if (index === i) return { ...u, presenter: true };
       return u;
     });
-    console.log(users);
+    // console.log(users);
     setUserList(users);
     setPresenter(userId);
-    console.log("[발표자 권한 버튼 클릭 시 시그널 보냄]");
+    // console.log("[발표자 권한 버튼 클릭 시 시그널 보냄]");
     sendSignal("WhoIsP", userId);
   };
 
@@ -327,7 +341,7 @@ const StudyRoomPage = () => {
 
   useEffect(() => {
     if (!presenter) return;
-    console.log("[presenter]", presenter);
+    // console.log("[presenter]", presenter);
     if (OV.current == null) joinSession();
   }, [presenter]);
 
@@ -416,7 +430,7 @@ const StudyRoomPage = () => {
       setMode("1");
     }
 
-    console.log("녹음 시작");
+    // console.log("녹음 시작");
 
     const params = {
       title: title,
@@ -431,7 +445,7 @@ const StudyRoomPage = () => {
       (res) => {
         speechId.current = res.data.data.speechId;
 
-        console.log("발표 시작 : " + speechId.current);
+        // console.log("발표 시작 : " + speechId.current);
 
         startRecording();
         videoRecordingStart();
@@ -442,7 +456,9 @@ const StudyRoomPage = () => {
         setRecord(false);
         setResultResponse(false);
       },
-      (err) => console.log(err)
+      (err) => {
+        // console.log(err)
+      }
     );
 
     setRecord(true);
@@ -462,14 +478,14 @@ const StudyRoomPage = () => {
 
     // On every new Stream received...
     session.current.on("streamCreated", (event) => {
-      console.log(tag, "누가 접속했어요");
+      // console.log(tag, "누가 접속했어요");
 
       if (room.managerId === nickname) {
-        console.log("[접속 시 시그널 보냄]", presenter);
+        // console.log("[접속 시 시그널 보냄]", presenter);
         sendSignal("WhoIsP", presenter);
       }
 
-      console.log(event.stream.connection.data.split("%/%"));
+      // console.log(event.stream.connection.data.split("%/%"));
       var tmp = event.stream.connection.data.split("%/%");
       var nickname2 = JSON.parse(tmp[0]).clientData;
       if (nickname2.split("//").length == 1) {
@@ -495,20 +511,20 @@ const StudyRoomPage = () => {
     session.current.on("streamDestroyed", (event) => {
       userSize.current -= 1;
 
-      console.log(tag, "누가 떠났어요");
+      // console.log(tag, "누가 떠났어요");
 
       var tmp = event.stream.connection.data.split("%/%");
       var nickname = JSON.parse(tmp[0]).clientData;
       removeUser(nickname);
 
-      console.log(nickname + "님이 떠남");
+      // console.log(nickname + "님이 떠남");
 
       deleteSubscriber(event.stream.streamManager);
     });
 
     // On every asynchronous exception...
     session.current.on("exception", (exception) => {
-      console.warn(tag, exception);
+      // console.warn(tag, exception);
     });
 
     // 채팅 수신
@@ -549,7 +565,7 @@ const StudyRoomPage = () => {
     // 발표자 시그널 수신
     session.current.on("signal:WhoIsP", (event) => {
       var p = JSON.parse(event.data).chatvalue;
-      console.log("[발표 시그널 수신함]", p);
+      // console.log("[발표 시그널 수신함]", p);
       setPresenter(p);
       setUserList((userList) =>
         userList.map((user, i) => {
@@ -563,7 +579,7 @@ const StudyRoomPage = () => {
     // 코멘트 입력 여부 수신
     session.current.on("signal:Typing", (event) => {
       var p = JSON.parse(event.data).chatvalue;
-      console.log("[코멘트 입력중 수신함]");
+      // console.log("[코멘트 입력중 수신함]");
 
       const allIndexes = Array.from(
         { length: userSize.current },
@@ -575,10 +591,10 @@ const StudyRoomPage = () => {
         (index) => !typingList.includes(index)
       );
 
-      console.log("유저 리스트 사이즈 : " + userList.length);
+      // console.log("유저 리스트 사이즈 : " + userList.length);
 
       // console.log("전부 : " + allIndexes);
-      console.log("유저 수 : " + userSize.current);
+      // console.log("유저 수 : " + userSize.current);
       // console.log("현재 피드백 수 : " + typingList.length);
       // console.log("가능한 수 : " + availableIndexes.length);
 
@@ -622,7 +638,7 @@ const StudyRoomPage = () => {
       var micState = JSON.parse(event.data).chatvalue;
 
       setMicOffUserList((prevList) => {
-        console.log(prevList)
+        // console.log(prevList)
         const exists = prevList.includes(username);
         // 이미 마이크를 끈 사람 리스트에 있고 마이크를 켰다면 리스트에서 제외하기
         if (exists && micState == "on") {
@@ -672,8 +688,8 @@ const StudyRoomPage = () => {
     session.current.on("signal:rstart", (event) => {
       var username = JSON.parse(event.data).nickname;
       var content = JSON.parse(event.data).chatvalue;
-      console.log("[녹화 시작 신호 받음]");
-      console.log(username, nickname);
+      // console.log("[녹화 시작 신호 받음]");
+      // console.log(username, nickname);
 
       // console.log(publisher);
 
@@ -739,7 +755,7 @@ const StudyRoomPage = () => {
       .connect(ovToken, { clientData: nickname })
       .then(async () => {
         // --- 5) Get your own camera stream ---
-        console.log("Session 연결중");
+        // console.log("Session 연결중");
 
         let tmpPublisher = await OV.current.initPublisherAsync(undefined, {
           audioSource: undefined,
@@ -791,7 +807,7 @@ const StudyRoomPage = () => {
   };
 
   const leaveSession = () => {
-    console.log(tag, "leaveSession");
+    console.log("leaveSession");
     sendSignal("chat", "님이 퇴장하였습니다!");
 
     if (room.managerId == nickname) {
@@ -882,7 +898,7 @@ const StudyRoomPage = () => {
         vRecorder.start();
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
   };
 
@@ -901,7 +917,7 @@ const StudyRoomPage = () => {
     tmp.push(data);
 
     var videoPlayTime = new Date().getTime() - videoStartTime.current;
-    console.log("영상 길이 : " + videoPlayTime / 1000 + "(초)");
+    // console.log("영상 길이 : " + videoPlayTime / 1000 + "(초)");
 
     const videoFile = new Blob(tmp, { type: "video/webm" });
     const vFormData = new FormData();
@@ -913,11 +929,11 @@ const StudyRoomPage = () => {
       token,
       vFormData,
       (response) => {
-        console.log("영상 업로드 성공");
+        // console.log("영상 업로드 성공");
         setVideoResponse(true);
       },
       (error) => {
-        console.log("영상 업로드 실패");
+        // console.log("영상 업로드 실패");
         setVideoResponse(false);
       }
     );
@@ -925,7 +941,7 @@ const StudyRoomPage = () => {
 
   // 녹화 종료 요청
   const speechEnd = () => {
-    console.log("녹화 종료");
+    // console.log("녹화 종료");
     isLast.current = true;
     // 녹화 중지 함수 실행
     stopRecording();
@@ -943,7 +959,7 @@ const StudyRoomPage = () => {
         // console.log(response);
       },
       (error) => {
-        console.log(error);
+        // console.log(error);
       }
     );
 
@@ -972,7 +988,7 @@ const StudyRoomPage = () => {
         // console.log(response);
       },
       (error) => {
-        console.log(error);
+        // console.log(error);
       }
     );
     setFeedback("");
@@ -981,7 +997,7 @@ const StudyRoomPage = () => {
   // ---------- Speech Method ----------
   const addDecibel = (newDecibel) => {
     if (newDecibel != 0) {
-      console.log("데시벨 : " + newDecibel);
+      // console.log("데시벨 : " + newDecibel);
       decibels.current.push(newDecibel);
     }
   };
@@ -1060,7 +1076,7 @@ const StudyRoomPage = () => {
         }, 5000);
       })
       .catch((error) => {
-        console.error("오디오 스트림을 가져오는 중 오류 발생:", error);
+        // console.error("오디오 스트림을 가져오는 중 오류 발생:", error);
       });
   };
 
@@ -1090,7 +1106,7 @@ const StudyRoomPage = () => {
     var tmp = [];
     tmp.push(data);
 
-    console.log("평가요청 : " + speechId.current);
+    // console.log("평가요청 : " + speechId.current);
 
     const audioFile = new Blob(tmp, { type: "audio/wav" });
     const formData = new FormData();
@@ -1103,13 +1119,13 @@ const StudyRoomPage = () => {
       formData,
       (response) => {
         // console.log(response.data);
-        console.log("음성 평가 결과");
-        console.log(
-          "개수 : " +
-            response.data.scriptCnt +
-            ", 점수 : " +
-            response.data.score
-        );
+        // console.log("음성 평가 결과");
+        // console.log(
+        //   "개수 : " +
+        //     response.data.scriptCnt +
+        //     ", 점수 : " +
+        //     response.data.score
+        // );
 
         if(isLast.current){
           setResultResponse(true);
@@ -1117,7 +1133,7 @@ const StudyRoomPage = () => {
       },
       (error) => {
         // console.log(error);
-        console.log("평가 실패");
+        // console.log("평가 실패");
         if(isLast.current){
           setResultResponse(true);
         }
@@ -1127,7 +1143,7 @@ const StudyRoomPage = () => {
 
   // 비디오 핸들러
   const toggleVideo = () => {
-    console.log("비디오 상태 수정");
+    // console.log("비디오 상태 수정");
 
     const newVideo = !video;
 
@@ -1140,20 +1156,11 @@ const StudyRoomPage = () => {
 
   // 마이크 핸들러
   const toggleMic = () => {
-    console.log("오디오 상태 수정");
+    // console.log("오디오 상태 수정");
 
     const newMic = !mic;
 
     setMic(newMic); // 상태 업데이트
-    if (publisher) {
-      publisher.publishAudio(newMic); // 마이크 상태 토글
-
-      if (newMic) {
-        sendSignal("micChange", "on");
-      } else {
-        sendSignal("micChange", "off");
-      }
-    }
   };
 
   // const toggleMicTest = () => {
