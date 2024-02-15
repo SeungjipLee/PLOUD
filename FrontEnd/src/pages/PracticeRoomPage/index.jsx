@@ -152,14 +152,18 @@ const PracticeRoomPage = () => {
 
   const toggleVideo = () => {
     const newVideo = !video;
+    setVideo(newVideo);
 
     if (stream) {
       stream.getVideoTracks().forEach((track) => {
         track.enabled = !track.enabled;
       });
     }
-    setVideo(newVideo);
   };
+
+  useEffect(() => {
+    setState(!state);
+  }, [video]);
 
   // 시작 버튼 누르면
   const speechStart = (e) => {
@@ -477,7 +481,7 @@ const PracticeRoomPage = () => {
   const leaveSession = () => {
     if (stream) {
       stream.getTracks().forEach((track) => track.stop());
-      if(videoRef.current){
+      if (videoRef.current) {
         videoRef.current.srcObject = null;
       }
     }
@@ -615,24 +619,26 @@ const PracticeRoomPage = () => {
           }}
         >
           <div>
-            {video ? (
-              <video
-                style={{ width: "530px", height: "500px" }}
-                ref={videoRef}
-                autoPlay
-                muted
-              />
-            ) : (
-              <img
-                style={{
-                  width: "530px",
-                  height: "400px",
-                  marginTop: "50px",
-                  marginBottom: "50px",
-                }}
-                src="/images/videoimage_disabled.png"
-              />
-            )}
+            <video
+              style={{
+                display: video ? "block" : "none",
+                width: "530px",
+                height: "500px",
+              }}
+              ref={videoRef}
+              autoPlay
+              muted
+            />
+            <img
+              style={{
+                display: video ? "none" : "block",
+                width: "530px",
+                height: "400px",
+                marginTop: "50px",
+                marginBottom: "50px",
+              }}
+              src="/images/videoimage_disabled.png"
+            />
           </div>
           <div
             style={{
