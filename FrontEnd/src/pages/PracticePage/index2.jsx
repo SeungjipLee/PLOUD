@@ -32,8 +32,7 @@ const NewsPage = ({ setScriptid, setTitle }) => {
       {list.map((i, index) => (
         <div
           key={index}
-          className="rounded-md px-1 pt-1 my-2 text-center bg-white text-sm"
-        >
+          className="rounded-md px-1 pt-1 my-2 text-center bg-white text-sm">
           <hr />
           <button
             onClick={() => {
@@ -42,8 +41,7 @@ const NewsPage = ({ setScriptid, setTitle }) => {
             }}
             className="mt-2"
             style={{ textAlign: "left" }}
-            title={i.scriptTitle}
-          >
+            title={i.scriptTitle}>
             {i.scriptTitle.length > 32
               ? `${i.scriptTitle.substring(0, 32)}...`
               : i.scriptTitle}
@@ -80,8 +78,7 @@ const SpeechPage = ({ setScriptid, setTitle }) => {
       {list.map((i, index) => (
         <div
           key={index}
-          className="rounded-md px-1 pt-1 my-2 text-center bg-white text-sm"
-        >
+          className="rounded-md px-1 pt-1 my-2 text-center bg-white text-sm">
           <hr />
           <button
             onClick={() => {
@@ -90,8 +87,7 @@ const SpeechPage = ({ setScriptid, setTitle }) => {
             }}
             className="mt-2"
             style={{ textAlign: "left" }}
-            title={i.scriptTitle}
-          >
+            title={i.scriptTitle}>
             {i.scriptTitle.length > 32
               ? `${i.scriptTitle.substring(0, 32)}...`
               : i.scriptTitle}
@@ -131,8 +127,7 @@ const ScriptPage = ({ scriptid, setContent }) => {
         overflowWrap: "break-word",
         flex: "auto",
         whiteSpace: "pre-wrap",
-      }}
-    >
+      }}>
       {list.content}
     </div>
   );
@@ -167,8 +162,7 @@ const PracticePage2 = () => {
               <div className="text-xl mainBlueF font-bold">1. 대본 :</div>
               <Link
                 to="/practice1"
-                className="ms-5 bg-blue-300 text-gray-200 rounded-xl px-2 py-1"
-              >
+                className="ms-5 bg-blue-300 text-gray-200 rounded-xl px-2 py-1">
                 직접 입력
               </Link>
               <button className="ms-3 bg-blue-500 text-white rounded-xl px-2 py-1">
@@ -200,8 +194,7 @@ const PracticePage2 = () => {
                   </button>
                   <button
                     className="ms-3 bg-blue-300 text-gray-200 rounded-xl px-2 "
-                    onClick={handleCategoty1}
-                  >
+                    onClick={handleCategoty1}>
                     연설
                   </button>
                 </>
@@ -210,8 +203,7 @@ const PracticePage2 = () => {
                 <>
                   <button
                     className="ms-5 bg-blue-300 text-gray-200 rounded-xl px-2 "
-                    onClick={handleCategoty2}
-                  >
+                    onClick={handleCategoty2}>
                     뉴스
                   </button>
                   <button className="ms-3 bg-sky-500 text-white rounded-xl px-2 ">
@@ -228,8 +220,7 @@ const PracticePage2 = () => {
                   <div className="text-xl font-bold ms-5">대본 목록</div>
                   <div
                     className="m-2 h-64 rounded-xl p-1 text-xs"
-                    style={{ overflowY: "auto" }}
-                  >
+                    style={{ overflowY: "auto" }}>
                     {category === 1 && (
                       <NewsPage setScriptid={setScriptid} setTitle={setTitle} />
                     )}
@@ -245,8 +236,7 @@ const PracticePage2 = () => {
                   <div className="text-xl font-bold">미리보기</div>
                   <div
                     className="my-2 me-5 practiceScript h-64 rounded-xl p-4"
-                    style={{ overflowY: "auto" }}
-                  >
+                    style={{ overflowY: "auto" }}>
                     {scriptid !== "" && (
                       <ScriptPage scriptid={scriptid} setContent={setContent} />
                     )}
@@ -265,8 +255,7 @@ const PracticePage2 = () => {
                   predicate: "0",
                   category: category,
                 }}
-                className="self-center mb-2 rounded-xl px-2 py-1 bg-blue-500 text-gray-200 text-lg"
-              >
+                className="self-center mb-2 rounded-xl px-2 py-1 bg-blue-500 text-gray-200 text-lg">
                 <span className="practice-startText">녹화 시작하기</span>
               </Link>
             )}
