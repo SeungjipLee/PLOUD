@@ -62,6 +62,8 @@ const PracticeRoomPage = () => {
   const [video, setVideo] = useState(true);
   const [mic, setMic] = useState(false);
 
+  const [videoResponse, setVideoResponse] = useState(null);
+
   // 피드백 관련
   const tmpDecibels = useRef([]); // 임시 데시벨 데이터 저장(3초)
   const isFeedback = useRef(false);
@@ -413,9 +415,11 @@ const PracticeRoomPage = () => {
       vFormData,
       (response) => {
         console.log("영상 업로드 성공");
+        setVideoResponse(true);
       },
       (error) => {
         console.log("영상 업로드 실패");
+        setVideoResponse(false);
       }
     );
   };
@@ -754,6 +758,7 @@ const PracticeRoomPage = () => {
         <PracticeResult
           onClose={handleResultClose}
           speechId={speechId.current}
+          videoResponse={videoResponse}
         />
       )}
     </div>

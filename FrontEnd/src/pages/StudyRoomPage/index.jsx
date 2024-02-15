@@ -292,6 +292,7 @@ const StudyRoomPage = () => {
 
   // 결과 창 닫기
   const handleResultClose = () => {
+    setVideoResponse(null);
     setResultScreen(false);
     speechId.current = -1;
   };
