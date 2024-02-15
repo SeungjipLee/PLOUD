@@ -899,6 +899,7 @@ const StudyRoomPage = () => {
     videoStartTime.current = new Date().getTime();
 
     const videoState = videoStateRef.current;
+
     navigator.mediaDevices
       .getUserMedia({ video: videoState, audio: true })
       .then((stream) => {
@@ -1644,7 +1645,6 @@ const StudyRoomPage = () => {
             <img
               onClick={() => setConfirmLeave(!confirmLeave)}
               src="/images/exitbutton.png"
-              alt=""
             />
           </div>
           <div className="flex items-center space-x-4">
@@ -1736,7 +1736,7 @@ const StudyRoomPage = () => {
                   const { username, time, content } = item;
                   if (username != "ADMIN") {
                     return (
-                      <div className="chat-box" key={index}>
+                      <div className="chat-box" key={username}>
                         <div className="chat-header">
                           <span className="chat-username">{username}</span>
                           <span className="chat-time">{time}</span>{" "}
@@ -1746,7 +1746,7 @@ const StudyRoomPage = () => {
                     );
                   } else {
                     return (
-                      <div className="chat-box admin-chat">
+                      <div className="chat-box admin-chat" key={username}>
                         <span
                           className="chat-content"
                           style={{ fontWeight: "bold", margin: "1px" }}>
@@ -1840,15 +1840,13 @@ const StudyRoomPage = () => {
           </div>
         )}
         {confirmLeave && (
-          <>
             <div className="study-leave">
               정말 나가시겠습니까?
               <div className="study-leave-buttons">
                 <div onClick={() => setConfirmLeave(false)}>아니요</div>
-                <div onClick={navigate("/study")}>예</div>
+                <div onClick={() => navigate("/study")}>예</div>
               </div>
             </div>
-          </>
         )}
       </div>
       {alert1 && (

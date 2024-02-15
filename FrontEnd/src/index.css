@@ -277,6 +277,11 @@
   display: inline-block;
 }
 
+.card-study-room-info:hover{
+  transform: translateY(-2px); /* 위로 조금 이동 */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* 그림자 효과 추가 */
+}
+
 .card-study-room-div1 {
   display: flex;
   justify-content: space-between;
@@ -429,7 +434,7 @@
   bottom: 20px;
 }
 
-.enter-room :hover{
+.enter-room:hover{
   cursor: pointer;
 }
 
@@ -825,15 +830,15 @@ p {
 }
 
 .overflow-ellipsis:hover {
-  position: absolute;
-  white-space: normal; /* 호버링 시 텍스트 줄 바꿈 활성화 */
-  overflow: visible; /* 호버링 시 텍스트 내용 표시 */
-  text-overflow: unset; /* 줄임표 제거 */
+  /* position: absolute;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset; */
   /* background-color: #B0B0B0; */
-  width: 241px;
+  /* width: 241px;
   height: 100px;
   background: linear-gradient(to bottom, #3a3758, #100e2c);
-  border-radius: 5px;
+  border-radius: 5px; */
 }
 
 .record-form {
