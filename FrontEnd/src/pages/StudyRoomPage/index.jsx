@@ -652,8 +652,10 @@ const StudyRoomPage = () => {
       console.log("여기서 찍혀야 함");
       console.log(publisher);
 
+      console.log("신호 보낸 사람 : " + username);
       console.log("발표자 : " + presenter);
-      if (username != nickname) {
+      console.log("일치 여부 : " + presenter !== nickname);
+      if (presenter !== nickname) {
         // 녹화 시작 신호를 받았을 때 모드가 3이 아니라면 청자는 모드 2번으로 이동
         
         console.log("스크린 공유 : " + otherScreenShare);
