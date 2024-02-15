@@ -897,7 +897,8 @@ p {
 .video-div-size-4 {
 }
 
-.video-div-size-4 video {
+.video-div-size-4 video,
+.video-div-size-4 img {
   /* padding: 10px; */
   width: 400px;
   height: auto;
@@ -907,7 +908,8 @@ p {
 .video-div-size-6 {
 }
 
-.video-div-size-6 video {
+.video-div-size-6 video,
+.video-div-size-6 img {
   /* padding: 10px; */
   width: 400px;
   height: auto;

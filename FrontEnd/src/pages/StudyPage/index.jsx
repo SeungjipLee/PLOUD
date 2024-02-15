@@ -52,7 +52,7 @@ const StudyPage = () => {
 
   // 스터디 리스트 요청
   const searchStudyList = () => {
-    console.log(studyList);
+    // console.log(studyList);
     const data = { categoryId: categoryId, word: word };
     getMeetingList(
       token,
