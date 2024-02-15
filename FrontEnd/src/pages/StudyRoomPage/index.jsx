@@ -643,6 +643,7 @@ const StudyRoomPage = () => {
       var username = JSON.parse(event.data).nickname;
       var content = JSON.parse(event.data).chatvalue;
       console.log("[녹화 시작 신호 받음]");
+      console.log(username, nickname)
       // 참여자라면
       denyMics();
 
@@ -653,6 +654,8 @@ const StudyRoomPage = () => {
         
         if (!screenShareRef.current) { // 이거 mode 안찍힐수도 있다.
           setMode("2");
+        } else {
+          setMode("3")
         }
       }
 
@@ -1234,7 +1237,6 @@ const StudyRoomPage = () => {
                         </div>
                       </div>
                     );
-                    s;
                   }
                 })}
                 {/* {publisher !== mainStreamManager && ( */}
