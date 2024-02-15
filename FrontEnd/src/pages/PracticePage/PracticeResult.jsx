@@ -1,5 +1,5 @@
 import Modal from "../../components/Modal";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import BarChart from "../../components/BarChart";
 import { getRecordResult } from "../../services/record";
@@ -32,6 +32,8 @@ const PracticeResult = ({
 
   const [loading, setLoading] = useState(true);
   const [countdown, setCountdown] = useState(20);
+
+  const isClosed = useRef(false);
 
   const handleDetail = () => {
     setIsDetail(!isDetail);
@@ -124,6 +126,7 @@ const PracticeResult = ({
 
   const handleSkip = () => {
     if (typeof onClose === "function") {
+      isClosed.current = true;
       onClose(); // "skip" 버튼 클릭 시 모달 닫기
     }
   };
@@ -136,7 +139,9 @@ const PracticeResult = ({
 
     // 20초 후 모달 자동 닫기
     const timeoutId = setTimeout(() => {
-      onClose(); // 모달 닫는 함수 호출
+      if(!isClosed.current){
+        onClose(); // 모달 닫는 함수 호출
+      }
     }, 20000);
 
     return () => {
