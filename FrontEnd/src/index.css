@@ -1520,10 +1520,14 @@ a .slideshowDot.active {
 .alert button {
   /* border: 1px solid rgb(170, 168, 168); */
 }
+
+.feedback-time {
+  color: blue;
+}
+
 .feedback-time:hover {
   cursor: pointer;
-  color: blue;
-  opacity: 0.8;
+  text-decoration: underline;
 }
 
 .practiceScript {
