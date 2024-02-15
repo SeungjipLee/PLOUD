@@ -110,7 +110,7 @@ const PracticeRoomPage = () => {
     }
   };
 
-  const videoStateRef = useRef(true);
+  const [state, setState] = useState(true);
 
   useEffect(() => {
     if (navigator.mediaDevices.getUserMedia) {
@@ -152,13 +152,13 @@ const PracticeRoomPage = () => {
 
   const toggleVideo = () => {
     const newVideo = !video;
-    videoStateRef.current = newVideo;
     setVideo(newVideo);
 
     if (stream) {
       stream.getVideoTracks().forEach((track) => {
         track.enabled = !track.enabled;
       });
+      setState(!state);
     }
   };
 
