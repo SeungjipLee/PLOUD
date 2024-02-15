@@ -219,10 +219,7 @@ const PracticeRoomPage = () => {
       }
     );
 
-    // 비동기 처리 헷갈리니까 5초 뒤에 하자
-    setTimeout(() => {
-      recordResult();
-    }, 5000);
+    recordResult();
   };
 
   const recordResult = () => {
