@@ -1142,6 +1142,18 @@ const StudyRoomPage = () => {
     sendSignal("videoChange", "누군가의 비디오 상태 변경");
   };
 
+  useEffect(() => {
+    if (publisher) {
+      publisher.publishAudio(mic); // 마이크 상태 토글
+
+      if (mic) {
+        sendSignal("micChange", "on");
+      } else {
+        sendSignal("micChange", "off");
+      }
+    }
+  }, [mic])
+
   // 마이크 핸들러
   const toggleMic = () => {
     // console.log("오디오 상태 수정");
@@ -1149,15 +1161,6 @@ const StudyRoomPage = () => {
     const newMic = !mic;
 
     setMic(newMic); // 상태 업데이트
-    if (publisher) {
-      publisher.publishAudio(newMic); // 마이크 상태 토글
-
-      if (newMic) {
-        sendSignal("micChange", "on");
-      } else {
-        sendSignal("micChange", "off");
-      }
-    }
   };
 
   // const toggleMicTest = () => {
