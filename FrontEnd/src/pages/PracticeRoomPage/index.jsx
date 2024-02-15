@@ -117,17 +117,17 @@ const PracticeRoomPage = () => {
     // 평가 요청을 받았을 떄 속도가 빠르다, 발음 점수가 낮다.
     // 실시간 데시벨 측정으로 목소리 크기
 
-    if(videoStateRef.current){
+    if (videoStateRef.current) {
       if (navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices
           .getUserMedia({ video: true, audio: true })
           .then((stream) => {
             videoRef.current.srcObject = stream;
-  
+
             const vRecorder = new MediaRecorder(stream);
             setStream(stream);
             setVideoRecorder(vRecorder);
-  
+
             vRecorder.ondataavailable = (e) => {
               if (e.data.size > 0) {
                 // 주석해제하기
@@ -139,17 +139,21 @@ const PracticeRoomPage = () => {
             // console.log(error);
           });
       }
-    }else{
+    } else {
       if (stream) {
         stream.getTracks().forEach((track) => track.stop());
-        videoRef.current.srcObject = null;
+        if (videoRef.current) {
+          videoRef.current.srcObject = null;
+        }
       }
     }
 
     return () => {
       if (stream) {
         stream.getTracks().forEach((track) => track.stop());
-        videoRef.current.srcObject = null;
+        if (videoRef.current) {
+          videoRef.current.srcObject = null;
+        }
       }
 
       if (!isLast.current) {
@@ -161,7 +165,7 @@ const PracticeRoomPage = () => {
 
   const toggleVideo = () => {
     const newVideo = !video;
-    videoStateRef.current = newVideo;
+    videoStateRef.current.current = newVideo;
     setVideo(newVideo);
 
     if (stream) {
