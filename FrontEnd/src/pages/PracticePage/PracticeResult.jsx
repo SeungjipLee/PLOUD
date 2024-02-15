@@ -341,14 +341,9 @@ const PracticeResult = ({
               </div>
               <div align="right">
                 <div className="h-10 text-end">
-                  {countdown > 0
-                    ? `이 창은 ${countdown}초 후 자동으로 닫힙니다.`
-                    : "모달이 곧 닫힙니다."}
-                  {countdown > 0 && (
-                    <button onClick={handleSkip} className="ms-3">
-                      skip
-                    </button>
-                  )}
+                  <button onClick={handleSkip} className="ms-3">
+                    skip
+                  </button>
                 </div>
               </div>
             </div>
