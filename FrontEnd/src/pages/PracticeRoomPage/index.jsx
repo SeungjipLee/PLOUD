@@ -110,12 +110,14 @@ const PracticeRoomPage = () => {
     }
   };
 
+  const videoStateRef = useRef(true);
+
   useEffect(() => {
     // 로직 작성
     // 평가 요청을 받았을 떄 속도가 빠르다, 발음 점수가 낮다.
     // 실시간 데시벨 측정으로 목소리 크기
 
-    if(video){
+    if(videoStateRef.current){
       if (navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices
           .getUserMedia({ video: true, audio: true })
@@ -137,8 +139,13 @@ const PracticeRoomPage = () => {
             // console.log(error);
           });
       }
+    }else{
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+        videoRef.current.srcObject = null;
+      }
     }
-    
+
     return () => {
       if (stream) {
         stream.getTracks().forEach((track) => track.stop());
@@ -154,6 +161,7 @@ const PracticeRoomPage = () => {
 
   const toggleVideo = () => {
     const newVideo = !video;
+    videoStateRef.current.current = newVideo;
     setVideo(newVideo);
 
     if (stream) {
