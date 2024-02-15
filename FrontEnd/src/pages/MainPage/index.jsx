@@ -109,7 +109,7 @@ const MainPage = () => {
             <div>
               <div className="Main2Container me-36">
                 <div
-                  className="mainBlueB text-white card text-center pt-5 my-5"
+                  className="mainBlueB text-white card text-center pt-5 my-5 mb-28"
                   style={{
                     borderRadius: "10%",
                     display: "flex",

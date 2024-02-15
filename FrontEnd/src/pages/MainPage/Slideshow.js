@@ -1,6 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 
-const images = ["/images/main_microphone.jpg", "/images/main_teaching.jpg", "/images/main_microphone2.jpg", "/images/main_interview.jpg"];
+const images = [
+  "/images/main_microphone.jpg",
+  "/images/main_teaching.jpg",
+  "/images/main_microphone2.jpg",
+  "/images/main_interview.jpg",
+];
 const delay = 2500;
 
 function Slideshow() {
@@ -38,7 +43,12 @@ function Slideshow() {
           <div
             className="slide"
             key={index}
-            style={{backgroundImage: `url(${image})`, backgroundSize: 'cover'}}
+            style={{
+              backgroundImage: `url(${image})`,
+              backgroundSize: "cover",
+              width: "300px",
+              height: "300px",
+            }}
           ></div>
         ))}
       </div>

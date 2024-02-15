@@ -142,7 +142,7 @@ const StudyRoomPage = () => {
 
   // 화면공유 여부 파악
   const [screenShare, setScreenShare] = useState(false);
-  const screenShareRef = useRef(false)
+  const screenShareRef = useRef(false);
 
   // 녹화 Form
   const [title, setTitle] = useState("");
@@ -591,16 +591,16 @@ const StudyRoomPage = () => {
 
     // 화면 공유 수신
     session.current.on("signal:screenOn", (event) => {
-      setScreenShare(true)
-      screenShareRef.current = true
-      setMode("3")
-    })
+      setScreenShare(true);
+      screenShareRef.current = true;
+      setMode("3");
+    });
     // 화면 공유 종료 수신
     session.current.on("signal:screenOff", (event) => {
-      setScreenShare(false)
-      screenShareRef.current = false
-      setMode("0")
-    })
+      setScreenShare(false);
+      screenShareRef.current = false;
+      setMode("0");
+    });
 
     // 방장이 떠남
     session.current.on("signal:exit", (event) => {
@@ -644,7 +644,8 @@ const StudyRoomPage = () => {
       console.log(publisher);
       if (presenter != nickname) {
         // 녹화 시작 신호를 받았을 때 모드가 3이 아니라면 청자는 모드 2번으로 이동
-        if (!screenShareRef) { // 이거 mode 안찍힐수도 있다.
+        if (!screenShareRef) {
+          // 이거 mode 안찍힐수도 있다.
           setMode("2");
         }
       }
