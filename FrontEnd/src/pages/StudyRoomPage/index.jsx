@@ -612,18 +612,20 @@ const StudyRoomPage = () => {
     // 마이크 상태 전환
     session.current.on("signal:micChange", (event) => {
       var username = JSON.parse(event.data).nickname;
-      // var content = JSON.parse(event.data).chatvalue;
+      var micState = JSON.parse(event.data).chatvalue;
 
       setMicOffUserList((prevList) => {
+        console.log(prevList)
         const exists = prevList.includes(username);
-
-        if (exists) {
-          console.log(username + "마이크 온");
-          return prevList.filter((user) => user !== nickname);
-        } else {
-          console.log(username + "마이크 오프");
-          return [...prevList, nickname];
+        // 이미 마이크를 끈 사람 리스트에 있고 마이크를 켰다면 리스트에서 제외하기
+        if (exists && micState == "on") {
+          return prevList.filter((user) => user != nickname);
         }
+        // 마이크를 끈사람 리스트에 없고 마이크를 껐다면
+        else if (!exists && micState == "off"){
+          return [...prevList, nickname]
+        }
+        else return prevList
       });
     });
 
@@ -1131,7 +1133,11 @@ const StudyRoomPage = () => {
     if (publisher) {
       publisher.publishAudio(newMic); // 마이크 상태 토글
 
-      sendSignal("micChange", "마이크 상태 변경");
+      if (newMic) {
+        sendSignal("micChange", "on");
+      } else {
+        sendSignal("micChange", "off");
+      }
     }
   };
 
@@ -1418,7 +1424,7 @@ const StudyRoomPage = () => {
             </div>
           )}
 
-          {/* ---------------------------------------면접 화면 구성(발표자) -----------------------------------------------*/}
+          {/* ---------------------------------------면접 화면 구성(발표자)-----------------------------------------------*/}
           {/* subscriber - 발표자 이외 */}
           {/* p - 발표자, s - 청자 */}
           {mode == "1" && mainStreamManager == publisher && (
