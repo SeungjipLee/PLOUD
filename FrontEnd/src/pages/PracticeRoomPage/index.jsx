@@ -81,7 +81,7 @@ const PracticeRoomPage = () => {
     if (newDecibel !== 0) {
       decibels.current.push(newDecibel);
       // 아침주석
-      console.log("데시벨(점수 측정) : " + newDecibel);
+      // console.log("데시벨(점수 측정) : " + newDecibel);
     }
 
     if (tmpDecibels.current.length >= 30) {
@@ -367,13 +367,13 @@ const PracticeRoomPage = () => {
       formData,
       (response) => {
         // 아침주석
-        console.log("음성 평가 결과");
-        console.log(
-          "개수 : " +
-            response.data.data.scriptCnt +
-            ", 점수 : " +
-            response.data.data.score
-        );
+        // console.log("음성 평가 결과");
+        // console.log(
+          // "개수 : " +
+            // response.data.data.scriptCnt +
+            // ", 점수 : " +
+            // response.data.data.score
+        // );
 
         // 실시간 피드백
         if (response.data.data.scriptCnt > 28) {
@@ -525,7 +525,7 @@ const PracticeRoomPage = () => {
             const micDecibel = calcDecibel(micAverage);
 
             // 아침주석
-            console.log("데시벨(테스트) : " + micDecibel);
+            // console.log("데시벨(테스트) : " + micDecibel);
 
             if (micDecibel < 30) {
               setMicTestContent("목소리가 거의 들리지 않아요!");

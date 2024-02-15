@@ -1014,7 +1014,8 @@ const StudyRoomPage = () => {
   // ---------- Speech Method ----------
   const addDecibel = (newDecibel) => {
     if (newDecibel != 0) {
-      console.log("데시벨 : " + newDecibel);
+      // 아침주석
+      // console.log("데시벨 : " + newDecibel);
       decibels.current.push(newDecibel);
     }
   };
@@ -1136,14 +1137,14 @@ const StudyRoomPage = () => {
       formData,
       (response) => {
         // 아침주석
-        console.log(response.data);
-        console.log("음성 평가 결과");
-        console.log(
-          "개수 : " +
-            response.data.scriptCnt +
-            ", 점수 : " +
-            response.data.score
-        );
+        // console.log(response.data);
+        // console.log("음성 평가 결과");
+        // console.log(
+        //   "개수 : " +
+        //     response.data.scriptCnt +
+        //     ", 점수 : " +
+        //     response.data.score
+        // );
 
         if (isLast.current) {
           setResultResponse(true);
