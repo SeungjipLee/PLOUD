@@ -165,7 +165,7 @@ const PracticeRoomPage = () => {
 
   const toggleVideo = () => {
     const newVideo = !video;
-    videoStateRef.current.current = newVideo;
+    videoStateRef.current = newVideo;
     setVideo(newVideo);
 
     if (stream) {
