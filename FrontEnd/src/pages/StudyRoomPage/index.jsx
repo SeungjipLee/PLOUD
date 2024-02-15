@@ -969,7 +969,7 @@ const StudyRoomPage = () => {
 
     dispatch(addRecordList({ speechId: speechId.current, title: title }));
     setMode("0");
-    // 비동기 처리 헷갈리니까 5초 뒤에 하자
+
     recordResult();
   };
 

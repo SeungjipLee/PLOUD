@@ -57,6 +57,12 @@ const PracticeResult = ({
   };
 
   useEffect(() => {
+    if (resultResponse) {
+      recordResultGet();
+    }
+  }, [resultResponse]);
+
+  useEffect(() => {
     if (videoResponse === true) {
       // -> 다시 요청
       recordResultGet();
@@ -88,12 +94,6 @@ const PracticeResult = ({
   const gradeStyle = {
     background: `linear-gradient(to top, ${resultTextColor} 40%, transparent 40%)`,
   };
-
-  useEffect(() => {
-    if (resultResponse) {
-      recordResultGet();
-    }
-  }, [resultResponse]);
 
   const recordResultGet = () => {
     getRecordResult(
