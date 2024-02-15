@@ -621,10 +621,10 @@ const StudyRoomPage = () => {
 
       setMicOffUserList((prevList) => {
         const exists = prevList.includes(username);
-  
+
         if (exists) {
           console.log(username + "마이크 온");
-          return prevList.filter(user => user !== nickname);
+          return prevList.filter((user) => user !== nickname);
         } else {
           console.log(username + "마이크 오프");
           return [...prevList, nickname];
@@ -683,7 +683,7 @@ const StudyRoomPage = () => {
           setMode("3");
         }
 
-        if(mic){
+        if (mic) {
           toggleMic();
         }
       }
@@ -1126,7 +1126,7 @@ const StudyRoomPage = () => {
     if (publisher) {
       publisher.publishVideo(newVideo); // 비디오 상태 토글
     }
-    sendSignal("videoChange", "누군가의 비디오 상태 변경");    
+    sendSignal("videoChange", "누군가의 비디오 상태 변경");
   };
 
   // 마이크 핸들러
@@ -1138,7 +1138,7 @@ const StudyRoomPage = () => {
     setMic(newMic); // 상태 업데이트
     if (publisher) {
       publisher.publishAudio(newMic); // 마이크 상태 토글
-    
+
       sendSignal("micChange", "마이크 상태 변경");
     }
   };
@@ -1251,9 +1251,9 @@ const StudyRoomPage = () => {
                                 ? typingList.indexOf(i) >= 0
                                 : false
                             }
-                            isMicState={
-                              micOffUserList.includes(getUserNickname(sub))
-                            }
+                            isMicState={micOffUserList.includes(
+                              getUserNickname(sub)
+                            )}
                             streamManager={sub}
                           />
                         </div>
@@ -1274,9 +1274,9 @@ const StudyRoomPage = () => {
                             ? typingList.indexOf(-1) >= 0
                             : false
                         }
-                        isMicState={
-                          micOffUserList.includes(getUserNickname(publisher))
-                        }
+                        isMicState={micOffUserList.includes(
+                          getUserNickname(publisher)
+                        )}
                         streamManager={publisher}
                       />
                     </div>
@@ -1300,9 +1300,9 @@ const StudyRoomPage = () => {
                                 ? typingList.indexOf(i) >= 0
                                 : false
                             }
-                            isMicState={
-                              micOffUserList.includes(getUserNickname(sub))
-                            }
+                            isMicState={micOffUserList.includes(
+                              getUserNickname(sub)
+                            )}
                             streamManager={sub}
                           />
                         </div>
@@ -1331,9 +1331,9 @@ const StudyRoomPage = () => {
                             ? typingList.indexOf(-1) >= 0
                             : false
                         }
-                        isMicState={
-                          micOffUserList.includes(getUserNickname(publisher))
-                        }
+                        isMicState={micOffUserList.includes(
+                          getUserNickname(publisher)
+                        )}
                         streamManager={publisher}
                       />
                     </div>
@@ -1357,9 +1357,9 @@ const StudyRoomPage = () => {
                                 ? typingList.indexOf(i) >= 0
                                 : false
                             }
-                            isMicState={
-                              micOffUserList.includes(getUserNickname(sub))
-                            }
+                            isMicState={micOffUserList.includes(
+                              getUserNickname(sub)
+                            )}
                             streamManager={sub}
                           />
                         </div>
@@ -1390,9 +1390,9 @@ const StudyRoomPage = () => {
                           ? typingList.indexOf(-1) >= 0
                           : false
                       }
-                      isMicState={
-                        micOffUserList.includes(getUserNickname(publisher))
-                      }
+                      isMicState={micOffUserList.includes(
+                        getUserNickname(publisher)
+                      )}
                       streamManager={publisher}
                     />
                   </div>
@@ -1414,9 +1414,9 @@ const StudyRoomPage = () => {
                             ? typingList.indexOf(i) >= 0
                             : false
                         }
-                        isMicState={
-                          micOffUserList.includes(getUserNickname(sub))
-                        }
+                        isMicState={micOffUserList.includes(
+                          getUserNickname(sub)
+                        )}
                         streamManager={sub}
                       />
                     </div>
@@ -1453,9 +1453,9 @@ const StudyRoomPage = () => {
                               ? typingList.indexOf(i) >= 0
                               : false
                           }
-                          isMicState={
-                            micOffUserList.includes(getUserNickname(sub))
-                          }
+                          isMicState={micOffUserList.includes(
+                            getUserNickname(sub)
+                          )}
                           streamManager={sub}
                         />
                       </div>
@@ -1474,9 +1474,9 @@ const StudyRoomPage = () => {
                           ? typingList.indexOf(-1) >= 0
                           : false
                       }
-                      isMicState={
-                        micOffUserList.includes(getUserNickname(publisher))
-                      }
+                      isMicState={micOffUserList.includes(
+                        getUserNickname(publisher)
+                      )}
                       streamManager={publisher}
                     />
                   ) : null}
@@ -1502,9 +1502,9 @@ const StudyRoomPage = () => {
                             ? typingList.indexOf(i) >= 0
                             : false
                         }
-                        isMicState={
-                          micOffUserList.includes(getUserNickname(sub))
-                        }
+                        isMicState={micOffUserList.includes(
+                          getUserNickname(sub)
+                        )}
                         streamManager={sub}
                       />
                     </div>
@@ -1531,9 +1531,9 @@ const StudyRoomPage = () => {
                             ? typingList.indexOf(i) >= 0
                             : false
                         }
-                        isMicState={
-                          micOffUserList.includes(getUserNickname(sub))
-                        }
+                        isMicState={micOffUserList.includes(
+                          getUserNickname(sub)
+                        )}
                         streamManager={sub}
                       />
                     </div>
@@ -1760,23 +1760,29 @@ const StudyRoomPage = () => {
           >
             {/* <h1 style={{fontWeight:"bold"}}>녹화 정보 입력</h1> */}
             <form onSubmit={submitHandler}>
-              <div className="ms-3">
-                <p>
-                  <span>제목 :</span>
-                  <input
-                    placeholder="제목 입력"
-                    style={{ backgroundColor: "#e5e7eb" }}
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  ></input>
-                </p>
-                <p>카테고리 : {categoryName()}</p>
-                <p>분류 : 스터디</p>
+              <div className="ms-3 mt-5">
+                <div className="record-form-each">
+                  <div>제목</div>
+                  <div>
+                    <input
+                      placeholder="제목 입력"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                    ></input>
+                  </div>
+                </div>
+                <div className="record-form-each">
+                  <div>카테고리</div>
+                  <div>{categoryName()}</div>
+                </div>
+                <div className="record-form-each">
+                  <div>분류</div>
+                  <div>스터디</div>
+                </div>
               </div>
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button
                   style={{
-                    backgroundColor: "#0C134F",
                     color: "#FFFFFF",
                     fontWeight: "bold",
                   }}
