@@ -784,8 +784,7 @@ const StudyRoomPage = () => {
   const leaveSession = () => {
     console.log(tag, "leaveSession");
     sendSignal("chat", "님이 퇴장하였습니다!");
-
-    // managerId랑 내 Id랑 똑같으면
+    
     if (room.managerId == nickname) {
       sendSignal("exit", "종료");
     }

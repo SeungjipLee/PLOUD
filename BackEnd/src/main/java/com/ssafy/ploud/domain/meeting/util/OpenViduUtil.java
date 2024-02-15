@@ -17,11 +17,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.apache.bcel.classfile.Module.Open;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @Transactional
 public class OpenViduUtil {
@@ -123,20 +125,25 @@ public class OpenViduUtil {
                     meetingInfo.setCurrentPeople(meetingInfo.getCurrentPeople() - 1);
 
                     if(isManager && (meetingInfo.getCurrentPeople() == 0 && findBySessionId(sessionId) != null)) {
+                        log.debug("방 삭제 요청 - 세션 ID : " + sessionId);
+
                         this.mapSessionIdsTokens.remove(sessionId);
                         this.mapSessions.remove(sessionId);
 
                         for (int i = 0; i < meetingList.size(); ++i) {
                             if (meetingList.get(i).getSessionId().equals(sessionId)) {
+                                log.debug("방 삭제 - 세션 ID : " + sessionId + ", 방장 : " + meetingInfo.getManagerId());
+
                                 meetingList.remove(i);
+                                break;
                             }
                         }
+
+                        this.mapSessions.get(sessionId).close();
                     }
                 } else{
                     throw new CustomException(ResponseCode.OPENBVIDU_TOKEN_ERROR);
                 }
-
-                // this.mapSessions.get(sessionId).close();
             }else{
                 throw new CustomException(ResponseCode.SESSION_NOT_FOUND);
             }
