@@ -143,7 +143,6 @@ const StudyRoomPage = () => {
   // 화면공유 여부 파악
   const [screenShare, setScreenShare] = useState(false);
   const screenShareRef = useRef(false)
-  const [otherScreenShare, setOtherScreenShare] = useState(false);
 
   // 녹화 Form
   const [title, setTitle] = useState("");
@@ -596,19 +595,15 @@ const StudyRoomPage = () => {
 
     // 화면 공유 수신
     session.current.on("signal:screenOn", (event) => {
-      // setScreenShare(true)
-      setOtherScreenShare(true);
-      console.log("화면 공유 받음");
-      screenShareRef.current = true
-      setMode("3")
+      setScreenShare(true);
+      screenShareRef.current = true;
+      setMode("3");
     })
     // 화면 공유 종료 수신
     session.current.on("signal:screenOff", (event) => {
-      // setScreenShare(false)
-      setOtherScreenShare(false);
-      console.log("화면 공유 종료");
-      screenShareRef.current = false
-      setMode("0")
+      setScreenShare(false);
+      screenShareRef.current = false;
+      setMode("0");
     })
 
     // 방장이 떠남
@@ -651,20 +646,12 @@ const StudyRoomPage = () => {
       // 참여자라면
       denyMics();
 
-      console.log("여기서 찍혀야 함");
       // console.log(publisher);
-
-      console.log("나 : " + nickname);
-      console.log("신호 보낸 사람 : " + username);
-      console.log("발표자 : " + presenter);
-      console.log("일치 여부 : " + presenter !== nickname);
 
       if (username !== nickname) {
         // 녹화 시작 신호를 받았을 때 모드가 3이 아니라면 청자는 모드 2번으로 이동
         
-        console.log("스크린 공유 : " + otherScreenShare);
-        if (!otherScreenShare) { // 이거 mode 안찍힐수도 있다.
-          console.log("모드 변경");
+        if (!screenShareRef.current) { // 이거 mode 안찍힐수도 있다.
           setMode("2");
         }
       }
