@@ -99,14 +99,14 @@ const PracticeRoomPage = () => {
       isSilent
     ) {
       isFeedback.current = true;
-      changeFeedback("침묵이 길어지고 있어요!");
+      changeFeedback1("침묵이 길어지고 있어요!");
     } else if (
       !isFeedback.current &&
       !isFeedback2.current &&
       tmpDecibels.current.slice(-1)[0] >= 70
     ) {
       isFeedback.current = true;
-      changeFeedback("목소리가 너무 크게 들려요!");
+      changeFeedback1("목소리가 너무 크게 들려요!");
     }
   };
 
@@ -305,26 +305,34 @@ const PracticeRoomPage = () => {
       });
   };
 
-  const changeFeedback = (fb) => {
+  // 데시벨 관련
+  const changeFeedback1 = (fb) => {
+    // 설정된 피드백이 없는 경우만 수정
     setFeedback(fb);
 
     setTimeout(() => {
-      if (
-        isFeedback2.current == true ||
-        (isFeedback.current == true && isFeedback2.current == false)
-      ) {
+      // 피드백2가 없으면 초기화
+      if(isFeedback2.current == false){
         setFeedback("잘하고 있어요!");
       }
 
       setTimeout(() => {
-        if (isFeedback.current == true) {
-          isFeedback.current = false;
-        } else if (isFeedback2.current == true) {
-          isFeedback2.current = false;
-        }
+        // 피드백1 다시 실행 가능 하도록
+        isFeedback.current = false;
       }, 2500);
     }, 2500);
   };
+
+  // 점수 관련
+  const changeFeedback2 = (fb) => {
+    isFeedback2.current = true;
+    setFeedback(fb);
+
+    setTimeout(()=> {
+      isFeedback2.current = false;
+      setFeedback("잘하고 있어요!");
+    }, 2500);
+  }
 
   // 녹화 종료
   const stopRecording = () => {
@@ -365,9 +373,9 @@ const PracticeRoomPage = () => {
 
         // 실시간 피드백
         if (response.data.scriptCnt > 28) {
-          changeFeedback("조금만 천천히 말해주세요!");
+          changeFeedback2("조금만 천천히 말해주세요!");
         } else if (response.data.score < 3) {
-          changeFeedback("발음을 정확하게 해주세요!");
+          changeFeedback2("발음을 정확하게 해주세요!");
         }
 
         if (isLast.current) {
@@ -522,7 +530,7 @@ const PracticeRoomPage = () => {
             } else if (micDecibel <= 65) {
               setMicTestContent("목소리의 크기가 적당해요!");
               setMicColor("green");
-            } else if (micDecibel < 75) {
+            } else if (micDecibel < 80) {
               setMicTestContent("조금만 작게 말해주세요!");
               setMicColor("orange");
             } else {
