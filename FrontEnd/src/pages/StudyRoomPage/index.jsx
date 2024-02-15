@@ -768,8 +768,7 @@ const StudyRoomPage = () => {
         // currentVideoDevice: currentVideoDevice,
       })
       .catch((error) => {
-        // console.log("끄아아아앜");
-        console.log(tag, error);
+        // console.log(tag, error);
         navigate("/study");
       });
 
@@ -777,14 +776,14 @@ const StudyRoomPage = () => {
       .connect(screenToken, { clientData: nickname + "//screen" })
       .then(async () => {})
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
   };
 
   const leaveSession = () => {
     console.log(tag, "leaveSession");
     sendSignal("chat", "님이 퇴장하였습니다!");
-    
+
     if (room.managerId == nickname) {
       sendSignal("exit", "종료");
     }
@@ -793,10 +792,10 @@ const StudyRoomPage = () => {
       token,
       { sessionId: room.sessionId, token: ovToken, userId: nickname },
       (response) => {
-        console.log(tag, response);
+        // console.log(tag, response);
       },
       (error) => {
-        console.log(tag, error);
+        // console.log(tag, error);
       }
     );
 
