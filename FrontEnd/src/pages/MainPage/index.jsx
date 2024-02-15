@@ -1,94 +1,183 @@
-import React from 'react'
+import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar";
 import Page from "../../components/Page";
 import Footer from "../../components/Footer";
-import { Link } from "react-router-dom";
-import PracticePage from "../PracticePage";
-import StudyPage from "../StudyPage";
-import API from '../../services/Api';
-import axios from 'axios'
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import Slideshow from "./Slideshow";
+import { getSpeechCount } from "../../services/speech";
+import MyAlert from "../../components/MyAlert";
 
-// 메인페이지
+const MainPage = () => {
+  const { isLogined } = useSelector((state) => state.userReducer);
+  const navigate = useNavigate();
+  const [speechCount, setSpeechCount] = useState(0);
+  const [message, setMessage] = useState("");
+  const [alert, setAlert] = useState(false);
+  const handleLink = async (path) => {
+    if (isLogined) {
+      navigate(path);
+    } else {
+      // alert('로그인이 필요합니다.')
+      await setMessage("로그인이 필요합니다.");
+      setAlert(true);
+      // navigate('/login')
+    }
+  };
+  const [modal, setModal] = useState(true);
+  const handleClose = () => {
+    setModal(false);
+  };
 
-// 로그인 전과 후로 나뉘며
-// 로그인 토큰을 가지고 있을 시 
-// Navbar에 
-// 닉네임 마이페이지 로그아웃이 활성화되고
-// 로그인 회원가입 버튼이 비활성화된다
-// 로그인 되어 있지 않으면 게시판, 연습, 스터디로 가는 버튼이
-// 로그인페이지로 향하게 된다
-
-export const login = async (code) => {
-    const { data } = await API.post('url',
-          JSON.stringify(code)
+  // scroll animation
+  useEffect(() => {
+    // get speech count
+    getSpeechCount(
+      (res) => {
+        setSpeechCount(res.data.data.count);
+      },
+      (err) => err
     );
-    return data;
-}
+    // end get speech count
 
-// export const getDeposit = function () {
-//   axios({
-//     method: "get",
-//     url: "http://127.0.0.1:8000/finance/deposits",
-//   })
-//     .then((response) => {
-//       this.setState({
-//         depositProducts: response.data
-//       })
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//     });
-// };
+    var scrollEvent = function () {
+      // 사용자 모니터 화면 높이 + 스크롤이 움직인 높이
+      var scroll = window.innerHeight + window.scrollY;
 
-class MainPage extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      depositProducts: '',
+      // 애니메이션 효과를 넣을 DOM 객체 배열
+      var itemList = document.querySelectorAll(".animatable");
+
+      Array.prototype.forEach.call(itemList, function (li) {
+        // 객체 위치와 높이 비교 : 화면에 표출되는 높이인지 체크
+        if (li.offsetTop < scroll) {
+          // 객체 animatable 클래스 지우고, animated 클래스 추가
+          li.classList.remove("animatable");
+          li.classList.add("animated");
+        }
+      });
     };
-  }
 
-  // componentDidMount() {
-  //   getDeposit();
-  // }
+    // 스크롤 이벤트 리스너 등록
+    window.addEventListener("scroll", scrollEvent);
 
+    // 컴포넌트가 언마운트될 때 리스너 제거
+    return () => {
+      window.removeEventListener("scroll", scrollEvent);
+    };
+  }, []);
+  // end scroll animation
 
-  render() {
-    return (
-      <div className="MainPage">
+  return (
+    <>
+      <div>
         <Page header={<Navbar />} footer={<Footer />}>
-          <div className="Main1">
-            <img src="images/Main1.png" alt="Main1.png" />
-          </div>
-          <div className="Main2">
-            <video src="videos/cat.mp4" autoPlay loop />
-            <div className="card">오늘의 발표 수</div>
-          </div>
-          <div className="Main3">
-            <h2>스피치 실력을 키워볼까요?</h2>
-            <div className="card">
-              <Link to="/practice" element={<PracticePage />}>
-                혼자연습
-              </Link>
+          {/* main1 */}
+          <div
+            style={{ height: "100vh", position: "relative" }}
+            className="mainBlueB"
+          >
+            <img
+              src="/images/main1transparent.png"
+              alt=""
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                zIndex: "1",
+              }}
+            />
+            <div
+              className="text-5xl font-extrabold mainOrangeF mainPageFont fadein"
+              style={{
+                position: "absolute",
+                top: "35%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                fontSize: "20vw",
+              }}
+            >
+              PLOUD
             </div>
-            <div className="card">
-              <Link to="/study" element={<StudyPage />}>
-                함께연습
-              </Link>
+          </div>
+          {/* main2; video */}
+          <div style={{ height: "100vh" }} className="Main2 bg-white">
+            <div className="video mx-16">
+              <video src="/videos/mainvideo.mp4" autoPlay loop muted></video>
+            </div>
+            <div>
+              <div className="Main2Container me-36">
+                <div
+                  className="mainBlueB text-white card text-center pt-5 my-5"
+                  style={{
+                    borderRadius: "10%",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div className="font-extrabold text-2xl">누적 발표수</div>
+                  <div className="mt-3 font-extrabold text-2xl">{`${speechCount}`}</div>
+                </div>
+                <Slideshow className="mainBlueB text-white card text-center pt-5 my-5"></Slideshow>
+              </div>
             </div>
           </div>
-          <div className="Main4">
-            <img src="images/Main2.png" alt="" />
+          {/* main3; link */}
+          <div style={{ height: "100vh" }} className="bg-white">
+            <h2 className="text-5xl text-center font-bold pt-24">
+              스피치 실력을 키워볼까요?
+            </h2>
+            <div className="Main3_1 mt-32">
+              <div
+                className="subtitleImg me-12 mb-24 animatable"
+                onClick={() => handleLink("/practice1")}
+              >
+                <img src="images/solo.png" />
+                <div className="text cursor-pointer font-bold ">
+                  연습모드 바로가기
+                </div>
+              </div>
+              <div
+                className="subtitleImg mb-24 animatable"
+                onClick={() => handleLink("/study")}
+              >
+                <img src="images/study.png" />
+                <div className="text cursor-pointer font-bold">
+                  스터디룸 바로가기
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="Main5">
-            {this.state.depositProducts}
+          {/* main4; about us */}
+          <div
+            style={{ height: "100vh", position: "relative" }}
+            className="bg-white animatable"
+          >
+            <img
+              src="images/AboutUs.png"
+              alt="about us"
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            />
           </div>
         </Page>
       </div>
-    );
-  }
-}
-
-
+      {alert && (
+        <MyAlert
+          content={message}
+          onClose={() => {
+            setAlert(false);
+            navigate("/login");
+          }}
+        />
+      )}
+    </>
+  );
+};
 
 export default MainPage;

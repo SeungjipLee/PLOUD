@@ -1,12 +1,20 @@
 # Docker file
 
-# jdk17
-FROM openjdk:17-jdk
+# APP
+FROM gradle:8.5-jdk17 AS builder
+WORKDIR /backend
+
+COPY build.gradle settings.gradle /backend/
+COPY . /backend
+RUN gradle build -x test --parallel --continue
 
 # jar
-ARG JAR_FILE=build/libs/*.jar
+FROM openjdk:17-jdk
+#ARG JAR_FILE=build/libs/*.jar
+#COPY ${JAR_FILE} app.jar
+
+WORKDIR /backend
 
 # jar file Copy
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "app.jar"]
-
+COPY --from=builder /backend/build/libs/*.jar /backend/app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]

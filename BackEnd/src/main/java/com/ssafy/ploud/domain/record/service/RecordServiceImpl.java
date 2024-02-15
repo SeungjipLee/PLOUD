@@ -1,35 +1,121 @@
 package com.ssafy.ploud.domain.record.service;
 
-import com.ssafy.ploud.domain.meeting.util.OpenViduUtil;
-import com.ssafy.ploud.domain.record.dto.request.RecordStartRequest;
-import io.openvidu.java.client.OpenViduHttpException;
-import io.openvidu.java.client.OpenViduJavaClientException;
-import io.openvidu.java.client.Recording;
-import io.openvidu.java.client.RecordingProperties;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import com.ssafy.ploud.common.exception.CustomException;
+import com.ssafy.ploud.common.response.ResponseCode;
+import com.ssafy.ploud.domain.record.FeedbackEntity;
+import com.ssafy.ploud.domain.record.ScoreEntity;
+import com.ssafy.ploud.domain.record.VideoEntity;
+import com.ssafy.ploud.domain.record.dto.request.RecordListRequest;
+import com.ssafy.ploud.domain.record.dto.response.FeedbackDetail;
+import com.ssafy.ploud.domain.record.dto.response.RecordDetailResponse;
+import com.ssafy.ploud.domain.record.dto.response.RecordListResponse;
+import com.ssafy.ploud.domain.record.dto.response.ScoreDetail;
+import com.ssafy.ploud.domain.record.dto.response.SpeechDetail;
+import com.ssafy.ploud.domain.record.dto.response.TotalScoreResponse;
+import com.ssafy.ploud.domain.record.dto.response.VideoDetail;
+import com.ssafy.ploud.domain.record.repository.FeedbackRepository;
+import com.ssafy.ploud.domain.record.repository.ScoreRepository;
+import com.ssafy.ploud.domain.record.repository.VideoRepository;
+import com.ssafy.ploud.domain.script.ScriptCategory;
+import com.ssafy.ploud.domain.speech.SpeechCategory;
+import com.ssafy.ploud.domain.speech.SpeechEntity;
+import com.ssafy.ploud.domain.speech.repository.SpeechRepository;
+import com.ssafy.ploud.domain.user.UserEntity;
+import com.ssafy.ploud.domain.user.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class RecordServiceImpl implements RecordService{
-    private OpenViduUtil openViduUtil;
+
+    private final SpeechRepository speechRepository;
+    private final FeedbackRepository feedbackRepository;
+    private final VideoRepository videoRepository;
+    private final UserRepository userRepository;
+
     @Override
-    public Recording startRecording(RecordStartRequest request) {
-        String sessionId = request.getSessionId();
-        Recording.OutputMode outputMode = Recording.OutputMode.valueOf(request.getOutputMode());
-        boolean hasAudio = request.getHasAudio();
-        boolean hasVideo = request.getHasVideo();
+    public RecordDetailResponse getSpeechDetail(int speechId) {
+        // speech 조회
+        SpeechEntity speechEntity = speechRepository.findById(speechId)
+            .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
 
-        RecordingProperties properties = new RecordingProperties.Builder().outputMode(outputMode).hasAudio(hasAudio)
-            .hasVideo(hasVideo).build();
+        // video 조회(없어도 ok)
+        VideoEntity video = speechEntity.getSpeechVideo();
+        VideoDetail videoDetail = (video == null) ? null : video.toDto(video);
 
-        System.out.println("Starting recording for session " + sessionId + " with properties {outputMode=" + outputMode
-            + ", hasAudio=" + hasAudio + ", hasVideo=" + hasVideo + "}");
+        // feedback list 조회
+        List<FeedbackDetail> feedbackDetailList = new ArrayList<>();
+        for (FeedbackEntity feedback : feedbackRepository.findBySpeechId(speechId)) {
+            feedbackDetailList.add(FeedbackDetail.of(feedback));
+        }
 
-        return openViduUtil.startRecording(sessionId, properties);
+        return RecordDetailResponse.of(speechEntity, videoDetail, feedbackDetailList);
+    }
+
+
+    @Override
+    public List<SpeechDetail> getSpeechList(String userId) {
+
+        // DB에서 목록 조회
+        List<SpeechEntity> speechList = speechRepository.findTop5ByUser_userIdOrderByRecordTimeDesc(
+            userId);
+
+        List<SpeechDetail> dtoList = new ArrayList<>();
+        for(SpeechEntity entity:speechList) {
+            dtoList.add(SpeechDetail.of(entity));
+        }
+
+        return dtoList;
+    }
+
+    @Override
+    @Transactional
+    public String deleteVideo(int speechId) {
+        // Video Table에서 speechId에 해당하는 video path 가져오기
+        SpeechEntity speech = speechRepository.findById(speechId)
+            .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
+
+        VideoEntity video = speech.getSpeechVideo();
+        if(video==null) throw new CustomException(ResponseCode.NOT_FOUND); // 영상 정보가 없을 경우 Exception
+        String videoPath = video.getVideoPath();
+
+        // DB 삭제
+        speech.setVideo(null);
+        videoRepository.delete(video);
+
+        // video path 반환
+        return videoPath;
+    }
+
+    @Override
+    public TotalScoreResponse getSpeechScore(String userId) {
+
+        UserEntity user = userRepository.findByUserId(userId)
+            .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
+
+        // userId 사용자가 했던 모든 speechId 찾기 -> speech entity 찾기
+        List<SpeechEntity> speechList = speechRepository.findAllByUser_userIdOrderByRecordTimeAsc(
+            userId);
+
+        List<ScoreDetail> dtoList = new ArrayList<>();
+        for (SpeechEntity speech : speechList) {
+            ScoreEntity score = speech.getScore();
+            dtoList.add(score.toDtoWithSpeechDate(speech.getRecordTime()));
+        }
+
+        return TotalScoreResponse.createResponse(
+            (user.getSoloDurationInMinute()+user.getStudyDurationInMinute())/60, // convert seconds to minutes
+            dtoList);
+    }
+
+    private String convertMinuteToString(long minute) {
+        return String.format("%2d시간 %2d분", minute / 60, minute % 60);
     }
 }

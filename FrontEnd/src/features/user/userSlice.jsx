@@ -1,45 +1,47 @@
-import { createSlice } from '@reduxjs/toolkit'
-import {request} from "../../lib/axios"
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+// import { request } from "../../lib/axios";
+
+const initialState = {
+  isLogined: false,
+  token: { accessToken: "", refreshToken: "", tokenType: "" },
+  userId: "",
+  email: "",
+  nickname: "", // 추가: nickname 정보를 저장할 필드 추가
+  name: "",
+  birth_year: "",
+  loading: false,
+};
 
 export const userSlice = createSlice({
-  name: 'user',
-  initialState: {
-    user_id: '',
-    email: '',
-    password: '',
-    nickname: '',
-    name: '',
-    token: '',
-    birth_year: '',    
-  },
+  name: "user",
+  initialState,
   reducers: {
-    signup: (state, action) => {
-      const USER_URL = "/api/user"
-      const data = request("post", USER_URL + "/signup", action.payload)
+    getToken: (state, action) => {
+      state.isLogined = true;
+      state.token = {
+        accessToken: action.payload.data.accessToken,
+        refreshToken: action.payload.data.refreshToken,
+        tokenType: action.payload.data.tokenType
+      }
+      state.nickname = action.payload.data.nickname; // 추가: nickname 정보 저장
     },
-    // login: (state) => {
-    // },
-    // logout: (state, action) => {
-    //   state.value += action.payload
-    // },
+    getNewToken: (state, action) => {
+      state.token = action.payload.data
+    },
+    expireToken: (state) => {
+      state.isLogined = false;
+      state.token = { accessToken: "", refreshToken: "", tokenType: "" };
+      state.nickname = ""; // 추가: 로그아웃 시 nickname 초기화
+    },
+    getUserId: (state, action) => {
+      state.userId = action.payload;
+    },
+    updateNickname: (state, action) => {
+      state.nickname = action.payload;
+    }
   },
-})
+});
 
-export const { signup } = userSlice.actions
 
-// // The function below is called a thunk and allows us to perform async logic. It
-// // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
-// // will call the thunk with the `dispatch` function as the first argument. Async
-// // code can then be executed and other actions can be dispatched
-// export const incrementAsync = (amount) => (dispatch) => {
-//   setTimeout(() => {
-//     dispatch(incrementByAmount(amount))
-//   }, 1000)
-// }
-
-// // The function below is called a selector and allows us to select a value from
-// // the state. Selectors can also be defined inline where they're used instead of
-// // in the slice file. For example: `useSelector((state) => state.counter.value)`
-// export const selectCount = (state) => state.counter.value
-
-export default userSlice.reducer
+export const { getToken, expireToken, getUserId, getNewToken, updateNickname } = userSlice.actions;
+export default userSlice.reducer;

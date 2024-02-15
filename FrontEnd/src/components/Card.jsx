@@ -1,17 +1,23 @@
-const Card = ({ header, data = [], footer }) => (
-    <div className="Card">
-      {header && <header>{header}</header>}
-      <main>
-        {data.map(({ term, description }) => (
-          <dl key={term}>
-            <dt>{term}</dt>
-            <dd>{description}</dd>
-          </dl>
-        ))}
-      </main>
-      {footer && <footer>{footer}</footer>}
-    </div>
-  );
-  
-  export default Card;
-  
+const Card = ({ header, footer, children, onClick }) => (
+  <div className="custom-card" onClick={onClick}>
+    {header && <header>{header}</header>}
+    <main>
+      {children}
+    </main>
+    {footer && <footer>{footer}</footer>}
+  </div>
+);
+
+export default Card;
+
+// {
+//   categoryId: 1,
+//   currentPeople: 1,
+//   isPrivate: false,
+//   managerId: "kyd1126",
+//   maxPeople: 3,
+//   password: null,
+//   sessionId: "session0",
+//   speechId: -1,
+//   title: "asdfasdf",
+// },

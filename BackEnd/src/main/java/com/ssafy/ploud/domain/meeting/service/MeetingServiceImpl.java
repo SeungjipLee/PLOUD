@@ -1,9 +1,11 @@
 package com.ssafy.ploud.domain.meeting.service;
 
+import com.ssafy.ploud.common.exception.CustomException;
+import com.ssafy.ploud.common.response.ResponseCode;
 import com.ssafy.ploud.domain.meeting.dto.MeetingInfo;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingCreateRequest;
-import com.ssafy.ploud.domain.meeting.dto.request.MeetingLeaveRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingJoinRequest;
+import com.ssafy.ploud.domain.meeting.dto.request.MeetingLeaveRequest;
 import com.ssafy.ploud.domain.meeting.dto.request.MeetingSearchRequest;
 import com.ssafy.ploud.domain.meeting.dto.response.MeetingInfoResponse;
 import com.ssafy.ploud.domain.meeting.util.OpenViduUtil;
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MeetingServiceImpl implements MeetingService {
 
-    private OpenViduUtil openViduUtil;
+    private final OpenViduUtil openViduUtil;
 
     @Override
     public List<MeetingInfo> list(MeetingSearchRequest request) {
@@ -24,14 +26,13 @@ public class MeetingServiceImpl implements MeetingService {
 
         List<MeetingInfo> res = new ArrayList<>();
 
-        String categoryId = request.getCategoryId();
+        int categoryId = request.getCategoryId();
         String word = request.getWord();
 
-        for (int i = 0; i < list.size(); ++i) {
-            if (list.get(i).getCategoryId().equals(categoryId)) {
-                res.add(list.get(i));
-            } else if (list.get(i).getTitle().indexOf(word) != 0) {
-                res.add(list.get(i));
+        for (MeetingInfo meetingInfo : list) {
+            if (!(categoryId != 0 && categoryId != meetingInfo.getCategoryId())
+                && !(!word.isEmpty() && !meetingInfo.getTitle().contains(word))) {
+                res.add(meetingInfo);
             }
         }
 
@@ -47,7 +48,7 @@ public class MeetingServiceImpl implements MeetingService {
                 return list.get(i);
             }
         }
-        return null;
+        throw new CustomException(ResponseCode.ROOM_NOT_FOUND);
     }
 
     @Override
@@ -56,8 +57,12 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
     @Override
-    public Object join(MeetingJoinRequest request) {
-        return openViduUtil.join(request);
+    public MeetingInfoResponse join(MeetingJoinRequest request) {
+        Object object = openViduUtil.join(request);
+        if (object instanceof MeetingInfoResponse) {
+            return (MeetingInfoResponse) object;
+        }
+        throw new CustomException(ResponseCode.BAD_REQUEST);
     }
     @Override
     public MeetingInfo findBySessionId(String sessionId) {
@@ -65,14 +70,9 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
     @Override
-    public boolean leave(MeetingLeaveRequest request) {
+    public void leave(MeetingLeaveRequest request) {
         MeetingInfo meetingInfo = openViduUtil.findBySessionId(request.getSessionId());
-        // 방장인 경우
-        if(meetingInfo.getManagerId().equals(request.getUserId())){
-            return openViduUtil.leave(request.getSessionId(), request.getToken(), true);
-        }else{
-            return openViduUtil.leave(request.getSessionId(), request.getToken(), false);
-        }
+        openViduUtil.leave(request.getSessionId(), request.getToken(), meetingInfo.getManagerId().equals(request.getUserId()));
     }
 
 }

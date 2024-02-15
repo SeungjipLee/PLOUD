@@ -9,12 +9,14 @@ import lombok.Setter;
 public class MeetingInfo {
     private String sessionId;
     private String managerId;
-    private String categoryId;
+    private int categoryId;
     private String title;
     private int currentPeople;
     private int maxPeople;
     private Boolean isPrivate;
     private String password;
+    private int speechId;
+
     public MeetingInfo(String sessionId, MeetingCreateRequest request) {
         this.sessionId = sessionId;
         this.managerId = request.getManagerId();
@@ -24,6 +26,7 @@ public class MeetingInfo {
         this.maxPeople = request.getMaxPeople();
         this.isPrivate = request.getIsPrivate();
         this.password = request.getPassword();
+        speechId = -1;
     }
 }
 

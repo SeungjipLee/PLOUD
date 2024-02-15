@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MeetingListResponse {
-    List<MeetingInfo> meetingInfoList;
+    private List<MeetingInfo> meetingInfoList;
     public MeetingListResponse(List<MeetingInfo> meetingInfoList) {
         this.meetingInfoList = meetingInfoList;
     }

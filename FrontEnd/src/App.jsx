@@ -1,13 +1,11 @@
 import React from "react";
 import Router from "./lib/MyRouter";
-import Navbar from "./components/Navbar";
-import { Counter } from "./features/counter/Counter";
+import "chartjs-adapter-date-fns";
 
 const App = () => {
   return (
     <>
-      <Router/>
-      {/* <Counter/> */}
+      <Router />
     </>
   );
 };
