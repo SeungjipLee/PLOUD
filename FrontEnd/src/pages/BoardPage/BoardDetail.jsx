@@ -65,7 +65,7 @@ const BoardDetail = () => {
           (err) => err
         );
       } catch (error) {
-        error
+        error;
       }
     };
     getBoard();
@@ -95,7 +95,7 @@ const BoardDetail = () => {
       // 좋아요 상태에 따라 좋아요 수를 조정합니다.
       setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
     } catch (error) {
-      error
+      error;
     }
   };
 
@@ -115,7 +115,7 @@ const BoardDetail = () => {
 
       setComment(""); // 댓글 입력창 초기화
     } catch (err) {
-      err
+      err;
       // await setMessage("댓글 작성에 실패했습니다.")
       // setAlert(true)
     }
@@ -144,11 +144,27 @@ const BoardDetail = () => {
             <div className="mx-60 mb-24 bg-gray-100 p-10 border border-black rounded-2xl">
               {/* 게시글 */}
               <div>
-                <div className="mb-2 text-2xl font-bold">{title}</div>
+                <div
+                  className="flex"
+                  style={{ justifyContent: "space-between" }}
+                >
+                  <div className="mb-2 text-2xl font-bold">{title}</div>
+                  {isLiked && (
+                    <button className="my-0.5 text-2xl" onClick={handleLike}>
+                      <span>❤️</span> {likeCount}
+                    </button>
+                  )}
+                  {!isLiked && (
+                    <button className="my-0.5 text-2xl" onClick={handleLike}>
+                      <span>🤍</span> {likeCount}
+                    </button>
+                  )}
+                </div>
                 {/* info */}
                 <div
                   className="flex text-sm mb-3"
-                  style={{ justifyContent: "space-between" }}>
+                  style={{ justifyContent: "space-between" }}
+                >
                   <div className="flex">
                     작성자:
                     <div className="mx-2">{nickname}</div>
@@ -184,19 +200,22 @@ const BoardDetail = () => {
                   </div>
                   <div
                     className="flex mt-3 my-2"
-                    style={{ justifyContent: "center" }}>
+                    style={{ justifyContent: "center" }}
+                  >
                     <button
                       className="mx-2 text-white border bg-sky-400 rounded-md py-1 px-2"
                       onClick={() =>
                         navigate("/createboard", {
                           state: { isCreate: false, boardId: boardId },
                         })
-                      }>
+                      }
+                    >
                       수정
                     </button>
                     <button
                       className="mx-2 text-white border bg-red-500 rounded-md py-1 px-2"
-                      onClick={handleDelete}>
+                      onClick={handleDelete}
+                    >
                       삭제
                     </button>
                     <Link to={"/board"}>
@@ -212,25 +231,17 @@ const BoardDetail = () => {
               <div>
                 <div
                   className="flex"
-                  style={{ justifyContent: "space-between" }}>
+                  style={{ justifyContent: "space-between" }}
+                >
                   <div className="flex">
                     <div className="px-3 text-2xl font-bold">댓글</div>
                     <span
                       className="text-2xl"
-                      style={{ verticalAlign: "middle" }}>
+                      style={{ verticalAlign: "middle" }}
+                    >
                       {commentList.length}
                     </span>
                   </div>
-                  {isLiked && (
-                    <button className="my-0.5 text-2xl" onClick={handleLike}>
-                      ❤️
-                    </button>
-                  )}
-                  {!isLiked && (
-                    <button className="my-0.5 text-2xl" onClick={handleLike}>
-                      🤍
-                    </button>
-                  )}
                 </div>
 
                 <div className="flex mt-3">
@@ -240,11 +251,13 @@ const BoardDetail = () => {
                     rows="5"
                     placeholder="댓글을 입력해주세요"
                     onChange={(e) => setComment(e.target.value)}
-                    value={comment}></textarea>
+                    value={comment}
+                  ></textarea>
                   <div className="flex item-center">
                     <button
                       className="ms-3  px-3 text-white border bg-blue-500 rounded-md"
-                      onClick={handleComment}>
+                      onClick={handleComment}
+                    >
                       작성
                       <br />
                       완료
@@ -277,14 +290,16 @@ const BoardDetail = () => {
                             <button
                               className="col-span-2 text-red-500 border bg-transparent rounded-md mx-3"
                               onClick={() => handleDeleteComment(s.id)}
-                              style={{ align: "right" }}>
+                              style={{ align: "right" }}
+                            >
                               삭제
                             </button>
                           )}
                         </span>
                         {/* <div className="flex" style={{flexWrap:'wrap'}}> */}
                         <div
-                          style={{ maxWidth: "100%", wordBreak: "break-all" }}>
+                          style={{ maxWidth: "100%", wordBreak: "break-all" }}
+                        >
                           {s.comment}
                         </div>{" "}
                         {/* 댓글 내용 */}
