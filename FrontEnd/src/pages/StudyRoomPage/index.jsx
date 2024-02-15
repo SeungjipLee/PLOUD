@@ -176,12 +176,12 @@ const StudyRoomPage = () => {
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
-      if(!isLast.current){
+      if (!isLast.current) {
         speechEnd();
       }
 
       leaveSession();
-      
+
       event.preventDefault();
     };
 
@@ -228,7 +228,7 @@ const StudyRoomPage = () => {
     } catch {
       (err) => {
         // console.log(err);
-      }
+      };
     }
   };
 
@@ -296,7 +296,7 @@ const StudyRoomPage = () => {
         sendSignal("micChange", "off");
       }
     }
-  }, [mic])
+  }, [mic]);
 
   // 신고 창 닫기
   const closeModal = () => {
@@ -503,7 +503,7 @@ const StudyRoomPage = () => {
           { userId: nickname2, presenter: false },
         ]);
       }
-      
+
       var subscriber = session.current.subscribe(event.stream, undefined);
 
       setSubscribers((subscribers) => [...subscribers, subscriber]);
@@ -647,10 +647,9 @@ const StudyRoomPage = () => {
           return prevList.filter((user) => user != username);
         }
         // 마이크를 끈사람 리스트에 없고 마이크를 껐다면
-        else if (!exists && micState == "off"){
-          return [...prevList, username]
-        }
-        else return prevList
+        else if (!exists && micState == "off") {
+          return [...prevList, username];
+        } else return prevList;
       });
     });
 
@@ -670,7 +669,7 @@ const StudyRoomPage = () => {
       setEndSession(true);
 
       setTimeout(() => {
-        if(!realExit.current){
+        if (!realExit.current) {
           navigate("/study");
         }
       }, 4000);
@@ -1132,14 +1131,14 @@ const StudyRoomPage = () => {
         //     response.data.score
         // );
 
-        if(isLast.current){
+        if (isLast.current) {
           setResultResponse(true);
         }
       },
       (error) => {
         // console.log(error);
         // console.log("평가 실패");
-        if(isLast.current){
+        if (isLast.current) {
           setResultResponse(true);
         }
       }
@@ -1244,8 +1243,7 @@ const StudyRoomPage = () => {
                 <select
                   name="mode"
                   id="mode"
-                  onChange={(e) => setMode(e.target.value)}
-                >
+                  onChange={(e) => setMode(e.target.value)}>
                   <option value="0">기본화면</option>
                   <option value="1">면접모드(발표자)</option>
                   <option value="2">면접모드(면접관)</option>
@@ -1428,8 +1426,7 @@ const StudyRoomPage = () => {
                   return (
                     <div
                       key={sub.id}
-                      className={`${videoDivClass} mode0-each col-md-6 col-xs-6`}
-                    >
+                      className={`${videoDivClass} mode0-each col-md-6 col-xs-6`}>
                       <span className="nickname-overlay">
                         {getUserNickname(sub)}
                       </span>
@@ -1462,8 +1459,7 @@ const StudyRoomPage = () => {
                     .length <= 3
                     ? "single-row"
                     : "multi-row"
-                }`}
-              >
+                }`}>
                 {subscribers
                   .filter((sub) => getUserNickname(sub) !== "screen")
                   .map((sub, i) => (
@@ -1682,15 +1678,13 @@ const StudyRoomPage = () => {
                     (data.presenter ? (
                       <div
                         onClick={(e) => changePresenter(data.userId, index)}
-                        className="presenter presenter-button Button"
-                      >
+                        className="presenter presenter-button Button">
                         발표자
                       </div>
                     ) : (
                       <div
                         onClick={(e) => changePresenter(data.userId, index)}
-                        className="participant presenter-button Button"
-                      >
+                        className="participant presenter-button Button">
                         발표자
                       </div>
                     ))}
@@ -1716,8 +1710,7 @@ const StudyRoomPage = () => {
                 textAlign: "center",
                 marginTop: "-4px",
                 marginBottom: "-8px",
-              }}
-            >
+              }}>
               방 제목 : {room.title}
             </h1>
             <h1>채팅</h1>
@@ -1742,8 +1735,7 @@ const StudyRoomPage = () => {
                       <div className="chat-box admin-chat">
                         <span
                           className="chat-content"
-                          style={{ fontWeight: "bold", margin: "1px" }}
-                        >
+                          style={{ fontWeight: "bold", margin: "1px" }}>
                           {content}
                         </span>
                         <span className="chat-time">{time}</span>
@@ -1782,8 +1774,7 @@ const StudyRoomPage = () => {
           <Modal
             title="녹화 정보 입력"
             onClose={(e) => setRecordForm(false)}
-            className={"record-form"}
-          >
+            className={"record-form"}>
             {/* <h1 style={{fontWeight:"bold"}}>녹화 정보 입력</h1> */}
             <form onSubmit={submitHandler}>
               <div className="ms-3 mt-5">
@@ -1793,8 +1784,7 @@ const StudyRoomPage = () => {
                     <input
                       placeholder="제목 입력"
                       value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                    ></input>
+                      onChange={(e) => setTitle(e.target.value)}></input>
                   </div>
                 </div>
                 <div className="record-form-each">
@@ -1811,8 +1801,7 @@ const StudyRoomPage = () => {
                   style={{
                     color: "#FFFFFF",
                     fontWeight: "bold",
-                  }}
-                >
+                  }}>
                   녹화 시작
                 </Button>
               </div>
