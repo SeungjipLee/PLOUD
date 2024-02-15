@@ -653,7 +653,7 @@ const StudyRoomPage = () => {
       console.log(publisher);
 
       console.log("발표자 : " + presenter);
-      if (presenter != nickname) {
+      if (username != nickname) {
         // 녹화 시작 신호를 받았을 때 모드가 3이 아니라면 청자는 모드 2번으로 이동
         
         console.log("스크린 공유 : " + otherScreenShare);
