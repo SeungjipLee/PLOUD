@@ -113,39 +113,26 @@ const PracticeRoomPage = () => {
   const videoStateRef = useRef(true);
 
   useEffect(() => {
-    // 로직 작성
-    // 평가 요청을 받았을 떄 속도가 빠르다, 발음 점수가 낮다.
-    // 실시간 데시벨 측정으로 목소리 크기
+    if (navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: true })
+        .then((stream) => {
+          videoRef.current.srcObject = stream;
 
-    if (videoStateRef.current) {
-      if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices
-          .getUserMedia({ video: true, audio: true })
-          .then((stream) => {
-            videoRef.current.srcObject = stream;
+          const vRecorder = new MediaRecorder(stream);
+          setStream(stream);
+          setVideoRecorder(vRecorder);
 
-            const vRecorder = new MediaRecorder(stream);
-            setStream(stream);
-            setVideoRecorder(vRecorder);
-
-            vRecorder.ondataavailable = (e) => {
-              if (e.data.size > 0) {
-                // 주석해제하기
-                videoUpload(e.data); // e.data : videoChunk
-              }
-            };
-          })
-          .catch((error) => {
-            // console.log(error);
-          });
-      }
-    } else {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-        if (videoRef.current) {
-          videoRef.current.srcObject = null;
-        }
-      }
+          vRecorder.ondataavailable = (e) => {
+            if (e.data.size > 0) {
+              // 주석해제하기
+              videoUpload(e.data); // e.data : videoChunk
+            }
+          };
+        })
+        .catch((error) => {
+          // console.log(error);
+        });
     }
 
     return () => {
@@ -161,6 +148,17 @@ const PracticeRoomPage = () => {
         speechEnd();
       }
     };
+  }, []);
+
+  useEffect(() => {
+    if (stream) {
+      console.log(stream);
+      if (videoStateRef) {
+        stream.mediaDevices.video = true;
+      } else {
+        stream.mediaDevices.video = false;
+      }
+    }
   }, [video]);
 
   const toggleVideo = () => {
@@ -636,7 +634,12 @@ const PracticeRoomPage = () => {
               />
             ) : (
               <img
-                style={{ width: "530px", height: "400px", marginTop: "50px", marginBottom: "50px" }}
+                style={{
+                  width: "530px",
+                  height: "400px",
+                  marginTop: "50px",
+                  marginBottom: "50px",
+                }}
                 src="/images/videoimage_disabled.png"
               />
             )}
