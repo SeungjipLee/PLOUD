@@ -1572,7 +1572,14 @@ a .slideshowDot.active {
 
 .practice-main {
   min-width: 900px;
-  max-width: 1100px;
+  max-width: 900px;
+  min-height: 600px;
+  display: flex; 
+  flex-direction: column; 
+  background-color: rgb(240 249 255/var(--tw-bg-opacity));
+  margin: 0px 240px;
+  padding: 40px;
+  border-radius: 1rem;
 }
 
 .mic-off img {
@@ -1583,4 +1590,8 @@ a .slideshowDot.active {
   position: absolute;
   right: 10px;
   bottom: 10px;
+}
+.no-room {
+  padding-top: 300px;
+  text-align: center;
 }
