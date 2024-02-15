@@ -598,6 +598,7 @@ const StudyRoomPage = () => {
     session.current.on("signal:screenOn", (event) => {
       // setScreenShare(true)
       setOtherScreenShare(true);
+      console.log("화면 공유 받음");
       screenShareRef.current = true
       setMode("3")
     })
@@ -605,6 +606,7 @@ const StudyRoomPage = () => {
     session.current.on("signal:screenOff", (event) => {
       // setScreenShare(false)
       setOtherScreenShare(false);
+      console.log("화면 공유 종료");
       screenShareRef.current = false
       setMode("0")
     })
@@ -656,11 +658,13 @@ const StudyRoomPage = () => {
       console.log("신호 보낸 사람 : " + username);
       console.log("발표자 : " + presenter);
       console.log("일치 여부 : " + presenter !== nickname);
-      if (presenter !== nickname) {
+
+      if (username !== nickname) {
         // 녹화 시작 신호를 받았을 때 모드가 3이 아니라면 청자는 모드 2번으로 이동
         
         console.log("스크린 공유 : " + otherScreenShare);
         if (!otherScreenShare) { // 이거 mode 안찍힐수도 있다.
+          console.log("모드 변경");
           setMode("2");
         }
       }
