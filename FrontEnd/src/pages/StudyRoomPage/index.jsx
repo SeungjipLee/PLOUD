@@ -284,6 +284,18 @@ const StudyRoomPage = () => {
     }
   }, [chatList]);
 
+  useEffect(() => {
+    if (publisher) {
+      publisher.publishAudio(mic); // 마이크 상태 토글
+
+      if (mic) {
+        sendSignal("micChange", "on");
+      } else {
+        sendSignal("micChange", "off");
+      }
+    }
+  }, [mic])
+
   // 신고 창 닫기
   const closeModal = () => {
     setReport(false);
@@ -1141,18 +1153,6 @@ const StudyRoomPage = () => {
     }
     sendSignal("videoChange", "누군가의 비디오 상태 변경");
   };
-
-  useEffect(() => {
-    if (publisher) {
-      publisher.publishAudio(mic); // 마이크 상태 토글
-
-      if (mic) {
-        sendSignal("micChange", "on");
-      } else {
-        sendSignal("micChange", "off");
-      }
-    }
-  }, [mic])
 
   // 마이크 핸들러
   const toggleMic = () => {
