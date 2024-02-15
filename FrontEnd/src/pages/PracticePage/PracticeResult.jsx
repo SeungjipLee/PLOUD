@@ -89,14 +89,12 @@ const PracticeResult = ({ onClose, speechId, videoResponse }) => {
   };
 
   useEffect(() => {
-
     setTimeout(() => {
       recordResultGet();
     }, 5000);
   }, []);
 
   const recordResultGet = () => {
-
     getRecordResult(
       token,
       resultId,
@@ -118,7 +116,7 @@ const PracticeResult = ({ onClose, speechId, videoResponse }) => {
       (err) => {
         // console.log(err);
       }
-    )
+    );
 
     // setLoading(false); // 로딩 종료
   };
@@ -169,8 +167,12 @@ const PracticeResult = ({ onClose, speechId, videoResponse }) => {
               </div>
               <div className="p-2">
                 <div
-                  className="w-68 h-36 m-auto grid grid-cols-2 text-center place-content-center rounded-xl"
-                  style={{ backgroundColor: "#EBEAFA" }}
+                  className="w-68 h-28 m-auto grid grid-cols-2 text-center place-content-center rounded-xl"
+                  style={{
+                    backgroundColor: "#EBEAFA",
+                    marginTop: "16px",
+                    marginBottom: "16px",
+                  }}
                 >
                   <div className="text-2xl mt-5 ps-5 pb-4 ms-5">결과:</div>
                   <div className="text-5xl me-5 pt-2">{grade}</div>
