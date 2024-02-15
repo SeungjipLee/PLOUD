@@ -5,6 +5,7 @@ import BarChart from "../../../components/BarChart";
 import { getRecordResult } from "../../../services/record";
 import { postComment } from "../../../services/speech";
 import LoadingScreen from "./Loading";
+import LoadingScreen2 from "./Loading2";
 import MyAlert from "../../../components/MyAlert";
 
 const StudyResult = ({ onClose, speechId, videoResponse }) => {
@@ -25,6 +26,7 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
 
   // 로딩 상태 관리
   const [loading, setLoading] = useState(true);
+  const [responseLoading, setResponseLoading] = useState(true);
 
   useEffect(() => {
     console.log("유즈 이펙트~");
@@ -176,7 +178,11 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
                     style={{ width: "100%", height: "100%" }}
                   >
                     {videoPath == "" ? (
-                      <div>영상을 가져오고 있습니다.</div>
+                      // 로딩 필요함
+                      <div className="loading-overlay">
+                        <LoadingScreen2 />
+                        <p style={{ textAlign: "center" }}>영상로딩 중...</p>
+                      </div>
                     ) : videoPath == "False" ? (
                       <div>영상 업로드에 실패헀습니다.</div>
                     ) : (
