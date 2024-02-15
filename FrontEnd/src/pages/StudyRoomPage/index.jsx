@@ -727,6 +727,10 @@ const StudyRoomPage = () => {
       if (username != nickname) {
         setFeedbackModal(false);
         setFeedbackButton(false);
+
+        if(!mic){
+          toggleMic()
+        }
       }
       setMode("0");
       // 녹화 종료의 경우 여기서 한 번에 처리해도 가능할 듯?
