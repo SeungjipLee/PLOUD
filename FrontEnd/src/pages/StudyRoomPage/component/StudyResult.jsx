@@ -27,6 +27,8 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("유즈 이펙트~");
+
     setTimeout(() => {
       recordResultGet();
     }, 5000);
@@ -45,11 +47,13 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
   }, [videoResponse]);
 
   const recordResultGet = () => {
+    console.log("결과 가쟈와~");
 
     getRecordResult(
       token,
       resultId,
       (res) => {
+        console.log(res.data.data);
         setSpeech(res.data.data.speech);
         setScores(res.data.data.score);
         setFeedbacks(res.data.data.feedbacks);
@@ -57,9 +61,7 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
           setVideoPath(res.data.data.video.videoPath);
         }
       },
-      (err) => {
-        // console.log(err)
-      }
+      (err) => console.log(err)
     );
 
     setLoading(false); // 로딩 종료
@@ -136,12 +138,10 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
           setMessage("내 피드백이 등록되었습니다");
           setAlert1(true);
         },
-        (err) => {
-          // console.log(err)
-        }
+        (err) => console.log(err)
       );
     } catch (err) {
-      // console.log(err);
+      console.log(err);
     }
   };
 
@@ -188,8 +188,12 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
                 </div>
                 <div className="p-2">
                   <div
-                    className="w-68 h-36 m-auto grid grid-cols-2 text-center place-content-center rounded-xl"
-                    style={{ backgroundColor: "#EBEAFA" }}
+                    className="w-68 h-28 m-auto grid grid-cols-2 text-center place-content-center rounded-xl"
+                    style={{
+                      backgroundColor: "#EBEAFA",
+                      marginTop: "16px",
+                      marginBottom: "16px",
+                    }}
                   >
                     <div className="text-2xl mt-5 ps-5 pb-4 ms-5">결과:</div>
                     <div className="text-5xl me-5 pt-2 me-5">{grade}</div>
@@ -287,7 +291,7 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
                         className="p-3 bg-gray-100"
                       >
                         {feedbacks.map((feedback, index) => (
-                          <p key={index} className="py-0.5">
+                          <p key={index} className="py-2 px-4 ">
                             {feedback.timeLog} - {feedback.content}
                           </p>
                         ))}
@@ -310,7 +314,7 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
                           id=""
                           cols="20"
                           rows="3"
-                          className="bg-gray-100"
+                          className="bg-gray-100 py-2 px-4 "
                           placeholder="피드백을 남겨보세요."
                           style={{ width: "100%" }}
                           onChange={(e) => setMyFeedback(e.target.value)}
