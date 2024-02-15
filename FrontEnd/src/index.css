@@ -1380,6 +1380,11 @@ input[type="number"]::-webkit-outer-spin-button {
 
   background-color: #c4c4c4;
 }
+
+.slideshowDot.active {
+  background-color: #f3704b;
+}
+
 a .slideshowDot.active {
   background-color: #f3704b;
 }
