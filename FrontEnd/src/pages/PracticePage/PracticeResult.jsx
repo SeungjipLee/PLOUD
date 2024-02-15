@@ -140,18 +140,19 @@ const PracticeResult = ({
     }, 20000);
 
     return () => {
-      clearInterval(timerId); // 컴포넌트 언마운트 시 타이머 제거
-      clearTimeout(timeoutId); // 타임아웃 제거
+      if (resultResponse) {
+        clearInterval(timerId); // 컴포넌트 언마운트 시 타이머 제거
+        clearTimeout(timeoutId); // 타임아웃 제거
+      }
     };
-  }, [onClose]);
+  }, [resultResponse]);
 
   return (
     <>
       <Modal
         title="연습 결과 발표"
         className="study-result"
-        style={{ position: "fixed", top: "100px", left: "100px", zIndex: 999 }}
-        onClick={onClose}>
+        style={{ position: "fixed", top: "100px", left: "100px", zIndex: 999 }}>
         {/* <div className="result-section" onClick={(e) => e.stopPropagation()}>
         <div className="result-section-1 mx-5">
           <div className="p-2">

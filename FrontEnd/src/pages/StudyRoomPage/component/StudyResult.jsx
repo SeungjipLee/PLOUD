@@ -116,10 +116,12 @@ const StudyResult = ({ onClose, speechId, videoResponse, resultResponse }) => {
     }, 20000);
 
     return () => {
-      clearInterval(timerId); // 컴포넌트 언마운트 시 타이머 제거
-      clearTimeout(timeoutId); // 타임아웃 제거
+      if (resultResponse) {
+        clearInterval(timerId); // 컴포넌트 언마운트 시 타이머 제거
+        clearTimeout(timeoutId); // 타임아웃 제거
+      }
     };
-  }, [onClose]);
+  }, [resultResponse]);
 
   const handleSkip = () => {
     if (typeof onClose === "function") {
