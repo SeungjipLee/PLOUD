@@ -392,7 +392,8 @@
 - [API 명세서](./document/API명세서.pdf)
 - [와이어프레임](./document/와이어프레임.png)
 - [ER Diagram](./document/erd.png)
-- [포팅메뉴얼](./exec/PortingManual.md)
+- [포팅메뉴얼](./exec/PortingManual.md)  
+- [점수 산출 과정 시퀀스 다이어그림](./document/점수산출과정.png)  
 
 
 ## 👨‍👨‍👧 팀원 👨‍👨‍👧
