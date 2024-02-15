@@ -240,6 +240,7 @@ const StudyRoomPage = () => {
   const [presenter, setPresenter] = useState("");
   const [userList, setUserList] = useState([]);
   // { userId: "test01", presenter: true },
+  const presenterRef = useRef("")
 
   // 채팅 정보
   const [chatvalue, setChatvalue] = useState("");
@@ -323,6 +324,7 @@ const StudyRoomPage = () => {
   }, []);
 
   useEffect(() => {
+    presenterRef.current = presenter
     if (!presenter) return;
     console.log("[presenter]", presenter);
     if (OV.current == null) joinSession();
@@ -639,13 +641,15 @@ const StudyRoomPage = () => {
       var username = JSON.parse(event.data).nickname;
       var content = JSON.parse(event.data).chatvalue;
       console.log("[녹화 시작 신호 받음]");
+      console.log(presenterRef, nickname)
       // 참여자라면
       denyMics();
-      console.log(publisher);
-      if (presenter != nickname) {
+      if (presenterRef.current != nickname) {
         // 녹화 시작 신호를 받았을 때 모드가 3이 아니라면 청자는 모드 2번으로 이동
-        if (!screenShareRef) { // 이거 mode 안찍힐수도 있다.
+        if (!screenShareRef.current) { // 이거 mode 안찍힐수도 있다.
           setMode("2");
+        } else {
+          setMode("3")
         }
       }
       setRecord(true);
@@ -1226,7 +1230,6 @@ const StudyRoomPage = () => {
                         </div>
                       </div>
                     );
-                    s;
                   }
                 })}
                 {/* {publisher !== mainStreamManager && ( */}
