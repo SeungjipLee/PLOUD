@@ -312,7 +312,7 @@ const PracticeRoomPage = () => {
 
     setTimeout(() => {
       // 피드백2가 없으면 초기화
-      if(isFeedback2.current == false){
+      if (isFeedback2.current == false) {
         setFeedback("잘하고 있어요!");
       }
 
@@ -328,11 +328,11 @@ const PracticeRoomPage = () => {
     isFeedback2.current = true;
     setFeedback(fb);
 
-    setTimeout(()=> {
+    setTimeout(() => {
       isFeedback2.current = false;
       setFeedback("잘하고 있어요!");
     }, 2500);
-  }
+  };
 
   // 녹화 종료
   const stopRecording = () => {
@@ -610,14 +610,21 @@ const PracticeRoomPage = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-          }}>
+          }}
+        >
           <div>
-            <video
-              style={{ width: "530px", height: "500px" }}
-              ref={videoRef}
-              autoPlay
-              muted
-            />
+            {video ? (
+              <video
+                style={{ width: "530px", height: "500px" }}
+                ref={videoRef}
+                autoPlay
+                muted
+              />
+            ) : (
+              <div className="mic-off">
+                <img src="/images/mic_off.png" />
+              </div>
+            )}
           </div>
           <div
             style={{
@@ -632,7 +639,8 @@ const PracticeRoomPage = () => {
               color: "white",
               marginTop: "-20px",
               paddingTop: "26px",
-            }}>
+            }}
+          >
             {feedback}
           </div>
         </div>
@@ -642,7 +650,8 @@ const PracticeRoomPage = () => {
               width: "50%",
               height: "600px",
               display: "flex",
-            }}>
+            }}
+          >
             <div>
               <video
                 ref={screenShareVideoRef}
@@ -653,7 +662,8 @@ const PracticeRoomPage = () => {
                   maxHeight: "600px",
                   padding: "22px",
                 }}
-                autoPlay></video>
+                autoPlay
+              ></video>
             </div>
           </div>
         ) : content != "" ? (
@@ -664,7 +674,8 @@ const PracticeRoomPage = () => {
                 fontWeight: "bold",
                 textAlign: "center",
                 marginBottom: "23px",
-              }}>
+              }}
+            >
               {scriptTitle}
             </p>
             {wrapWords(content)}
@@ -720,20 +731,23 @@ const PracticeRoomPage = () => {
         <Modal
           title="마이크테스트"
           onClose={(e) => setMic(false)}
-          className={"mic-test-form"}>
+          className={"mic-test-form"}
+        >
           <div
             style={{
               display: "flex",
               justifyContent: "center",
               flexDirection: "column",
               alignItems: "center",
-            }}>
+            }}
+          >
             <p className="mic-text-box">{micTestContent}</p>
             <div
               className="mic-color-box"
               style={{
                 backgroundColor: micColor,
-              }}></div>
+              }}
+            ></div>
           </div>
         </Modal>
       )}
@@ -743,7 +757,8 @@ const PracticeRoomPage = () => {
         <Modal
           title="녹화 정보 입력"
           onClose={(e) => setRecordForm(false)}
-          className={"record-form"}>
+          className={"record-form"}
+        >
           <form onSubmit={speechStart}>
             <div className="ms-3 mt-5">
               <div className="record-form-each">
@@ -753,7 +768,8 @@ const PracticeRoomPage = () => {
                     placeholder="제목 입력"
                     value={title}
                     style={{ color: "white" }}
-                    onChange={(e) => setTitle(e.target.value)}></input>
+                    onChange={(e) => setTitle(e.target.value)}
+                  ></input>
                 </div>
               </div>
               <div className="record-form-each">
@@ -770,7 +786,8 @@ const PracticeRoomPage = () => {
                 style={{
                   color: "#FFFFFF",
                   fontWeight: "bold",
-                }}>
+                }}
+              >
                 녹화 시작
               </Button>
             </div>
