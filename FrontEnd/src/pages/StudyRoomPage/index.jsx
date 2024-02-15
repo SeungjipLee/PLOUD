@@ -743,12 +743,11 @@ const StudyRoomPage = () => {
       if (username != nickname) {
         setFeedbackModal(false);
         setFeedbackButton(false);
+
+        // 녹화 종료한 경우 자동으로 마이크 다시 켜지도록
+        setMic(true);
       }
       setMode("0");
-      // 녹화 종료의 경우 여기서 한 번에 처리해도 가능할 듯?
-
-      // 레이아웃 전환
-      // 버튼 활성화
     });
 
     session.current
