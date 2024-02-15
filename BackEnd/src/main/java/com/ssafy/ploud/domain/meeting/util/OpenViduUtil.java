@@ -128,7 +128,7 @@ public class OpenViduUtil {
                         log.debug("방 삭제 요청 - 세션 ID : " + sessionId);
 
                         this.mapSessionIdsTokens.remove(sessionId);
-                        this.mapSessions.remove(sessionId);
+                        this.mapSessions.remove(sessionId).close();
 
                         for (int i = 0; i < meetingList.size(); ++i) {
                             if (meetingList.get(i).getSessionId().equals(sessionId)) {
@@ -138,8 +138,6 @@ public class OpenViduUtil {
                                 break;
                             }
                         }
-
-                        this.mapSessions.get(sessionId).close();
                     }
                 } else{
                     throw new CustomException(ResponseCode.OPENBVIDU_TOKEN_ERROR);
