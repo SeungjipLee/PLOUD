@@ -1,5 +1,5 @@
 import Modal from "../../../components/Modal";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import BarChart from "../../../components/BarChart";
 import { getRecordResult } from "../../../services/record";
@@ -29,10 +29,10 @@ const StudyResult = ({ onClose, speechId, videoResponse, resultResponse }) => {
   const videoRef = useRef(null);
 
   useEffect(() => {
-    if(resultResponse){
+    if (resultResponse) {
       recordResultGet();
     }
-  }, [resultResponse])
+  }, [resultResponse]);
 
   useEffect(() => {
     if (videoResponse === true) {
