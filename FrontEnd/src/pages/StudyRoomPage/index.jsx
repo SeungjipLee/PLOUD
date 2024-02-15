@@ -173,8 +173,12 @@ const StudyRoomPage = () => {
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
-      leaveSession();
+      if(!isLast.current){
+        speechEnd();
+      }
 
+      leaveSession();
+      
       event.preventDefault();
     };
 
@@ -479,6 +483,7 @@ const StudyRoomPage = () => {
           { userId: nickname2, presenter: false },
         ]);
       }
+      
       var subscriber = session.current.subscribe(event.stream, undefined);
 
       setSubscribers((subscribers) => [...subscribers, subscriber]);

@@ -11,8 +11,6 @@ import {
   startSpeech,
   endSpeech,
   assessSpeech,
-  postFeedback,
-  postComment,
   uploadVideo,
 } from "../../services/speech";
 
@@ -28,7 +26,7 @@ const PracticeRoomPage = () => {
   const predicate = location.state.predicate;
   const category = location.state.category;
 
-  const [feedback, setFeedback] = useState("");
+  const [feedback, setFeedback] = useState("[ 실시간 피드백 ]");
 
   const videoRef = useRef(null);
   const screenShareVideoRef = useRef(null);
@@ -67,6 +65,7 @@ const PracticeRoomPage = () => {
   // 피드백 관련
   const tmpDecibels = useRef([]); // 임시 데시벨 데이터 저장(3초)
   const isFeedback = useRef(false);
+  const isFeedback2 = useRef(false);
 
   // 마이크 테스트 관련
   const [micTestContent, setMicTestContent] = useState("");
@@ -90,10 +89,10 @@ const PracticeRoomPage = () => {
     // 3초 동안 30데시벨 이하
     const isSilent = tmpDecibels.current.every((db) => db < 30);
 
-    if (!isFeedback.current && tmpDecibels.current.length >= 30 && isSilent) {
+    if (!isFeedback.current && !isFeedback2.current && tmpDecibels.current.length >= 30 && isSilent) {
       isFeedback.current = true;
       changeFeedback("침묵이 길어지고 있어요!");
-    } else if (!isFeedback.current && tmpDecibels.current.slice(-1)[0] >= 70) {
+    } else if (!isFeedback.current && !isFeedback2.current && tmpDecibels.current.slice(-1)[0] >= 70) {
       isFeedback.current = true;
       changeFeedback("목소리가 너무 크게 들려요!");
     }
@@ -131,6 +130,11 @@ const PracticeRoomPage = () => {
         stream.getTracks().forEach((track) => track.stop());
         videoRef.current.srcObject = null;
       }
+
+      if(isLast.current){
+        console.log("녹화 중 종료");
+        speechEnd();
+      }
     };
   }, []);
 
@@ -164,6 +168,14 @@ const PracticeRoomPage = () => {
 
         startRecording();
         videoRecordingStart();
+
+        // 마이크 꺼짐
+        setMic(false);
+
+        setFeedback("");
+        setTimeout(() => {
+          setFeedback("잘하고 있어요!");
+        }, 1500)
       },
       (err) => {
         // console.log(err)
@@ -285,34 +297,20 @@ const PracticeRoomPage = () => {
 
   const changeFeedback = (fb) => {
     setFeedback(fb);
-    feedbackPost(fb);
 
     setTimeout(() => {
-      setFeedback("");
+      if(isFeedback2.current == true || (isFeedback.current == true && isFeedback2.current == false)){
+        setFeedback("잘하고 있어요!");
+      }
 
       setTimeout(() => {
-        isFeedback.current = false;
+        if(isFeedback.current == true){
+          isFeedback.current = false;
+        }else if(isFeedback2.current == true){
+          isFeedback2.current = false;
+        }
       }, 2500);
     }, 2500);
-  };
-
-  // 피드백 전송
-  const feedbackPost = (tmpFb) => {
-    // be로 요청
-    postFeedback(
-      token,
-      {
-        sessionId: "",
-        speechId: speechId.current,
-        content: tmpFb,
-      },
-      (response) => {
-        // console.log("피드백 등록 성공");
-      },
-      (error) => {
-        // console.log("피드백 등록 실패");
-      }
-    );
   };
 
   // 녹화 종료
