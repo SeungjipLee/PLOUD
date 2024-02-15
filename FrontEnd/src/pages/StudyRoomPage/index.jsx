@@ -44,6 +44,8 @@ const StudyRoomPage = () => {
 
   const userSize = useRef(0);
 
+  const [videoChange, setVideoChange] = useState(false);
+
   // 기본 정보
   const { userId, token, nickname } = useSelector((state) => state.userReducer);
   const room = useSelector((state) => state.studyReducer.studyInfo.meetingInfo);
@@ -606,6 +608,11 @@ const StudyRoomPage = () => {
       setMode("0");
     })
 
+    // 비디오 상태 전환
+    session.current.on("signal:videoChange", (event) => {
+      setVideoChange(!videoChange);
+    })
+
     // 방장이 떠남
     session.current.on("signal:exit", (event) => {
       setChatList((chatList) => [
@@ -1097,6 +1104,7 @@ const StudyRoomPage = () => {
     if (publisher) {
       publisher.publishVideo(newVideo); // 비디오 상태 토글
     }
+    sendSignal("videoChange", "누군가의 비디오 상태 변경");    
   };
 
   // 마이크 핸들러
