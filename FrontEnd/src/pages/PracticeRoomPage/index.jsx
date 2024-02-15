@@ -359,6 +359,10 @@ const PracticeRoomPage = () => {
         // console.log(error);
       }
     );
+
+    if(isLast.current){
+      setFeedback("[ 실시간 피드백 ]");
+    }
   };
 
   // 비디오 녹화 시작
