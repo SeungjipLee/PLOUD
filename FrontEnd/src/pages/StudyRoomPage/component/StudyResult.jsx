@@ -189,9 +189,11 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
                 <div className="p-2">
                   <div
                     className="w-68 h-28 m-auto grid grid-cols-2 text-center place-content-center rounded-xl"
-                    style={{ backgroundColor: "#EBEAFA",
-                            marginTop: "16px",
-                            marginBottom: "16px", }}
+                    style={{
+                      backgroundColor: "#EBEAFA",
+                      marginTop: "16px",
+                      marginBottom: "16px",
+                    }}
                   >
                     <div className="text-2xl mt-5 ps-5 pb-4 ms-5">결과:</div>
                     <div className="text-5xl me-5 pt-2 me-5">{grade}</div>
