@@ -219,10 +219,7 @@ const PracticeRoomPage = () => {
       }
     );
 
-    // 비동기 처리 헷갈리니까 5초 뒤에 하자
-    setTimeout(() => {
-      recordResult();
-    }, 5000);
+    recordResult();
   };
 
   const recordResult = () => {
@@ -370,13 +367,13 @@ const PracticeRoomPage = () => {
           changeFeedback("발음을 정확하게 해주세요!");
         }
 
-        if(isLast.current){
+        if (isLast.current) {
           setResultResponse(true);
         }
       },
       (error) => {
         // console.log(error);
-        if(isLast.current){
+        if (isLast.current) {
           setResultResponse(true);
         }
       }
@@ -599,8 +596,7 @@ const PracticeRoomPage = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-          }}
-        >
+          }}>
           <div>
             <video
               style={{ width: "530px", height: "500px" }}
@@ -622,8 +618,7 @@ const PracticeRoomPage = () => {
               color: "white",
               marginTop: "-20px",
               paddingTop: "26px",
-            }}
-          >
+            }}>
             {feedback}
           </div>
         </div>
@@ -633,8 +628,7 @@ const PracticeRoomPage = () => {
               width: "50%",
               height: "600px",
               display: "flex",
-            }}
-          >
+            }}>
             <div>
               <video
                 ref={screenShareVideoRef}
@@ -645,8 +639,7 @@ const PracticeRoomPage = () => {
                   maxHeight: "600px",
                   padding: "22px",
                 }}
-                autoPlay
-              ></video>
+                autoPlay></video>
             </div>
           </div>
         ) : content != "" ? (
@@ -657,8 +650,7 @@ const PracticeRoomPage = () => {
                 fontWeight: "bold",
                 textAlign: "center",
                 marginBottom: "23px",
-              }}
-            >
+              }}>
               {scriptTitle}
             </p>
             {wrapWords(content)}
@@ -714,23 +706,20 @@ const PracticeRoomPage = () => {
         <Modal
           title="마이크테스트"
           onClose={(e) => setMic(false)}
-          className={"mic-test-form"}
-        >
+          className={"mic-test-form"}>
           <div
             style={{
               display: "flex",
               justifyContent: "center",
               flexDirection: "column",
               alignItems: "center",
-            }}
-          >
+            }}>
             <p className="mic-text-box">{micTestContent}</p>
             <div
               className="mic-color-box"
               style={{
                 backgroundColor: micColor,
-              }}
-            ></div>
+              }}></div>
           </div>
         </Modal>
       )}
@@ -740,8 +729,7 @@ const PracticeRoomPage = () => {
         <Modal
           title="녹화 정보 입력"
           onClose={(e) => setRecordForm(false)}
-          className={"record-form"}
-        >
+          className={"record-form"}>
           <form onSubmit={speechStart}>
             <div className="ms-3 mt-5">
               <div className="record-form-each">
@@ -751,8 +739,7 @@ const PracticeRoomPage = () => {
                     placeholder="제목 입력"
                     value={title}
                     style={{ color: "white" }}
-                    onChange={(e) => setTitle(e.target.value)}
-                  ></input>
+                    onChange={(e) => setTitle(e.target.value)}></input>
                 </div>
               </div>
               <div className="record-form-each">
@@ -769,8 +756,7 @@ const PracticeRoomPage = () => {
                 style={{
                   color: "#FFFFFF",
                   fontWeight: "bold",
-                }}
-              >
+                }}>
                 녹화 시작
               </Button>
             </div>
