@@ -1278,7 +1278,7 @@ const StudyRoomPage = () => {
                             : false
                         }
                         isMicState={
-                          micOffUserList.includes(getUserNickname(sub))
+                          micOffUserList.includes(getUserNickname(publisher))
                         }
                         streamManager={publisher}
                       />
@@ -1335,7 +1335,7 @@ const StudyRoomPage = () => {
                             : false
                         }
                         isMicState={
-                          micOffUserList.includes(getUserNickname(sub))
+                          micOffUserList.includes(getUserNickname(publisher))
                         }
                         streamManager={publisher}
                       />
@@ -1394,7 +1394,7 @@ const StudyRoomPage = () => {
                           : false
                       }
                       isMicState={
-                        micOffUserList.includes(getUserNickname(sub))
+                        micOffUserList.includes(getUserNickname(publisher))
                       }
                       streamManager={publisher}
                     />
@@ -1478,7 +1478,7 @@ const StudyRoomPage = () => {
                           : false
                       }
                       isMicState={
-                        micOffUserList.includes(getUserNickname(sub))
+                        micOffUserList.includes(getUserNickname(publisher))
                       }
                       streamManager={publisher}
                     />
