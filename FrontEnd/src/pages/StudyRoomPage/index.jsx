@@ -625,8 +625,10 @@ const StudyRoomPage = () => {
         const exists = prevList.includes(username);
   
         if (exists) {
+          console.log(username + "마이크 온");
           return prevList.filter(user => user !== nickname);
         } else {
+          console.log(username + "마이크 오프");
           return [...prevList, nickname];
         }
       });
