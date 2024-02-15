@@ -20,7 +20,6 @@ const Tier = () => {
             const response = await getScoreList(
               token,
               (res) => {
-                console.log(res.data.data.totalTime)
                 setTier(res.data.data.totalTime)
                 const tier = res.data.data.totalTime
                 if (tier < 60) {
@@ -38,17 +37,18 @@ const Tier = () => {
                 }
 
             },
-              (err) => console.log('여기')
+              (err) => err
             );       
           } catch (error) {
-            console.error(error);
+            error
           }
         };
         fetchData();
       }, []);
     
       const Modal = () => (
-        <div style={{
+        <div className="tier-info"
+        style={{
           position: 'absolute', top: '30px', left:'120px',
           background: 'white', padding: '20px', borderRadius: '5px',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', width: '300px', height:'100px', zIndex:'1000',

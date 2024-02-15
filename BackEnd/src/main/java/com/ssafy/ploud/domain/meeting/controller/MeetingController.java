@@ -42,9 +42,7 @@ public class MeetingController {
     }
 
     @PostMapping("/leave")
-    public ApiResponse<?> leaveMeeting(@AuthenticationPrincipal UserDetails loginUser,
-        @RequestBody MeetingLeaveRequest request) {
-        request.setUserId(loginUser.getUsername());
+    public ApiResponse<?> leaveMeeting(@RequestBody MeetingLeaveRequest request) {
         meetingService.leave(request);
         return ApiResponse.ok("종료 성공");
     }

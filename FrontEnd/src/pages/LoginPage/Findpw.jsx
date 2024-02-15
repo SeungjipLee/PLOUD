@@ -9,10 +9,15 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { findId, findPw } from "../../services/user";
+import MyAlert from "../../components/MyAlert";
 
 const FindPwPage = () => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
+  // 알림 창 상태
+  const [ message, setMessage ] = useState("")
+  const [ alert, setAlert ] = useState(false)
+  const [ alert2, setAlert2 ] = useState(false)
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -23,12 +28,14 @@ const FindPwPage = () => {
     e.preventDefault();
     findId(
       {email: email, name: name},
-      (res) => {
-        alert(`아이디는 ${res.data.data.userId}입니다.`)
+      async (res) => {
+        await setMessage(`아이디는 ${res.data.data.userId}입니다.`)
+        setAlert(true)
         setIsIdFind(true)
       },
-      (err) => {
-        alert("이름이나 이메일 정보가 올바르지 않습니다.")
+      async (err) => {
+        await setMessage("이름이나 이메일 정보가 올바르지 않습니다.")
+        setAlert(true)
       }
     );
   };
@@ -37,12 +44,13 @@ const FindPwPage = () => {
     e.preventDefault();
     findPw(
       {userId:id, email:email},
-      (res) => {
-        alert('(비밀번호 초기화) 메일로 새비밀번호를 전송하였습니다.')
-        navigate('/')
+      async (res) => {
+        await setMessage('(비밀번호 초기화) 메일로 새비밀번호를 전송하였습니다.')
+        setAlert2(true)
       },
-      (err) => {
-        alert("아이디나 이메일 정보가 올바르지 않습니다.")
+      async (err) => {
+        await setMessage("아이디나 이메일 정보가 올바르지 않습니다.")
+        setAlert(true)
       }
     )
   }
@@ -56,6 +64,7 @@ const FindPwPage = () => {
   }
 
   return (
+    <>
     <Page footer={<Footer />}>
       <div className="flex justify-center">
         <a href="/"><img src="images/ICON_similar_white.png" className="w-36 mt-24"/></a>
@@ -128,6 +137,9 @@ const FindPwPage = () => {
         </div>
       </div>
     </Page>
+    {alert && <MyAlert content={message} onClose={() => {setAlert(false)}}/>}
+    {alert2 && <MyAlert content={message} onClose={() => {setAlert2(false); navigate("/login")}}/>}
+    </>
   );
 };
 

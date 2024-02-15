@@ -9,7 +9,6 @@ export const recordSlice = createSlice({
   initialState,
   reducers: {
     addRecordList: (state, action) => {
-      console.log(action.payload);
       state.recordList = [...state.recordList, action.payload];
     },
     initRecordList: (state, action) => {

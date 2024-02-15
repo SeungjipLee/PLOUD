@@ -4,10 +4,13 @@ import { createMeeting } from "../../services/meeting";
 import { useDispatch } from "react-redux";
 import { getStudy } from "../../features/study/studySlice";
 import { useNavigate } from "react-router";
+import MyAlert from "../../components/MyAlert";
 
 const CreateForm = () => {
+  const [message, setMessage] = useState("");
+  const [alert1, setAlert1] = useState(false);
   const navigate = useNavigate();
-  const { nickname } = useSelector((state) => state.userReducer ) 
+  const { nickname } = useSelector((state) => state.userReducer);
   const [formData, setFormData] = useState({
     managerId: nickname,
     categoryId: "",
@@ -31,15 +34,15 @@ const CreateForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.title.trim()) {
-      alert("제목을 입력해 주세요.");
+      setMessage("제목을 입력해 주세요.")
+      setAlert1(true)
       return;
     }
     if (formData.categoryId == "" || formData.categoryId == "0") {
-      alert("카테고리를 선택해 주세요.");
+      setMessage("카테고리를 선택해 주세요.")
+      setAlert1(true)
       return;
     }
-    console.log("전송 ");
-    console.log(formData);
 
     createMeeting(
       token,
@@ -49,7 +52,7 @@ const CreateForm = () => {
         navigate("/study/room");
       },
       (error) => {
-        console.log(error);
+        // console.log(error);
       }
     );
   };
@@ -124,7 +127,7 @@ const CreateForm = () => {
               <button
                 type="button"
                 onClick={decrementMaxPeople}
-                className="p-2 text-lg rounded" 
+                className="p-2 text-lg rounded"
                 // className="text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
                 -
@@ -138,7 +141,7 @@ const CreateForm = () => {
               <button
                 type="button"
                 onClick={incrementMaxPeople}
-                className="p-2 text-lg rounded" 
+                className="p-2 text-lg rounded"
                 // className="text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
                 +
@@ -245,6 +248,14 @@ const CreateForm = () => {
           </button>
         </div>
       </form>
+      {alert1 && (
+        <MyAlert
+          content={message}
+          onClose={() => {
+            setAlert1(false);
+          }}
+        />
+      )}
     </>
   );
 };

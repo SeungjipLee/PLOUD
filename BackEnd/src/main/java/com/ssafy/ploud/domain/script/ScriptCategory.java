@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Getter
 public enum ScriptCategory {
+  MYSCRIPT("내 대본",0),
   NEWS("뉴스", 1),
   SPEECH("발표", 2);
 

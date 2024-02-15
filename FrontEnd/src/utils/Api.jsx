@@ -1,13 +1,9 @@
 import axios from "axios";
-// import { useDispatch } from "react-redux";
-// import { getToken } from "../features/user/userSlice";
 
 const DOMAIN = "https://i10e207.p.ssafy.io";
 // const DOMAIN = "http://localhost:8000";
 
 const API = (token) => {
-  // const dispatch = useDispatch();
-
   const instance = axios.create({
     baseURL: DOMAIN + "/api",
     headers: {
@@ -21,9 +17,7 @@ const API = (token) => {
       return response;
     },
     async (error) => {
-      console.log(error);
-
-      if (error.response.data.message) {
+      if (error.response.data.message === "JWT token expired") {
         alert("로그아웃 후 다시 로그인해 주세요!");
 
         return Promise.reject(error);

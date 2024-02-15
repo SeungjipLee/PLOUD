@@ -59,18 +59,17 @@ const PracticeResult = ({ onClose, speechId }) => {
           token,
           resultId,
           (res) => {
-            console.log(res.data.data)
             setScores(res.data.data.score)
             setVideoPath(res.data.data.video.videoPath)
             setAbout(res.data.data.speech)
           },
-          (err) => console.log(err)
+          (err) => err
         );
         
         const randomSentenceResponse = getSentence(
           token,
           (res) => setSentence(res.data.data.sentence),
-          (err) => console.log(err)
+          (err) => err
         );
 
       } catch (error) {
@@ -107,7 +106,7 @@ const PracticeResult = ({ onClose, speechId }) => {
               <div className="w-68 h-36 grid grid-cols-2 text-center place-content-center rounded-xl"
                 style={{backgroundColor:"#EBEAFA"}}>
                 <div className="text-2xl mt-5 ps-5 pb-4 ms-5">결과:</div>
-                <div className="text-5xl me-5 pt-2 me-5" style={gradeStyle}>{grade}</div>                              
+                <div className="text-5xl me-5 pt-2 me-5">{grade}</div>                              
               </div>
             </div>
           </div>

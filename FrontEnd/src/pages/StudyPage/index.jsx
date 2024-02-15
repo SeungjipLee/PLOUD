@@ -11,6 +11,7 @@ import RoomCard from "./roomCard";
 import { useNavigate } from "react-router-dom";
 import CreateModal from "./CreateModal";
 import JoinConfirmModal from "./JoinConfirmModal";
+import MyAlert from "../../components/MyAlert";
 
 // 방 목록이 리렌더링 되야하는 시점
 // 방을 클릭했을 때 - 방에 사람이 다 들어가서 들어갈 수 없을 때 다시 렌더링되서 보여줘야함
@@ -18,6 +19,10 @@ import JoinConfirmModal from "./JoinConfirmModal";
 const tag = "[StudyPage]";
 
 const StudyPage = () => {
+  // 알림 창 상태
+  const [message, setMessage] = useState("");
+  const [alert1, setAlert1] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -53,9 +58,11 @@ const StudyPage = () => {
       data,
       (response) => {
         dispatch(getStudyList(response.data.data));
-        setMaxPage(Math.floor((response.data.data.length-1) / 9) + 1 );
+        setMaxPage(Math.floor((response.data.data.length - 1) / 9) + 1);
       },
-      (error) => console.log(error)
+      (error) => {
+        // console.log(error)
+      }
     );
   };
 
@@ -67,14 +74,13 @@ const StudyPage = () => {
   // 방 클릭시 인원, 잠금여부 판단
   const joinStudyRoom = async (data) => {
     setPassword("");
-    console.log(data);
     setSessionId(data.sessionId);
 
     if (data.currentPeople === data.maxPeople) {
-      alert("입장 인원 초과");
+      setMessage("입장 인원이 초과되었습니다.");
+      setAlert1(true);
       return;
     }
-    console.log(data.isPrivate);
     if (data.isPrivate) {
       setIsSecret(true);
     }
@@ -97,7 +103,7 @@ const StudyPage = () => {
         navigate("/study/room");
       },
       (error) => {
-        console.log(error);
+        // console.log(error);
       }
     );
   };
@@ -164,8 +170,8 @@ const StudyPage = () => {
                     기타
                   </Button>
                   <div className="study-main-search">
-                    {/* {word === "" && <img src="./images/search_icon.PNG" alt="" />} */}
-                    <img src="./images/search_icon.PNG" alt="" />
+                    {/* {word === "" && <img src="/images/search_icon.PNG" alt="" />} */}
+                    <img src="/images/search_icon.PNG" alt="" />
                     <input
                       className="search-room-input"
                       type="text"
@@ -199,7 +205,7 @@ const StudyPage = () => {
               </div>
               <div className="pagination">
                 <button onClick={(e) => (page > 1 ? setPage(page - 1) : null)}>
-                  <img src="/images/leftbutton.png"/>
+                  <img src="/images/leftbutton.png" />
                 </button>
                 {page > 1 && (
                   <span onClick={(e) => setPage(page - 1)}>{page - 1}</span>
@@ -214,7 +220,7 @@ const StudyPage = () => {
                 <button
                   onClick={(e) => (page < maxPage ? setPage(page + 1) : null)}
                 >
-                  <img src="/images/rightbutton.png"/>
+                  <img src="/images/rightbutton.png" />
                 </button>
               </div>
               {/* <div className="create-room-button">
@@ -245,7 +251,6 @@ const StudyPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                console.log(e);
                 handleJoin();
               }
             }}
@@ -261,6 +266,14 @@ const StudyPage = () => {
             <button onClick={handleJoin}>예</button>
           </div>
         </JoinConfirmModal>
+      )}
+      {alert1 && (
+        <MyAlert
+          content={message}
+          onClose={() => {
+            setAlert1(false);
+          }}
+        />
       )}
     </>
   );

@@ -17,14 +17,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.aspectj.apache.bcel.classfile.Module.Open;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @Transactional
 public class OpenViduUtil {
-    private int num = 0;
     private OpenVidu openVidu;
     private Map<String, Session> mapSessions = new ConcurrentHashMap<>();
 
@@ -98,7 +100,7 @@ public class OpenViduUtil {
             String token = session.createConnection(connectionProperties).getToken();
             String token2 = session.createConnection(connectionProperties).getToken();
 
-            String sessionId = "session" + (num++);
+            String sessionId = session.getSessionId();
 
             // Data 관리
             this.mapSessions.put(sessionId, session);
@@ -115,26 +117,38 @@ public class OpenViduUtil {
     }
 
     public void leave(String sessionId, String token, Boolean isManager) {
-        if (this.mapSessions.get(sessionId) != null
-            && this.mapSessionIdsTokens.get(sessionId) != null) {
-            if(this.mapSessionIdsTokens.get(sessionId).remove(token) != null){
-                if(isManager){
-                    this.mapSessionIdsTokens.remove(sessionId);
-                    this.mapSessions.remove(sessionId);
+        try{
+            if (this.mapSessions.get(sessionId) != null
+                && this.mapSessionIdsTokens.get(sessionId) != null) {
+                if(this.mapSessionIdsTokens.get(sessionId).remove(token) != null){
+                    MeetingInfo meetingInfo = findBySessionId(sessionId);
+                    meetingInfo.setCurrentPeople(meetingInfo.getCurrentPeople() - 1);
 
-                    for(int i = 0; i < meetingList.size(); ++i){
-                        if(meetingList.get(i).getSessionId().equals(sessionId)){
-                            meetingList.remove(i);
+                    if(isManager) {
+                        log.debug("방 삭제 요청 - 세션 ID : " + sessionId);
+
+                        this.mapSessionIdsTokens.remove(sessionId);
+                        this.mapSessions.remove(sessionId);
+
+                        for (int i = 0; i < meetingList.size(); ++i) {
+                            if (meetingList.get(i).getSessionId().equals(sessionId)) {
+                                log.debug("방 삭제 - 세션 ID : " + sessionId + ", 방장 : " + meetingInfo.getManagerId());
+
+                                meetingList.remove(i);
+                                break;
+                            }
                         }
+
+                        this.mapSessions.get(sessionId).close();
                     }
+                } else{
+                    throw new CustomException(ResponseCode.OPENBVIDU_TOKEN_ERROR);
                 }
-                MeetingInfo meetingInfo = findBySessionId(sessionId);
-                meetingInfo.setCurrentPeople(meetingInfo.getCurrentPeople() - 1);
-            } else{
-                throw new CustomException(ResponseCode.OPENBVIDU_TOKEN_ERROR);
+            }else{
+                throw new CustomException(ResponseCode.SESSION_NOT_FOUND);
             }
-        }else{
-            throw new CustomException(ResponseCode.SESSION_NOT_FOUND);
+        }catch (Exception e){
+            throw new CustomException(ResponseCode.OPENVIDU_ERROR);
         }
     }
 

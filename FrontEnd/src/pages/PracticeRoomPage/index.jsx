@@ -11,20 +11,22 @@ import {
   startSpeech,
   endSpeech,
   assessSpeech,
-  postFeedback,
-  postComment,
   uploadVideo,
 } from "../../services/speech";
 
-const Level1 = () => {
+const PracticeRoomPage = () => {
   const { token } = useSelector((state) => state.userReducer);
   const navigate = useNavigate();
 
   const location = useLocation();
   const scriptTitle = location.state.title;
   const content = location.state.content;
+  const subject = location.state.subject;
+  const object = location.state.object;
+  const predicate = location.state.predicate;
+  const category = location.state.category;
 
-  const [feedback, setFeedback] = useState("");
+  const [feedback, setFeedback] = useState("[ 실시간 피드백 ]");
 
   const videoRef = useRef(null);
   const screenShareVideoRef = useRef(null);
@@ -58,12 +60,53 @@ const Level1 = () => {
   const [video, setVideo] = useState(true);
   const [mic, setMic] = useState(false);
 
+  const [resultResponse, setResultResponse] = useState(false);
+  const [videoResponse, setVideoResponse] = useState(null);
+
   // 피드백 관련
   const tmpDecibels = useRef([]); // 임시 데시벨 데이터 저장(3초)
   const isFeedback = useRef(false);
+  const isFeedback2 = useRef(false);
 
   // 마이크 테스트 관련
   const [micTestContent, setMicTestContent] = useState("");
+
+  // 데시벨 계산 후 추가하기
+  const calcDecibel = (average) => {
+    var decibel = Math.max(Math.round(38 * Math.log10(average)), 0);
+    return decibel;
+  };
+
+  const addDecibel = (newDecibel) => {
+    if (newDecibel !== 0) {
+      decibels.current.push(newDecibel);
+    }
+
+    if (tmpDecibels.current.length >= 30) {
+      tmpDecibels.current.shift();
+    }
+    tmpDecibels.current.push(newDecibel);
+
+    // 3초 동안 30데시벨 이하
+    const isSilent = tmpDecibels.current.every((db) => db < 30);
+
+    if (
+      !isFeedback.current &&
+      !isFeedback2.current &&
+      tmpDecibels.current.length >= 30 &&
+      isSilent
+    ) {
+      isFeedback.current = true;
+      changeFeedback("침묵이 길어지고 있어요!");
+    } else if (
+      !isFeedback.current &&
+      !isFeedback2.current &&
+      tmpDecibels.current.slice(-1)[0] >= 70
+    ) {
+      isFeedback.current = true;
+      changeFeedback("목소리가 너무 크게 들려요!");
+    }
+  };
 
   useEffect(() => {
     // 로직 작성
@@ -88,9 +131,21 @@ const Level1 = () => {
           };
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
         });
     }
+
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+        videoRef.current.srcObject = null;
+      }
+
+      if (!isLast.current) {
+        console.log("녹화 중 종료");
+        speechEnd();
+      }
+    };
   }, []);
 
   const toggleVideo = () => {
@@ -108,12 +163,10 @@ const Level1 = () => {
   const speechStart = (e) => {
     e.preventDefault();
 
-    console.log("녹음 시작");
-
     const params = {
       title: title,
       personal: true,
-      categoryId: 0,
+      categoryId: category,
       sessionId: "",
     };
 
@@ -123,12 +176,21 @@ const Level1 = () => {
       (res) => {
         speechId.current = res.data.data.speechId;
 
-        console.log("발표 시작 : " + speechId.current);
-
         startRecording();
         videoRecordingStart();
+
+        // 마이크 꺼짐
+        setMic(false);
+        setResultResponse(false);
+
+        setFeedback("");
+        setTimeout(() => {
+          setFeedback("잘하고 있어요!");
+        }, 1500);
       },
-      (err) => console.log(err)
+      (err) => {
+        // console.log(err)
+      }
     );
 
     // 폼 변경
@@ -137,7 +199,6 @@ const Level1 = () => {
 
   // 녹화 종료 버튼 누르면
   const speechEnd = () => {
-    console.log("녹화 종료");
     isLast.current = true;
     // 녹화 중지 함수 실행
     stopRecording();
@@ -151,13 +212,12 @@ const Level1 = () => {
         decibels: decibels.current,
       },
       (response) => {
-        console.log(response);
+        // console.log(response);
       },
       (error) => {
-        console.log(error);
+        // console.log(error);
       }
     );
-    console.log("평가 끝");
 
     // 비동기 처리 헷갈리니까 5초 뒤에 하자
     setTimeout(() => {
@@ -166,10 +226,9 @@ const Level1 = () => {
   };
 
   const recordResult = () => {
-    console.log("5초 뒤 실행");
     setResultScreen(true);
   };
-
+  stream;
   // 평가 시작
   const startRecording = () => {
     isLast.current = false;
@@ -247,70 +306,29 @@ const Level1 = () => {
       });
   };
 
-  // 데시벨 계산 후 추가하기
-  const calcDecibel = (average) => {
-    var decibel = Math.max(Math.round(38 * Math.log10(average)), 0);
-    return decibel;
-  };
-
-  const addDecibel = (newDecibel) => {
-    decibels.current.push(newDecibel);
-
-    if (tmpDecibels.current.length >= 30) {
-      tmpDecibels.current.shift();
-    }
-    tmpDecibels.current.push(newDecibel);
-
-    // 3초 동안 30데시벨 이하
-    const isSilent = decibels.current.slice(-30).every((db) => db < 30);
-
-    console.log("데시벨 : " + newDecibel);
-
-    if (!isFeedback.current && tmpDecibels.current.length >= 30 && isSilent) {
-      isFeedback.current = true;
-      changeFeedback("침묵이 길어지고 있어요!");
-    } else if (!isFeedback.current && tmpDecibels.current.slice(-1)[0] >= 70) {
-      isFeedback.current = true;
-      changeFeedback("목소리가 너무 크게 들려요!");
-    }
-  };
-
   const changeFeedback = (fb) => {
-    console.log("피드백 수락");
     setFeedback(fb);
-    feedbackPost(fb);
 
     setTimeout(() => {
-      setFeedback("");
+      if (
+        isFeedback2.current == true ||
+        (isFeedback.current == true && isFeedback2.current == false)
+      ) {
+        setFeedback("잘하고 있어요!");
+      }
 
       setTimeout(() => {
-        isFeedback.current = false;
+        if (isFeedback.current == true) {
+          isFeedback.current = false;
+        } else if (isFeedback2.current == true) {
+          isFeedback2.current = false;
+        }
       }, 2500);
     }, 2500);
   };
 
-  // 피드백 전송
-  const feedbackPost = (tmpFb) => {
-    // be로 요청
-    postFeedback(
-      token,
-      {
-        sessionId: "",
-        speechId: speechId.current,
-        content: tmpFb,
-      },
-      (response) => {
-        console.log("피드백 등록 성공");
-      },
-      (error) => {
-        console.log("피드백 등록 실패");
-      }
-    );
-  };
-
   // 녹화 종료
   const stopRecording = () => {
-    // console.log("녹음 중지");
     isRecording.current = false;
     if (mediaRecorder && mediaRecorder.state === "recording") {
       mediaRecorder.stop();
@@ -324,11 +342,8 @@ const Level1 = () => {
 
   // 10초 평가 요청
   const uploadAudio = async (data) => {
-    // console.log("평가 요청");
     var tmp = [];
     tmp.push(data);
-
-    console.log("평가요청 : " + speechId.current);
 
     const audioFile = new Blob(tmp, { type: "audio/wav" });
     const formData = new FormData();
@@ -340,27 +355,36 @@ const Level1 = () => {
       token,
       formData,
       (response) => {
-        console.log("음성 평가 결과");
-        console.log(response.data);
+        // console.log("음성 평가 결과");
         console.log(
           "개수 : " +
-            response.data.scriptCnt +
+            response.data.data.scriptCnt +
             ", 점수 : " +
-            response.data.score
+            response.data.data.score
         );
-        // 실시간 피드백
 
-        if (response.data.scriptCnt > 15) {
+        // 실시간 피드백
+        if (response.data.scriptCnt > 28) {
           changeFeedback("조금만 천천히 말해주세요!");
         } else if (response.data.score < 3) {
           changeFeedback("발음을 정확하게 해주세요!");
         }
+
+        if(isLast.current){
+          setResultResponse(true);
+        }
       },
       (error) => {
-        console.log("평가 실패");
         // console.log(error);
+        if(isLast.current){
+          setResultResponse(true);
+        }
       }
     );
+
+    if (isLast.current) {
+      setFeedback("[ 실시간 피드백 ]");
+    }
   };
 
   // 비디오 녹화 시작
@@ -389,7 +413,6 @@ const Level1 = () => {
     tmp.push(data);
 
     var videoPlayTime = new Date().getTime() - videoStartTime.current;
-    console.log("영상 길이 : " + videoPlayTime / 1000 + "(초)");
 
     const videoFile = new Blob(tmp, { type: "video/webm" });
     const vFormData = new FormData();
@@ -401,10 +424,12 @@ const Level1 = () => {
       token,
       vFormData,
       (response) => {
-        console.log("영상 업로드 성공");
+        // console.log("영상 업로드 성공");
+        setVideoResponse(true);
       },
       (error) => {
-        console.log("영상 업로드 실패");
+        // console.log("영상 업로드 실패");
+        setVideoResponse(false);
       }
     );
   };
@@ -418,7 +443,6 @@ const Level1 = () => {
         screenShareVideoRef.current.srcObject = screenStream;
         setScreenStream(screenStream);
 
-        console.log(screenStream.getVideoTracks()[0]);
         screenStream.getVideoTracks()[0].onended = () => {
           stopScreenShare();
         };
@@ -438,32 +462,39 @@ const Level1 = () => {
   // 결과 창 닫기
   const handleResultClose = () => {
     setResultScreen(false);
+    setResultResponse(false);
     speechId.current = -1;
   };
 
   const leaveSession = () => {
-    navigate("/practice");
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      videoRef.current.srcObject = null;
+    }
+    navigate("/practice1");
   };
 
   const [micColor, setMicColor] = useState("green");
+  const [micStream, setMicStream] = useState(null);
+  const micTestRef = useRef(false);
 
   useEffect(() => {
-    let micStream;
-    let micAudioContext;
-    let micSource;
-
     const startMicTest = async () => {
+      micTestRef.current = true;
+
       navigator.mediaDevices
         .getUserMedia({ audio: true })
-        .then((micStream) => {
-          micAudioContext = new AudioContext();
-          micSource = micAudioContext.createMediaStreamSource(micStream);
+        .then((mStream) => {
+          const micAudioContext = new AudioContext();
+          const micSource = micAudioContext.createMediaStreamSource(mStream);
           const micAnalyzer = micAudioContext.createAnalyser();
           micAnalyzer.fftSize = 2048;
           micSource.connect(micAnalyzer);
 
+          setMicStream(mStream);
+
           function analyzeMicAudio() {
-            if (!mic) {
+            if (!micTestRef.current) {
               return;
             }
 
@@ -479,24 +510,20 @@ const Level1 = () => {
 
             const micDecibel = calcDecibel(micAverage);
 
-            console.log(micDecibel);
-
-            // mic-color-box
-
-            if (micDecibel < 25) {
+            if (micDecibel < 30) {
               setMicTestContent("목소리가 거의 들리지 않아요!");
               setMicColor("red");
-            } else if (micDecibel < 40) {
+            } else if (micDecibel <= 55) {
               setMicTestContent("조금만 크게 말해주세요!");
               setMicColor("orange");
-            } else if (micDecibel < 70) {
+            } else if (micDecibel <= 65) {
               setMicTestContent("목소리의 크기가 적당해요!");
               setMicColor("green");
-            } else if (micDecibel < 80) {
+            } else if (micDecibel < 75) {
               setMicTestContent("조금만 작게 말해주세요!");
               setMicColor("orange");
             } else {
-              setMicTestContent("목소리가 너무 커요!");
+              setMicTestContent("목소리가 너무 크게 들려요!");
               setMicColor("red");
             }
 
@@ -506,23 +533,26 @@ const Level1 = () => {
           analyzeMicAudio();
         })
         .catch((error) => {
-          console.log("마이크 테스트 에러");
+          // console.log("마이크 테스트 에러");
         });
     };
 
     const stopMicTest = () => {
-      if (micAudioContext) micAudioContext.close();
+      micTestRef.current = false;
+
+      // if (micAudioContext) micAudioContext.close();
       if (micStream) micStream.getTracks().forEach((track) => track.stop());
       setMicTestContent("");
     };
 
     if (mic) {
+      // console.log("마이크 테스트 시작");
       startMicTest();
     } else {
+      // console.log("마이크 테스트 종료");
       stopMicTest();
     }
 
-    // Cleanup function
     return () => {
       stopMicTest();
     };
@@ -530,6 +560,30 @@ const Level1 = () => {
 
   const toggleMic = () => {
     setMic(!mic); // 상태 업데이트
+  };
+
+  // 서술어를 가린다 (. 포함하는 word 가림)
+  const wrapWords = (text) => {
+    const words = text.split(" ");
+    return words.map((word, index) => (
+      <span key={index} className="word">
+        {(predicate === "1" && word.includes(".")) ||
+        (object === "1" && (word.endsWith("을") || word.endsWith("를"))) ||
+        (subject === "1" &&
+          (word.endsWith("은") ||
+            word.endsWith("는") ||
+            word.endsWith("이") ||
+            word.endsWith("에서") ||
+            word.endsWith("께서") ||
+            word.endsWith("가"))) ? (
+          <span className="blur-text">{word + " "}</span>
+        ) : (
+          <>
+            {word} <></>
+          </>
+        )}
+      </span>
+    ));
   };
 
   return (
@@ -560,13 +614,14 @@ const Level1 = () => {
               width: "500px",
               margin: "30px",
               height: "100px",
-              lineHeight: "100px",
               borderRadius: "10px",
               backgroundColor: "#444A78",
               textAlign: "center",
               fontSize: "24px",
               fontWeight: "bold",
               color: "white",
+              marginTop: "-20px",
+              paddingTop: "26px",
             }}
           >
             {feedback}
@@ -577,12 +632,24 @@ const Level1 = () => {
             style={{
               width: "50%",
               height: "600px",
-              margin: "-30px 80px 0 20px",
+              display: "flex",
             }}
           >
-            <video ref={screenShareVideoRef} autoPlay></video>
+            <div>
+              <video
+                ref={screenShareVideoRef}
+                style={{
+                  minWidth: "530px",
+                  minHeight: "500px",
+                  maxWidth: "800px",
+                  maxHeight: "600px",
+                  padding: "22px",
+                }}
+                autoPlay
+              ></video>
+            </div>
           </div>
-        ) : (
+        ) : content != "" ? (
           <div className="script-box">
             <p
               style={{
@@ -594,18 +661,18 @@ const Level1 = () => {
             >
               {scriptTitle}
             </p>
-            {content}
+            {wrapWords(content)}
           </div>
-        )}
+        ) : null}
       </div>
 
       {/* Bottom - 버튼 */}
       <div className="RoomPage-bottom" style={{ justifyContent: "center" }}>
         <div className="flex items-center space-x-16">
           {mic ? (
-            <img onClick={toggleMic} src="/images/micbutton.png" />
+            <img onClick={toggleMic} src="/images/mictestbutton.png" />
           ) : (
-            <img onClick={toggleMic} src="/images/micbutton_disabled.png" />
+            <img onClick={toggleMic} src="/images/mictestbutton_disabled.png" />
           )}
           {!isLast.current ? (
             <img onClick={speechEnd} src="/images/recordbutton_activated.png" />
@@ -613,6 +680,7 @@ const Level1 = () => {
             <img
               onClick={(e) => {
                 setRecordForm(!recordForm);
+                setMic(false);
               }}
               src="/images/recordbutton.png"
             />
@@ -675,21 +743,37 @@ const Level1 = () => {
           className={"record-form"}
         >
           <form onSubmit={speechStart}>
-            <div>
-              <p>
-                제목 :
-                <input
-                  placeholder="제목 입력..."
-                  value={title}
-                  style={{ color: "white" }}
-                  onChange={(e) => setTitle(e.target.value)}
-                ></input>
-              </p>
-              <p>카테고리 : 전체</p>
-              <p>분류 : 개인</p>
+            <div className="ms-3 mt-5">
+              <div className="record-form-each">
+                <div>제목</div>
+                <div>
+                  <input
+                    placeholder="제목 입력"
+                    value={title}
+                    style={{ color: "white" }}
+                    onChange={(e) => setTitle(e.target.value)}
+                  ></input>
+                </div>
+              </div>
+              <div className="record-form-each">
+                <div>카테고리</div>
+                <div>전체</div>
+              </div>
+              <div className="record-form-each">
+                <div>분류</div>
+                <div>개인</div>
+              </div>
             </div>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}></div>
-            <Button>녹화 시작</Button>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                style={{
+                  color: "#FFFFFF",
+                  fontWeight: "bold",
+                }}
+              >
+                녹화 시작
+              </Button>
+            </div>
           </form>
         </Modal>
       )}
@@ -699,10 +783,12 @@ const Level1 = () => {
         <PracticeResult
           onClose={handleResultClose}
           speechId={speechId.current}
+          videoResponse={videoResponse}
+          resultResponse={resultResponse}
         />
       )}
     </div>
   );
 };
 
-export default Level1;
+export default PracticeRoomPage;

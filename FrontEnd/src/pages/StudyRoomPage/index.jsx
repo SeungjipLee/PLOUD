@@ -17,25 +17,34 @@ import {
   endSpeech,
   assessSpeech,
   postFeedback,
-  postComment,
   uploadVideo,
 } from "../../services/speech";
 import Modal from "../../components/Modal";
 import Button from "../../components/Button";
 import StudyResult from "./component/StudyResult";
-import LoadingScreen from "./component/Loading";
 import TimerComponent from "../../components/Timer";
+import MyAlert from "../../components/MyAlert";
 
 const StudyRoomPage = () => {
+  // 알림 창 상태
+  const [message, setMessage] = useState("");
+  const [alert1, setAlert1] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const tag = "[StudyRoomPage]";
 
   const OV = useRef(null);
   const session = useRef(null);
+  const publisherRef = useRef(undefined);
 
   const OVScreen = useRef(null);
   const sessionScreen = useRef(null);
+  const [endSession, setEndSession] = useState(false);
+
+  const userSize = useRef(0);
+
+  const [videoChange, setVideoChange] = useState(false);
 
   // 기본 정보
   const { userId, token, nickname } = useSelector((state) => state.userReducer);
@@ -45,18 +54,26 @@ const StudyRoomPage = () => {
     (state) => state.studyReducer.studyInfo.screenToken
   );
   // 코멘트 입력 중 여부
-  const [typing, setTyping] = useState(false);
+  const [typingList, setTypingList] = useState([]);
 
   // 방에 있는 유저 목록 관리 { nickname : String }
   const [roomUsers, setRoomUsers] = useState([]);
+
+  // 마이크 종료 유저
+  const [micOffUserList, setMicOffUserList] = useState([]);
+
   // 유저 닉네임 추가
   const addUser = (newUser) => {
     setRoomUsers((prevUsers) => [...prevUsers, newUser]);
   };
+
   // 특정 유저 닉네임 제거
   const removeUser = (userNickname) => {
     setRoomUsers((prevUsers) =>
       prevUsers.filter((user) => user.nickname !== userNickname)
+    );
+    setUserList((users) =>
+      users.filter((user) => user.userId !== userNickname)
     );
   };
 
@@ -70,8 +87,8 @@ const StudyRoomPage = () => {
   const isVideoRecording = useRef(false);
   const videoChunksRef = useRef([]); // 영상 정보
 
-  // 로딩 상태 관리
-  const [loading, setLoading] = useState(false);
+  // 채팅
+  const chatAreaRef = useRef(null);
 
   // 화면 모드
   // 0 대기 1 면접 2 발표 3 대본
@@ -79,11 +96,9 @@ const StudyRoomPage = () => {
 
   // 공유화면도 subs 이기때문에 실질적인 subs수를 체크하기 위함
   const setClassName = (subs) => {
-    // console.log(subs);
     const subscribersWithOutScreen = subs.filter(
       (sub, i) => getUserNickname(sub) !== "screen"
     );
-    // console.log(subscribersWithOutScreen);
     const selected =
       subscribersWithOutScreen.length > 3 ? "video-flex-big" : "video-flex";
     return selected;
@@ -116,6 +131,7 @@ const StudyRoomPage = () => {
     }
   };
   // 비디오 구성 버튼 활성/비활성화 상태
+  const [micTest, setMicTest] = useState(true);
   const [mic, setMic] = useState(true);
   const [video, setVideo] = useState(true);
   const [screen, setScreen] = useState(false);
@@ -124,19 +140,22 @@ const StudyRoomPage = () => {
   const [result, setResult] = useState(false);
   const [resultScreen, setResultScreen] = useState(false);
   const [report, setReport] = useState(false);
-  const [chat, setChat] = useState(false);
-  const [user, setUser] = useState(false);
+  const [chat, setChat] = useState(true);
+  const [user, setUser] = useState(true);
 
   // 화면공유 여부 파악
   const [screenShare, setScreenShare] = useState(false);
+  const screenShareRef = useRef(false);
 
   // 녹화 Form
   const [title, setTitle] = useState("");
   const speechId = useRef(0);
 
   // 결과 관련
-  const [currentResult, setCurrentResult] = useState(null);
   const recordList = useSelector((state) => state.recordReducer.recordList);
+
+  const [resultResponse, setResultResponse] = useState(false);
+  const [videoResponse, setVideoResponse] = useState(null);
 
   const categoryName = () => {
     switch (room.categoryId) {
@@ -153,10 +172,29 @@ const StudyRoomPage = () => {
 
   const [publisherScreen, setPublisherScreen] = useState(undefined);
 
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if(!isLast.current){
+        speechEnd();
+      }
+
+      leaveSession();
+      
+      event.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
   // 화면 공유
   const handleScreenShare = async () => {
     if (presenter != nickname) {
-      alert("화면 공유 권한이 없습니다.(발표자만 가능)");
+      setMessage("화면 공유 권한이 없습니다.(발표자만 가능)");
+      setAlert1(true);
       return;
     }
     try {
@@ -166,7 +204,7 @@ const StudyRoomPage = () => {
           audioSource: undefined,
           videoSource:
             navigator.userAgent.indexOf("Firefox") !== -1 ? "window" : "screen",
-          publishAudio: true,
+          publishAudio: false,
           publishVideo: true,
           resolution: "640x480",
           frameRate: 30,
@@ -184,6 +222,7 @@ const StudyRoomPage = () => {
       setPublisherScreen(publisherScreen);
       setScreenShare(true);
       setMode("3");
+      sendSignal("screenOn", "공유시작");
     } catch {
       (err) => console.log(err);
     }
@@ -195,6 +234,7 @@ const StudyRoomPage = () => {
 
       setPublisherScreen(null);
       setScreenShare(false);
+      sendSignal("screenOff", "공유종료");
     }
   };
 
@@ -203,14 +243,11 @@ const StudyRoomPage = () => {
   const [presenter, setPresenter] = useState("");
   const [userList, setUserList] = useState([]);
   // { userId: "test01", presenter: true },
-  // { userId: "test02", presenter: false },
-  // { userId: "test03", presenter: false },
-  // { userId: "test04", presenter: false },
 
   // 채팅 정보
   const [chatvalue, setChatvalue] = useState("");
   const [chatList, setChatList] = useState([]);
-  const [confirmLeave, setConfirmLeave] = useState(false)
+  const [confirmLeave, setConfirmLeave] = useState(false);
 
   // ---------- Variables During Speech ----------
   const [feedbackModal, setFeedbackModal] = useState(false);
@@ -233,40 +270,17 @@ const StudyRoomPage = () => {
 
   // 사용법 publisher, mainStreamManager, subscriber 등을 넣으면 닉네임을 파싱해서 반환해줌
   const getUserNickname = (streamObject) => {
-    // console.log(streamObject);
     const nickname = JSON.parse(
       streamObject.stream.connection.data.split("%/%")[0]
     ).clientData;
     return nickname.split("//").length > 1 ? "screen" : nickname;
   };
 
-  // // 상태 준비 여부 플래그
-  // const [isReady, setIsReady] = useState(false);
-
-  // // 상태가 모두 준비되었는지 확인
-  // useEffect(() => {
-  //   if (room && userId && nickname) {
-  //     setIsReady(true);
-  //   } else return;
-  // }, [room, userId, nickname]); // 상태 변경을 감지하기 위해 의존성 배열에 포함
-
-  // // 실제 로직을 실행하는 useEffect
-  // useEffect(() => {
-  //   // 상태가 준비되지 않았다면 아무것도 하지 않음
-  //   if (!isReady) return;
-
-  //   // 상태가 모두 준비되었을 때 실행할 로직
-  //   if (room.managerId === userId) {
-  //     setPresenter(nickname);
-  //     setUserList([{ userId: nickname, presenter: true }]);
-  //     console.log(nickname, room.managerId, userId);
-  //     // 여기에 방장인 경우 실행할 코드 작성
-  //   } else {
-  //     setUserList([{ userId: nickname, presenter: false }]);
-  //     // 방장이 아닌 경우 실행할 코드 작성
-  //     joinSession();
-  //   }
-  // }, [isReady]);
+  useEffect(() => {
+    if (chatAreaRef.current) {
+      chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+    }
+  }, [chatList]);
 
   // 신고 창 닫기
   const closeModal = () => {
@@ -275,6 +289,7 @@ const StudyRoomPage = () => {
 
   // 결과 창 닫기
   const handleResultClose = () => {
+    setVideoResponse(null);
     setResultScreen(false);
     speechId.current = -1;
   };
@@ -289,12 +304,12 @@ const StudyRoomPage = () => {
     });
     console.log(users);
     setUserList(users);
+    setPresenter(userId);
     console.log("[발표자 권한 버튼 클릭 시 시그널 보냄]");
     sendSignal("WhoIsP", userId);
   };
 
   useEffect(() => {
-    console.log(nickname, room.managerId);
     if (room.managerId === nickname) {
       setPresenter(nickname);
       setUserList([{ userId: nickname, presenter: true }]);
@@ -302,6 +317,12 @@ const StudyRoomPage = () => {
       setUserList([{ userId: nickname, presenter: false }]);
       joinSession();
     }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      leaveSession();
+    };
   }, []);
 
   useEffect(() => {
@@ -371,13 +392,27 @@ const StudyRoomPage = () => {
     return "stream-container col-md-6 col-xs-6"; // 기본 클래스
   };
 
+  const getChatTime = () => {
+    let date = new Date();
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let ampm = hours >= 12 ? "오후" : "오전";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // 시간이 0이면 12로 변환
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    let strTime = ampm + " " + hours + ":" + minutes;
+    return strTime;
+  };
+
   // 녹화 시작
   const submitHandler = (e) => {
     e.preventDefault();
 
-    if (room.categoryId === 2) {
-      setMode("3");
-    } else {
+    // 녹화시작은 발표자가 함
+    // 따라서 발표자의 모드가 3번이 아니라면
+    // mode 1로 이동
+
+    if (mode !== "3") {
       setMode("1");
     }
 
@@ -401,6 +436,11 @@ const StudyRoomPage = () => {
         startRecording();
         videoRecordingStart();
         sendSignal("rstart", "님이 발표를 시작하였습니다.");
+
+        setChat(false);
+        setReport(false);
+        setRecord(false);
+        setResultResponse(false);
       },
       (err) => console.log(err)
     );
@@ -424,29 +464,28 @@ const StudyRoomPage = () => {
     session.current.on("streamCreated", (event) => {
       console.log(tag, "누가 접속했어요");
 
-      if (room.managerId === userId) {
+      if (room.managerId === nickname) {
         console.log("[접속 시 시그널 보냄]", presenter);
         sendSignal("WhoIsP", presenter);
       }
 
       console.log(event.stream.connection.data.split("%/%"));
       var tmp = event.stream.connection.data.split("%/%");
-      var nickname = JSON.parse(tmp[0]).clientData;
-      if (nickname.split("//").length == 1) {
-        addUser({ nickname: nickname });
+      var nickname2 = JSON.parse(tmp[0]).clientData;
+      if (nickname2.split("//").length == 1) {
+        userSize.current += 1;
+        addUser({ nickname: nickname2 });
       }
 
       if (
-        (nickname.split("//").length > 1 ? "screen" : nickname) !== "screen"
+        (nickname2.split("//").length > 1 ? "screen" : nickname2) !== "screen"
       ) {
         setUserList((userList) => [
           ...userList,
-          { userId: nickname, presenter: false },
+          { userId: nickname2, presenter: false },
         ]);
       }
-
-      console.log(nickname + "님이 접속");
-
+      
       var subscriber = session.current.subscribe(event.stream, undefined);
 
       setSubscribers((subscribers) => [...subscribers, subscriber]);
@@ -454,6 +493,8 @@ const StudyRoomPage = () => {
 
     // On every Stream destroyed...
     session.current.on("streamDestroyed", (event) => {
+      userSize.current -= 1;
+
       console.log(tag, "누가 떠났어요");
 
       var tmp = event.stream.connection.data.split("%/%");
@@ -475,10 +516,32 @@ const StudyRoomPage = () => {
       var username = JSON.parse(event.data).nickname;
       var content = JSON.parse(event.data).chatvalue;
 
-      if (!(username == nickname && content == "님이 접속하였습니다!")) {
+      if (content == "님이 접속하였습니다!") {
         setChatList((chatList) => [
           ...chatList,
-          { username: username, content: content },
+          {
+            username: "ADMIN",
+            time: getChatTime(),
+            content: username + content,
+          },
+        ]);
+      } else if (content == "님이 퇴장하였습니다!") {
+        setChatList((chatList) => [
+          ...chatList,
+          {
+            username: "ADMIN",
+            time: getChatTime(),
+            content: username + content,
+          },
+        ]);
+      } else {
+        setChatList((chatList) => [
+          ...chatList,
+          {
+            username: username,
+            time: getChatTime(),
+            content: content,
+          },
         ]);
       }
     });
@@ -499,54 +562,149 @@ const StudyRoomPage = () => {
 
     // 코멘트 입력 여부 수신
     session.current.on("signal:Typing", (event) => {
-      if (typing) return;
       var p = JSON.parse(event.data).chatvalue;
       console.log("[코멘트 입력중 수신함]");
-      //
-      setTyping(true);
 
-      setTimeout(() => {
-        setTyping(false);
-      }, 5000);
+      const allIndexes = Array.from(
+        { length: userSize.current },
+        (_, index) => index
+      );
+      allIndexes.push(-1);
+
+      const availableIndexes = allIndexes.filter(
+        (index) => !typingList.includes(index)
+      );
+
+      console.log("유저 리스트 사이즈 : " + userList.length);
+
+      // console.log("전부 : " + allIndexes);
+      console.log("유저 수 : " + userSize.current);
+      // console.log("현재 피드백 수 : " + typingList.length);
+      // console.log("가능한 수 : " + availableIndexes.length);
+
+      if (availableIndexes.length > 0) {
+        const randomIndex =
+          availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
+
+        setTypingList([...typingList, randomIndex]);
+        // console.log("피드백 추가 : " + randomIndex);
+
+        setTimeout(() => {
+          setTypingList((typingList) =>
+            typingList.filter((idx) => idx !== randomIndex)
+          );
+          // console.log("피드백 삭제 : " + randomIndex);
+        }, 5000);
+      }
+    });
+
+    // 화면 공유 수신
+    session.current.on("signal:screenOn", (event) => {
+      setScreenShare(true);
+      screenShareRef.current = true;
+      setMode("3");
+    });
+    // 화면 공유 종료 수신
+    session.current.on("signal:screenOff", (event) => {
+      setScreenShare(false);
+      screenShareRef.current = false;
+      setMode("0");
+    });
+
+    // 비디오 상태 전환
+    session.current.on("signal:videoChange", (event) => {
+      setVideoChange(!videoChange);
+    });
+
+    // 마이크 상태 전환
+    session.current.on("signal:micChange", (event) => {
+      var username = JSON.parse(event.data).nickname;
+      var micState = JSON.parse(event.data).chatvalue;
+
+      setMicOffUserList((prevList) => {
+        console.log(prevList)
+        const exists = prevList.includes(username);
+        // 이미 마이크를 끈 사람 리스트에 있고 마이크를 켰다면 리스트에서 제외하기
+        if (exists && micState == "on") {
+          return prevList.filter((user) => user != username);
+        }
+        // 마이크를 끈사람 리스트에 없고 마이크를 껐다면
+        else if (!exists && micState == "off"){
+          return [...prevList, username]
+        }
+        else return prevList
+      });
     });
 
     // 방장이 떠남
     session.current.on("signal:exit", (event) => {
       setChatList((chatList) => [
         ...chatList,
-        { username: "관리자", content: "3초 후 스터디룸이 종료됩니다." },
+        {
+          username: "ADMIN",
+          time: getChatTime(),
+          content: "3초 후 스터디룸이 종료됩니다.",
+        },
       ]);
 
+      setMessage("3초 후 방을 종료합니다.");
+      setAlert1(true);
+      setEndSession(true);
+
       setTimeout(() => {
-        leaveSession();
-      }, 3000);
+        navigate("/study");
+      }, 4000);
     });
+
+    // const denyMics = () => {
+    //   console.log(publisher)
+    //   if (presenter != nickname) {
+    //     // 마이크 off
+    //     setMic(false); // 상태 업데이트
+    //     if (publisher) {
+    //       publisher.publishAudio(false); // 마이크 상태 토글
+    //       console.log(publisher)
+    //     }
+    //   }
+    // }
 
     // 녹화 시작 신호
     session.current.on("signal:rstart", (event) => {
       var username = JSON.parse(event.data).nickname;
       var content = JSON.parse(event.data).chatvalue;
-      if (presenter != nickname) { // 참여자라면
-        setMic(false); // 상태 업데이트
-        if (publisher) {
-          publisher.publishAudio(false); // 마이크 상태 토글
-        }
-        if (room.categoryId === 2) {
-          setMode("3");
-        } else {
+      console.log("[녹화 시작 신호 받음]");
+      console.log(username, nickname);
+
+      // console.log(publisher);
+
+      if (username !== nickname) {
+        // 녹화 시작 신호를 받았을 때 모드가 3이 아니라면 청자는 모드 2번으로 이동
+
+        if (!screenShareRef.current) {
+          // 이거 mode 안찍힐수도 있다.
           setMode("2");
+        } else {
+          setMode("3");
+        }
+
+        if (mic) {
+          toggleMic();
         }
       }
+
+      setUser(false);
       setRecord(true);
       setChatList((chatList) => [
         ...chatList,
-        { username: username, content: content },
+        { username: "ADMIN", time: getChatTime(), content: username + content },
       ]);
 
       // 녹화 시작 신호를 받을 경우 처리할 것
       if (username != nickname) {
         // 녹화시작 버튼을 누르지 않은 사람은 피드백 모달이 열리게 됨
-        setFeedbackModal(true);
+
+        toggleFeedback();
+        // setFeedbackModal(true);
         setFeedbackButton(true);
         // 내가 아닌 경우의 레이아웃 전환
       }
@@ -562,7 +720,7 @@ const StudyRoomPage = () => {
       setRecord(false);
       setChatList((chatList) => [
         ...chatList,
-        { username: username, content: content },
+        { username: "ADMIN", time: getChatTime(), content: username + content },
       ]);
 
       // 녹화 종료 신호를 받을 경우 처리할 것
@@ -570,7 +728,7 @@ const StudyRoomPage = () => {
         setFeedbackModal(false);
         setFeedbackButton(false);
       }
-
+      setMode("0");
       // 녹화 종료의 경우 여기서 한 번에 처리해도 가능할 듯?
 
       // 레이아웃 전환
@@ -613,22 +771,22 @@ const StudyRoomPage = () => {
 
         setMainStreamManager(tmpPublisher);
         setPublisher(tmpPublisher);
+        publisherRef.current = tmpPublisher;
 
         sendSignal("chat", "님이 접속하였습니다!");
 
         // currentVideoDevice: currentVideoDevice,
       })
       .catch((error) => {
-        console.log("끄아아아앜");
-        console.log(tag, error);
-        leaveSession();
+        // console.log(tag, error);
+        navigate("/study");
       });
 
     sessionScreen.current
       .connect(screenToken, { clientData: nickname + "//screen" })
       .then(async () => {})
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
   };
 
@@ -636,26 +794,24 @@ const StudyRoomPage = () => {
     console.log(tag, "leaveSession");
     sendSignal("chat", "님이 퇴장하였습니다!");
 
-    // managerId랑 내 Id랑 똑같으면
-    if (room.managerId == userId) {
+    if (room.managerId == nickname) {
       sendSignal("exit", "종료");
     }
 
     leaveMeeting(
       token,
-      { sessionId: room.sessionId, token: ovToken },
+      { sessionId: room.sessionId, token: ovToken, userId: nickname },
       (response) => {
-        console.log(tag, response);
+        // console.log(tag, response);
       },
       (error) => {
-        console.log(tag, error);
+        // console.log(tag, error);
       }
     );
 
     session.current.disconnect();
     session.current = null;
     OV.current = null;
-    navigate("/study");
   };
 
   const deleteSubscriber = useCallback((streamManager) => {
@@ -673,10 +829,10 @@ const StudyRoomPage = () => {
 
   // 채팅 전송
   const handleMessageSubmit = async (e) => {
-    e.preventDefault()
-    if (e.key !== "Enter") return;
-
-    sendSignal("chat", chatvalue);
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (chatvalue !== "") sendSignal("chat", chatvalue);
+    }
   };
 
   const sendSignal = (type, chatvalue) => {
@@ -758,9 +914,11 @@ const StudyRoomPage = () => {
       vFormData,
       (response) => {
         console.log("영상 업로드 성공");
+        setVideoResponse(true);
       },
       (error) => {
         console.log("영상 업로드 실패");
+        setVideoResponse(false);
       }
     );
   };
@@ -768,7 +926,6 @@ const StudyRoomPage = () => {
   // 녹화 종료 요청
   const speechEnd = () => {
     console.log("녹화 종료");
-    setLoading(true); // 로딩 시작
     isLast.current = true;
     // 녹화 중지 함수 실행
     stopRecording();
@@ -783,35 +940,6 @@ const StudyRoomPage = () => {
         decibels: decibels.current,
       },
       (response) => {
-        console.log(response);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-
-    dispatch(addRecordList({ speechId: speechId.current, title: title }));
-
-    // 비동기 처리 헷갈리니까 5초 뒤에 하자
-    setTimeout(() => {
-      setLoading(false); // 로딩 종료
-      recordResult();
-    }, 3000);
-  };
-
-  const recordResult = () => {
-    setResultScreen(true);
-  };
-
-  // 코멘트 등록 요청
-  const commentPost = () => {
-    postComment(
-      token,
-      {
-        speechId: speechId.current,
-        comment: comment,
-      },
-      (response) => {
         // console.log(response);
       },
       (error) => {
@@ -819,12 +947,20 @@ const StudyRoomPage = () => {
       }
     );
 
-    setShowComment(false);
+    dispatch(addRecordList({ speechId: speechId.current, title: title }));
+    setMode("0");
+    // 비동기 처리 헷갈리니까 5초 뒤에 하자
+    recordResult();
+  };
+
+  const recordResult = () => {
+    setResultScreen(true);
   };
 
   // 피드백 등록 요청
   const feedbackPost = (e) => {
     if (e.key !== "Enter") return;
+    e.preventDefault();
     sendSignal("Typing", "typing");
     postFeedback(
       token,
@@ -833,7 +969,7 @@ const StudyRoomPage = () => {
         content: feedback,
       },
       (response) => {
-        console.log(response);
+        // console.log(response);
       },
       (error) => {
         console.log(error);
@@ -844,13 +980,17 @@ const StudyRoomPage = () => {
 
   // ---------- Speech Method ----------
   const addDecibel = (newDecibel) => {
-    decibels.current.push(newDecibel);
+    if (newDecibel != 0) {
+      console.log("데시벨 : " + newDecibel);
+      decibels.current.push(newDecibel);
+    }
   };
 
   // 녹화 시작
   const startRecording = () => {
     isLast.current = false;
     isRecording.current = true;
+    setVideoResponse(null);
     setRecordingTime(0);
 
     // recordTime 측정
@@ -963,10 +1103,24 @@ const StudyRoomPage = () => {
       formData,
       (response) => {
         // console.log(response.data);
+        console.log("음성 평가 결과");
+        console.log(
+          "개수 : " +
+            response.data.scriptCnt +
+            ", 점수 : " +
+            response.data.score
+        );
+
+        if(isLast.current){
+          setResultResponse(true);
+        }
       },
       (error) => {
-        console.log("평가 실패");
         // console.log(error);
+        console.log("평가 실패");
+        if(isLast.current){
+          setResultResponse(true);
+        }
       }
     );
   };
@@ -981,6 +1135,7 @@ const StudyRoomPage = () => {
     if (publisher) {
       publisher.publishVideo(newVideo); // 비디오 상태 토글
     }
+    sendSignal("videoChange", "누군가의 비디오 상태 변경");
   };
 
   // 마이크 핸들러
@@ -992,527 +1147,704 @@ const StudyRoomPage = () => {
     setMic(newMic); // 상태 업데이트
     if (publisher) {
       publisher.publishAudio(newMic); // 마이크 상태 토글
+
+      if (newMic) {
+        sendSignal("micChange", "on");
+      } else {
+        sendSignal("micChange", "off");
+      }
+    }
+  };
+
+  // const toggleMicTest = () => {
+  //   setMicTest(!micTest);
+  // };
+
+  const toggleChats = () => {
+    setChat(!chat);
+    if (report) {
+      toggleReprot();
+    }
+    if (result) {
+      setResult(!result);
+    }
+    if (feedbackModal) {
+      setFeedbackModal(!feedbackModal);
+    }
+  };
+
+  const toggleReprot = () => {
+    setReport(!report);
+    if (chat) {
+      setChat(!chat);
+    }
+    if (result) {
+      setResult(!result);
+    }
+    if (feedbackModal) {
+      setFeedbackModal(!feedbackModal);
+    }
+  };
+
+  const toggleResult = () => {
+    setResult(!result);
+    if (report) {
+      setReport(!report);
+    }
+    if (chat) {
+      setChat(!chat);
+    }
+    if (feedbackModal) {
+      setFeedbackModal(!feedbackModal);
+    }
+  };
+
+  const toggleFeedback = () => {
+    setFeedbackModal(!feedbackModal);
+    if (report) {
+      setReport(!report);
+    }
+    if (result) {
+      setResult(!result);
+    }
+    if (chat) {
+      setChat(!chat);
     }
   };
 
   return (
-    <div className="RoomPage">
-      {loading && (
-        <div className="loading-overlay">
-          <LoadingScreen /> {/* Material-UI 로딩 스피너 */}
-          <p>로딩 중...</p>
-        </div>
-      )}
-      {/* <div className="RoomPage-top"> */}
-      <div className={setClassRoomPageTOP()}>
-        <div className="roompage-icon">
-          <img src="/images/ploud_icon_bg.png" />
-          <div className="roompage-icon2">
-            {record && (
-              <div className="on-air">
-                <div className="on-air-img">
-                  <img src="/images/recording.png" />
+    <>
+      <div className="RoomPage">
+        {/* <div className="RoomPage-top"> */}
+        <div className={setClassRoomPageTOP()}>
+          <div className="roompage-icon">
+            <img src="/images/ploud_icon_bg.png" />
+            <div className="roompage-icon2">
+              {record && (
+                <div className="on-air">
+                  <div className="on-air-img">
+                    <img src="/images/recording.png" />
+                  </div>
+                  <TimerComponent isActive={record} resetTimer={!record} />
                 </div>
-                <TimerComponent isActive={record} resetTimer={!record} />
+              )}
+              <div className="mode-select">
+                <select
+                  name="mode"
+                  id="mode"
+                  onChange={(e) => setMode(e.target.value)}
+                >
+                  <option value="0">기본화면</option>
+                  <option value="1">면접모드(발표자)</option>
+                  <option value="2">면접모드(면접관)</option>
+                  <option value="3">발표모드(화면공유)</option>
+                </select>
               </div>
-            )}
-            <div className="mode-select">
-              <select
-                name="mode"
-                id="mode"
-                onChange={(e) => setMode(e.target.value)}
-              >
-                <option value="0">기본화면</option>
-                <option value="1">면접모드(발표자)</option>
-                <option value="2">면접모드(면접관)</option>
-                <option value="3">발표모드(화면공유)</option>
-              </select>
             </div>
           </div>
+          {/* 발표 화면 상단 구성 */}
+          {mode == "3" && (
+            <div className="mode2-top">
+              <div className="mode2-top-left"></div>
+              {/* 참가자 일렬로 작은 화면으로 나열 // 순서 : 발표자, 참여자... */}
+              <div className="flex flex-row justify-center items-center space-x-2 w-full">
+                {/* sub 돌면서 발표자 닉네임과 같으면 첫화면으로 송출 */}
+                {subscribers.map((sub, i) => {
+                  if (getUserNickname(sub) === presenter) {
+                    // console.log(sub);
+                    return (
+                      <div key={i} className="relative">
+                        <div className="mode2-top-each">
+                          <span className="nickname-overlay">
+                            {getUserNickname(sub)}
+                          </span>
+                          <UserVideoComponent
+                            isTyping={
+                              getUserNickname(sub) !== presenter
+                                ? typingList.indexOf(i) >= 0
+                                : false
+                            }
+                            isMicState={micOffUserList.includes(
+                              getUserNickname(sub)
+                            )}
+                            streamManager={sub}
+                          />
+                        </div>
+                      </div>
+                    );
+                  }
+                })}
+                {/* {publisher !== mainStreamManager && ( */}
+                {publisher && (
+                  <div className="relative">
+                    <div className="mode2-top-each">
+                      <span className="nickname-overlay">
+                        {getUserNickname(publisher)}
+                      </span>
+                      <UserVideoComponent
+                        isTyping={
+                          getUserNickname(publisher) !== presenter
+                            ? typingList.indexOf(-1) >= 0
+                            : false
+                        }
+                        isMicState={micOffUserList.includes(
+                          getUserNickname(publisher)
+                        )}
+                        streamManager={publisher}
+                      />
+                    </div>
+                  </div>
+                )}
+                {subscribers.map((sub, i) => {
+                  if (
+                    getUserNickname(sub) != "screen" &&
+                    getUserNickname(sub) != presenter
+                  ) {
+                    // console.log(sub);
+                    return (
+                      <div key={i} className="relative">
+                        <div className="mode2-top-each">
+                          <span className="nickname-overlay">
+                            {getUserNickname(sub)}
+                          </span>
+                          <UserVideoComponent
+                            isTyping={
+                              getUserNickname(sub) !== presenter
+                                ? typingList.indexOf(i) >= 0
+                                : false
+                            }
+                            isMicState={micOffUserList.includes(
+                              getUserNickname(sub)
+                            )}
+                            streamManager={sub}
+                          />
+                        </div>
+                      </div>
+                    );
+                  }
+                })}
+              </div>
+            </div>
+          )}
+          {mode == "2" && (
+            <div className="mode2-top">
+              <div className="mode2-top-left"></div>
+              {/* 참가자 일렬로 작은 화면으로 나열 // 순서 : 참여자... */}
+              <div className="flex flex-row justify-center items-center space-x-2 w-full py-2">
+                {/* sub 돌면서 발표자를 제외한 나머지 사람들 송출 */}
+                {publisher && (
+                  <div className="relative">
+                    <div className="mode2-top-each">
+                      <span className="nickname-overlay">
+                        {getUserNickname(publisher)}
+                      </span>
+                      <UserVideoComponent
+                        isTyping={
+                          getUserNickname(publisher) !== presenter
+                            ? typingList.indexOf(-1) >= 0
+                            : false
+                        }
+                        isMicState={micOffUserList.includes(
+                          getUserNickname(publisher)
+                        )}
+                        streamManager={publisher}
+                      />
+                    </div>
+                  </div>
+                )}
+                {subscribers.map((sub, i) => {
+                  if (
+                    getUserNickname(sub) != "screen" &&
+                    getUserNickname(sub) != presenter
+                  ) {
+                    // console.log(sub);
+                    return (
+                      <div key={i} className="relative">
+                        <div className="mode2-top-each">
+                          <span className="nickname-overlay">
+                            {getUserNickname(sub)}
+                          </span>
+                          <UserVideoComponent
+                            isTyping={
+                              getUserNickname(sub) !== presenter
+                                ? typingList.indexOf(i) >= 0
+                                : false
+                            }
+                            isMicState={micOffUserList.includes(
+                              getUserNickname(sub)
+                            )}
+                            streamManager={sub}
+                          />
+                        </div>
+                      </div>
+                    );
+                  }
+                })}
+              </div>
+            </div>
+          )}
         </div>
-        {/* 발표 화면 상단 구성 */}
-        {mode == "3" && (
-          <div className="mode2-top">
-            <div className="mode2-top-left"></div>
-            {/* 참가자 일렬로 작은 화면으로 나열 // 순서 : 발표자, 참여자... */}
-            <div className="flex flex-row justify-center items-center space-x-2 w-full py-2">
-              {/* sub 돌면서 발표자 닉네임과 같으면 첫화면으로 송출 */}
-              {subscribers.map((sub, i) => {
-                if (getUserNickname(sub) === presenter) {
-                  console.log(sub);
-                  return (
-                    <div key={i} className="relative">
-                      <div className="mode2-top-each">
-                        <span className="nickname-overlay">
-                          {getUserNickname(sub)}
-                        </span>
-                        <UserVideoComponent
-                          isTyping={
-                            getUserNickname(sub) !== presenter ? typing : false
-                          }
-                          streamManager={sub}
-                        />
-                      </div>
-                    </div>
-                  );
-                }
-              })}
-              {/* {publisher !== mainStreamManager && ( */}
-              {publisher && (
-                <div className="relative">
-                  <div className="mode2-top-each">
+
+        {/* <div className="RoomPage-mid"> */}
+        <div className={setClassRoomPageMID()}>
+          {/* ---------------------------------------대기 화면 구성 -----------------------------------------------*/}
+          {/* publisher - 나, subscriber - 그 외 */}
+          {mode == "0" && (
+            <div className={setClassName(subscribers)}>
+              <div id="video-container" className={videoDivClass}>
+                {publisher !== undefined ? (
+                  <div className="mode0-each col-md-6 col-xs-6">
                     <span className="nickname-overlay">
                       {getUserNickname(publisher)}
                     </span>
                     <UserVideoComponent
                       isTyping={
                         getUserNickname(publisher) !== presenter
-                          ? typing
+                          ? typingList.indexOf(-1) >= 0
                           : false
                       }
+                      isMicState={micOffUserList.includes(
+                        getUserNickname(publisher)
+                      )}
                       streamManager={publisher}
                     />
                   </div>
-                </div>
-              )}
+                ) : null}
+              </div>
               {subscribers.map((sub, i) => {
-                if (
-                  getUserNickname(sub) != "screen" &&
-                  getUserNickname(sub) != presenter
-                ) {
-                  console.log(sub);
+                if (sub !== publisher && getUserNickname(sub) != "screen") {
                   return (
-                    <div key={i} className="relative">
-                      <div className="mode2-top-each">
-                        <span className="nickname-overlay">
-                          {getUserNickname(sub)}
-                        </span>
-                        <UserVideoComponent
-                          isTyping={
-                            getUserNickname(sub) !== presenter ? typing : false
-                          }
-                          streamManager={sub}
-                        />
-                      </div>
-                    </div>
-                  );
-                }
-              })}
-            </div>
-          </div>
-        )}
-        {mode == "2" && (
-          <div className="mode2-top">
-            <div className="mode2-top-left"></div>
-            {/* 참가자 일렬로 작은 화면으로 나열 // 순서 : 참여자... */}
-            <div className="flex flex-row justify-center items-center space-x-2 w-full py-2">
-              {/* sub 돌면서 발표자를 제외한 나머지 사람들 송출 */}
-              {publisher && (
-                <div className="relative">
-                  <div className="mode2-top-each">
-                    <span className="nickname-overlay">
-                      {getUserNickname(publisher)}
-                    </span>
-                    <UserVideoComponent
-                      isTyping={
-                        getUserNickname(publisher) !== presenter
-                          ? typing
-                          : false
-                      }
-                      streamManager={publisher}
-                    />
-                  </div>
-                </div>
-              )}
-              {subscribers.map((sub, i) => {
-                if (
-                  getUserNickname(sub) != "screen" &&
-                  getUserNickname(sub) != presenter
-                ) {
-                  console.log(sub);
-                  return (
-                    <div key={i} className="relative">
-                      <div className="mode2-top-each">
-                        <span className="nickname-overlay">
-                          {getUserNickname(sub)}
-                        </span>
-                        <UserVideoComponent
-                          isTyping={
-                            getUserNickname(sub) !== presenter ? typing : false
-                          }
-                          streamManager={sub}
-                        />
-                      </div>
-                    </div>
-                  );
-                }
-              })}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* <div className="RoomPage-mid"> */}
-      <div className={setClassRoomPageMID()}>
-        {/* ---------------------------------------대기 화면 구성 -----------------------------------------------*/}
-        {/* publisher - 나, subscriber - 그 외 */}
-        {mode == "0" && (
-          <div className={setClassName(subscribers)}>
-            <div id="video-container" className={videoDivClass}>
-              {publisher !== undefined ? (
-                <div className="mode0-each col-md-6 col-xs-6">
-                  <span className="nickname-overlay">
-                    {getUserNickname(publisher)}
-                  </span>
-                  <UserVideoComponent
-                    isTyping={
-                      getUserNickname(publisher) !== presenter ? typing : false
-                    }
-                    streamManager={publisher}
-                  />
-                </div>
-              ) : null}
-            </div>
-            {subscribers.map((sub, i) => {
-              if (sub !== publisher && getUserNickname(sub) != "screen") {
-                return (
-                  <div
-                    key={sub.id}
-                    className={`${videoDivClass} mode0-each col-md-6 col-xs-6`}
-                  >
-                    <span className="nickname-overlay">
-                      {getUserNickname(sub)}
-                    </span>
-                    <UserVideoComponent
-                      isTyping={
-                        getUserNickname(sub) !== presenter ? typing : false
-                      }
-                      streamManager={sub}
-                    />
-                  </div>
-                );
-              }
-            })}
-          </div>
-        )}
-
-        {/* ---------------------------------------면접 화면 구성(발표자) -----------------------------------------------*/}
-        {/* subscriber - 발표자 이외 */}
-        {/* p - 발표자, s - 청자 */}
-        {mode == "1" && mainStreamManager == publisher && (
-          <div className="mode-1">
-            <div
-              className={`mode1-top ${
-                subscribers.filter((sub) => getUserNickname(sub) !== "screen")
-                  .length <= 3
-                  ? "single-row"
-                  : "multi-row"
-              }`}
-            >
-              {subscribers
-                .filter((sub) => getUserNickname(sub) !== "screen")
-                .map((sub, i) => (
-                  <div key={i} className="relative">
-                    <div className="mode1-each">
+                    <div
+                      key={sub.id}
+                      className={`${videoDivClass} mode0-each col-md-6 col-xs-6`}
+                    >
                       <span className="nickname-overlay">
                         {getUserNickname(sub)}
                       </span>
                       <UserVideoComponent
                         isTyping={
-                          getUserNickname(sub) !== presenter ? typing : false
+                          getUserNickname(sub) !== presenter
+                            ? typingList.indexOf(i) >= 0
+                            : false
                         }
+                        isMicState={micOffUserList.includes(
+                          getUserNickname(sub)
+                        )}
                         streamManager={sub}
                       />
                     </div>
-                  </div>
-                ))}
-            </div>
-            <div className="mode1-bottom">
-              <div className="mode1-each">
-                <span className="nickname-overlay">
-                  {getUserNickname(publisher)}
-                </span>
-                {publisher !== undefined ? (
-                  <UserVideoComponent
-                    isTyping={
-                      getUserNickname(publisher) !== presenter ? typing : false
-                    }
-                    streamManager={publisher}
-                  />
-                ) : null}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ---------------------------------------면접 화면 구성(청자) -----------------------------------------------*/}
-        {/* Main - 발표자, sub - 참가자, pub - 참가자 */}
-        {mode == "2" && (
-          <div>
-            {subscribers.map((sub, i) => {
-              if (getUserNickname(sub) == presenter) {
-                return (
-                  <div key={sub.id} className="mode3-each">
-                    <span className="nickname-overlay">
-                      {getUserNickname(sub)}
-                    </span>
-                    <UserVideoComponent
-                      isTyping={
-                        getUserNickname(sub) !== presenter ? typing : false
-                      }
-                      streamManager={sub}
-                    />
-                  </div>
-                );
-              }
-            })}
-          </div>
-        )}
-
-        {/* ---------------------------------------발표 화면 구성 -----------------------------------------------*/}
-        {/* mainStreamManager - 발표자, publisherScreen - 공유화면, p - 참가자, subscribers - 참가자 */}
-        {/* 발표 화면 구성 */}
-        {mode == "3" && (
-          <div className="mode2-main">
-            {/* 메인 - 공유화면 크게 */}
-            {subscribers.map((sub, i) => {
-              if (getUserNickname(sub) === "screen") {
-                console.log(sub);
-                return (
-                  <div key={i} className="mode2-main-screen">
-                    <UserVideoComponent
-                      isTyping={
-                        getUserNickname(sub) !== presenter ? typing : false
-                      }
-                      streamManager={sub}
-                    />
-                  </div>
-                );
-              }
-            })}
-          </div>
-        )}
-      </div>
-
-      <div className="RoomPage-bottom">
-        <div className="button-empty items-center space-x-4">
-          <img
-            onClick={(e) => {
-              console.log(publisher);
-              setUser(!user);
-            }}
-            src="/images/user_icon.png"
-          />
-        </div>
-        <div className="flex items-center space-x-6">
-          {mic ? (
-            <img onClick={toggleMic} src="/images/micbutton.png" />
-          ) : (
-            <img onClick={toggleMic} src="/images/micbutton_disabled.png" />
-          )}
-          {video ? (
-            <img onClick={toggleVideo} src="/images/videobutton.png" />
-          ) : (
-            <img onClick={toggleVideo} src="/images/videobutton_disabled.png" />
-          )}
-
-          {screenShare === false ? (
-            <img onClick={handleScreenShare} src="/images/sharebutton.png" />
-          ) : (
-            <img
-              onClick={handleScreenShare2}
-              src="/images/sharebutton_disabled.png"
-            />
-          )}
-
-          {!isLast.current ? (
-            <img onClick={speechEnd} src="/images/recordbutton_activated.png" />
-          ) : !recordForm ? (
-            <img
-              onClick={(e) => {
-                setRecordForm(!recordForm);
-              }}
-              src="/images/recordbutton.png"
-            />
-          ) : (
-            <img
-              onClick={(e) => {
-                setRecordForm(!recordForm);
-              }}
-              src="/images/recordbutton_disabled.png"
-            />
-          )}
-          <img onClick={() => setConfirmLeave(!confirmLeave)} src="/images/exitbutton.png" alt="" />
-        </div>
-        <div className="flex items-center space-x-4">
-          {feedbackButton && (
-            <img
-              onClick={(e) => {
-                setFeedbackModal(!feedbackModal);
-              }}
-              src="/images/feedbackbutton.png"
-            />
-          )}
-          <img
-            onClick={(e) => {
-              setResult(!result);
-            }}
-            src="/images/resultbutton.png"
-          />
-          <img
-            onClick={(e) => {
-              setReport(!report);
-            }}
-            src="/images/reportbutton.png"
-          />
-          <img
-            onClick={(e) => {
-              setChat(!chat);
-            }}
-            src="/images/chatbutton.png"
-          />
-        </div>
-      </div>
-      {user && (
-        <div className="study-room-manage">
-          <div>
-            <h1>참여자</h1>
-          </div>
-          <div>
-            {userList.map((data, index) => (
-              <div key={index} className="study-room-user-list">
-                <div className="study-room-user">
-                  <span>{data.userId}</span>
-                  {/* <span>{captain && "(방장)"}</span> */}
-                </div>
-                {userId === room.managerId &&
-                  (data.presenter ? (
-                    <div
-                      onClick={(e) => changePresenter(data.userId, index)}
-                      className="presenter presenter-button Button"
-                    >
-                      발표자
-                    </div>
-                  ) : (
-                    <div
-                      onClick={(e) => changePresenter(data.userId, index)}
-                      className="participant presenter-button Button"
-                    >
-                      발표자
-                    </div>
-                  ))}
-                {userId !== room.managerId &&
-                  (data.presenter ? (
-                    <div className="presenter presenter-button Button">
-                      발표자
-                    </div>
-                  ) : (
-                    <div className="participant presenter-button Button">
-                      발표자
-                    </div>
-                  ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      {chat && (
-        <div className="chat bg-grad-y-black">
-          <h1>채팅 [방 제목 : {room.title}]</h1>
-          <div className="chat-area">
-            {chatList &&
-              chatList.map((item, index) => {
-                const { username, content } = item;
-                return (
-                  <div className="chat-box"
-                  key={index}>
-                      <div className="chat-header">
-                        <span className="chat-username">{username}</span>
-                        <span className="chat-time">오후 5:35</span>{" "}
-                      </div>
-                    <div className="chat-content">
-                      {content}{" "}
-                    </div>
-                  </div>
-                );
+                  );
+                }
               })}
-          </div>
-          <div>
-            <textarea
-              type="text"
-              value={chatvalue}
-              onChange={(e) => setChatvalue(e.target.value)}
-              onKeyDown={handleMessageSubmit}
-              placeholder="댓글을 입력하세요."
-            />
-          </div>
-        </div>
-      )}
-      {/* 발표자가 녹화종료를 눌렀을 때, 결과리스트에서 선택했을 때 결과 화면을 볼 수 있음 */}
-      {resultScreen && (
-        <StudyResult onClose={handleResultClose} speechId={speechId.current} />
-      )}
-      {result && <ResultList />}
-      {report && <Report users={roomUsers} closeModal={closeModal} />}
-      {recordForm && (
-        <Modal
-          title="녹화 정보 입력"
-          onClose={(e) => setRecordForm(false)}
-          className={"record-form"}
-        >
-          {/* <h1 style={{fontWeight:"bold"}}>녹화 정보 입력</h1> */}
-          <form onSubmit={submitHandler}>
-            <div className="ms-3">
-              <p>
-                <span>제목 :</span>
-                <input
-                  placeholder="제목 입력"
-                  style={{ backgroundColor: "#e5e7eb" }}
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                ></input>
-              </p>
-              <p>카테고리 : {categoryName()}</p>
-              <p>분류 : 스터디</p>
             </div>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button
-                style={{
-                  backgroundColor: "#0C134F",
-                  color: "#FFFFFF",
-                  fontWeight: "bold",
-                }}
+          )}
+
+          {/* ---------------------------------------면접 화면 구성(발표자)-----------------------------------------------*/}
+          {/* subscriber - 발표자 이외 */}
+          {/* p - 발표자, s - 청자 */}
+          {mode == "1" && mainStreamManager == publisher && (
+            <div className="mode-1">
+              <div
+                className={`mode1-top ${
+                  subscribers.filter((sub) => getUserNickname(sub) !== "screen")
+                    .length <= 3
+                    ? "single-row"
+                    : "multi-row"
+                }`}
               >
-                녹화 시작
-              </Button>
+                {subscribers
+                  .filter((sub) => getUserNickname(sub) !== "screen")
+                  .map((sub, i) => (
+                    <div key={i} className="relative">
+                      <div className="mode1-each">
+                        <span className="nickname-overlay">
+                          {getUserNickname(sub)}
+                        </span>
+                        <UserVideoComponent
+                          isTyping={
+                            getUserNickname(sub) !== presenter
+                              ? typingList.indexOf(i) >= 0
+                              : false
+                          }
+                          isMicState={micOffUserList.includes(
+                            getUserNickname(sub)
+                          )}
+                          streamManager={sub}
+                        />
+                      </div>
+                    </div>
+                  ))}
+              </div>
+              <div className="mode1-bottom">
+                <div className="mode1-each">
+                  <span className="nickname-overlay">
+                    {getUserNickname(publisher)}
+                  </span>
+                  {publisher !== undefined ? (
+                    <UserVideoComponent
+                      isTyping={
+                        getUserNickname(publisher) !== presenter
+                          ? typingList.indexOf(-1) >= 0
+                          : false
+                      }
+                      isMicState={micOffUserList.includes(
+                        getUserNickname(publisher)
+                      )}
+                      streamManager={publisher}
+                    />
+                  ) : null}
+                </div>
+              </div>
             </div>
-          </form>
-        </Modal>
-      )}
-      {feedbackModal && (
-        <div className="feedback-form  bg-grad-y-black">
-          <h1>피드백 입력</h1>
-          <p>
-            내용 :{" "}
-            <textarea
-              type="text"
-              value={feedback}
-              onChange={(e) => setFeedback(e.target.value)}
-              onKeyDown={(e) => feedbackPost(e)}
-            />
-          </p>
+          )}
+
+          {/* ---------------------------------------면접 화면 구성(청자) -----------------------------------------------*/}
+          {/* Main - 발표자, sub - 참가자, pub - 참가자 */}
+          {mode == "2" && (
+            <div>
+              {subscribers.map((sub, i) => {
+                if (getUserNickname(sub) == presenter) {
+                  return (
+                    <div key={sub.id} className="mode3-each">
+                      <span className="nickname-overlay">
+                        {getUserNickname(sub)}
+                      </span>
+                      <UserVideoComponent
+                        isTyping={
+                          getUserNickname(sub) !== presenter
+                            ? typingList.indexOf(i) >= 0
+                            : false
+                        }
+                        isMicState={micOffUserList.includes(
+                          getUserNickname(sub)
+                        )}
+                        streamManager={sub}
+                      />
+                    </div>
+                  );
+                }
+              })}
+            </div>
+          )}
+
+          {/* ---------------------------------------발표 화면 구성 -----------------------------------------------*/}
+          {/* mainStreamManager - 발표자, publisherScreen - 공유화면, p - 참가자, subscribers - 참가자 */}
+          {/* 발표 화면 구성 */}
+          {mode == "3" && (
+            <div className="mode2-main">
+              {/* 메인 - 공유화면 크게 */}
+              {subscribers.map((sub, i) => {
+                if (getUserNickname(sub) === "screen") {
+                  // console.log(sub);
+                  return (
+                    <div key={i} className="mode2-main-screen">
+                      <UserVideoComponent
+                        isTyping={
+                          getUserNickname(sub) !== presenter
+                            ? typingList.indexOf(i) >= 0
+                            : false
+                        }
+                        isMicState={micOffUserList.includes(
+                          getUserNickname(sub)
+                        )}
+                        streamManager={sub}
+                      />
+                    </div>
+                  );
+                }
+              })}
+            </div>
+          )}
         </div>
-      )}
-      {confirmLeave && <>
-        <div className="study-leave">
-          정말 나가시겠습니까?
-          <div className="study-leave-buttons">
-          <div onClick={() => setConfirmLeave(false)}>아니요</div>
-          <div onClick={leaveSession}>예</div>
+
+        <div className="RoomPage-bottom">
+          <div className="button-empty items-center space-x-4">
+            <img
+              onClick={(e) => {
+                // console.log(publisher);
+                setUser(!user);
+              }}
+              src="/images/user_icon.png"
+            />
+          </div>
+          <div className="flex items-center space-x-6">
+            {mic ? (
+              <img onClick={() => toggleMic()} src="/images/micbutton.png" />
+            ) : (
+              <img
+                onClick={() => toggleMic()}
+                src="/images/micbutton_disabled.png"
+              />
+            )}
+            {video ? (
+              <img onClick={toggleVideo} src="/images/videobutton.png" />
+            ) : (
+              <img
+                onClick={toggleVideo}
+                src="/images/videobutton_disabled.png"
+              />
+            )}
+
+            {screenShare === false ? (
+              <img onClick={handleScreenShare} src="/images/sharebutton.png" />
+            ) : (
+              <img
+                onClick={handleScreenShare2}
+                src="/images/sharebutton_disabled.png"
+              />
+            )}
+
+            {!isLast.current ? (
+              <img
+                onClick={speechEnd}
+                src="/images/recordbutton_activated.png"
+              />
+            ) : !recordForm ? (
+              <img
+                onClick={(e) => {
+                  if (nickname !== presenter) {
+                    setMessage("녹화 권한이 없습니다.(발표자만 가능)");
+                    setAlert1(true);
+                    return;
+                  }
+                  setRecordForm(!recordForm);
+                }}
+                src="/images/recordbutton.png"
+              />
+            ) : (
+              <img
+                onClick={(e) => {
+                  setRecordForm(!recordForm);
+                }}
+                src="/images/recordbutton_disabled.png"
+              />
+            )}
+            <img
+              onClick={() => setConfirmLeave(!confirmLeave)}
+              src="/images/exitbutton.png"
+              alt=""
+            />
+          </div>
+          <div className="flex items-center space-x-4">
+            {feedbackButton && (
+              <img
+                onClick={(e) => {
+                  toggleFeedback();
+                }}
+                src="/images/feedbackbutton.png"
+              />
+            )}
+            <img
+              onClick={(e) => {
+                toggleResult();
+              }}
+              src="/images/resultbutton.png"
+            />
+            <img
+              onClick={(e) => {
+                toggleReprot();
+              }}
+              src="/images/reportbutton.png"
+            />
+            <img
+              onClick={(e) => {
+                toggleChats();
+              }}
+              src="/images/chatbutton.png"
+            />
           </div>
         </div>
-      </>}
-    </div>
+        {user && (
+          <div className="study-room-manage">
+            <div>
+              <h1>참여자</h1>
+            </div>
+            <div>
+              {userList.map((data, index) => (
+                <div key={index} className="study-room-user-list">
+                  <div className="study-room-user">
+                    <span>{data.userId}</span>
+                    {/* <span>{captain && "(방장)"}</span> */}
+                  </div>
+                  {nickname === room.managerId &&
+                    (data.presenter ? (
+                      <div
+                        onClick={(e) => changePresenter(data.userId, index)}
+                        className="presenter presenter-button Button"
+                      >
+                        발표자
+                      </div>
+                    ) : (
+                      <div
+                        onClick={(e) => changePresenter(data.userId, index)}
+                        className="participant presenter-button Button"
+                      >
+                        발표자
+                      </div>
+                    ))}
+                  {nickname !== room.managerId &&
+                    (data.presenter ? (
+                      <div className="presenter presenter-button Button">
+                        발표자
+                      </div>
+                    ) : (
+                      <div className="participant presenter-button Button">
+                        발표자
+                      </div>
+                    ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        {chat && (
+          <div className="chat bg-grad-y-black">
+            <h1
+              style={{
+                textAlign: "center",
+                marginTop: "-4px",
+                marginBottom: "-8px",
+              }}
+            >
+              방 제목 : {room.title}
+            </h1>
+            <h1>채팅</h1>
+            <hr style={{ marginTop: "-4px", marginBottom: "4px" }} />
+            {/*  */}
+            <div className="chat-area" ref={chatAreaRef}>
+              {chatList &&
+                chatList.map((item, index) => {
+                  const { username, time, content } = item;
+                  if (username != "ADMIN") {
+                    return (
+                      <div className="chat-box" key={index}>
+                        <div className="chat-header">
+                          <span className="chat-username">{username}</span>
+                          <span className="chat-time">{time}</span>{" "}
+                        </div>
+                        <div className="chat-content">{content} </div>
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div className="chat-box admin-chat">
+                        <span
+                          className="chat-content"
+                          style={{ fontWeight: "bold", margin: "1px" }}
+                        >
+                          {content}
+                        </span>
+                        <span className="chat-time">{time}</span>
+                      </div>
+                    );
+                  }
+                })}
+            </div>
+            <div>
+              <textarea
+                type="text"
+                value={chatvalue}
+                onChange={(e) => setChatvalue(e.target.value)}
+                onKeyDown={handleMessageSubmit}
+                placeholder="댓글을 입력하세요."
+                style={{
+                  marginTop: "12px",
+                  width: "100%",
+                }}
+              />
+            </div>
+          </div>
+        )}
+        {/* 발표자가 녹화종료를 눌렀을 때, 결과리스트에서 선택했을 때 결과 화면을 볼 수 있음 */}
+        {resultScreen && (
+          <StudyResult
+            onClose={handleResultClose}
+            speechId={speechId.current}
+            videoResponse={videoResponse}
+            resultResponse={resultResponse}
+          />
+        )}
+        {result && <ResultList />}
+        {report && <Report users={roomUsers} closeModal={closeModal} />}
+        {recordForm && (
+          <Modal
+            title="녹화 정보 입력"
+            onClose={(e) => setRecordForm(false)}
+            className={"record-form"}
+          >
+            {/* <h1 style={{fontWeight:"bold"}}>녹화 정보 입력</h1> */}
+            <form onSubmit={submitHandler}>
+              <div className="ms-3 mt-5">
+                <div className="record-form-each">
+                  <div>제목</div>
+                  <div>
+                    <input
+                      placeholder="제목 입력"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                    ></input>
+                  </div>
+                </div>
+                <div className="record-form-each">
+                  <div>카테고리</div>
+                  <div>{categoryName()}</div>
+                </div>
+                <div className="record-form-each">
+                  <div>분류</div>
+                  <div>스터디</div>
+                </div>
+              </div>
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <Button
+                  style={{
+                    color: "#FFFFFF",
+                    fontWeight: "bold",
+                  }}
+                >
+                  녹화 시작
+                </Button>
+              </div>
+            </form>
+          </Modal>
+        )}
+        {feedbackModal && (
+          <div className="feedback-form  bg-grad-y-black">
+            <h1>피드백 입력</h1>
+            <p>
+              내용 :{" "}
+              <textarea
+                style={{
+                  marginTop: "4px",
+                }}
+                type="text"
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+                onKeyDown={(e) => feedbackPost(e)}
+              />
+            </p>
+          </div>
+        )}
+        {confirmLeave && (
+          <>
+            <div className="study-leave">
+              정말 나가시겠습니까?
+              <div className="study-leave-buttons">
+                <div onClick={() => setConfirmLeave(false)}>아니요</div>
+                <div onClick={navigate("/study")}>예</div>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+      {alert1 && (
+        <MyAlert
+          content={message}
+          onClose={() => {
+            setAlert1(false);
+          }}
+        />
+      )}
+    </>
   );
 };
 export default StudyRoomPage;

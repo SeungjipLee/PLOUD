@@ -110,6 +110,10 @@
   text-decoration: none;
 }
 
+.Button :hover{
+  cursor: pointer;
+}
+
 .study-category-button {
   min-width: 60px;
   height: 35px;
@@ -149,7 +153,7 @@
   position: absolute;
   top: 200px;
   width: 250px;
-  height: 300px;
+  min-height: 300px;
   /* background-color: #EBEAFA; */
   color: white;
   background-color: #060515;
@@ -175,13 +179,14 @@
   flex-direction: column;
   margin-top: 120px;
   margin-bottom: 30px;
-  /* width: 980px; */
+  min-width: 980px;
   /* margin: 120px 25%; */
   height: 80vh;
   background-color: white;
   align-items: center;
 }
 .study-main-container {
+  /* min-width: 960px; */
 }
 
 .pagination {
@@ -224,6 +229,7 @@
   background-color: #0c134f;
   margin-top: 3%;
   width: 450px;
+  height: 430px;
 }
 
 .LoginAnother {
@@ -305,12 +311,17 @@
   background-color: #b0b0b0;
   color: white;
 }
+
 .presenter-button {
   border-radius: 5px;
   color: white;
   text-align: center;
   width: 70px;
   height: 30px;
+}
+
+.presenter-button :hover {
+  cursor: pointer;
 }
 
 .private-icon {
@@ -420,6 +431,10 @@
   position: absolute;
   right: 20px;
   bottom: 20px;
+}
+
+.enter-room :hover{
+  cursor: pointer;
 }
 
 .room-list {
@@ -559,7 +574,8 @@
   bottom: 10vh;
   right: 30px;
   width: 350px;
-  height: 730px;
+  max-height: 80vh;
+  min-height: 40vh;
   /* background-color: #060515; */
   color: white;
 }
@@ -825,7 +841,7 @@ p {
 }
 
 .record-form {
-  /* border: rgb(85, 85, 85) solid 1px; */
+  border: rgb(85, 85, 85) solid 1px;
   /* position: absolute; */
   position: fixed;
   display: flex;
@@ -833,20 +849,26 @@ p {
   padding: 20px;
   border-radius: 10px;
   width: 400px;
-  height: 330px;
-  background-color: #ffffff;
-  color: #0c134f;
+  background-color: #060515;
+  color: white;
   top: 40%; /* 상단 위치를 부모 요소의 중간으로 조정 */
   left: 50%; /* 왼쪽 위치를 부모 요소의 중간으로 조정 */
   transform: translate(-50%, -50%); /* 요소를 정확한 중앙으로 이동 */
 }
 
 .record-form input {
-  background-color: #272541;
+  background: none;
+  color: white;
 }
 
-.record-form p {
-  padding: 10px 0px;
+.record-form-top {
+}
+.record-form-each {
+  padding: 7px 0px;
+  display: flex;
+}
+.record-form-each > div{
+  min-width: 90px;
 }
 
 .record-form button {
@@ -866,7 +888,8 @@ p {
 .video-div-size-2 {
 }
 
-.video-div-size-2 video {
+.video-div-size-2 video,
+.video-div-size-2 img {
   /* padding-top: 150px;
   padding-left: 20px;
   padding-right: 20px; */
@@ -1079,17 +1102,20 @@ p {
 
 .mode2-top {
   display: flex;
-
-  height: 150px;
+  height: 15vh;
+  /* height: 150px; */
 }
-.mode2-top video {
-  height: 140px;
+
+.mode2-top video,
+.mode2-top img {
+  height: 15vh;
   width: auto;
 }
 
 .mode2-main {
   display: flex;
   justify-content: center;
+  flex-direction: column;
   width: 100%;
   height: 660px;
 }
@@ -1136,8 +1162,10 @@ p {
 }
 
 .mode2-main-screen video {
-  padding-top: 20px;
-  height: 600px;
+  padding: 10px 0px;
+  /* max-height: 660px; */
+  max-height: 70vh;
+  width: 100%;
 }
 
 .mode1-each {
@@ -1168,6 +1196,7 @@ p {
 .mode3-each video {
   width: 40vw;
 }
+
 .mode3-each {
   position: relative;
   padding: 0px 10px;
@@ -1205,7 +1234,9 @@ p {
   left: 5px;
 }
 .typing img {
-  width: 30px;
+  width: 80px;
+  height: auto;
+  opacity: 0.6;
 }
 
 .practice-startText:hover {
@@ -1229,7 +1260,7 @@ p {
   height: 500px;
 
   /* background-color: #f4e8c1; */
-  background-color: #f8f5f0;
+  background-color: #fffaf1;
 
   border: 1px solid #e2d5b8;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
@@ -1237,10 +1268,10 @@ p {
   margin: 0px 80px 0 20px;
   padding: 22px;
 
-  font-family: "Courier New", Courier, monospace;
-  font-size: 16px;
+  font-size: 28px;
   white-space: pre-wrap;
   word-wrap: break-word;
+  line-height: 200%;
 
   overflow-wrap: break-word;
   flex: auto;
@@ -1252,7 +1283,7 @@ p {
     rgba(0, 0, 0, 0.1) 1px,
     transparent 1px
   );
-  background-size: 100% 24px; /* 줄 간격 조정 */
+  background-size: 100% 44px; /* 줄 간격 조정 */
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -1350,9 +1381,8 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 15px 7px 0px;
 
   background-color: #c4c4c4;
-}a
-
-.slideshowDot.active {
+}
+a .slideshowDot.active {
   background-color: #f3704b;
 }
 
@@ -1402,8 +1432,7 @@ input[type="number"]::-webkit-outer-spin-button {
   border-radius: 20px;
 }
 
-.room-title{
-  
+.room-title {
 }
 
 .chat-box {
@@ -1413,7 +1442,7 @@ input[type="number"]::-webkit-outer-spin-button {
   border-radius: 8px;
 }
 
-.chat-box:hover{
+.chat-box:hover {
   background: linear-gradient(to bottom, #23232a, #050410);
 }
 
@@ -1467,19 +1496,95 @@ input[type="number"]::-webkit-outer-spin-button {
   justify-content: flex-end;
 }
 
-.study-leave-buttons > div{
+.study-leave-buttons > div {
   padding: 10px 10px;
 }
-.study-leave-buttons > div:hover{
+.study-leave-buttons > div:hover {
   cursor: pointer;
 }
 .alert {
-  position:absolute;
-  top: 280px;
-  left: 40%;
-  width: 320px;
-  height: 200px;
-  background-color: #192169;
+  position: fixed;
+  top: 100px;
+  left: 50%; /* 좌우 중앙에 위치 */
+  transform: translateX(-50%); /* 좌우 중앙 정렬을 위한 트랜스폼 */
+  min-width: 370px;
+  /* height: 160px; */
+  color: #010318;
+  font-weight: bold;
+  background-color: #fdf9f9;
   border-radius: 10px;
+  padding: 20px;
+  z-index: 1000;
+  /* border: 1px solid rgb(255, 255, 255); */
+}
+.alert-text {
+  /* word-wrap: break-word; */
+  white-space: pre-wrap;
+}
+.alert-button {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 17px;
+  color: #ee9611;
+}
+.alert button {
+  /* border: 1px solid rgb(170, 168, 168); */
+}
+
+.feedback-time {
+  color: blue;
+}
+
+.feedback-time:hover {
+  cursor: pointer;
+  text-decoration: under;
+}
+
+.practiceScript {
+  background: #fffaf1;
+}
+
+.signup-info {
+  color: #f3704b;
+  font-size: 12px;
+}
+
+.signup-info1 {
+  position: absolute;
+  left: 80px;
+}
+
+.signup-info2 {
+  position: absolute;
+  left: 80px;
+  top: 145px;
+}
+
+.signup-info3 {
+  position: absolute;
+  left: 80px;
+  top: 195px;
+}
+
+.tier-info:hover {
+  cursor: pointer;
+}
+
+.admin-chat {
   text-align: center;
+}
+
+.practice-main {
+  min-width: 900px;
+  max-width: 1100px;
+}
+
+.mic-off img {
+  width: 50px;
+  height: auto;
+}
+.mic-off {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
 }

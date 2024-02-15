@@ -141,18 +141,8 @@ public class SpeechServiceImpl implements SpeechService {
         speech.getScore().updateVolume(volume);
 
         // 사용자 연습 시간 업데이트
-        updateUserPracticeTime(speech);
-    }
-
-    private void updateUserPracticeTime(SpeechEntity speech) {
         UserEntity user = speech.getUser();
-        Duration duration = Duration.between(speech.getRecordTime(), speech.getSpeechEndTime());
-        long practiceTimeInMinute = duration.toMinutes();
-        if (speech.isPersonal()) {
-            user.updateSoloDuration(practiceTimeInMinute);
-        } else {
-            user.updateStudyDuration(practiceTimeInMinute);
-        }
+        user.updateUserPracticeTime(speech);
     }
 
     @Override
@@ -204,7 +194,12 @@ public class SpeechServiceImpl implements SpeechService {
 
             ClearityDto clearityDto = etriUtil.getScore(audioInfo);
 
-            speechAssessUtil.addClearity(speechId, clearityDto);
+            if(clearityDto != null){
+                speechAssessUtil.addClearity(speechId, clearityDto);
+                log.debug("스크립트 개수 확인 : " + clearityDto.getCnt() + ", 점수 확인 : " + clearityDto.getFloatScore());
+            }else{
+                log.debug("평가 점수 없음.");
+            }
 
             if (isLast) {
                 Map<String, Integer> scores = speechAssessUtil.assess(speechId);
@@ -216,6 +211,7 @@ public class SpeechServiceImpl implements SpeechService {
                 score.updateClearity(scores.get("clearity"));
                 score.updateSpeed(scores.get("speed"));
                 scoreRepository.save(score);
+                log.debug("스피치 평가 등록 완료, 스피치 아이디 : " + speechId);
             }
             if (clearityDto == null) {
                 throw new CustomException(ResponseCode.ETRI_ERROR);

@@ -88,7 +88,7 @@ export const patchPassword = async (token, data, success, fail) => {
 
 // 수정해야 함
 // header "Authorization": Bearer {access token}, "Content-Type": "multipart/form-data"
-export const postProfileImage = async (token, success, fail) => {
+export const postProfileImage = async (token, data, success, fail) => {
   return await API(token)
     .post("user/img", data)
     .then(success)
