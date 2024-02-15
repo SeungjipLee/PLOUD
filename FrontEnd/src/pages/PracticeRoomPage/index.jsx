@@ -131,7 +131,7 @@ const PracticeRoomPage = () => {
         videoRef.current.srcObject = null;
       }
 
-      if(isLast.current){
+      if(!isLast.current){
         console.log("녹화 중 종료");
         speechEnd();
       }
