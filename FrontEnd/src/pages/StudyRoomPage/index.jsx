@@ -175,22 +175,17 @@ const StudyRoomPage = () => {
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
-      // 여기에서 세션 종료 로직을 실행합니다.
-      // 예: session.disconnect();
       leaveSession();
 
-      // 이벤트를 취소할 수 없지만, 대부분의 브라우저에서는 사용자에게 페이지를 떠나겠냐는 확인 창을 표시합니다.
       event.preventDefault();
     };
 
-    // 이벤트 리스너를 등록합니다.
     window.addEventListener("beforeunload", handleBeforeUnload);
 
-    // 컴포넌트가 언마운트될 때 이벤트 리스너를 정리합니다.
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, []); // 의존성 배열이 빈 배열이므로 컴포넌트 마운트 시 한 번만 실행됩니다.
+  }, []);
 
   // 화면 공유
   const handleScreenShare = async () => {
@@ -812,7 +807,6 @@ const StudyRoomPage = () => {
     session.current.disconnect();
     session.current = null;
     OV.current = null;
-    navigate("/study");
   };
 
   const deleteSubscriber = useCallback((streamManager) => {
