@@ -128,7 +128,7 @@ public class OpenViduUtil {
                         log.debug("방 삭제 요청 - 세션 ID : " + sessionId);
 
                         this.mapSessionIdsTokens.remove(sessionId);
-                        this.mapSessions.remove(sessionId).close();
+                        this.mapSessions.remove(sessionId);
 
                         for (int i = 0; i < meetingList.size(); ++i) {
                             if (meetingList.get(i).getSessionId().equals(sessionId)) {
