@@ -59,6 +59,9 @@ const StudyRoomPage = () => {
   // 방에 있는 유저 목록 관리 { nickname : String }
   const [roomUsers, setRoomUsers] = useState([]);
 
+  // 마이크 종료 유저
+  const [micOffUserList, setMicOffUserList] = useState([]);
+
   // 유저 닉네임 추가
   const addUser = (newUser) => {
     setRoomUsers((prevUsers) => [...prevUsers, newUser]);
@@ -611,7 +614,23 @@ const StudyRoomPage = () => {
     // 비디오 상태 전환
     session.current.on("signal:videoChange", (event) => {
       setVideoChange(!videoChange);
-    })
+    });
+
+    // 마이크 상태 전환
+    session.current.on("signal:micChange", (event) => {
+      var username = JSON.parse(event.data).nickname;
+      // var content = JSON.parse(event.data).chatvalue;
+
+      setMicOffUserList((prevList) => {
+        const exists = prevList.includes(username);
+  
+        if (exists) {
+          return prevList.filter(user => user !== nickname);
+        } else {
+          return [...prevList, nickname];
+        }
+      });
+    });
 
     // 방장이 떠남
     session.current.on("signal:exit", (event) => {
@@ -651,8 +670,6 @@ const StudyRoomPage = () => {
       var content = JSON.parse(event.data).chatvalue;
       console.log("[녹화 시작 신호 받음]");
       console.log(username, nickname);
-      // 참여자라면
-      denyMics();
 
       // console.log(publisher);
 
@@ -664,6 +681,10 @@ const StudyRoomPage = () => {
           setMode("2");
         } else {
           setMode("3");
+        }
+
+        if(mic){
+          toggleMic();
         }
       }
 
@@ -1117,8 +1138,9 @@ const StudyRoomPage = () => {
     setMic(newMic); // 상태 업데이트
     if (publisher) {
       publisher.publishAudio(newMic); // 마이크 상태 토글
+    
+      sendSignal("micChange", "마이크 상태 변경");
     }
-    console.log(publisher);
   };
 
   // const toggleMicTest = () => {
@@ -1177,18 +1199,6 @@ const StudyRoomPage = () => {
     }
   };
 
-  const denyMics = () => {
-    // const pub = publisher
-    // console.log(pub)
-    if (presenter != nickname) {
-      // 마이크 off
-      setMic(false); // 상태 업데이트
-      if (publisherRef.current) {
-        publisherRef.current.publishAudio(false); // 마이크 상태 토글
-        console.log(publisherRef);
-      }
-    }
-  };
   return (
     <>
       <div className="RoomPage">
@@ -1241,6 +1251,9 @@ const StudyRoomPage = () => {
                                 ? typingList.indexOf(i) >= 0
                                 : false
                             }
+                            isMicState={
+                              micOffUserList.includes(getUserNickname(sub))
+                            }
                             streamManager={sub}
                           />
                         </div>
@@ -1260,6 +1273,9 @@ const StudyRoomPage = () => {
                           getUserNickname(publisher) !== presenter
                             ? typingList.indexOf(-1) >= 0
                             : false
+                        }
+                        isMicState={
+                          micOffUserList.includes(getUserNickname(sub))
                         }
                         streamManager={publisher}
                       />
@@ -1283,6 +1299,9 @@ const StudyRoomPage = () => {
                               getUserNickname(sub) !== presenter
                                 ? typingList.indexOf(i) >= 0
                                 : false
+                            }
+                            isMicState={
+                              micOffUserList.includes(getUserNickname(sub))
                             }
                             streamManager={sub}
                           />
@@ -1312,6 +1331,9 @@ const StudyRoomPage = () => {
                             ? typingList.indexOf(-1) >= 0
                             : false
                         }
+                        isMicState={
+                          micOffUserList.includes(getUserNickname(sub))
+                        }
                         streamManager={publisher}
                       />
                     </div>
@@ -1334,6 +1356,9 @@ const StudyRoomPage = () => {
                               getUserNickname(sub) !== presenter
                                 ? typingList.indexOf(i) >= 0
                                 : false
+                            }
+                            isMicState={
+                              micOffUserList.includes(getUserNickname(sub))
                             }
                             streamManager={sub}
                           />
@@ -1365,6 +1390,9 @@ const StudyRoomPage = () => {
                           ? typingList.indexOf(-1) >= 0
                           : false
                       }
+                      isMicState={
+                        micOffUserList.includes(getUserNickname(sub))
+                      }
                       streamManager={publisher}
                     />
                   </div>
@@ -1385,6 +1413,9 @@ const StudyRoomPage = () => {
                           getUserNickname(sub) !== presenter
                             ? typingList.indexOf(i) >= 0
                             : false
+                        }
+                        isMicState={
+                          micOffUserList.includes(getUserNickname(sub))
                         }
                         streamManager={sub}
                       />
@@ -1422,6 +1453,9 @@ const StudyRoomPage = () => {
                               ? typingList.indexOf(i) >= 0
                               : false
                           }
+                          isMicState={
+                            micOffUserList.includes(getUserNickname(sub))
+                          }
                           streamManager={sub}
                         />
                       </div>
@@ -1439,6 +1473,9 @@ const StudyRoomPage = () => {
                         getUserNickname(publisher) !== presenter
                           ? typingList.indexOf(-1) >= 0
                           : false
+                      }
+                      isMicState={
+                        micOffUserList.includes(getUserNickname(sub))
                       }
                       streamManager={publisher}
                     />
@@ -1465,6 +1502,9 @@ const StudyRoomPage = () => {
                             ? typingList.indexOf(i) >= 0
                             : false
                         }
+                        isMicState={
+                          micOffUserList.includes(getUserNickname(sub))
+                        }
                         streamManager={sub}
                       />
                     </div>
@@ -1490,6 +1530,9 @@ const StudyRoomPage = () => {
                           getUserNickname(sub) !== presenter
                             ? typingList.indexOf(i) >= 0
                             : false
+                        }
+                        isMicState={
+                          micOffUserList.includes(getUserNickname(sub))
                         }
                         streamManager={sub}
                       />
