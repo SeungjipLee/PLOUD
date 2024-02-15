@@ -163,12 +163,12 @@ const PracticePage2 = () => {
   return (
     <div className="bg-white w-full min-h-screen">
       <Page header={<Navbar />} footer={<Footer />}>
-        <div className="mt-28">
+        <div className="flex flex-col mt-28 justify-center items-center">
           <div className="text-center font-extrabold text-2xl mainBlueF mb-10">
             혼자연습
           </div>
 
-          <div className="flex flex-col mx-60 bg-sky-50 ps-10 py-10 rounded-2xl mb-24">
+          <div className="practice-main flex flex-col mx-60 bg-sky-50 ps-10 py-10 rounded-2xl mb-24">
             <div className="flex mb-5">
               <div className="text-xl mainBlueF font-bold">1. 대본 :</div>
               <Link
