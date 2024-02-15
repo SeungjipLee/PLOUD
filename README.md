@@ -27,13 +27,19 @@
 
 <br>
 
-1. 메인페이지
-2. 대본 선택 (선택, 마이크테스트)
-3. 혼자 연습 화면 (녹화 시작한 화면, 피드백)
-4. 스터디 화면 (입장, 권한 받고, 발표 시작)
-4-1. 발표하는 화면
-5. 마이페이지 (다섯개 호버링)
-6. 결과화면 (눌렀을 때 나오는 거)
+![메인페이지](./document/PLOUD/main.gif)
+
+![대본선택](./document/PLOUD/script.gif)
+
+![혼자연습](./document/PLOUD/single.gif)
+
+![스터디](./document/PLOUD/study.gif)
+
+![마이페이지](./document/PLOUD/mypage.gif)
+
+![결과페이지](./document/PLOUD/result.gif)
+
+![게시판](./document/PLOUD/board.gif)
 
 <br>
 
