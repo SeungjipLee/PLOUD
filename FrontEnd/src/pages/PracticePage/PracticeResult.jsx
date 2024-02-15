@@ -67,16 +67,16 @@ const PracticeResult = ({
   }, [videoResponse]);
 
   useEffect(() => {
-    if (scores.grade < 20) {
+    if (scores.grade < 40) {
       setGrade("E");
       setResultTextColor("#393939");
-    } else if (scores.grade < 40) {
+    } else if (scores.grade < 60) {
       setGrade("D");
       setResultTextColor("#0C134F");
-    } else if (scores.grade < 60) {
+    } else if (scores.grade < 75) {
       setGrade("C");
       setResultTextColor("#624637");
-    } else if (scores.grade < 80) {
+    } else if (scores.grade < 90) {
       setGrade("B");
       setResultTextColor("#c0c0c0");
     } else {
