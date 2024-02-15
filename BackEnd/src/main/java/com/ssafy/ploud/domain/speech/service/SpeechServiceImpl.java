@@ -127,14 +127,14 @@ public class SpeechServiceImpl implements SpeechService {
     @Override
     @Transactional
     public void endAndDecibel(SpeechEndRequest speechEndRequest) {
-//        String sessionId = speechEndRequest.getSessionId();
-//        if (!sessionId.isEmpty()) {
-//            MeetingInfo meetingInfo = openViduUtil.findBySessionId(sessionId);
-//            meetingInfo.setSpeechId(-1);
-//        }
+        String sessionId = speechEndRequest.getSessionId();
+        if (!sessionId.isEmpty()) {
+            MeetingInfo meetingInfo = openViduUtil.findBySessionId(sessionId);
+            meetingInfo.setSpeechId(-1);
+        }
 
         // 데시벨 평가
-        int volume = 65;//speechAssessUtil.decibels(speechEndRequest.getDecibels());
+        int volume = speechAssessUtil.decibels(speechEndRequest.getDecibels());
         SpeechEntity speech = speechRepository.findById(speechEndRequest.getSpeechId())
             .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
         speech.updateSpeechEndTime();
