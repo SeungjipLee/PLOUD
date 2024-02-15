@@ -43,6 +43,9 @@ public class S3ServiceImpl implements S3Service {
       // S3에 파일 저장하는 경로
       String path = getFilename(type, userId, multipartFile);
 
+      log.debug("S3 파일 타입 : " + type);
+      log.debug("S3 파일 저장 이름 : " + path);
+
       amazonS3.putObject(bucket, path, multipartFile.getInputStream(), metadata);
 
       return amazonS3.getUrl(bucket, path).toString();
