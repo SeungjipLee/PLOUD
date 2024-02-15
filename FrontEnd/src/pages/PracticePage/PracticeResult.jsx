@@ -7,7 +7,7 @@ import { getSentence } from "../../services/sentence";
 import { postComment } from "../../services/speech";
 import MyAlert from "../../components/MyAlert";
 
-const PracticeResult = ({ onClose, speechId, videoResponse }) => {
+const PracticeResult = ({ onClose, speechId, videoResponse, resultResponse }) => {
   // 알림 창 상태
   const [message, setMessage] = useState("");
   const [alert, setAlert] = useState(false);
@@ -22,14 +22,6 @@ const PracticeResult = ({ onClose, speechId, videoResponse }) => {
   const [sentence, setSentence] = useState(""); // 명언
   const [resultTextColor, setResultTextColor] = useState("#000000");
   const [myFeedback, setMyFeedback] = useState("");
-
-  const formatTimeLog = (timeLog) => {
-    const match = timeLog.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
-    const hours = match[1] ? match[1].slice(0, -1) : "00";
-    const minutes = match[2] ? match[2].slice(0, -1) : "00";
-    const seconds = match[3] ? match[3].slice(0, -1) : "00";
-    return `${minutes} : ${seconds}`;
-  };
 
   const handleDetail = () => {
     setIsDetail(!isDetail);
@@ -89,10 +81,10 @@ const PracticeResult = ({ onClose, speechId, videoResponse }) => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
+    if(resultResponse){
       recordResultGet();
-    }, 5000);
-  }, []);
+    }
+  }, [resultResponse]);
 
   const recordResultGet = () => {
     getRecordResult(

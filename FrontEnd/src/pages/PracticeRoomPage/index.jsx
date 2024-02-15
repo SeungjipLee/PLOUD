@@ -60,6 +60,7 @@ const PracticeRoomPage = () => {
   const [video, setVideo] = useState(true);
   const [mic, setMic] = useState(false);
 
+  const [resultResponse, setResultResponse] = useState(false);
   const [videoResponse, setVideoResponse] = useState(null);
 
   // 피드백 관련
@@ -171,6 +172,7 @@ const PracticeRoomPage = () => {
 
         // 마이크 꺼짐
         setMic(false);
+        setResultResponse(false);
 
         setFeedback("");
         setTimeout(() => {
@@ -348,15 +350,23 @@ const PracticeRoomPage = () => {
             ", 점수 : " +
             response.data.data.score
         );
+
         // 실시간 피드백
         if (response.data.scriptCnt > 28) {
           changeFeedback("조금만 천천히 말해주세요!");
         } else if (response.data.score < 3) {
           changeFeedback("발음을 정확하게 해주세요!");
         }
+
+        if(isLast.current){
+          setResultResponse(true);
+        }
       },
       (error) => {
         // console.log(error);
+        if(isLast.current){
+          setResultResponse(true);
+        }
       }
     );
 
@@ -440,6 +450,7 @@ const PracticeRoomPage = () => {
   // 결과 창 닫기
   const handleResultClose = () => {
     setResultScreen(false);
+    setResultResponse(false);
     speechId.current = -1;
   };
 
@@ -745,6 +756,7 @@ const PracticeRoomPage = () => {
           onClose={handleResultClose}
           speechId={speechId.current}
           videoResponse={videoResponse}
+          resultResponse={resultResponse}
         />
       )}
     </div>

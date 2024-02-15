@@ -8,7 +8,7 @@ import LoadingScreen from "./Loading";
 import LoadingScreen2 from "./Loading2";
 import MyAlert from "../../../components/MyAlert";
 
-const StudyResult = ({ onClose, speechId, videoResponse }) => {
+const StudyResult = ({ onClose, speechId, videoResponse, resultResponse }) => {
   const [isDetail, setIsDetail] = useState(true);
   const { token } = useSelector((state) => state.userReducer);
   const resultId = speechId;
@@ -29,12 +29,10 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
   const videoRef = useRef(null);
 
   useEffect(() => {
-    console.log("유즈 이펙트~");
-
-    setTimeout(() => {
+    if(resultResponse){
       recordResultGet();
-    }, 5000);
-  }, []);
+    }
+  }, [resultResponse])
 
   useEffect(() => {
     if (videoResponse === true) {

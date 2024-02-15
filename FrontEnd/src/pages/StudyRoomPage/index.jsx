@@ -152,8 +152,9 @@ const StudyRoomPage = () => {
   const speechId = useRef(0);
 
   // 결과 관련
-  const [currentResult, setCurrentResult] = useState(null);
   const recordList = useSelector((state) => state.recordReducer.recordList);
+
+  const [resultResponse, setResultResponse] = useState(false);
   const [videoResponse, setVideoResponse] = useState(null);
 
   const categoryName = () => {
@@ -439,6 +440,7 @@ const StudyRoomPage = () => {
         setChat(false);
         setReport(false);
         setRecord(false);
+        setResultResponse(false);
       },
       (err) => console.log(err)
     );
@@ -1108,10 +1110,17 @@ const StudyRoomPage = () => {
             ", 점수 : " +
             response.data.score
         );
+
+        if(isLast.current){
+          setResultResponse(true);
+        }
       },
       (error) => {
-        console.log("평가 실패");
         // console.log(error);
+        console.log("평가 실패");
+        if(isLast.current){
+          setResultResponse(true);
+        }
       }
     );
   };
@@ -1752,6 +1761,7 @@ const StudyRoomPage = () => {
             onClose={handleResultClose}
             speechId={speechId.current}
             videoResponse={videoResponse}
+            resultResponse={resultResponse}
           />
         )}
         {result && <ResultList />}
