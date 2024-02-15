@@ -1521,6 +1521,8 @@ a .slideshowDot.active {
 }
 .feedback-time:hover {
   cursor: pointer;
+  color: blue;
+  opacity: 0.8;
 }
 
 .practiceScript {

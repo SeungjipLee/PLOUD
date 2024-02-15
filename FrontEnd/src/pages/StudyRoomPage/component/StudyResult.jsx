@@ -25,7 +25,8 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
 
   // 로딩 상태 관리
   const [loading, setLoading] = useState(true);
-
+  const videoRef = useRef(null);
+  
   useEffect(() => {
     console.log("유즈 이펙트~");
 
@@ -39,10 +40,14 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
       // -> 다시 요청
       recordResultGet();
       console.log("결과 페이지 비디오 다시 요청");
+
+      // 스피너 종료
     } else if (videoResponse === false) {
       // 비디오를 올리지 못함.
       setVideoPath("False");
       console.log("결과 페이지 비디오 올리지 못함");
+    
+        // 스피너 종료
     }
   }, [videoResponse]);
 
@@ -145,6 +150,15 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
     }
   };
 
+  const moveVideoTime = (timeLog) => {
+    const parts = timeLog.split(':');
+    const totalSeconds = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+    
+    if(videoRef.current){
+      videoRef.current.currentTime = totalSeconds; 
+    }
+  }
+
   return (
     <>
       <Modal title="스터디 결과 발표 - 스터디룸" className="study-result">
@@ -180,7 +194,7 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
                     ) : videoPath == "False" ? (
                       <div>영상 업로드에 실패헀습니다.</div>
                     ) : (
-                      <video controls src={videoPath} type="video/webm">
+                      <video ref={videoRef} controls src={videoPath} type="video/webm">
                         Your browser does not support the video tag.
                       </video>
                     )}
@@ -291,8 +305,14 @@ const StudyResult = ({ onClose, speechId, videoResponse }) => {
                         className="p-3 bg-gray-100"
                       >
                         {feedbacks.map((feedback, index) => (
-                          <p key={index} className="py-2 px-4 ">
-                            {feedback.timeLog} - {feedback.content}
+                          <p key={index} className="py-0.5">
+                            <span
+                              className="feedback-time"
+                              onClick={() => moveVideoTime(feedback.timeLog)}
+                            >
+                              {feedback.timeLog}
+                            </span>
+                            <span>{" - " + feedback.content}</span>
                           </p>
                         ))}
                       </div>

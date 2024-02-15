@@ -152,7 +152,8 @@ const NoSkipResult = ({ onClose, speechId }) => {
                   <p key={index} className="py-0.5">
                     <span 
                     className="feedback-time"
-                    onClick={() => moveVideoTime(feedback.timeLog)}>{feedback.timeLog}</span> - {feedback.content}
+                    onClick={() => moveVideoTime(feedback.timeLog)}>{feedback.timeLog}</span>
+                    <span>{" - " + feedback.content}</span>
                   </p>
                 ))}
               </div>

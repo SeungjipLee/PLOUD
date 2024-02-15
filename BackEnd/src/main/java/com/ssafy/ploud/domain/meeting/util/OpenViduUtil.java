@@ -124,7 +124,7 @@ public class OpenViduUtil {
                     MeetingInfo meetingInfo = findBySessionId(sessionId);
                     meetingInfo.setCurrentPeople(meetingInfo.getCurrentPeople() - 1);
 
-                    if(isManager && (meetingInfo.getCurrentPeople() == 0 && findBySessionId(sessionId) != null)) {
+                    if(isManager) {
                         log.debug("방 삭제 요청 - 세션 ID : " + sessionId);
 
                         this.mapSessionIdsTokens.remove(sessionId);
