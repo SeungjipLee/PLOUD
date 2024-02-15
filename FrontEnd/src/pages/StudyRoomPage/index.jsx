@@ -240,7 +240,6 @@ const StudyRoomPage = () => {
   const [presenter, setPresenter] = useState("");
   const [userList, setUserList] = useState([]);
   // { userId: "test01", presenter: true },
-  const presenterRef = useRef("")
 
   // 채팅 정보
   const [chatvalue, setChatvalue] = useState("");
@@ -324,7 +323,6 @@ const StudyRoomPage = () => {
   }, []);
 
   useEffect(() => {
-    presenterRef.current = presenter
     if (!presenter) return;
     console.log("[presenter]", presenter);
     if (OV.current == null) joinSession();
@@ -410,9 +408,11 @@ const StudyRoomPage = () => {
     // 녹화시작은 발표자가 함
     // 따라서 발표자의 모드가 3번이 아니라면
     // mode 1로 이동
+
     if (mode !== "3") {
       setMode("1");
     }
+
     console.log("녹음 시작");
 
     const params = {
@@ -570,8 +570,10 @@ const StudyRoomPage = () => {
         (index) => !typingList.includes(index)
       );
 
+      console.log("유저 리스트 사이즈 : " + userList.length);
+
       // console.log("전부 : " + allIndexes);
-      // console.log("유저 수 : " + userSize.current);
+      console.log("유저 수 : " + userSize.current);
       // console.log("현재 피드백 수 : " + typingList.length);
       // console.log("가능한 수 : " + availableIndexes.length);
 
@@ -593,15 +595,15 @@ const StudyRoomPage = () => {
 
     // 화면 공유 수신
     session.current.on("signal:screenOn", (event) => {
-      setScreenShare(true)
-      screenShareRef.current = true
-      setMode("3")
+      setScreenShare(true);
+      screenShareRef.current = true;
+      setMode("3");
     })
     // 화면 공유 종료 수신
     session.current.on("signal:screenOff", (event) => {
-      setScreenShare(false)
-      screenShareRef.current = false
-      setMode("0")
+      setScreenShare(false);
+      screenShareRef.current = false;
+      setMode("0");
     })
 
     // 방장이 떠남
@@ -641,17 +643,23 @@ const StudyRoomPage = () => {
       var username = JSON.parse(event.data).nickname;
       var content = JSON.parse(event.data).chatvalue;
       console.log("[녹화 시작 신호 받음]");
-      console.log(presenterRef, nickname)
+      console.log(username, nickname)
       // 참여자라면
       denyMics();
-      if (presenterRef.current != nickname) {
+
+      // console.log(publisher);
+
+      if (username !== nickname) {
         // 녹화 시작 신호를 받았을 때 모드가 3이 아니라면 청자는 모드 2번으로 이동
+        
         if (!screenShareRef.current) { // 이거 mode 안찍힐수도 있다.
           setMode("2");
         } else {
           setMode("3")
         }
       }
+
+
       setRecord(true);
       setChatList((chatList) => [
         ...chatList,
