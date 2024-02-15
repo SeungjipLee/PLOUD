@@ -568,8 +568,10 @@ const StudyRoomPage = () => {
         (index) => !typingList.includes(index)
       );
 
+      console.log("유저 리스트 사이즈 : " + userList.length);
+
       // console.log("전부 : " + allIndexes);
-      // console.log("유저 수 : " + userSize.current);
+      console.log("유저 수 : " + userSize.current);
       // console.log("현재 피드백 수 : " + typingList.length);
       // console.log("가능한 수 : " + availableIndexes.length);
 
