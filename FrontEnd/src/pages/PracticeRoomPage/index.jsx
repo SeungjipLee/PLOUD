@@ -89,10 +89,19 @@ const PracticeRoomPage = () => {
     // 3초 동안 30데시벨 이하
     const isSilent = tmpDecibels.current.every((db) => db < 30);
 
-    if (!isFeedback.current && !isFeedback2.current && tmpDecibels.current.length >= 30 && isSilent) {
+    if (
+      !isFeedback.current &&
+      !isFeedback2.current &&
+      tmpDecibels.current.length >= 30 &&
+      isSilent
+    ) {
       isFeedback.current = true;
       changeFeedback("침묵이 길어지고 있어요!");
-    } else if (!isFeedback.current && !isFeedback2.current && tmpDecibels.current.slice(-1)[0] >= 70) {
+    } else if (
+      !isFeedback.current &&
+      !isFeedback2.current &&
+      tmpDecibels.current.slice(-1)[0] >= 70
+    ) {
       isFeedback.current = true;
       changeFeedback("목소리가 너무 크게 들려요!");
     }
@@ -131,7 +140,7 @@ const PracticeRoomPage = () => {
         videoRef.current.srcObject = null;
       }
 
-      if(!isLast.current){
+      if (!isLast.current) {
         console.log("녹화 중 종료");
         speechEnd();
       }
@@ -175,11 +184,11 @@ const PracticeRoomPage = () => {
         setFeedback("");
         setTimeout(() => {
           setFeedback("잘하고 있어요!");
-        }, 1500)
+        }, 1500);
       },
       (err) => {
         // console.log(err)
-      } 
+      }
     );
 
     // 폼 변경
@@ -299,14 +308,17 @@ const PracticeRoomPage = () => {
     setFeedback(fb);
 
     setTimeout(() => {
-      if(isFeedback2.current == true || (isFeedback.current == true && isFeedback2.current == false)){
+      if (
+        isFeedback2.current == true ||
+        (isFeedback.current == true && isFeedback2.current == false)
+      ) {
         setFeedback("잘하고 있어요!");
       }
 
       setTimeout(() => {
-        if(isFeedback.current == true){
+        if (isFeedback.current == true) {
           isFeedback.current = false;
-        }else if(isFeedback2.current == true){
+        } else if (isFeedback2.current == true) {
           isFeedback2.current = false;
         }
       }, 2500);
@@ -360,7 +372,7 @@ const PracticeRoomPage = () => {
       }
     );
 
-    if(isLast.current){
+    if (isLast.current) {
       setFeedback("[ 실시간 피드백 ]");
     }
   };
@@ -720,21 +732,37 @@ const PracticeRoomPage = () => {
           className={"record-form"}
         >
           <form onSubmit={speechStart}>
-            <div>
-              <p>
-                제목 :
-                <input
-                  placeholder="제목 입력..."
-                  value={title}
-                  style={{ color: "white" }}
-                  onChange={(e) => setTitle(e.target.value)}
-                ></input>
-              </p>
-              <p>카테고리 : 전체</p>
-              <p>분류 : 개인</p>
+            <div className="ms-3 mt-5">
+              <div className="record-form-each">
+                <div>제목</div>
+                <div>
+                  <input
+                    placeholder="제목 입력"
+                    value={title}
+                    style={{ color: "white" }}
+                    onChange={(e) => setTitle(e.target.value)}
+                  ></input>
+                </div>
+              </div>
+              <div className="record-form-each">
+                <div>카테고리</div>
+                <div>전체</div>
+              </div>
+              <div className="record-form-each">
+                <div>분류</div>
+                <div>개인</div>
+              </div>
             </div>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}></div>
-            <Button>녹화 시작</Button>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                style={{
+                  color: "#FFFFFF",
+                  fontWeight: "bold",
+                }}
+              >
+                녹화 시작
+              </Button>
+            </div>
           </form>
         </Modal>
       )}
