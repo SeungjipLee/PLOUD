@@ -624,11 +624,11 @@ const StudyRoomPage = () => {
         const exists = prevList.includes(username);
         // 이미 마이크를 끈 사람 리스트에 있고 마이크를 켰다면 리스트에서 제외하기
         if (exists && micState == "on") {
-          return prevList.filter((user) => user != nickname);
+          return prevList.filter((user) => user != username);
         }
         // 마이크를 끈사람 리스트에 없고 마이크를 껐다면
         else if (!exists && micState == "off"){
-          return [...prevList, nickname]
+          return [...prevList, username]
         }
         else return prevList
       });
