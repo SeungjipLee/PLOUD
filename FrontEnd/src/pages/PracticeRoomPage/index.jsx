@@ -150,17 +150,6 @@ const PracticeRoomPage = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (stream) {
-      console.log(stream);
-      if (videoStateRef) {
-        stream.mediaDevices.video = true;
-      } else {
-        stream.mediaDevices.video = false;
-      }
-    }
-  }, [video]);
-
   const toggleVideo = () => {
     const newVideo = !video;
     videoStateRef.current = newVideo;
