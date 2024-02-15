@@ -40,8 +40,8 @@
 }
 
 .card {
-  width: 200px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
   margin-top: 30px;
 }
 
@@ -1329,7 +1329,7 @@ input[type="number"]::-webkit-outer-spin-button {
 .slideshow {
   margin: 0 auto;
   overflow: hidden;
-  max-width: 200px;
+  max-width: 300px;
 }
 
 .slideshowSlider {
@@ -1518,23 +1518,23 @@ a .slideshowDot.active {
   background: #fffaf1;
 }
 
-.signup-info{
-  color: #F3704B;
+.signup-info {
+  color: #f3704b;
   font-size: 12px;
 }
 
-.signup-info1{
+.signup-info1 {
   position: absolute;
   left: 80px;
 }
 
-.signup-info2{
+.signup-info2 {
   position: absolute;
   left: 80px;
   top: 145px;
 }
 
-.signup-info3{
+.signup-info3 {
   position: absolute;
   left: 80px;
   top: 195px;
@@ -1544,7 +1544,7 @@ a .slideshowDot.active {
   cursor: pointer;
 }
 
-.admin-chat{
+.admin-chat {
   text-align: center;
 }
 
