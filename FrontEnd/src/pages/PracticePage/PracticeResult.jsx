@@ -120,7 +120,7 @@ const PracticeResult = ({ onClose, speechId, videoResponse }) => {
       }
     )
 
-    setLoading(false); // 로딩 종료
+    // setLoading(false); // 로딩 종료
   };
 
   return (
