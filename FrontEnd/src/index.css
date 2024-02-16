@@ -830,15 +830,16 @@ p {
 }
 
 .overflow-ellipsis:hover {
-  /* position: absolute;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: unset; */
+  /* position: absolute; */
+  /* white-space: normal; */
+  /* overflow: visible; */
+  /* color:rgb(85, 85, 85); */
+  /* text-overflow: unset; */
   /* background-color: #B0B0B0; */
-  /* width: 241px;
-  height: 100px;
-  background: linear-gradient(to bottom, #3a3758, #100e2c);
-  border-radius: 5px; */
+  /* width: 241px; */
+  /* height: 100px; */
+  /* background: linear-gradient(to bottom, #3a3758, #100e2c); */
+  /* border-radius: 5px; */
 }
 
 .record-form {
@@ -1192,7 +1193,9 @@ p {
   height: 30px;
 }
 
-.mode1-top video {
+.mode1-top video,
+.mode1-top img
+ {
   width: 400px;
 }
 
