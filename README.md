@@ -26,20 +26,27 @@
 ## 💻 서비스 화면
 
 <br>
-
-![메인페이지](./document/PLOUD/main.gif)
-
-![대본선택](./document/PLOUD/script.gif)
-
-![혼자연습](./document/PLOUD/single.gif)
-
-![스터디](./document/PLOUD/study.gif)
-
-![마이페이지](./document/PLOUD/mypage.gif)
-
-![결과페이지](./document/PLOUD/result.gif)
-
-![게시판](./document/PLOUD/board.gif)
+  
+1. 메인페이지  
+![메인페이지](./document/PLOUD/main.gif)  
+  
+2. 대본 선택  
+![대본선택](./document/PLOUD/script.gif)  
+  
+3. 혼자 연습  
+![혼자연습](./document/PLOUD/single.gif)  
+  
+4. 스터디 페이지
+![스터디](./document/PLOUD/study.gif)  
+  
+5. 마이페이지  
+![마이페이지](./document/PLOUD/mypage.gif)  
+  
+6. 결과페이지  
+![결과페이지](./document/PLOUD/result.gif)  
+  
+7. 게시판  
+![게시판](./document/PLOUD/board.gif)  
 
 <br>
 
