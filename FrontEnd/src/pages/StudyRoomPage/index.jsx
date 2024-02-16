@@ -634,6 +634,9 @@ const StudyRoomPage = () => {
     // 비디오 상태 전환
     session.current.on("signal:videoChange", (event) => {
       setVideoChange(!videoChange);
+      setTimeout(()=>{
+        setVideoChange(!videoChange);
+      }, 500);
     });
 
     // 마이크 상태 전환
