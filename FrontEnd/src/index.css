@@ -832,8 +832,8 @@ p {
 .overflow-ellipsis:hover {
   /* position: absolute; */
   /* white-space: normal; */
-  overflow: visible;
-  color:rgb(85, 85, 85);
+  /* overflow: visible; */
+  /* color:rgb(85, 85, 85); */
   /* text-overflow: unset; */
   /* background-color: #B0B0B0; */
   /* width: 241px; */
