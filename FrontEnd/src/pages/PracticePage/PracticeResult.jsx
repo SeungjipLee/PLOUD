@@ -70,7 +70,7 @@ const PracticeResult = ({
   }, [resultResponse]);
 
   useEffect(() => {
-    if (resultResponse === true && videoResponse === true) {
+    if (resultResponse === true && videoResponse === true && videoPath == "") {
       // -> 다시 요청
       recordResultGet();
     } else if (videoResponse === false) {
@@ -116,11 +116,13 @@ const PracticeResult = ({
 
         if(res.data.data.score.speed == 0 || res.data.data.score.speed.clarity == 0){
           recordResultGet();
+        }else{
+          return;
         }
       },
       (err) => {
         console.log("재 요 청");
-        recordResultGet();   
+        recordResultGet();
       }
     );
   };
