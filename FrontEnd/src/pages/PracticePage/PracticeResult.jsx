@@ -35,6 +35,8 @@ const PracticeResult = ({
 
   const isClosed = useRef(false);
 
+  const [isState, setIsState] = useState(1);
+
   const handleDetail = () => {
     setIsDetail(!isDetail);
   };
@@ -62,6 +64,10 @@ const PracticeResult = ({
   useEffect(() => {
     if (resultResponse === true) {
       recordResultGet();
+
+      setTimeout(()=> {
+        setIsState(!isState);
+      }, 1000)
     }
   }, [resultResponse]);
 
