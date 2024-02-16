@@ -76,7 +76,6 @@ public class EtriUtil {
             byte[] buffer = new byte[is.available()];
             int byteRead = is.read(buffer);
             responBody = new String(buffer);
-            log.debug("ERTI API RESPONSE CODE : " + responseCode);
 
             System.out.println(responBody);
 

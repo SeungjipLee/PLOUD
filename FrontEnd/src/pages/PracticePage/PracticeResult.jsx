@@ -118,7 +118,10 @@ const PracticeResult = ({
           recordResultGet();
         }
       },
-      (err) => err
+      (err) => {
+        console.log("재 요 청");
+        recordResultGet(); 
+      }
     );
   };
 
