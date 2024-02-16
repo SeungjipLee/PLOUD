@@ -64,9 +64,16 @@ const StudyResult = ({ onClose, speechId, videoResponse, resultResponse }) => {
         if (res.data.data.video.videoPath) {
           setVideoPath(res.data.data.video.videoPath);
         }
+
+        if(res.data.data.score.speed == 0 || res.data.data.score.speed.clarity == 0){
+          recordResultGet();
+        }else{
+          return;
+        }
       },
       (err) => {
-        // console.log(err)
+        console.log("재 요 청");
+        recordResultGet();
       }
     );
 
