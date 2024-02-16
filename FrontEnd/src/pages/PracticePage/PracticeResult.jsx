@@ -60,13 +60,13 @@ const PracticeResult = ({
   };
 
   useEffect(() => {
-    if (resultResponse) {
+    if (resultResponse === true) {
       recordResultGet();
     }
   }, [resultResponse]);
 
   useEffect(() => {
-    if (videoResponse === true) {
+    if (resultResponse === true && videoResponse === true) {
       // -> 다시 요청
       recordResultGet();
     } else if (videoResponse === false) {

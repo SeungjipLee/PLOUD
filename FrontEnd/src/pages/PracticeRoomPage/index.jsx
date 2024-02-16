@@ -191,7 +191,9 @@ const PracticeRoomPage = () => {
 
         setFeedback("");
         setTimeout(() => {
-          setFeedback("잘하고 있어요!");
+          if(!isFeedback2.current){
+            setFeedback("잘하고 있어요!");
+          }
         }, 1500);
       },
       (err) => {
@@ -302,7 +304,7 @@ const PracticeRoomPage = () => {
           if (recorder.state === "recording") {
             recorder.stop();
           }
-        }, 5000);
+        }, 3000);
       })
       .catch((error) => {
         // console.error("오디오 스트림을 가져오는 중 오류 발생:", error);
@@ -376,7 +378,7 @@ const PracticeRoomPage = () => {
         // );
 
         // 실시간 피드백
-        if (response.data.data.scriptCnt > 28) {
+        if (response.data.data.scriptCnt > 16) {
           changeFeedback2("조금만 천천히 말해주세요!");
         } else if (response.data.data.score < 3.2) {
           changeFeedback2("발음을 정확하게 해주세요!");
