@@ -213,13 +213,13 @@ public class SpeechServiceImpl implements SpeechService {
                 scoreRepository.save(score);
                 log.debug("스피치 평가 등록 완료, 스피치 아이디 : " + speechId);
             }
-            if (clearityDto == null) {
-                throw new CustomException(ResponseCode.ETRI_ERROR);
-            }
 
+            if (clearityDto == null) {
+                throw null;
+            }
             return new ClearityResponse(clearityDto);
         } catch (Exception e) {
-            throw new CustomException(ResponseCode.FILE_CONVERT_ERROR);
+            return null;
         } finally {
             dest.delete();
         }
