@@ -67,6 +67,7 @@ const PracticeRoomPage = () => {
   const tmpDecibels = useRef([]); // 임시 데시벨 데이터 저장(3초)
   const isFeedback = useRef(false);
   const isFeedback2 = useRef(false);
+  const isFeedback3 = useRef(false);
 
   // 마이크 테스트 관련
   const [micTestContent, setMicTestContent] = useState("");
@@ -95,6 +96,7 @@ const PracticeRoomPage = () => {
     if (
       !isFeedback.current &&
       !isFeedback2.current &&
+      !isFeedback3.current &&
       tmpDecibels.current.length >= 30 &&
       isSilent
     ) {
@@ -103,6 +105,7 @@ const PracticeRoomPage = () => {
     } else if (
       !isFeedback.current &&
       !isFeedback2.current &&
+      !isFeedback3.current &&
       tmpDecibels.current.slice(-1)[0] >= 70
     ) {
       isFeedback.current = true;
@@ -304,7 +307,7 @@ const PracticeRoomPage = () => {
           if (recorder.state === "recording") {
             recorder.stop();
           }
-        }, 3000);
+        }, 5000);
       })
       .catch((error) => {
         // console.error("오디오 스트림을 가져오는 중 오류 발생:", error);
@@ -318,7 +321,7 @@ const PracticeRoomPage = () => {
 
     setTimeout(() => {
       // 피드백2가 없으면 초기화
-      if (isFeedback2.current == false) {
+      if (isFeedback2.current == false && isFeedback3.current == false) {
         setFeedback("잘하고 있어요!");
       }
 
@@ -330,14 +333,20 @@ const PracticeRoomPage = () => {
   };
 
   // 점수 관련
-  const changeFeedback2 = (fb) => {
-    isFeedback2.current = true;
+  const changeFeedback2 = (fb, type) => {
     setFeedback(fb);
 
-    setTimeout(() => {
-      isFeedback2.current = false;
+    setTimeout(()=>{
       setFeedback("잘하고 있어요!");
-    }, 2500);
+      
+      setTimeout(() => {
+        if(type == 0){
+          isFeedback2.current = false;
+        }else{
+          isFeedback3.current = false;  
+        }
+      }, 4000); 
+    }, 3000)
   };
 
   // 녹화 종료
@@ -378,10 +387,12 @@ const PracticeRoomPage = () => {
         // );
 
         // 실시간 피드백
-        if (response.data.data.scriptCnt > 16) {
-          changeFeedback2("조금만 천천히 말해주세요!");
-        } else if (response.data.data.score < 3.2) {
-          changeFeedback2("발음을 정확하게 해주세요!");
+        if (isFeedback2 && response.data.data.scriptCnt > 27) {
+          isFeedback2.current = true;
+          changeFeedback2("조금만 천천히 말해주세요!", 0);
+        } else if (isFeedback3 && response.data.data.score < 3.2) {
+          isFeedback3.current = true;
+          changeFeedback2("발음을 정확하게 해주세요!", 1);
         }
 
         if (isLast.current) {

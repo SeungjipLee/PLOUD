@@ -114,13 +114,13 @@ const PracticeResult = ({
         setAbout(res.data.data.speech);
         setLoading(false); // 로딩 종료
 
-        if(res.data.data.score.speed == 0 || res.data.data.score.speed.clarity){
+        if(res.data.data.score.speed == 0 || res.data.data.score.speed.clarity == 0){
           recordResultGet();
         }
       },
       (err) => {
         console.log("재 요 청");
-        recordResultGet(); 
+        recordResultGet();   
       }
     );
   };
@@ -319,6 +319,7 @@ const PracticeResult = ({
                             }}
                             onChange={(e) => setMyFeedback(e.target.value)}
                           ></textarea>
+
                         </div>
                         <div align="right">
                           <button
