@@ -378,7 +378,7 @@ const PracticeRoomPage = () => {
         // 실시간 피드백
         if (response.data.data.scriptCnt > 28) {
           changeFeedback2("조금만 천천히 말해주세요!");
-        } else if (response.data.data.score < 3) {
+        } else if (response.data.data.score < 3.2) {
           changeFeedback2("발음을 정확하게 해주세요!");
         }
 
