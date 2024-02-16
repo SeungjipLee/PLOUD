@@ -194,7 +194,7 @@ const PracticeRoomPage = () => {
 
         setFeedback("");
         setTimeout(() => {
-          if(!isFeedback2.current){
+          if (!isFeedback2.current) {
             setFeedback("잘하고 있어요!");
           }
         }, 1500);
@@ -317,12 +317,16 @@ const PracticeRoomPage = () => {
   // 데시벨 관련
   const changeFeedback1 = (fb) => {
     // 설정된 피드백이 없는 경우만 수정
-    setFeedback(fb);
+    if (isRecording.current) {
+      setFeedback(fb);
+    }
 
     setTimeout(() => {
       // 피드백2가 없으면 초기화
       if (isFeedback2.current == false && isFeedback3.current == false) {
-        setFeedback("잘하고 있어요!");
+        if (isRecording.current) {
+          setFeedback("잘하고 있어요!");
+        }
       }
 
       setTimeout(() => {
@@ -334,24 +338,29 @@ const PracticeRoomPage = () => {
 
   // 점수 관련
   const changeFeedback2 = (fb, type) => {
-    setFeedback(fb);
+    if (isRecording.current) {
+      setFeedback(fb);
+    }
 
-    setTimeout(()=>{
-      setFeedback("잘하고 있어요!");
-      
+    setTimeout(() => {
+      if (isRecording.current) {
+        setFeedback("잘하고 있어요!");
+      }
+
       setTimeout(() => {
-        if(type == 0){
+        if (type == 0) {
           isFeedback2.current = false;
-        }else{
-          isFeedback3.current = false;  
+        } else {
+          isFeedback3.current = false;
         }
       }, 4000);
-    }, 3000)
+    }, 3000);
   };
 
   // 녹화 종료
   const stopRecording = () => {
     isRecording.current = false;
+    setFeedback("[ 실시간 피드백 ]");
     if (mediaRecorder && mediaRecorder.state === "recording") {
       mediaRecorder.stop();
     }
@@ -380,10 +389,10 @@ const PracticeRoomPage = () => {
         // 아침주석
         // console.log("음성 평가 결과");
         // console.log(
-          // "개수 : " +
-            // response.data.data.scriptCnt +
-            // ", 점수 : " +
-            // response.data.data.score
+        // "개수 : " +
+        // response.data.data.scriptCnt +
+        // ", 점수 : " +
+        // response.data.data.score
         // );
 
         // 실시간 피드백
@@ -406,10 +415,6 @@ const PracticeRoomPage = () => {
         }
       }
     );
-
-    if (isLast.current) {
-      setFeedback("[ 실시간 피드백 ]");
-    }
   };
 
   // 비디오 녹화 시작
