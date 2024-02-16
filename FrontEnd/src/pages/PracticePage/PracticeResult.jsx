@@ -63,22 +63,8 @@ const PracticeResult = ({
   };
 
   useEffect(() => {
-    for (let i = 0; i < 5; i++) {
-      setTimeout(() => {
-        if (resultResponse && scores.clarity == 0 && scores.speed == 0) {
-          recordResultGet();
-        } else if (
-          resultResponse &&
-          (scores.clarity != 0 || scores.speed != 0)
-        ) {
-          return;
-        }
-      }, 1000);
-    }
-  }, []);
-
-  useEffect(() => {
     if (resultResponse === true) {
+      sentenceGet();
       recordResultGet();
     }
   }, [resultResponse]);
@@ -117,16 +103,6 @@ const PracticeResult = ({
   };
 
   const recordResultGet = () => {
-    getSentence(
-      token,
-      (res) => {
-        setSentence(res.data.data.sentence);
-      },
-      (err) => {
-        // console.log(err);
-      }
-    );
-
     getRecordResult(
       token,
       resultId,
@@ -137,10 +113,26 @@ const PracticeResult = ({
         }
         setAbout(res.data.data.speech);
         setLoading(false); // 로딩 종료
+
+        if(res.data.data.score.speed == 0 || res.data.data.score.speed.clarity){
+          recordResultGet();
+        }
       },
       (err) => err
     );
   };
+
+  const sentenceGet = () => {
+    getSentence(
+      token,
+      (res) => {
+        setSentence(res.data.data.sentence);
+      },
+      (err) => {
+        // console.log(err);
+      }
+    );
+  }
 
   const handleSkip = () => {
     if (typeof onClose === "function") {
