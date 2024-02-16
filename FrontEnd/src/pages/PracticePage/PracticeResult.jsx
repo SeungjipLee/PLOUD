@@ -8,6 +8,7 @@ import { postComment } from "../../services/speech";
 import MyAlert from "../../components/MyAlert";
 import LoadingScreen from "../StudyRoomPage/component/Loading";
 import LoadingScreen2 from "../StudyRoomPage/component/Loading2";
+import { set } from "lodash";
 
 const PracticeResult = ({
   onClose,
@@ -62,12 +63,23 @@ const PracticeResult = ({
   };
 
   useEffect(() => {
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => {
+        if (resultResponse && scores.clarity == 0 && scores.speed == 0) {
+          recordResultGet();
+        } else if (
+          resultResponse &&
+          (scores.clarity != 0 || scores.speed != 0)
+        ) {
+          return;
+        }
+      }, 1000);
+    }
+  }, []);
+
+  useEffect(() => {
     if (resultResponse === true) {
       recordResultGet();
-
-      setTimeout(()=> {
-        setIsState(!isState);
-      }, 1000)
     }
   }, [resultResponse]);
 
@@ -145,7 +157,7 @@ const PracticeResult = ({
 
     // 20초 후 모달 자동 닫기
     const timeoutId = setTimeout(() => {
-      if(!isClosed.current){
+      if (!isClosed.current) {
         onClose(); // 모달 닫는 함수 호출
       }
     }, 20000);
@@ -163,7 +175,8 @@ const PracticeResult = ({
       <Modal
         title="연습 결과 발표"
         className="study-result"
-        style={{ position: "fixed", top: "100px", left: "100px", zIndex: 999 }}>
+        style={{ position: "fixed", top: "100px", left: "100px", zIndex: 999 }}
+      >
         {/* <div className="result-section" onClick={(e) => e.stopPropagation()}>
         <div className="result-section-1 mx-5">
           <div className="p-2">
@@ -180,21 +193,25 @@ const PracticeResult = ({
           <>
             <div
               className="p-5 ps-10 pe-10"
-              onClick={(e) => e.stopPropagation()}>
+              onClick={(e) => e.stopPropagation()}
+            >
               <div
                 className="result-section"
-                style={{ justifyContent: "space-between" }}>
+                style={{ justifyContent: "space-between" }}
+              >
                 <div
                   className="result-section-1"
                   style={{
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-around",
-                  }}>
+                  }}
+                >
                   <div>
                     <div
                       className="rounded-xl w-68 h-52 m-auto"
-                      style={{ width: "100%", height: "100%" }}>
+                      style={{ width: "100%", height: "100%" }}
+                    >
                       {videoPath == "" ? (
                         //  로딩 필요함
                         <div className="loading-overlay">
@@ -217,7 +234,8 @@ const PracticeResult = ({
                         backgroundColor: "#EBEAFA",
                         marginTop: "16px",
                         marginBottom: "16px",
-                      }}>
+                      }}
+                    >
                       <div className="text-2xl mt-5 ps-5 pb-4 ms-5">결과:</div>
                       <div className="text-5xl me-5 pt-2">{grade}</div>
                     </div>
@@ -229,13 +247,15 @@ const PracticeResult = ({
                     <div className="h-12 mb-2 text-center text-xl">
                       <span
                         className="mx-10 font-bold"
-                        style={{ color: "#F3704B" }}>
+                        style={{ color: "#F3704B" }}
+                      >
                         세부 결과
                       </span>
                       <span className="mx-10 text-3xl">|</span>
                       <span
                         onClick={handleDetail}
-                        className="mx-10 text-gray-400 font-bold cursor-pointer">
+                        className="mx-10 text-gray-400 font-bold cursor-pointer"
+                      >
                         피드백 작성
                       </span>
                     </div>
@@ -261,13 +281,15 @@ const PracticeResult = ({
                     <div className="h-12 mb-2 text-center text-xl">
                       <span
                         onClick={handleDetail}
-                        className="mx-10 text-gray-400 font-bold cursor-pointer">
+                        className="mx-10 text-gray-400 font-bold cursor-pointer"
+                      >
                         세부 결과
                       </span>
                       <span className="mx-10 text-3xl">|</span>
                       <span
                         className="mx-10 font-bold"
-                        style={{ color: "#F3704B" }}>
+                        style={{ color: "#F3704B" }}
+                      >
                         피드백 작성
                       </span>
                     </div>
@@ -283,7 +305,8 @@ const PracticeResult = ({
                           style={{
                             backgroundColor: "#343B71",
                             color: "#FFFFFF",
-                          }}>
+                          }}
+                        >
                           나의 피드백
                         </div>
                         <div style={{ overflow: "auto" }}>
@@ -299,9 +322,8 @@ const PracticeResult = ({
                               height: "150px",
                               resize: "none",
                             }}
-                            onChange={(e) =>
-                              setMyFeedback(e.target.value)
-                            }></textarea>
+                            onChange={(e) => setMyFeedback(e.target.value)}
+                          ></textarea>
                         </div>
                         <div align="right">
                           <button
@@ -311,7 +333,8 @@ const PracticeResult = ({
                               color: "#FFFFFF",
                               borderRadius: "10%",
                             }}
-                            onClick={handleSubmit}>
+                            onClick={handleSubmit}
+                          >
                             작성
                           </button>
                         </div>
@@ -324,13 +347,15 @@ const PracticeResult = ({
                             height: "90px",
                             display: "flex",
                             flexDirection: "column",
-                          }}>
+                          }}
+                        >
                           <div
                             className="text-xl text-center font-bold py-1"
                             style={{
                               backgroundColor: "#343B71",
                               color: "#FFFFFF",
-                            }}>
+                            }}
+                          >
                             오늘의 스피치 명언
                           </div>
                           <div
@@ -341,7 +366,8 @@ const PracticeResult = ({
                               display: "flex",
                               alignItems: "center",
                               justifyContent: "center",
-                            }}>
+                            }}
+                          >
                             {sentence}
                           </div>
                         </div>

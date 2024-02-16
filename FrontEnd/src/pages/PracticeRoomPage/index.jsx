@@ -167,6 +167,7 @@ const PracticeRoomPage = () => {
 
   // 시작 버튼 누르면
   const speechStart = (e) => {
+    setResultResponse(false);
     e.preventDefault();
 
     const params = {
@@ -187,7 +188,6 @@ const PracticeRoomPage = () => {
 
         // 마이크 꺼짐
         setMic(false);
-        setResultResponse(false);
 
         setFeedback("");
         setTimeout(() => {
@@ -221,13 +221,13 @@ const PracticeRoomPage = () => {
       },
       (response) => {
         // console.log(response);
+        recordResult();
       },
       (error) => {
         // console.log(error);
+        recordResult();
       }
     );
-
-    recordResult();
   };
 
   const recordResult = () => {
