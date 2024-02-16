@@ -830,15 +830,15 @@ p {
 }
 
 .overflow-ellipsis:hover {
-  /* position: absolute;
-  white-space: normal;
+  position: absolute;
+  /* white-space: normal; */
   overflow: visible;
-  text-overflow: unset; */
+  /* text-overflow: unset; */
   /* background-color: #B0B0B0; */
-  /* width: 241px;
-  height: 100px;
-  background: linear-gradient(to bottom, #3a3758, #100e2c);
-  border-radius: 5px; */
+  /* width: 241px; */
+  /* height: 100px; */
+  /* background: linear-gradient(to bottom, #3a3758, #100e2c); */
+  /* border-radius: 5px; */
 }
 
 .record-form {
