@@ -71,8 +71,8 @@ public class SpeechAssessUtil {
         double perSilenceMinute = silenceCnt / (decibels.length * 0.1 / 60);
 
         // 분당 침묵 횟수가 일정 횟수 이상이면 감점
-        if(perSilenceMinute > 2){
-            avarageScore = (int) (avarageScore * (100 - perSilenceMinute  *  5) / 100);
+        if(perSilenceMinute > 3){
+            avarageScore = (int) (avarageScore * (100 - (perSilenceMinute - 2)  *  5) / 100);
         }
 
         log.debug("분당 침묵 횟수 : " + perSilenceMinute + ", 평균 데시벨 : " + totalDb / decibels.length + ", 평가 점수 : " + avarageScore);
