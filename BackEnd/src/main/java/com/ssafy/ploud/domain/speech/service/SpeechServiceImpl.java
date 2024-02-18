@@ -70,7 +70,7 @@ public class SpeechServiceImpl implements SpeechService {
             File[] files = audioDir.listFiles();
             if (files != null) {
                 for (File file : files) {
-                    if (file.isFile()) { // 파일만 삭제
+                    if (file.isFile()) {
                         file.delete();
                     }
                 }

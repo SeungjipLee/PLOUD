@@ -44,6 +44,7 @@ public class EtriUtil {
     }
 
 
+    // API 요청을 보내는 함수
     public static ClearityDto getScore(Map<String, Object> audioInfo){
         Gson gson = new Gson();
 
@@ -110,19 +111,47 @@ public class EtriUtil {
         }
     }
 
+    // Script의 분당 음절 수 구하기
     public static int countKoreanCharacters(String text) {
         // 한글 정규식
         String koreanRegex = "[가-힣]";
-        Pattern pattern = Pattern.compile(koreanRegex);
-        Matcher matcher = pattern.matcher(text);
+        Pattern koreanPattern = Pattern.compile(koreanRegex);
+        Matcher koreanMatcher = koreanPattern.matcher(text);
 
-        int count = 0;
-        while (matcher.find()) {
-            count++;
+        // 영어 정규식
+        String englishRegex = "[a-zA-Z]";
+        Pattern englishPattern = Pattern.compile(englishRegex);
+        Matcher englishMatcher = englishPattern.matcher(text);
+
+        // 숫자 정규식
+        String numericRegex = "\\d";
+        Pattern numericPattern = Pattern.compile(numericRegex);
+        Matcher numericMatcher = numericPattern.matcher(text);
+
+        int koreanCount = 0;
+        while (koreanMatcher.find()) {
+            koreanCount++;
         }
 
-        return count;
+        int englishCount = 0;
+        while(englishMatcher.find()){
+            englishCount++;
+        }
+
+        int numericCount = 0;
+        while(numericMatcher.find()){
+            numericCount++;
+        }
+
+        // 한글의 경우 1 : 1
+        // 영어의 경우 평균 2.5 ~ 3.5 : 1
+        // 숫자의 경우 평균 2 ~ 3 : 1
+        int totalCount = koreanCount + (int)(englishCount / 3) + (int)(numericCount / 2);
+
+        return totalCount;
     }
+
+    // AudioFile을 API 요청을 위해 Base64로 인코딩하는 함수
     public static Map<String, Object> fileToBase64(String outputWavFile) throws UnsupportedAudioFileException, IOException {
         AudioInputStream audioInputStream = null;
         File outputFile = null;

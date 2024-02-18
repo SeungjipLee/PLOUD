@@ -24,6 +24,7 @@ public class FfmpegUtil {
 //        this.ffmpegPath = ffmpegPath;
 //    }
 
+    // 음성 파일을 API 요청 보내기 위해 적합한 포맷으로 변환하는 함수
     public static void convertAudio(String inputAudioPath, String outputAudioPath)
         throws Exception {
         // ffmpeg build
