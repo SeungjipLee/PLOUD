@@ -46,6 +46,8 @@ const StudyRoomPage = () => {
 
   const [videoChange, setVideoChange] = useState(false);
 
+  const [ checkState, setCheckState ] = useState(false);
+
   // 기본 정보
   const { userId, token, nickname } = useSelector((state) => state.userReducer);
   const room = useSelector((state) => state.studyReducer.studyInfo.meetingInfo);
@@ -613,6 +615,7 @@ const StudyRoomPage = () => {
           setTypingList((typingList) =>
             typingList.filter((idx) => idx !== randomIndex)
           );
+          setCheckState(!checkState);
           // console.log("피드백 삭제 : " + randomIndex);
         }, 5000);
       }
