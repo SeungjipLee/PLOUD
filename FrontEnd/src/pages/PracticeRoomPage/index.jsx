@@ -678,6 +678,7 @@ const PracticeRoomPage = () => {
           >
             {feedback}
           </div>
+          <input value={decibelCorrection} onChange={(e) => setDecibelCorrection(e.target.value)}></input>
         </div>
         {screenShare ? (
           <div
@@ -783,7 +784,6 @@ const PracticeRoomPage = () => {
                 backgroundColor: micColor,
               }}
             >
-              <input value={decibelCorrection} onChange={(e) => setDecibelCorrection(e.target.value)}></input>
             </div>
           </div>
         </Modal>
