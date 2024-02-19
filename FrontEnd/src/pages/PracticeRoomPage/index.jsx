@@ -77,7 +77,7 @@ const PracticeRoomPage = () => {
 
   // 데시벨 계산 후 추가하기
   const calcDecibel = (average) => {
-    var decibel = Math.max(Math.round(38 * Math.log10(average)), 0) + decibelCorrection;
+    var decibel = Math.max(Math.round(38 * Math.log10(average)), 0) + parseInt(decibelCorrection);
     return decibel;
   };
 
