@@ -678,7 +678,7 @@ const PracticeRoomPage = () => {
           >
             {feedback}
           </div>
-          <input value={decibelCorrection} onChange={(e) => setDecibelCorrection(e.target.value)}></input>
+          <input type="number" value={decibelCorrection} onChange={(e) => setDecibelCorrection(e.target.value)}></input>
         </div>
         {screenShare ? (
           <div
