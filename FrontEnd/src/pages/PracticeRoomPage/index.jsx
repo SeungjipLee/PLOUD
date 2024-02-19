@@ -15,6 +15,9 @@ import {
 } from "../../services/speech";
 
 const PracticeRoomPage = () => {
+  // 테스트용
+  const [decibelCorrection, setDecibelCorrection] = useState(0);
+
   const { token } = useSelector((state) => state.userReducer);
   const navigate = useNavigate();
 
@@ -74,7 +77,7 @@ const PracticeRoomPage = () => {
 
   // 데시벨 계산 후 추가하기
   const calcDecibel = (average) => {
-    var decibel = Math.max(Math.round(38 * Math.log10(average)), 0);
+    var decibel = Math.max(Math.round(38 * Math.log10(average)), 0) + decibelCorrection;
     return decibel;
   };
 
@@ -82,7 +85,7 @@ const PracticeRoomPage = () => {
     if (newDecibel !== 0) {
       decibels.current.push(newDecibel);
       // 아침주석
-      // console.log("데시벨(점수 측정) : " + newDecibel);
+      console.log("데시벨(점수 측정) : " + newDecibel);
     }
 
     if (tmpDecibels.current.length >= 30) {
@@ -386,14 +389,14 @@ const PracticeRoomPage = () => {
       token,
       formData,
       (response) => {
-        // 아침주석
-        // console.log("음성 평가 결과");
-        // console.log(
-        // "개수 : " +
-        // response.data.data.scriptCnt +
-        // ", 점수 : " +
-        // response.data.data.score
-        // );
+        아침주석;
+        console.log("음성 평가 결과");
+        console.log(
+          "개수 : " +
+            response.data.data.scriptCnt +
+            ", 점수 : " +
+            response.data.data.score
+        );
 
         // 실시간 피드백
         if (isFeedback2 && response.data.data.scriptCnt > 16) {
@@ -543,7 +546,7 @@ const PracticeRoomPage = () => {
             const micDecibel = calcDecibel(micAverage);
 
             // 아침주석
-            // console.log("데시벨(테스트) : " + micDecibel);
+            console.log("데시벨(테스트) : " + micDecibel);
 
             if (micDecibel < 30) {
               setMicTestContent("목소리가 거의 들리지 않아요!");
@@ -779,7 +782,9 @@ const PracticeRoomPage = () => {
               style={{
                 backgroundColor: micColor,
               }}
-            ></div>
+            >
+              <input value={decibelCorrection} onChange={(e) => setDecibelCorrection(e.target.value)}></input>
+            </div>
           </div>
         </Modal>
       )}
