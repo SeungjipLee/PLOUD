@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
-import javax.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -111,7 +110,7 @@ public class UserServiceImpl implements UserService {
       String verificationCode = RandomStringUtils.randomAlphanumeric(6);
       EmailSenderService.sendEmailVerificationCode(userEmail, verificationCode);
       emailVerificationCodes.put(userEmail, verificationCode);
-    } catch (MessagingException e) {
+    } catch (Exception e) {
       throw new CustomException(ResponseCode.MAIL_SEND_ERROR);
     }
   }
@@ -177,7 +176,7 @@ public class UserServiceImpl implements UserService {
       System.out.println("임시 비밀번호: " + tempPassword);
       EmailSenderService.sendResetPasswordMail(user.getEmail(), tempPassword); // send mail
       user.updateUserPassword(bCryptPasswordEncoder.encode(tempPassword));     // update users table
-    } catch (MessagingException e) {
+    } catch (Exception e) {
       throw new CustomException(ResponseCode.MAIL_SEND_ERROR);
     }
   }
