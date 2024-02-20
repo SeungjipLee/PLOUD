@@ -66,6 +66,7 @@ public class EtriUtil {
             con.setDoOutput(true);
             con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             con.setRequestProperty("Authorization", accessKey);
+            con.setConnectTimeout(5000);
 
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
             wr.write(gson.toJson(request).getBytes("UTF-8"));
