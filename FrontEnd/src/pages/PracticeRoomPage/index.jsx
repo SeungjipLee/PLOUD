@@ -503,7 +503,6 @@ const PracticeRoomPage = () => {
   const handleResultClose = () => {
     setResultScreen(false);
     setResultResponse(false);
-    speechId.current = -1;
   };
 
   const leaveSession = () => {
