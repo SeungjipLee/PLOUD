@@ -1138,6 +1138,8 @@ const StudyRoomPage = () => {
     formData.append("speechId", speechId.current);
     formData.append("isLast", isLast.current);
 
+    const tmpLast = isLast.current;
+
     assessSpeech(
       token,
       formData,
@@ -1152,14 +1154,14 @@ const StudyRoomPage = () => {
         //     response.data.score
         // );
 
-        if (isLast.current) {
+        if (tmpLast) {
           setResultResponse(true);
         }
       },
       (error) => {
         // console.log(error);
         // console.log("평가 실패");
-        if (isLast.current) {
+        if (tmpLast) {
           setResultResponse(true);
         }
       }

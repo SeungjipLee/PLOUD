@@ -385,6 +385,8 @@ const PracticeRoomPage = () => {
     formData.append("speechId", speechId.current);
     formData.append("isLast", isLast.current);
 
+    const tmpLast = isLast.current;
+
     assessSpeech(
       token,
       formData,
@@ -406,7 +408,7 @@ const PracticeRoomPage = () => {
           changeFeedback2("발음을 정확하게 해주세요!", 1);
         }
 
-        if (isLast.current) {
+        if (tmpLast) {
           console.log("마지막 평가");
           isLast.current = false;
           setResultResponse(true);
@@ -416,7 +418,7 @@ const PracticeRoomPage = () => {
         console.log("음성 평가 실패");
         // console.log(error);
         // console.log(error);
-        if (isLast.current) {
+        if (tmpLast) {
           console.log("마지막 평가");
           isLast.current = false;
           setResultResponse(true);
