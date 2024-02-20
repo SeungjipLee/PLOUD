@@ -311,7 +311,6 @@ const StudyRoomPage = () => {
   const handleResultClose = () => {
     setVideoResponse(null);
     setResultScreen(false);
-    speechId.current = -1;
   };
 
   // 발표자 권한 변경
