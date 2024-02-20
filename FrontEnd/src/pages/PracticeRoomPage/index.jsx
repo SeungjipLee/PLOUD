@@ -411,10 +411,13 @@ const PracticeRoomPage = () => {
         }
 
         if (isLast.current) {
+          console.log("마지막 평가");
           setResultResponse(true);
         }
       },
       (error) => {
+        console.log("음성 평가 실패");
+        console.log(error);
         // console.log(error);
         if (isLast.current) {
           setResultResponse(true);
