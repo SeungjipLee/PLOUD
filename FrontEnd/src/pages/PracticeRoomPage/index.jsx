@@ -392,7 +392,7 @@ const PracticeRoomPage = () => {
       token,
       formData,
       (response) => {
-        아침주석;
+        // 아침주석
         console.log("음성 평가 결과");
         console.log(
           "개수 : " +
