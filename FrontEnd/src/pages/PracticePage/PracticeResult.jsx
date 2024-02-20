@@ -105,7 +105,7 @@ const PracticeResult = ({
   };
 
   const recordResultGet = () => {
-    if(!resultCheck.current){
+    if (!resultCheck.current) {
       getRecordResult(
         token,
         resultId,
@@ -116,16 +116,19 @@ const PracticeResult = ({
           }
           setAbout(res.data.data.speech);
           setLoading(false); // 로딩 종료
-  
-          if(res.data.data.score.speed == 0 || res.data.data.score.speed.clarity == 0){
+
+          if (
+            res.data.data.score.speed == 0 ||
+            res.data.data.score.speed.clarity == 0
+          ) {
             recordResultGet();
-          }else{
+          } else {
             resultCheck.current = true;
           }
         },
         (err) => {
           console.log(err);
-          if(scores.speed == 0 || scores.clarity == 0){
+          if (scores.speed == 0 || scores.clarity == 0) {
             recordResultGet();
           }
         }
@@ -143,7 +146,7 @@ const PracticeResult = ({
         // console.log(err);
       }
     );
-  }
+  };
 
   const handleSkip = () => {
     if (typeof onClose === "function") {
@@ -154,24 +157,23 @@ const PracticeResult = ({
 
   useEffect(() => {
     // 카운트다운 시작
-    if(resultResponse){
-      const timerId = setInterval(() => {
-        setCountdown((prevCountdown) => prevCountdown - 1);
-      }, 1000);
-  
-      // 20초 후 모달 자동 닫기
-      const timeoutId = setTimeout(() => {
-        if (!isClosed.current) {
-          onClose(); // 모달 닫는 함수 호출
-        }
-      }, 20000);
-    }
+    if (!resultResponse) return;
+
+    const timerId = setInterval(() => {
+      setCountdown((prevCountdown) => prevCountdown - 1);
+    }, 1000);
+
+    // 20초 후 모달 자동 닫기
+    const timeoutId = setTimeout(() => {
+      if (!isClosed.current) {
+        onClose(); // 모달 닫는 함수 호출
+      }
+    }, 20000);
 
     return () => {
-      if (resultResponse) {
-        clearInterval(timerId); // 컴포넌트 언마운트 시 타이머 제거
-        clearTimeout(timeoutId); // 타임아웃 제거
-      }
+      if (!resultResponse) return;
+      clearInterval(timerId); // 컴포넌트 언마운트 시 타이머 제거
+      clearTimeout(timeoutId); // 타임아웃 제거
     };
   }, [resultResponse]);
 
@@ -329,7 +331,6 @@ const PracticeResult = ({
                             }}
                             onChange={(e) => setMyFeedback(e.target.value)}
                           ></textarea>
-
                         </div>
                         <div align="right">
                           <button
