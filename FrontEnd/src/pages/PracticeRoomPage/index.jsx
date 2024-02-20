@@ -419,6 +419,7 @@ const PracticeRoomPage = () => {
         // console.log(error);
         // console.log(error);
         if (isLast.current) {
+          console.log("마지막 평가");
           setResultResponse(true);
         }
       }

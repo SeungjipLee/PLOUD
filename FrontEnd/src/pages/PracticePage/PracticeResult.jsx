@@ -42,6 +42,8 @@ const PracticeResult = ({
     setIsDetail(!isDetail);
   };
 
+  const resultCheck = useRef(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     try {
@@ -65,7 +67,6 @@ const PracticeResult = ({
   useEffect(() => {
     if (resultResponse === true) {
       sentenceGet();
-      console.log("결과 받아와서 요청")
       recordResultGet();
     }
   }, [resultResponse]);
@@ -73,7 +74,6 @@ const PracticeResult = ({
   useEffect(() => {
     if (resultResponse === true && videoResponse === true && videoPath == "") {
       // -> 다시 요청
-      console.log("비디오 값이 없어서 요청");
       recordResultGet();
     } else if (videoResponse === false) {
       // 비디오를 올리지 못함.
@@ -105,29 +105,30 @@ const PracticeResult = ({
   };
 
   const recordResultGet = () => {
-    getRecordResult(
-      token,
-      resultId,
-      (res) => {
-        setScores(res.data.data.score);
-        if (res.data.data.video.videoPath) {
-          setVideoPath(res.data.data.video.videoPath);
-        }
-        setAbout(res.data.data.speech);
-        setLoading(false); // 로딩 종료
-
-        if(res.data.data.score.speed == 0 || res.data.data.score.speed.clarity == 0){
-          console.log("평가가 끝나지 않아서 요청");
+    if(!resultCheck.current){
+      getRecordResult(
+        token,
+        resultId,
+        (res) => {
+          setScores(res.data.data.score);
+          if (res.data.data.video.videoPath) {
+            setVideoPath(res.data.data.video.videoPath);
+          }
+          setAbout(res.data.data.speech);
+          setLoading(false); // 로딩 종료
+  
+          if(res.data.data.score.speed == 0 || res.data.data.score.speed.clarity == 0){
+            recordResultGet();
+          }else{
+            resultCheck.current = true;
+          }
+        },
+        (err) => {
+          console.log(err);
           recordResultGet();
-        }else{
-          return;
         }
-      },
-      (err) => {
-        console.log("재 요 청");
-        recordResultGet();
-      }
-    );
+      );
+    }
   };
 
   const sentenceGet = () => {
