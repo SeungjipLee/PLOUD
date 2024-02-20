@@ -204,14 +204,19 @@ public class SpeechServiceImpl implements SpeechService {
             if (isLast) {
                 Map<String, Integer> scores = speechAssessUtil.assess(speechId);
 
+                log.debug("스피치 전체 평가 완료, 스피치 아이디 : " + speechId);
+
                 // 평가 등록하기
                 SpeechEntity speechEntity = speechRepository.findById(speechId)
                     .orElseThrow(() -> new CustomException(ResponseCode.SPEECH_NOT_FOUND));
+
+                log.debug("스피치 아이디 : " + speechEntity.getId());
+
                 ScoreEntity score = speechEntity.getScore();
                 score.updateClearity(scores.get("clearity"));
                 score.updateSpeed(scores.get("speed"));
                 scoreRepository.save(score);
-                log.debug("스피치 평가 등록 완료, 스피치 아이디 : " + speechId + ", 명료도 : " + scores.get("clearity") + ", 속도 + " + scores.get("speed"));
+                log.debug("스피치 평가 등록 완료, 스피치 아이디 : " + speechId + ", 명료도 : " + scores.get("clearity") + ", 속도 : " + scores.get("speed"));
             }
 
             if (clearityDto == null) {

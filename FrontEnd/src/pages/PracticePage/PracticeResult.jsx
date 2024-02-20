@@ -154,16 +154,18 @@ const PracticeResult = ({
 
   useEffect(() => {
     // 카운트다운 시작
-    const timerId = setInterval(() => {
-      setCountdown((prevCountdown) => prevCountdown - 1);
-    }, 1000);
-
-    // 20초 후 모달 자동 닫기
-    const timeoutId = setTimeout(() => {
-      if (!isClosed.current) {
-        onClose(); // 모달 닫는 함수 호출
-      }
-    }, 20000);
+    if(resultResponse){
+      const timerId = setInterval(() => {
+        setCountdown((prevCountdown) => prevCountdown - 1);
+      }, 1000);
+  
+      // 20초 후 모달 자동 닫기
+      const timeoutId = setTimeout(() => {
+        if (!isClosed.current) {
+          onClose(); // 모달 닫는 함수 호출
+        }
+      }, 20000);
+    }
 
     return () => {
       if (resultResponse) {
