@@ -202,9 +202,11 @@ public class SpeechServiceImpl implements SpeechService {
             }
 
             if (isLast) {
+                log.debug("스피치 전체 평가 시작스피치 아이디 : " + speechId);
+
                 Map<String, Integer> scores = speechAssessUtil.assess(speechId);
 
-                log.debug("스피치 전체 평가 완료, 스피치 아이디 : " + speechId);
+                log.debug("스피치 전체 평가 완료");
 
                 // 평가 등록하기
                 SpeechEntity speechEntity = speechRepository.findById(speechId)
