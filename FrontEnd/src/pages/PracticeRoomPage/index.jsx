@@ -85,7 +85,7 @@ const PracticeRoomPage = () => {
     if (newDecibel !== 0) {
       decibels.current.push(newDecibel);
       // 아침주석
-      console.log("데시벨(점수 측정) : " + newDecibel);
+      // console.log("데시벨(점수 측정) : " + newDecibel);
     }
 
     if (tmpDecibels.current.length >= 30) {
@@ -319,6 +319,8 @@ const PracticeRoomPage = () => {
 
   // 데시벨 관련
   const changeFeedback1 = (fb) => {
+    console.log("피드백 : " + fb)
+
     // 설정된 피드백이 없는 경우만 수정
     if (isRecording.current) {
       setFeedback(fb);
@@ -341,6 +343,7 @@ const PracticeRoomPage = () => {
 
   // 점수 관련
   const changeFeedback2 = (fb, type) => {
+    console.log("피드백 : " + fb);
     if (isRecording.current) {
       setFeedback(fb);
     }
@@ -399,7 +402,7 @@ const PracticeRoomPage = () => {
         );
 
         // 실시간 피드백
-        if (isFeedback2 && response.data.data.scriptCnt > 16) {
+        if (isFeedback2 && response.data.data.scriptCnt > 15) {
           isFeedback2.current = true;
           changeFeedback2("조금만 천천히 말해주세요!", 0);
         } else if (isFeedback3 && response.data.data.score < 3.2) {
