@@ -393,9 +393,8 @@ const PracticeRoomPage = () => {
       formData,
       (response) => {
         // 아침주석
-        console.log("음성 평가 결과");
         console.log(
-          "개수 : " +
+          "음성 평가 결과 / 개수 : " +
             response.data.data.scriptCnt +
             ", 점수 : " +
             response.data.data.score
@@ -417,7 +416,7 @@ const PracticeRoomPage = () => {
       },
       (error) => {
         console.log("음성 평가 실패");
-        console.log(error);
+        // console.log(error);
         // console.log(error);
         if (isLast.current) {
           setResultResponse(true);

@@ -65,6 +65,7 @@ const PracticeResult = ({
   useEffect(() => {
     if (resultResponse === true) {
       sentenceGet();
+      console.log("결과 받아와서 요청")
       recordResultGet();
     }
   }, [resultResponse]);
@@ -72,6 +73,7 @@ const PracticeResult = ({
   useEffect(() => {
     if (resultResponse === true && videoResponse === true && videoPath == "") {
       // -> 다시 요청
+      console.log("비디오 값이 없어서 요청");
       recordResultGet();
     } else if (videoResponse === false) {
       // 비디오를 올리지 못함.
@@ -115,6 +117,7 @@ const PracticeResult = ({
         setLoading(false); // 로딩 종료
 
         if(res.data.data.score.speed == 0 || res.data.data.score.speed.clarity == 0){
+          console.log("평가가 끝나지 않아서 요청");
           recordResultGet();
         }else{
           return;
