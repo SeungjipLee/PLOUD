@@ -111,7 +111,7 @@ const PracticeResult = ({
         resultId,
         (res) => {
           setScores(res.data.data.score);
-          if (res.data.data.video.videoPath) {
+          if (res.data.data.video.videoPath != null) {
             setVideoPath(res.data.data.video.videoPath);
           }
           setAbout(res.data.data.speech);
@@ -125,7 +125,9 @@ const PracticeResult = ({
         },
         (err) => {
           console.log(err);
-          recordResultGet();
+          if(scores.speed == 0 || scores.clarity == 0){
+            recordResultGet();
+          }
         }
       );
     }

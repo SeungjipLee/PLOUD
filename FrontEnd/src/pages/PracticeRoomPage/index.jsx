@@ -411,6 +411,7 @@ const PracticeRoomPage = () => {
 
         if (isLast.current) {
           console.log("마지막 평가");
+          isLast.current = false;
           setResultResponse(true);
         }
       },
@@ -420,6 +421,7 @@ const PracticeRoomPage = () => {
         // console.log(error);
         if (isLast.current) {
           console.log("마지막 평가");
+          isLast.current = false;
           setResultResponse(true);
         }
       }
