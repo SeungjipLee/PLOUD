@@ -1022,7 +1022,7 @@ const StudyRoomPage = () => {
     if (newDecibel != 0) {
       // 아침주석
       // console.log("데시벨 : " + newDecibel);
-      decibels.current.push(newDecibel);
+      decibels.current.push(newDecibel + 5);
     }
   };
 

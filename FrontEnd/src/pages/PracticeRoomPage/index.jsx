@@ -15,9 +15,6 @@ import {
 } from "../../services/speech";
 
 const PracticeRoomPage = () => {
-  // 테스트용
-  const [decibelCorrection, setDecibelCorrection] = useState(0);
-
   const { token } = useSelector((state) => state.userReducer);
   const navigate = useNavigate();
 
@@ -77,7 +74,7 @@ const PracticeRoomPage = () => {
 
   // 데시벨 계산 후 추가하기
   const calcDecibel = (average) => {
-    var decibel = Math.max(Math.round(38 * Math.log10(average)), 0) + parseInt(decibelCorrection);
+    var decibel = Math.max(Math.round(38 * Math.log10(average)), 0);
     return decibel;
   };
 
@@ -686,7 +683,6 @@ const PracticeRoomPage = () => {
           >
             {feedback}
           </div>
-          <input type="number" value={decibelCorrection} onChange={(e) => setDecibelCorrection(e.target.value)}></input>
         </div>
         {screenShare ? (
           <div
